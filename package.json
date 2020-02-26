@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "caffeine-script": "^0.72.1",
+    "fs-extra": "^8.1.0",
+    "inquirer": "^7.0.4",
+    "pivotaljs": "^1.0.3",
+    "yargs": "^15.1.0"
+  },
+  "devDependencies": {}
+}

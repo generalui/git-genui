@@ -1,0 +1,18 @@
+import &ArtStandardLib
+
+fs = &fsExtra
+
+serve = -> log :serving
+
+{argv} = &yargs
+  .command
+    'commit'
+    'interactive commit'
+
+    &interactive
+
+  .option
+    :verbose
+    alias:        :v
+    type:         :boolean
+    description:  "" Run with verbose logging
