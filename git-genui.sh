@@ -1,3 +1,3 @@
 #!/usr/local/bin/node
 require('caffeine-script/register')
-require('./source/main')
+require('./source/GitGenUI').run()

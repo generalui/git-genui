@@ -1,28 +1,4 @@
-import &ArtStandardLib
-
-prepSearchMatch = (pattern) ->
-  if &ArtStandardLib.present pattern
-    new RegExp
-      array letter from pattern.split('') with &ArtStandardLib.escapeRegexp letter
-      .join '.*'
-      :i
-  else /^/
-
-searchMatch = (pattern, string) ->
-  prepSearchMatch(pattern).test string
-
-search = require('approx-string-match').default
-sortByMatchQuality = ({errors:a}, {errors:b}) -> a - b
-searchSort = (pattern, strings) ->
-  r = prepSearchMatch pattern
-  sorted =
-    array string in strings when r.test string
-      rs =
-        search pattern, strings, 100
-        .sort sortByMatchQuality
-      {} string, rs[0].errors
-    .sort sortByMatchQuality
-  array {string} in sorted with string
+import &ArtStandardLib, &Lib
 
 ({stories, members}) ->
 
@@ -71,7 +47,7 @@ searchSort = (pattern, strings) ->
       name:     :story
       message:  "" What story does this commit advance?
       source: (answersSoFar, input) -> Promise.then ->
-        searchSort array {id, name} in stories when "" [#{id}] #{name}
+        searchSort array {id, name} in stories with "" [#{id}] #{name}
 
     {}
       type:     :input
@@ -99,8 +75,7 @@ searchSort = (pattern, strings) ->
       message:  "" Are you pairing with someone?
       default:  null
       source: (answersSoFar, input) -> Promise.then ->
-        array {email, name} in members when searchMatch input, "" #{name} <#{email}>
-          "" #{name} <#{email}>
+        searchSort array {email, name} in stories with "" #{name} <#{email}>
 
     # {}
     #   type:     'input'

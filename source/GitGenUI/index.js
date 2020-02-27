@@ -2,10 +2,11 @@
 // file: GitGenUI/index.js
 
 (module.exports = require('./namespace'))
-
+.includeInNamespace(require('./GitGenUI'))
 .addModules({
+  Cli:         require('./cli'),
   Interactive: require('./interactive'),
-  Main:        require('./main'),
+  Lib:         require('./Lib'),
   Pizza:       require('./pizza'),
   Tracker:     require('./Tracker')
 });

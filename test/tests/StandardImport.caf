@@ -1,3 +1,4 @@
 &ArtStandardLib.mergeWithSelf
   &ArtTestbench
   GitGenUI: &source/GitGenUI
+  &source/GitGenUI
