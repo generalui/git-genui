@@ -1,10 +1,20 @@
 {
   "dependencies": {
+    "approx-string-match": "^1.1.0",
+    "art-rest-client": "^1.7.0",
+    "art-testbench": "^1.17.2",
     "caffeine-script": "^0.72.1",
+    "chai": "^4.2.0",
     "fs-extra": "^8.1.0",
     "inquirer": "^7.0.4",
+    "inquirer-autocomplete-prompt": "^1.0.2",
+    "mocha": "^7.1.0",
+    "neptune-namespaces": "^4.0.0",
     "pivotaljs": "^1.0.3",
     "yargs": "^15.1.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "scripts": {
+    "test": "nn -s;mocha -u tdd"
+  }
 }

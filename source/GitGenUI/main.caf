@@ -9,7 +9,11 @@ serve = -> log :serving
     'commit'
     'interactive commit'
 
-    &interactive
+    (argv) ->
+      Promise.deepAll {}
+        stories: &Tracker.getStories()
+        members: &Tracker.getMembers()
+      .then &interactive
 
   .option
     :verbose

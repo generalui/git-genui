@@ -1,0 +1,33 @@
+import
+  &ArtStandardLib
+  require("#{require('os').homedir()}/.git-genui.prefs")
+
+baseUrl = :https://www.pivotaltracker.com/services/v5
+
+commonRestOptions = normalizedHeaders: X-TrackerToken: trackers.pivotalTracker.token
+
+class PivotalTracker
+  @getProjects: ->
+    &ArtRestClient.getJson :https://www.pivotaltracker.com/services/v5/projects commonRestOptions
+
+  @getStories: (projectId, options) ->
+    options extract? states
+    states ?= :started :rejected :planned :unstarted :unscheduled
+    &ArtRestClient.getJson "#{baseUrl}/projects/#{projectId}/stories?limit=500&date_format=millis&filter=state:#{states.join ','}" commonRestOptions
+    .then (stories) ->
+      array {id, requested_by_id, current_state, story_type, name, updated_at, created_at, url, owner_ids} in stories
+        {}
+          id
+          url
+          name
+          requestedById: requested_by_id
+          ownerIds: owner_ids
+          state: current_state
+          updatedAt: updated_at
+          createdAt: created_at
+
+  @getMembers: (projectId) ->
+    &ArtRestClient.getJson "#{baseUrl}/projects/#{projectId}/memberships" commonRestOptions
+    .then (memberships) ->
+      array {person} in memberships
+        {id, name, email} = person

@@ -1,0 +1,148 @@
+import &ArtStandardLib
+
+prepSearchMatch = (pattern) ->
+  if &ArtStandardLib.present pattern
+    new RegExp
+      array letter from pattern.split('') with &ArtStandardLib.escapeRegexp letter
+      .join '.*'
+      :i
+  else /^/
+
+searchMatch = (pattern, string) ->
+  prepSearchMatch(pattern).test string
+
+search = require('approx-string-match').default
+sortByMatchQuality = ({errors:a}, {errors:b}) -> a - b
+searchSort = (pattern, strings) ->
+  r = prepSearchMatch pattern
+  sorted =
+    array string in strings when r.test string
+      rs =
+        search pattern, strings, 100
+        .sort sortByMatchQuality
+      {} string, rs[0].errors
+    .sort sortByMatchQuality
+  array {string} in sorted with string
+
+({stories, members}) ->
+
+  questions =
+    # {}
+    #   type: 'confirm'
+    #   name: 'toBeDelivered'
+    #   message: 'Is this for delivery?'
+    #   default: false
+
+    # {}
+    #   type: 'input'
+    #   name: 'phone'
+    #   message: "What's your phone number?"
+    #   validate: (value) ->
+    #     ///i ^([01]{1})?[-.\s]?\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})\s?((?:#|ext\.?\s?|x\.?\s?){1}(?:\d+)?)?$
+    #     .test value
+    #     || 'Please enter a valid phone number'
+
+    # {}
+    #   type:     :expand
+    #   name:     :semanticVersioning
+    #   message: "" Semantic versioning: Is your change...
+    #   choices:
+    #     key: :m value: :major name: "" Major
+    #     key: :n value: :minor name: "" miNor
+    #     key: :p value: :patch name: "" Patch
+    #   filter: (val) -> val.toLowerCase()
+
+    {}
+      type:     :list
+      name:     :changeType
+      message:  "" What type of commit is this? (select lowest matching number)
+      choices:
+        value: :feat        name: "" 1. new feature
+        value: :fix         name: "" 2. bug fix
+        value: :perf        name: "" 3. improved performance
+        value: :refactor    name: "" 4. refactor
+        value: :test        name: "" 5. tests added, improved or fixed
+        value: :docs        name: "" 6. documentation
+        value: :style       name: "" 7. code formatting
+        value: :chore       name: "" 8. chores and other changes (tooling, configuration, etc...)
+
+    {}
+      type:     :autocomplete
+      name:     :story
+      message:  "" What story does this commit advance?
+      source: (answersSoFar, input) -> Promise.then ->
+        searchSort array {id, name} in stories when "" [#{id}] #{name}
+
+    {}
+      type:     :input
+      name:     :subject
+      message:  "" Enter git commit summary:
+
+    {}
+      type:     :expand
+      name:     :wantLongMessage
+      message:  "" Do you want to add details to your git commit?
+      default: false
+      choices:
+        key: :N value: false name: "" no
+        key: :y value: true name: "" yes
+
+    {}
+      type:     :editor
+      name:     :body
+      message:  "" Git commit details
+      when:     ({wantLongMessage}) -> wantLongMessage
+
+    {}
+      type:     :autocomplete
+      name:     :pair
+      message:  "" Are you pairing with someone?
+      default:  null
+      source: (answersSoFar, input) -> Promise.then ->
+        array {email, name} in members when searchMatch input, "" #{name} <#{email}>
+          "" #{name} <#{email}>
+
+    # {}
+    #   type:     'input'
+    #   name:     'quantity'
+    #   message:  'How many do you need?',
+    #   validate: (value) ->
+    #     !isNaN(parseFloat(value))
+    #     || 'Please enter a number'
+
+    #   filter: Number
+
+    # {}
+    #   type:     :expand
+    #   name:     :toppings
+    #   message:  "" What about the toppings?
+    #   choices:
+    #     key: :p value: :PepperoniCheese name: "" Pepperoni and cheese
+    #     key: :a value: :alldressed      name: "" All dressed
+    #     key: :w value: :hawaiian        name: "" Hawaiian
+
+    # {}
+    #   type:     'rawlist'
+    #   name:     'beverage'
+    #   message:  'You also get a free 2L beverage'
+    #   choices:  :Pepsi :7up :Coke
+
+    # {}
+    #   type:     'input'
+    #   name:     'comments'
+    #   message:  'Any comments on your purchase experience?'
+    #   default:  'Nope, all good!'
+
+    # {}
+    #   type:     'list'
+    #   name:     'prize'
+    #   message:  'For leaving a comment, you get a freebie'
+    #   choices:  :cake :fries
+    #   when: (answers) -> answers.comments != 'Nope, all good!'
+
+  &inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
+  &inquirer
+  .prompt questions
+  .then (answers) ->
+    log '\nOrder receipt:'
+    log {} answers
