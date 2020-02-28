@@ -1,0 +1,71 @@
+import &ArtStandardLib
+stableSort = &stable
+
+class Lib
+  prepSearchMatch = (pattern) ->
+    if present pattern
+      new RegExp
+        array letter from pattern.split('') with escapeRegexp letter
+        .join '.*?'
+        :i
+    else /^/
+
+  searchMatch = (pattern, string) ->
+    prepSearchMatch(pattern).test string
+
+  approximateSearch = &approx-string-match.default
+  sortByMatchQuality = (a, b) ->
+    a extract string as aString, errors as aErrors
+    b extract string as bString, errors as bErrors
+    aErrors - bErrors
+
+  @searchSort: (pattern, strings) =>
+    if present pattern
+      r = prepSearchMatch pattern
+      @approximateSearchSort pattern, array string in strings when r.test string
+    else strings
+
+  @autocompleteFromStrings: (strings) =>
+    (answersSoFar, input) ->
+      process.stdout extract columns
+
+      Promise.resolve
+        array str in @searchSort input, strings
+          str.slice 0, columns - 3
+
+  @approximateSearchSort: (pattern, strings) =>
+    r = prepSearchMatch pattern
+    sortedStringsWithErrors =
+      stableSort
+        array string in strings
+          if match = (string.match r)?[0]
+            {} string, errors: match.length - pattern.length
+          else {} string, errors: 1/0
+        sortByMatchQuality
+    array {string} in sortedStringsWithErrors with string
+
+  @answersToCommit: ({type, scope, trackerId, subject, body, footer, coauthor}) ->
+    compactFlattenAll
+      type
+      if scope then "" (#{scope})
+      ": "
+      if trackerId then "[#{trackerId}] "
+      subject
+      if body then "\n\n#{body.replace(/\n[\n\s]*/g, "\n")}"
+      if coauthor then "\n\n\nCoauthored-by: #{coauthor}"
+    .join ''
+    ##
+      <type>(<scope>): [(Starts|Finishes) #TRACKER_STORY_ID] <subject>
+      <BLANK LINE>
+      <body>
+      <BLANK LINE>
+      <footer>
+      <BLANK LINE>
+      <BLANK LINE>
+      Co-authored-by: name <name@example.com>
+      Co-authored-by: another-name <another-name@example.com>
+        changeType:      :feat
+      story:           '[171339446] (started) Update "About Page" with collage, move Kayak photo to Careers.'
+      subject:         ""
+      wantLongMessage: true
+      body:

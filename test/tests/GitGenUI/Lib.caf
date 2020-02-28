@@ -1,0 +1,156 @@
+import &StandardImport
+suite:
+  answersToCommit: ->
+    ##
+      <type>(<scope>): [(Starts|Finishes) #TRACKER_STORY_ID] <subject>
+      <BLANK LINE>
+      <body>
+      <BLANK LINE>
+      <footer>
+      <BLANK LINE>
+      <BLANK LINE>
+      Co-authored-by: name <name@example.com>
+      Co-authored-by: another-name <another-name@example.com>
+
+    exhibitA =
+      type:      :feat
+      story:           '[171339446] (started) Update "About Page" with collage, move Kayak photo to Careers.'
+      subject:         ""
+      wantLongMessage: true
+      body:
+        """
+          This is good, right?
+
+          And this?\n
+
+    test "type and subject" ->
+      assert.eq
+        answersToCommit
+          type: :feat
+          subject:    :hi
+        "" feat: hi
+
+    test "trackerId" ->
+      assert.eq
+        answersToCommit
+          type:       :feat
+          subject:    :hi
+          trackerId:  :123
+        "" feat: [123] hi
+
+    test "scope" ->
+      assert.eq
+        answersToCommit
+          type:       :feat
+          subject:    :hi
+          scope:      :neverland
+        "" feat(neverland): hi
+
+    test "coauthor" ->
+      assert.eq
+        answersToCommit
+          type:       :feat
+          subject:    :hi
+          coauthor:   :franky
+        """
+          feat: hi
+
+
+          Coauthored-by: franky
+
+    test "body" ->
+      assert.eq
+        answersToCommit
+          type:       :feat
+          subject:    :hi
+          body:
+            """
+              This is nifty, right?
+
+
+              And those new lines should get squashed
+
+        """
+          feat: hi
+
+          This is nifty, right?
+          And those new lines should get squashed
+
+  approximateSearchSort: ->
+    test :basics ->
+      assert.eq
+        approximateSearchSort 'hi', [] :h__i :h___i :h_i :hi
+        :hi :h_i :h__i :h___i
+
+    test :stable1 ->
+      assert.eq
+        approximateSearchSort 'hi', [] :def_h-i :abc_hi :def_hi :xyz_hi
+        :abc_hi :def_hi :xyz_hi :def_h-i
+
+    test :stable2 ->
+      assert.eq
+        approximateSearchSort 'hi', [] :def_h-i :def_hi :abc_hi  :xyz_hi
+        :def_hi :abc_hi :xyz_hi :def_h-i
+
+    test :stable2 ->
+      assert.eq
+        approximateSearchSort 'hi', [] :xyz_hi :def_h-i :def_hi :abc_hi
+        :xyz_hi :def_hi :abc_hi :def_h-i
+
+    test :regression1 ->
+      assert.eq
+        approximateSearchSort 'unstarted)', []
+          "" [170589418] (unstarted) On an iPhone, the home hero services menu has line wrapping in bad places. Needs some cleanup.
+          "" [170466089] (unscheduled) The navigation needs to appear in opposite colors (light bg, dark links) when it is displayed on a page that has a light background top slat.
+          "" [170465836] (unstarted) Footer needs cleanup
+          "" [170652027] (unstarted) Services pages need case studies
+          "" [170589433] (unstarted) Research SEO appropriate way to redirect genui.co to genui.com.
+
+        []
+          "" [170589418] (unstarted) On an iPhone, the home hero services menu has line wrapping in bad places. Needs some cleanup.
+          "" [170465836] (unstarted) Footer needs cleanup
+          "" [170652027] (unstarted) Services pages need case studies
+          "" [170589433] (unstarted) Research SEO appropriate way to redirect genui.co to genui.com.
+          "" [170466089] (unscheduled) The navigation needs to appear in opposite colors (light bg, dark links) when it is displayed on a page that has a light background top slat.
+
+    test :regression2 ->
+      assert.eq
+        approximateSearchSort :fix []
+          "" FIX:      bug fix
+          "" TEST:     tests added, improved or fixed
+        []
+          "" FIX:      bug fix
+          "" TEST:     tests added, improved or fixed
+
+
+  searchSort: ->
+    test :empty_results ->
+      assert.eq
+        searchSort "hi", [] :ho :hum
+        []
+
+    test :one_exact_result ->
+      assert.eq
+        searchSort "hi", [] :ho :hum :hi
+        [] :hi
+
+    test :approximate_matches ->
+      assert.eq
+        searchSort "hi", [] :hi :hooi "h i" "shoot it"
+        [] :hi "h i" :hooi  "shoot it"
+
+
+    test :almost_matches ->
+      assert.eq
+        searchSort "hi", [] :ih :i :h :shoot :it
+        []
+
+    test :mixed_matches ->
+      assert.eq
+        searchSort "hi", [] :ih :hi :ho :shoot_it
+        [] :hi :shoot_it
+
+    test :priorizied_matches ->
+      assert.eq
+        searchSort "hi", [] :h__i :h___i :h_i :hi
+        [] :hi, :h_i, :h__i, :h___i

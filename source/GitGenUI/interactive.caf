@@ -1,123 +1,67 @@
 import &ArtStandardLib, &Lib
 
 ({stories, members}) ->
-
-  questions =
-    # {}
-    #   type: 'confirm'
-    #   name: 'toBeDelivered'
-    #   message: 'Is this for delivery?'
-    #   default: false
-
-    # {}
-    #   type: 'input'
-    #   name: 'phone'
-    #   message: "What's your phone number?"
-    #   validate: (value) ->
-    #     ///i ^([01]{1})?[-.\s]?\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})\s?((?:#|ext\.?\s?|x\.?\s?){1}(?:\d+)?)?$
-    #     .test value
-    #     || 'Please enter a valid phone number'
-
-    # {}
-    #   type:     :expand
-    #   name:     :semanticVersioning
-    #   message: "" Semantic versioning: Is your change...
-    #   choices:
-    #     key: :m value: :major name: "" Major
-    #     key: :n value: :minor name: "" miNor
-    #     key: :p value: :patch name: "" Patch
-    #   filter: (val) -> val.toLowerCase()
-
+  &inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
+  &inquirer.prompt []
     {}
-      type:     :list
-      name:     :changeType
+      type:     :autocomplete
+      name:     :type
       message:  "" What type of commit is this? (select lowest matching number)
-      choices:
-        value: :feat        name: "" 1. new feature
-        value: :fix         name: "" 2. bug fix
-        value: :perf        name: "" 3. improved performance
-        value: :refactor    name: "" 4. refactor
-        value: :test        name: "" 5. tests added, improved or fixed
-        value: :docs        name: "" 6. documentation
-        value: :style       name: "" 7. code formatting
-        value: :chore       name: "" 8. chores and other changes (tooling, configuration, etc...)
+      source:
+        autocompleteFromStrings []
+          "" FEAT:     feature added
+          "" FIX:      bug fix
+          "" PERF:     performance enhancement
+          "" REFACTOR: code quality improved
+          "" TEST:     tests added, improved or fixed
+          "" DOCS:     documentation updated
+          "" STYLE:    code formatting improved
+          "" CHORE:    other changes (tooling, configuration, etc...)
+      filter: (val) -> val.split(":")[0].toLowerCase()
 
     {}
       type:     :autocomplete
-      name:     :story
+      name:     :trackerId
       message:  "" What story does this commit advance?
-      source: (answersSoFar, input) -> Promise.then ->
-        searchSort array {id, name} in stories with "" [#{id}] #{name}
+      source: autocompleteFromStrings array {id, state, name} in stories with "" [#{id}] (#{state}) #{name}
+      filter: (val) ->
+        if m = val.match /// ^ \[ ([^\]]+)
+          m[1]
 
     {}
       type:     :input
       name:     :subject
       message:  "" Enter git commit summary:
+      validate: (v) -> if present(v) then true else "" Please enter a summary
 
     {}
       type:     :expand
       name:     :wantLongMessage
       message:  "" Do you want to add details to your git commit?
-      default: false
+      default:  :no
       choices:
-        key: :N value: false name: "" no
-        key: :y value: true name: "" yes
+        key: :N value: :no name: "" no
+        key: :y value: :yes name: "" yes
 
     {}
       type:     :editor
       name:     :body
       message:  "" Git commit details
-      when:     ({wantLongMessage}) -> wantLongMessage
+      when:     ({wantLongMessage}) -> wantLongMessage == :yes
+      filter:   (v) -> v?.trim()
 
     {}
       type:     :autocomplete
-      name:     :pair
+      name:     :coauthor
       message:  "" Are you pairing with someone?
       default:  null
-      source: (answersSoFar, input) -> Promise.then ->
-        searchSort array {email, name} in stories with "" #{name} <#{email}>
+      source: autocompleteFromStrings compactFlattenAll "(no one)" array {email, name} in members with "" #{name} <#{email}>
 
-    # {}
-    #   type:     'input'
-    #   name:     'quantity'
-    #   message:  'How many do you need?',
-    #   validate: (value) ->
-    #     !isNaN(parseFloat(value))
-    #     || 'Please enter a number'
-
-    #   filter: Number
-
-    # {}
-    #   type:     :expand
-    #   name:     :toppings
-    #   message:  "" What about the toppings?
-    #   choices:
-    #     key: :p value: :PepperoniCheese name: "" Pepperoni and cheese
-    #     key: :a value: :alldressed      name: "" All dressed
-    #     key: :w value: :hawaiian        name: "" Hawaiian
-
-    # {}
-    #   type:     'rawlist'
-    #   name:     'beverage'
-    #   message:  'You also get a free 2L beverage'
-    #   choices:  :Pepsi :7up :Coke
-
-    # {}
-    #   type:     'input'
-    #   name:     'comments'
-    #   message:  'Any comments on your purchase experience?'
-    #   default:  'Nope, all good!'
-
-    # {}
-    #   type:     'list'
-    #   name:     'prize'
-    #   message:  'For leaving a comment, you get a freebie'
-    #   choices:  :cake :fries
-    #   when: (answers) -> answers.comments != 'Nope, all good!'
-
-  &inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
-  &inquirer
-  .prompt questions
   .then (answers) ->
+    answers.coauthor = null if answers.coauthor == "(no one)"
+
     log '\nOrder receipt:'
-    log {} answers
+    log {}
+      answers
+      commit: answersToCommit answers
+

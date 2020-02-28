@@ -1,0 +1,22 @@
+import &ArtStandardLib
+fs = &fsExtra
+
+run: ->
+  serve = -> log :serving
+
+  {argv} = &yargs
+    .command
+      'commit'
+      'interactive commit'
+
+      (argv) ->
+        Promise.deepAll {}
+          stories: &Tracker.getStories()
+          members: &Tracker.getMembers()
+        .then &interactive
+
+    .option
+      :verbose
+      alias:        :v
+      type:         :boolean
+      description:  "" Run with verbose logging
