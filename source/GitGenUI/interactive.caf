@@ -1,5 +1,12 @@
 import &ArtStandardLib, &Lib
 
+yesNoOptions =
+  type:     :expand
+  default:  :no
+  choices:
+    key: :N value: :no name: "" no
+    key: :y value: :yes name: "" yes
+
 ({stories, members}) ->
   &inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
   &inquirer.prompt []
@@ -23,6 +30,7 @@ import &ArtStandardLib, &Lib
       type:     :autocomplete
       name:     :trackerId
       message:  "" What story does this commit advance?
+      pageSize: 20
       source: autocompleteFromStrings array {id, state, name} in stories with "" [#{id}] (#{state}) #{name}
       filter: (val) ->
         if m = val.match /// ^ \[ ([^\]]+)
@@ -34,14 +42,9 @@ import &ArtStandardLib, &Lib
       message:  "" Enter git commit summary:
       validate: (v) -> if present(v) then true else "" Please enter a summary
 
-    {}
-      type:     :expand
+    merge yesNoOptions,
       name:     :wantLongMessage
       message:  "" Do you want to add details to your git commit?
-      default:  :no
-      choices:
-        key: :N value: :no name: "" no
-        key: :y value: :yes name: "" yes
 
     {}
       type:     :editor
@@ -62,6 +65,24 @@ import &ArtStandardLib, &Lib
 
     log '\nOrder receipt:'
     log {}
-      answers
-      commit: answersToCommit answers
+      commit_message: answersToCommit answers
+
+    &inquirer.prompt []
+      merge yesNoOptions,
+        type:     :expand
+        default:  :no
+        choices:
+          key: :y value: true   name: "" yes
+          key: :c value: false  name: "" cancel
+        name:     :commit
+        message:  "" 'git commit' now?
+    .then ({commit}) ->
+      if commit
+        log
+          """
+            git commit...
+          simpleGit = require('simple-git/promise') :.
+      else
+        log " canceled..."
+
 
