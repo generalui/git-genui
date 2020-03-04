@@ -1,9 +1,11 @@
-&gitGenuiConfig.tracker extract projectId, name
+import &StandardImport, &Config
 
-tracker = &Trackers[name]
+class Tracker extends BaseClass
 
-class Tracker
+  @classGetter
+    projectId:    -> config.tracker?.projectId
+    tracker:      -> &Trackers[config.tracker?.name]
 
-  @getStories:    -> tracker.getStories projectId
-  @getMembers:    -> tracker.getMembers projectId
-  @openInBrowser: -> tracker.openInBrowser projectId
+  @getStories:    => @tracker.getStories @projectId
+  @getMembers:    => @tracker.getMembers @projectId
+  @openInBrowser: => @tracker.openInBrowser @projectId

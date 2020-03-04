@@ -1,0 +1,35 @@
+import &StandardImport
+
+fs = &fsExtra
+path = &path
+glob = &globPromise
+
+class SourceRoots extends BaseClass
+
+  constructor: (rootFiles...) ->
+    @rootFiles = compactFlatten rootFiles
+    @knownSourceRoots = {}
+
+  @property :sourceRootIndicatorFiles :knownSourceRoots
+
+  findSourceRoot: (directory) ->
+    directory = path.resolve directory ? process.cwd()
+    fs.stat directory
+    .then (stat) ->
+      directory = path.dirname directory unless stat.isDirectory()
+      @knownSourceRoots[directory] ||
+        @_findRootR directory
+        .then (sourceRoot) -> @knownSourceRoots[directory] = sourceRoot || false
+
+  _findRootR: (directory) ->
+    Promise.all array file in @rootFiles
+      glob path.join directory, file
+      .then (found) -> found.length > 0
+
+    .then (rootFileExistResults) ->
+      if find rootFileExistResults
+        directory
+      else if directory != "/" && present directory
+        @_findRootR path.dirname(directory), @rootFiles
+      else
+        null

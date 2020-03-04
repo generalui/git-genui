@@ -1,0 +1,45 @@
+import &StandardImport, {}
+  &path
+  fs:   &fsExtra
+  glob: &globPromise
+
+class LoadConfig extends BaseClass
+
+  @registerLoadersFilename: :register.js
+  @configBasename: :git-genui.config
+  @sourceRootIndicatorFiles:
+    "" .git
+    "" ?(.)#{@configBasename}.*
+
+  # capture require (hack around webpack)
+  realRequire = eval :require
+
+  @config: {}
+
+  @classGetter repoRootPromise: -> @_repoRoot ?=
+    new SourceRoots @sourceRootIndicatorFiles
+    .findSourceRoot process.cwd()
+
+  @load: =>
+    @_registerLoaders()
+    .then -> @repoRootPromise
+    .then (repoRoot) ->
+      merge
+        @_loadOneConfig path.join &os.homedir(), @configBasename
+        @_loadOneConfig path.join repoRoot, @configBasename
+    .tap (config) ->
+      log loaded: config
+      mergeInto @config, config
+
+  #######################################
+    PRIVATE
+  #######################################
+  @_registerLoaders: (repoRoot = @repoRootPromise) =>
+    Promise.resolve repoRoot
+    .then (repoRoot) ->
+      file = path.join repoRoot, @registerLoadersFilename
+      realRequire file if fs.existsSync file
+
+  @_loadOneConfig: (baseName) =>
+    glob baseName + ".*"
+    .then (results) -> realRequire baseName if results.length > 0

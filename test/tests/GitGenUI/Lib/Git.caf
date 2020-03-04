@@ -1,0 +1,77 @@
+import &StandardImport
+suite:
+  answersToCommit: ->
+    ##
+      <type>(<scope>): [(Starts|Finishes) #TRACKER_STORY_ID] <subject>
+      <BLANK LINE>
+      <body>
+      <BLANK LINE>
+      <footer>
+      <BLANK LINE>
+      <BLANK LINE>
+      Co-authored-by: name <name@example.com>
+      Co-authored-by: another-name <another-name@example.com>
+
+    exhibitA =
+      type:      :feat
+      story:           '[171339446] (started) Update "About Page" with collage, move Kayak photo to Careers.'
+      subject:         ""
+      wantLongMessage: true
+      body:
+        """
+          This is good, right?
+
+          And this?\n
+
+    test "type and subject" ->
+      assert.eq
+        answersToCommit
+          type: :feat
+          subject:    :hi
+        "" feat: hi
+
+    test "trackerId" ->
+      assert.eq
+        answersToCommit
+          type:       :feat
+          subject:    :hi
+          trackerId:  :123
+        "" feat: [123] hi
+
+    test "scope" ->
+      assert.eq
+        answersToCommit
+          type:       :feat
+          subject:    :hi
+          scope:      :neverland
+        "" feat(neverland): hi
+
+    test "coauthor" ->
+      assert.eq
+        answersToCommit
+          type:       :feat
+          subject:    :hi
+          coauthor:   :franky
+        """
+          feat: hi
+
+
+          Coauthored-by: franky
+
+    test "body" ->
+      assert.eq
+        answersToCommit
+          type:       :feat
+          subject:    :hi
+          body:
+            """
+              This is nifty, right?
+
+
+              And those new lines should get squashed
+
+        """
+          feat: hi
+
+          This is nifty, right?
+          And those new lines should get squashed

@@ -1,0 +1,9 @@
+import &StandardImport, &SearchSort
+{}
+  autocompleteFromStrings = (strings) ->
+    (answersSoFar, input) ->
+      process.stdout extract columns
+
+      Promise.resolve
+        array str in searchSort input, strings
+          str.slice 0, columns - 3

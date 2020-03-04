@@ -5,4 +5,5 @@ module.exports = require('../namespace').addNamespace(
   'GitGenUi',
   class GitGenUi extends Neptune.PackageNamespace {}
 );
+require('./Lib/namespace');
 require('./Trackers/namespace');

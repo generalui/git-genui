@@ -1,0 +1,36 @@
+import &ArtStandardLib
+stableSort = &stable
+
+prepSearchMatch = (pattern) ->
+  if present pattern
+    new RegExp
+      array letter from pattern.split('') with escapeRegexp letter
+      .join '.*?'
+      :i
+  else /^/
+
+searchMatch = (pattern, string) ->
+  prepSearchMatch(pattern).test string
+
+sortByMatchQuality = (a, b) ->
+  a extract string as aString, errors as aErrors
+  b extract string as bString, errors as bErrors
+  aErrors - bErrors
+
+{}
+  searchSort = (pattern, strings) ->
+    if present pattern
+      r = prepSearchMatch pattern
+      approximateSearchSort pattern, array string in strings when r.test string
+    else strings
+
+  approximateSearchSort = (pattern, strings) ->
+    r = prepSearchMatch pattern
+    sortedStringsWithErrors =
+      stableSort
+        array string in strings
+          if match = (string.match r)?[0]
+            {} string, errors: match.length - pattern.length
+          else {} string, errors: 1/0
+        sortByMatchQuality
+    array {string} in sortedStringsWithErrors with string

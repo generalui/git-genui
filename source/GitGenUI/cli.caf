@@ -4,26 +4,28 @@ fs = &fsExtra
 run: ->
   serve = -> log :serving
 
-  {argv} = &yargs
-    .command
-      :open-tracker
-      "" open tracker in the browser
+  &Config.load()
+  .then ->
+    {argv} = &yargs
+      .command
+        :open-tracker
+        "" open tracker in the browser
 
-      ->
-        &Tracker.openInBrowser()
+        ->
+          &Tracker.openInBrowser()
 
-    .command
-      :commit
-      "" interactive commit
+      .command
+        :commit
+        "" interactive commit
 
-      (argv) ->
-        Promise.deepAll {}
-          stories: &Tracker.getStories()
-          members: &Tracker.getMembers()
-        .then &interactive
+        (argv) ->
+          Promise.deepAll {}
+            stories: &Tracker.getStories()
+            members: &Tracker.getMembers()
+          .then &interactive
 
-    .option
-      :verbose
-      alias:        :v
-      type:         :boolean
-      description:  "" Run with verbose logging
+      .option
+        :verbose
+        alias:        :v
+        type:         :boolean
+        description:  "" Run with verbose logging
