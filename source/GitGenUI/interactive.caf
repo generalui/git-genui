@@ -63,9 +63,16 @@ yesNoOptions =
   .then (answers) ->
     answers.coauthor = null if answers.coauthor == "(no one)"
 
+    require('simple-git/promise') :.
+    .status()
+    .then (status) -> {} answers, status = object key in Object.keys(status) with status[key]
+
+  .then ({status, answers}) ->
     log '\nOrder receipt:'
     log {}
-      commit_message: answersToCommit answers
+      status
+      commit_message = answersToCommit answers
+
 
     &inquirer.prompt []
       merge yesNoOptions,
@@ -78,10 +85,10 @@ yesNoOptions =
         message:  "" 'git commit' now?
     .then ({commit}) ->
       if commit
-        log
-          """
-            git commit...
-          simpleGit = require('simple-git/promise') :.
+        &Git.commit answers
+        .then (results) -> log success: results
+        .catch (error) -> log.error error
+
       else
         log " canceled..."
 

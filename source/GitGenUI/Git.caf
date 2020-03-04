@@ -1,0 +1,7 @@
+import &StandardImport
+SimpleGit = require(:simple-git/promise)()
+
+class Git
+
+  @commit: (options) ->
+    SimpleGit.commit answersToCommit options

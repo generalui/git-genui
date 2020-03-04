@@ -45,6 +45,8 @@ class Lib
     array {string} in sortedStringsWithErrors with string
 
   @answersToCommit: ({type, scope, trackerId, subject, body, footer, coauthor}) ->
+    throw new Error "missing subject" unless present subject
+    throw new Error "missing type" unless present type
     compactFlattenAll
       type
       if scope then "" (#{scope})
