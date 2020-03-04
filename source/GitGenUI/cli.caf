@@ -6,8 +6,15 @@ run: ->
 
   {argv} = &yargs
     .command
-      'commit'
-      'interactive commit'
+      :open-tracker
+      "" open tracker in the browser
+
+      ->
+        &Tracker.openInBrowser()
+
+    .command
+      :commit
+      "" interactive commit
 
       (argv) ->
         Promise.deepAll {}

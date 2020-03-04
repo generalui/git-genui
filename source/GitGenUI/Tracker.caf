@@ -4,5 +4,6 @@ tracker = &Trackers[name]
 
 class Tracker
 
-  @getStories: -> tracker.getStories projectId
-  @getMembers: -> tracker.getMembers projectId
+  @getStories:    -> tracker.getStories projectId
+  @getMembers:    -> tracker.getMembers projectId
+  @openInBrowser: -> tracker.openInBrowser projectId

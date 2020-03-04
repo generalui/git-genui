@@ -31,3 +31,6 @@ class PivotalTracker
     .then (memberships) ->
       array {person} in memberships
         {id, name, email} = person
+
+  @openInBrowser: (projectId) ->
+    &open "" https://www.pivotaltracker.com/n/projects/#{projectId}
