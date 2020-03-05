@@ -9,92 +9,96 @@ yesNoOptions =
 
 ({stories, members}) ->
   &inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
-  &inquirer.prompt []
-
-    {}
-      type:     :autocomplete
-      name:     :trackerId
-      message:  "" What story does this commit advance?
-      pageSize: 20
-      source: autocompleteFromStrings array {id, state, name} in stories with "" [#{id}] (#{state}) #{name}
-      filter: (val) ->
-        if m = val.match /// ^ \[ ([^\]]+)
-          m[1]
-
-    {}
-      type:     :autocomplete
-      name:     :type
-      pageSize: 20
-      message:  "" What type of commit is this? (select lowest matching number)
-      source:
-        autocompleteFromStrings []
-          "" test:      tests added, improved or fixed   version + 0.0.1 (patch)
-          "" fix:       code fixed and passing tests     version + 0.0.1 (patch)
-          "" feature:   feature added or extended        version + 0.1.0 (minor)
-          "" perf:      performance improved             version + 0.0.1 (patch)
-          "" refactor:  code quality improved            version + 0.0.1 (patch)
-          "" doc:       documentation updated            version + 0.0.1 (patch)
-          "" format:    code formatting improved         version + 0.0.1 (patch)
-          "" chore:     other changes                    version + 0.0.1 (patch)
-          "" depricate: feature depricated               version + 0.1.0 (minor)
-          "" change:    breaking change                  version + 1.0.0 (major)
-          "" removal:   breaking removal                 version + 1.0.0 (major)
-
-      filter: (val) -> val.split(":")[0].toLowerCase()
-
-    {}
-      type:     :input
-      name:     :subject
-      message:  "" Enter git commit summary:
-      validate: (v) -> if present(v) then true else "" Please enter a summary
-
-    merge yesNoOptions,
-      name:     :wantLongMessage
-      message:  "" Do you want to add details to your git commit?
-
-    {}
-      type:     :editor
-      name:     :body
-      message:  "" Git commit details
-      when:     ({wantLongMessage}) -> wantLongMessage == :yes
-      filter:   (v) -> v?.trim()
-
-    {}
-      type:     :autocomplete
-      name:     :coauthor
-      message:  "" Are you pairing with someone?
-      default:  null
-      source: autocompleteFromStrings compactFlattenAll "(no one)" array {email, name} in members with "" #{name} <#{email}>
-
-  .then (answers) ->
-    answers.coauthor = null if answers.coauthor == "(no one)"
-
-    require('simple-git/promise') :.
-    .status()
-    .then (status) -> {} answers, status = object key in Object.keys(status) with status[key]
-
-  .then ({status, answers}) ->
-    log '\nOrder receipt:'
-    log {}
-      status
-      commit_message = answersToCommit answers
+  &Git.status()
+  .then (status) ->
+    if status.staged.length == 0
+      log "Nothing is staged in git.\nPlease 'git add' something."
+      process.exit 1
 
     &inquirer.prompt []
-      merge yesNoOptions,
-        type:     :expand
-        default:  :no
-        choices:
-          key: :y value: true   name: "" yes
-          key: :c value: false  name: "" cancel
-        name:     :commit
-        message:  "" 'git commit' now?
-    .then ({commit}) ->
-      if commit
-        &Git.commit answers
-        .then (results) -> log success: results
-        .catch (error) -> log.error error
 
-      else
-        log " canceled..."
+      {}
+        type:     :autocomplete
+        name:     :trackerId
+        message:  "" What story does this commit advance?
+        pageSize: 20
+        source: autocompleteFromStrings array {id, state, name} in stories with "" [#{id}] (#{state}) #{name}
+        filter: (val) ->
+          if m = val.match /// ^ \[ ([^\]]+)
+            m[1]
+
+      {}
+        type:     :autocomplete
+        name:     :type
+        pageSize: 20
+        message:  "" What type of commit is this? (select lowest matching number)
+        source:
+          autocompleteFromStrings []
+            "" test:      tests added, improved or fixed   version + 0.0.1 (patch)
+            "" fix:       code fixed and passing tests     version + 0.0.1 (patch)
+            "" feature:   feature added or extended        version + 0.1.0 (minor)
+            "" perf:      performance improved             version + 0.0.1 (patch)
+            "" refactor:  code quality improved            version + 0.0.1 (patch)
+            "" doc:       documentation updated            version + 0.0.1 (patch)
+            "" format:    code formatting improved         version + 0.0.1 (patch)
+            "" chore:     other changes                    version + 0.0.1 (patch)
+            "" depricate: feature depricated               version + 0.1.0 (minor)
+            "" change:    breaking change                  version + 1.0.0 (major)
+            "" removal:   breaking removal                 version + 1.0.0 (major)
+
+        filter: (val) -> val.split(":")[0].toLowerCase()
+
+      {}
+        type:     :input
+        name:     :subject
+        message:  "" Enter git commit summary:
+        validate: (v) -> if present(v) then true else "" Please enter a summary
+
+      merge yesNoOptions,
+        name:     :wantLongMessage
+        message:  "" Do you want to add details to your git commit?
+
+      {}
+        type:     :editor
+        name:     :body
+        message:  "" Git commit details
+        when:     ({wantLongMessage}) -> wantLongMessage == :yes
+        filter:   (v) -> v?.trim()
+
+      {}
+        type:     :autocomplete
+        name:     :coauthor
+        message:  "" Are you pairing with someone?
+        default:  null
+        source: autocompleteFromStrings compactFlattenAll "(no one)" array {email, name} in members with "" #{name} <#{email}>
+
+    .then (answers) ->
+      answers.coauthor = null if answers.coauthor == "(no one)"
+      &Git.status()
+      .then (status) -> {} answers, status = object key in Object.keys(status) with status[key]
+
+    .then ({status, answers}) ->
+      log '\nOrder receipt:'
+      log {}
+        status
+        commit_message = answersToCommit answers
+
+      &inquirer.prompt []
+        merge yesNoOptions,
+          type:     :expand
+          default:  :no
+          choices:
+            key: :y value: true   name: "" yes
+            key: :c value: false  name: "" cancel
+          name:     :commit
+          message:  "" 'git commit' now?
+      .then ({commit}) ->
+        if commit
+          &Git.commit answers
+          .then (results) -> log success: results
+          .catch (error) -> log.error error
+
+        else
+          log " canceled..."
 
 

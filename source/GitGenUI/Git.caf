@@ -5,3 +5,5 @@ class Git
 
   @commit: (options) ->
     SimpleGit.commit answersToCommit options
+
+  @status: -> SimpleGit.status()
