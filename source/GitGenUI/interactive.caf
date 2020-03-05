@@ -7,10 +7,11 @@ yesNoOptions =
     key: :N value: :no name: "" no
     key: :y value: :yes name: "" yes
 
-({stories, members, myAccount}) ->
+({stories, members, myAccount, verbose}) ->
   &inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
   &Git.status()
   .then (status) ->
+    status = object key in Object.keys status with status[key]
     if status.staged.length == 0
       log "Nothing is staged in git.\nPlease 'git add' something."
       process.exit 1
@@ -79,10 +80,17 @@ yesNoOptions =
       .then (status) -> {} answers, status = object key in Object.keys(status) with status[key]
 
     .then ({status, answers}) ->
-      log '\nOrder receipt:'
-      log {}
-        status
-        commit_message = answersToCommit answers
+
+      each statusGroup in :not_added :conflicted :created :deleted :modified
+        if status[statusGroup]?.length > 0
+          log "#{dashCase statusGroup}:"
+          each item in status[statusGroup].slice 0, 20
+            log "  #{item}"
+          if status[statusGroup].length > 20
+            log "  ... #{status[statusGroup].length} total"
+          log ''
+
+      log commit-message: answersToCommit answers
 
       &inquirer.prompt []
         merge yesNoOptions,
