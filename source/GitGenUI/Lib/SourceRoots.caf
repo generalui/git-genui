@@ -10,10 +10,10 @@ class SourceRoots extends BaseClass
     @rootFiles = compactFlatten rootFiles
     @knownSourceRoots = {}
 
-  @property :sourceRootIndicatorFiles :knownSourceRoots
+  @property :sourceRootIndicatorFiles :knownSourceRoots :rootFiles
 
   findSourceRoot: (directory) ->
-    directory = path.resolve directory ? process.cwd()
+    directory = path.resolve directory
     fs.stat directory
     .then (stat) ->
       directory = path.dirname directory unless stat.isDirectory()
@@ -23,13 +23,14 @@ class SourceRoots extends BaseClass
 
   _findRootR: (directory) ->
     Promise.all array file in @rootFiles
-      glob path.join directory, file
-      .then (found) -> found.length > 0
+      glob p = path.join directory, file
+      .then (found) ->
+        true if found.length > 0
 
     .then (rootFileExistResults) ->
       if find rootFileExistResults
         directory
-      else if directory != "/" && present directory
+      else if directory != "/" && directory != &os.homedir() && present directory
         @_findRootR path.dirname(directory), @rootFiles
       else
         null

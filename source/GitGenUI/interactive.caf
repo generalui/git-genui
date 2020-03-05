@@ -10,21 +10,6 @@ yesNoOptions =
 ({stories, members}) ->
   &inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
   &inquirer.prompt []
-    {}
-      type:     :autocomplete
-      name:     :type
-      message:  "" What type of commit is this? (select lowest matching number)
-      source:
-        autocompleteFromStrings []
-          "" FEAT:     feature added
-          "" FIX:      bug fix
-          "" PERF:     performance enhancement
-          "" REFACTOR: code quality improved
-          "" TEST:     tests added, improved or fixed
-          "" DOCS:     documentation updated
-          "" STYLE:    code formatting improved
-          "" CHORE:    other changes (tooling, configuration, etc...)
-      filter: (val) -> val.split(":")[0].toLowerCase()
 
     {}
       type:     :autocomplete
@@ -35,6 +20,27 @@ yesNoOptions =
       filter: (val) ->
         if m = val.match /// ^ \[ ([^\]]+)
           m[1]
+
+    {}
+      type:     :autocomplete
+      name:     :type
+      pageSize: 20
+      message:  "" What type of commit is this? (select lowest matching number)
+      source:
+        autocompleteFromStrings []
+          "" test:      tests added, improved or fixed   version + 0.0.1 (patch)
+          "" fix:       code fixed and passing tests     version + 0.0.1 (patch)
+          "" feature:   feature added or extended        version + 0.1.0 (minor)
+          "" perf:      performance improved             version + 0.0.1 (patch)
+          "" refactor:  code quality improved            version + 0.0.1 (patch)
+          "" doc:       documentation updated            version + 0.0.1 (patch)
+          "" format:    code formatting improved         version + 0.0.1 (patch)
+          "" chore:     other changes                    version + 0.0.1 (patch)
+          "" depricate: feature depricated               version + 0.1.0 (minor)
+          "" change:    breaking change                  version + 1.0.0 (major)
+          "" removal:   breaking removal                 version + 1.0.0 (major)
+
+      filter: (val) -> val.split(":")[0].toLowerCase()
 
     {}
       type:     :input

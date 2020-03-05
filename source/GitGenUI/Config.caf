@@ -3,13 +3,14 @@ import &StandardImport, {}
   fs:   &fsExtra
   glob: &globPromise
 
-class LoadConfig extends BaseClass
+class Config extends BaseClass
 
   @registerLoadersFilename: :register.js
   @configBasename: :git-genui.config
+  @prefsBasename: :git-genui.config
   @sourceRootIndicatorFiles:
     "" .git
-    "" ?(.)#{@configBasename}.*
+    "" #{@configBasename}.*
 
   # capture require (hack around webpack)
   realRequire = eval :require
@@ -24,12 +25,11 @@ class LoadConfig extends BaseClass
     @_registerLoaders()
     .then -> @repoRootPromise
     .then (repoRoot) ->
-      merge
-        @_loadOneConfig path.join &os.homedir(), @configBasename
-        @_loadOneConfig path.join repoRoot, @configBasename
-    .tap (config) ->
-      log loaded: config
-      mergeInto @config, config
+      Promise.all []
+        @_loadOneConfig &os.homedir()
+        @_loadOneConfig repoRoot
+    .then (results) -> mergeInto @config, deepMerge @config, results...
+    .tap (config) -> log loaded: config
 
   #######################################
     PRIVATE
@@ -38,8 +38,11 @@ class LoadConfig extends BaseClass
     Promise.resolve repoRoot
     .then (repoRoot) ->
       file = path.join repoRoot, @registerLoadersFilename
-      realRequire file if fs.existsSync file
+      if fs.existsSync file
 
-  @_loadOneConfig: (baseName) =>
+        realRequire file
+
+  @_loadOneConfig: (dir, name = @configBasename) =>
+    baseName = path.join dir, name
     glob baseName + ".*"
     .then (results) -> realRequire baseName if results.length > 0

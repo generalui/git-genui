@@ -5,5 +5,6 @@
 
 .addModules({
   Git:        require('./Git'),
-  SearchSort: require('./SearchSort')
+  SearchSort: require('./SearchSort'),
+  SourceRoot: require('./SourceRoot')
 });
