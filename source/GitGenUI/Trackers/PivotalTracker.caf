@@ -25,6 +25,9 @@ class PivotalTracker extends BaseClass
           updatedAt: updated_at
           createdAt: created_at
 
+  @getMyAccount: =>
+    config.trackers.pivotalTracker.account
+
   @getMembers: (projectId) =>
     &ArtRestClient.getJson "#{baseUrl}/projects/#{projectId}/memberships" @commonRestOptions
     .then (memberships) ->

@@ -7,7 +7,7 @@ yesNoOptions =
     key: :N value: :no name: "" no
     key: :y value: :yes name: "" yes
 
-({stories, members}) ->
+({stories, members, myAccount}) ->
   &inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
   &Git.status()
   .then (status) ->
@@ -15,7 +15,7 @@ yesNoOptions =
       log "Nothing is staged in git.\nPlease 'git add' something."
       process.exit 1
 
-    &inquirer.prompt []
+    &inquirer.prompt compact []
 
       {}
         type:     :autocomplete
@@ -65,12 +65,13 @@ yesNoOptions =
         when:     ({wantLongMessage}) -> wantLongMessage == :yes
         filter:   (v) -> v?.trim()
 
-      {}
-        type:     :autocomplete
-        name:     :coauthor
-        message:  "" Are you pairing with someone?
-        default:  null
-        source: autocompleteFromStrings compactFlattenAll "(no one)" array {email, name} in members with "" #{name} <#{email}>
+      if (coauthorList = array member in members when member.id != myAccount.id).length > 0
+        {}
+          type:     :autocomplete
+          name:     :coauthor
+          message:  "" Are you pairing with someone?
+          default:  null
+          source: autocompleteFromStrings compactFlattenAll "(no one)" array {email, name} in coauthorList with "" #{name} <#{email}>
 
     .then (answers) ->
       answers.coauthor = null if answers.coauthor == "(no one)"

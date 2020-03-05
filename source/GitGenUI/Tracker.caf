@@ -5,7 +5,8 @@ class Tracker extends BaseClass
   @classGetter
     projectId:    -> config.tracker?.projectId
     tracker:      -> &Trackers[config.tracker?.name]
+    stories:      -> @tracker.getStories @projectId
+    members:      -> @tracker.getMembers @projectId
+    myAccount:    -> @tracker.getMyAccount @projectId
 
-  @getStories:    => @tracker.getStories @projectId
-  @getMembers:    => @tracker.getMembers @projectId
-  @openInBrowser: => @tracker.openInBrowser @projectId
+  openInBrowser:  -> @tracker.openInBrowser @projectId

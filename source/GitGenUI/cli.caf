@@ -23,8 +23,9 @@ run: ->
 
         (argv) ->
           Promise.deepAll {}
-            stories: &Tracker.getStories()
-            members: &Tracker.getMembers()
+            &Tracker.stories
+            &Tracker.members
+            &Tracker.myAccount
           .then &interactive
 
       .option
