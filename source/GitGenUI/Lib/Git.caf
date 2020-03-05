@@ -7,7 +7,7 @@ import &StandardImport
       type
       if scope then "" (#{scope})
       ": "
-      if trackerId then "[#{trackerId}] "
+      if trackerId then "[##{trackerId}] "
       subject
       if body then "\n\n#{body.replace(/\n[\n\s]*/g, "\n")}"
       if coauthor then "\n\n\nCoauthored-by: #{coauthor}"

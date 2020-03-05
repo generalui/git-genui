@@ -10,9 +10,12 @@ run: ->
       .command
         :open-tracker
         "" open tracker in the browser
+        -> &Tracker.openInBrowser()
 
-        ->
-          &Tracker.openInBrowser()
+      .command
+        :show-config
+        "" show the merged configurarion for git-genui
+        -> log {} &Config.config
 
       .command
         :commit

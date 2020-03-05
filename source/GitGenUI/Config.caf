@@ -29,7 +29,6 @@ class Config extends BaseClass
         @_loadOneConfig &os.homedir()
         @_loadOneConfig repoRoot
     .then (results) -> mergeInto @config, deepMerge @config, results...
-    .tap (config) -> log loaded: config
 
   #######################################
     PRIVATE
