@@ -1,4 +1,4 @@
-import &ArtStandardLib
+import &ArtStandardLib, &Commands
 fs = &fsExtra
 
 run: ->
@@ -18,15 +18,26 @@ run: ->
         -> log {} &Config.config
 
       .command
+        :status
+        "" show git status
+        ->
+          &Git.printStatus()
+
+      .command
         :commit
         "" interactive commit
 
         (argv) ->
-          Promise.deepAll {}
+          &Git.status()
+          .then (status) ->
+            if status.staged.length == 0
+              log "Nothing is staged in git.\nPlease 'git add' something."
+              process.exit 1
+          .then -> Promise.deepAll {}
             &Tracker.stories
             &Tracker.members
             &Tracker.myAccount
-          .then &interactive
+          .then Commit
 
       .option
         :verbose

@@ -1,4 +1,4 @@
-import &StandardImport
+import &StandardImport, {} &colors
 SimpleGit = require(:simple-git/promise)()
 
 class Git
@@ -6,4 +6,58 @@ class Git
   @commit: (options) ->
     SimpleGit.commit answersToCommit options
 
-  @status: -> SimpleGit.status()
+  @status: ->
+    SimpleGit.status()
+    .then (o) -> object k in Object.keys o with o[k]
+
+  @printStatus: ->
+    unstagedColors =
+      deleted:    :red
+      conflicted: :magenta
+      added:      :yellow
+      renamed:    :blue
+      modified:   :cyan
+      created:        :gray
+      staged:     :green
+
+    stagedColors =
+      deleted:    :brightRed
+      conflicted: :brightMagenta
+      added:      :brightYellow
+      renamed:    :brightBlue
+      modified:   :brightCyan
+      created:        :brightGray
+      staged:     :brightGreen
+
+    statuses =
+      D: :deleted
+      C: :conflicted
+      R: :renamed
+      A: :added
+      M: :modified
+      ?: :created
+
+    @status()
+    .then (status) ->
+      log "branch: #{colors.green status.current} #{colors.grey "(#{status.tracking})"}"
+      outputOne = ({path}, status, _colors) ->
+        status = statuses[status] ? status
+        colors[_colors[status] ? :gray] "  #{status} #{path}"
+
+      staged = []
+      unstaged = []
+      each file in status.files
+        if !present file.working_dir
+          staged.push outputOne file, file.index, stagedColors
+        else
+          unstaged.push outputOne file, file.working_dir, {}
+
+      if staged.length > 0
+        log "" \nstaged to commit:
+        log staged.sort().join :\n
+
+
+      if unstaged.length > 0
+        log "" \nnot staged to commit:
+        log unstaged.sort().join :\n
+

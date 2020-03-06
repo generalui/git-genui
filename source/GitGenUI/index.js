@@ -7,10 +7,10 @@
   Cli:            require('./cli'),
   Config:         require('./Config'),
   Git:            require('./Git'),
-  Interactive:    require('./interactive'),
   Pizza:          require('./pizza'),
   StandardImport: require('./StandardImport'),
   Tracker:        require('./Tracker')
 });
+require('./Commands');
 require('./Lib');
 require('./Trackers');

@@ -16,7 +16,7 @@ yesNoOptions =
       log "Nothing is staged in git.\nPlease 'git add' something."
       process.exit 1
 
-    &inquirer.prompt compact []
+    Promise.then -> &inquirer.prompt compact []
 
       {}
         type:     :autocomplete
@@ -35,17 +35,17 @@ yesNoOptions =
         message:  "" What type of commit is this? (select lowest matching number)
         source:
           autocompleteFromStrings []
-            "" test:      tests added, improved or fixed   version + 0.0.1 (patch)
-            "" fix:       code fixed and passing tests     version + 0.0.1 (patch)
-            "" feature:   feature added or extended        version + 0.1.0 (minor)
-            "" perf:      performance improved             version + 0.0.1 (patch)
-            "" refactor:  code quality improved            version + 0.0.1 (patch)
-            "" doc:       documentation updated            version + 0.0.1 (patch)
-            "" format:    code formatting improved         version + 0.0.1 (patch)
-            "" chore:     other changes                    version + 0.0.1 (patch)
-            "" depricate: feature depricated               version + 0.1.0 (minor)
-            "" change:    breaking change                  version + 1.0.0 (major)
-            "" removal:   breaking removal                 version + 1.0.0 (major)
+            "" patch/test:      tests added, improved or fixed   version + 0.0.1 ()
+            "" patch/fix:       code fixed and passing tests     version + 0.0.1 ()
+            "" minor/feature:   feature added or extended        version + 0.1.0 ()
+            "" patch/perf:      performance improved             version + 0.0.1 ()
+            "" patch/refactor:  code quality improved            version + 0.0.1 ()
+            "" patch/doc:       documentation updated            version + 0.0.1 ()
+            "" patch/format:    code formatting improved         version + 0.0.1 ()
+            "" patch/chore:     other changes                    version + 0.0.1 ()
+            "" minor/depricate: feature depricated               version + 0.1.0 ()
+            "" major/change:    breaking change                  version + 1.0.0 ()
+            "" major/removal:   breaking removal                 version + 1.0.0 ()
 
         filter: (val) -> val.split(":")[0].toLowerCase()
 
@@ -74,23 +74,14 @@ yesNoOptions =
           default:  null
           source: autocompleteFromStrings compactFlattenAll "(no one)" array {email, name} in coauthorList with "" #{name} <#{email}>
 
-    .then (answers) ->
+    .tap (answers) ->
       answers.coauthor = null if answers.coauthor == "(no one)"
-      &Git.status()
-      .then (status) -> {} answers, status = object key in Object.keys(status) with status[key]
+      log ''
+      &Git.printStatus()
 
-    .then ({status, answers}) ->
+    .then (answers) ->
 
-      each statusGroup in :not_added :conflicted :created :deleted :modified
-        if status[statusGroup]?.length > 0
-          log "#{dashCase statusGroup}:"
-          each item in status[statusGroup].slice 0, 20
-            log "  #{item}"
-          if status[statusGroup].length > 20
-            log "  ... #{status[statusGroup].length} total"
-          log ''
-
-      log commit-message: answersToCommit answers
+      log "\ncommit-message: #{&colors.green answersToCommit answers}\n"
 
       &inquirer.prompt []
         merge yesNoOptions,
