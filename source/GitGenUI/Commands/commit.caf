@@ -48,6 +48,7 @@ yesNoOptions =
             "" patch/perf:      performance improved             version + 0.0.1 ()
             "" patch/refactor:  code quality improved            version + 0.0.1 ()
             "" patch/doc:       documentation updated            version + 0.0.1 ()
+            "" patch/asset:     asset/string added/improved      version + 0.0.1 ()
             "" patch/other:     other changes                    version + 0.0.1 ()
             "" minor/feature:   feature added or extended        version + 0.1.0 ()
             "" minor/depricate: feature depricated               version + 0.1.0 ()
