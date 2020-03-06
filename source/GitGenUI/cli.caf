@@ -27,19 +27,7 @@ run: ->
         :commit
         "" interactive commit
 
-        (argv) ->
-          &Git.status()
-          .then (status) ->
-            if status.staged.length == 0
-              &Git.printStatus()
-              .then ->
-                log "\nNothing is staged in git.\nPlease 'git add' something."
-                process.exit 1
-          .then -> Promise.deepAll {}
-            &Tracker.stories
-            &Tracker.members
-            &Tracker.myAccount
-          .then Commit
+        Commit
 
       .option
         :verbose
