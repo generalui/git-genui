@@ -3,7 +3,8 @@ GitGenUI.Trackers extract PivotalTracker
 
 suite: ->
   chainedTest :getProjects ->
-    PivotalTracker.getProjects()
+    &source/GitGenUI.Config.load()
+    .then -> PivotalTracker.getProjects()
     .then (results) ->
       assert.isArray results
       assert.gt results.length, 0

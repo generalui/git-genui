@@ -36,7 +36,7 @@ suite:
           type:       :feat
           subject:    :hi
           trackerId:  :123
-        "" feat: [123] hi
+        "" feat: [#123] hi
 
     test "scope" ->
       assert.eq
