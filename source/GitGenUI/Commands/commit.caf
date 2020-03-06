@@ -31,6 +31,11 @@ yesNoOptions =
           else if m = val.match /// ^ \[ ([^\]]+)
             m[1]
 
+      merge yesNoOptions,
+        name:     :storyFinished
+        when:     ({trackerId}) -> trackerId?
+        message:  "" Is the tracker-story finished?
+
       {}
         type:     :autocomplete
         name:     :type
