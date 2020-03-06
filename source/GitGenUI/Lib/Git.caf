@@ -1,13 +1,17 @@
 import &StandardImport
 {}
-  answersToCommit = ({type, scope, trackerId, subject, body, footer, coauthor}) ->
+  answersToCommit = ({type, scope, story, subject, body, footer, coauthor, storyFinished}) ->
     throw new Error "missing subject" unless present subject
     throw new Error "missing type" unless present type
     compactFlattenAll
       type
       if scope then "" (#{scope})
       ": "
-      if trackerId then "[##{trackerId}] "
+      if story
+        statusString = switch
+        when storyFinished then " finished"
+        when story.status == "unstarted" then " started"
+        "[##{story.id}#{statusString}] "
       subject
       if body then "\n\n#{body.replace(/\n[\n\s]*/g, "\n")}"
       if coauthor then "\n\n\nCoauthored-by: #{coauthor}"

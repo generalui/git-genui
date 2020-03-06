@@ -30,13 +30,31 @@ suite:
           subject:    :hi
         "" feat: hi
 
-    test "trackerId" ->
+    test "story: id: 123" ->
       assert.eq
         answersToCommit
           type:       :feat
           subject:    :hi
-          trackerId:  :123
+          story: id: 123
         "" feat: [#123] hi
+
+    test "story: id: 123 status: :unstarted" ->
+      assert.eq
+        answersToCommit
+          type:       :feat
+          subject:    :hi
+          story: id: 123 status: :unstarted
+        "" feat: [#123 started] hi
+
+    test :storyFinished ->
+      assert.eq
+        answersToCommit
+          type:       :feat
+          subject:    :hi
+          story: id:  123
+          storyFinished: true
+        "" feat: [#123 finished] hi
+
 
     test "scope" ->
       assert.eq

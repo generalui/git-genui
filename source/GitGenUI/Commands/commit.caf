@@ -20,7 +20,7 @@ yesNoOptions =
 
       {}
         type:     :autocomplete
-        name:     :trackerId
+        name:     :story
         message:  "" What story does this commit advance?
         pageSize: 20
         source: autocompleteFromStrings compactFlatten []
@@ -29,11 +29,12 @@ yesNoOptions =
         filter: (val) ->
           if val == "(none)" then null
           else if m = val.match /// ^ \[ ([^\]]+)
-            m[1]
+            id = m[1]
+            find story in stories when "#{story.id}" == id
 
       merge yesNoOptions,
         name:     :storyFinished
-        when:     ({trackerId}) -> trackerId?
+        when:     ({story}) -> story?
         message:  "" Is the story finished?
 
       {}
@@ -57,30 +58,34 @@ yesNoOptions =
 
         filter: (val) -> val.split(":")[0].toLowerCase()
 
-      {}
-        type:     :input
-        name:     :subject
-        message:  "" Enter git commit summary:
-        validate: (v) -> if present(v) then true else "" Please enter a summary
-
-      merge yesNoOptions,
-        name:     :wantLongMessage
-        message:  "" Do you want to add details to your git commit?
-
-      {}
-        type:     :editor
-        name:     :body
-        message:  "" Git commit details
-        when:     ({wantLongMessage}) -> wantLongMessage == :yes
-        filter:   (v) -> v?.trim()
-
-      if (coauthorList = array member in members when member.id != myAccount.id).length > 0
+    .then (answers) ->
+      &inquirer.prompt compact []
         {}
-          type:     :autocomplete
-          name:     :coauthor
-          message:  "" Are you pairing with someone?
-          default:  null
-          source: autocompleteFromStrings compactFlattenAll "(no one)" array {email, name} in coauthorList with "" #{name} <#{email}>
+          type:     :input
+          name:     :subject
+          default:  answers.story?.name
+          message:  "" Enter git commit message:
+          validate: (v) -> if present(v) then true else "" Please enter a message
+
+        # merge yesNoOptions,
+        #   name:     :wantLongMessage
+        #   message:  "" Do you want to add details to your git commit?
+
+        # {}
+        #   type:     :editor
+        #   name:     :body
+        #   message:  "" Git commit details
+        #   when:     ({wantLongMessage}) -> wantLongMessage == :yes
+        #   filter:   (v) -> v?.trim()
+
+        if (coauthorList = array member in members when member.id != myAccount.id).length > 0
+          {}
+            type:     :autocomplete
+            name:     :coauthor
+            message:  "" Are you pairing with someone?
+            default:  null
+            source: autocompleteFromStrings compactFlattenAll "(no one)" array {email, name} in coauthorList with "" #{name} <#{email}>
+      .then (_a) -> merge answers, _a
 
     .tap (answers) ->
       answers.coauthor = null if answers.coauthor == "(no one)"
