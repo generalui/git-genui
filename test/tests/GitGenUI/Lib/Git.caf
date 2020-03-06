@@ -44,7 +44,7 @@ suite:
           type:       :feat
           subject:    :hi
           story: id: 123 status: :unstarted
-        "" feat: [#123 started] hi
+        "" feat: [#123] (started) hi
 
     test :storyFinished ->
       assert.eq
@@ -53,7 +53,7 @@ suite:
           subject:    :hi
           story: id:  123
           storyFinished: true
-        "" feat: [#123 finished] hi
+        "" feat: [#123] (finished) hi
 
 
     test "scope" ->

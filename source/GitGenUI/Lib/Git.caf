@@ -9,9 +9,9 @@ import &StandardImport
       ": "
       if story
         statusString = switch
-        when storyFinished then " finished"
-        when story.status == "unstarted" then " started"
-        "[##{story.id}#{statusString}] "
+        when storyFinished then " (finished)"
+        when story.status == "unstarted" then " (started)"
+        "[##{story.id}]#{statusString} "
       subject
       if body then "\n\n#{body.replace(/\n[\n\s]*/g, "\n")}"
       if coauthor then "\n\n\nCoauthored-by: #{coauthor}"
