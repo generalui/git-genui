@@ -34,7 +34,7 @@ yesNoOptions =
       merge yesNoOptions,
         name:     :storyFinished
         when:     ({trackerId}) -> trackerId?
-        message:  "" Is the tracker-story finished?
+        message:  "" Is the story finished?
 
       {}
         type:     :autocomplete
