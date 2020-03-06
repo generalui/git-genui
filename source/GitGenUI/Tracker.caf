@@ -9,4 +9,4 @@ class Tracker extends BaseClass
     members:      -> @tracker.getMembers @projectId
     myAccount:    -> @tracker.getMyAccount @projectId
 
-  openInBrowser:  -> @tracker.openInBrowser @projectId
+  @openInBrowser:  -> @tracker.openInBrowser @projectId
