@@ -23,26 +23,28 @@ yesNoOptions =
         name:     :trackerId
         message:  "" What story does this commit advance?
         pageSize: 20
-        source: autocompleteFromStrings array {id, state, name} in stories with "" [#{id}] (#{state}) #{name}
+        source: autocompleteFromStrings compactFlatten []
+          "(none)"
+          array {id, state, name} in stories with "" [#{id}] (#{state}) #{name}
         filter: (val) ->
-          if m = val.match /// ^ \[ ([^\]]+)
+          if val == "(none)" then null
+          else if m = val.match /// ^ \[ ([^\]]+)
             m[1]
 
       {}
         type:     :autocomplete
         name:     :type
         pageSize: 20
-        message:  "" What type of commit is this? (select lowest matching number)
+        message:  "" What type of commit is this?
         source:
           autocompleteFromStrings []
             "" patch/test:      tests added, improved or fixed   version + 0.0.1 ()
             "" patch/fix:       code fixed and passing tests     version + 0.0.1 ()
-            "" minor/feature:   feature added or extended        version + 0.1.0 ()
             "" patch/perf:      performance improved             version + 0.0.1 ()
             "" patch/refactor:  code quality improved            version + 0.0.1 ()
             "" patch/doc:       documentation updated            version + 0.0.1 ()
-            "" patch/format:    code formatting improved         version + 0.0.1 ()
-            "" patch/chore:     other changes                    version + 0.0.1 ()
+            "" patch/other:     other changes                    version + 0.0.1 ()
+            "" minor/feature:   feature added or extended        version + 0.1.0 ()
             "" minor/depricate: feature depricated               version + 0.1.0 ()
             "" major/change:    breaking change                  version + 1.0.0 ()
             "" major/removal:   breaking removal                 version + 1.0.0 ()
@@ -100,5 +102,3 @@ yesNoOptions =
 
         else
           log " canceled..."
-
-
