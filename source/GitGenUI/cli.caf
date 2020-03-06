@@ -31,8 +31,10 @@ run: ->
           &Git.status()
           .then (status) ->
             if status.staged.length == 0
-              log "Nothing is staged in git.\nPlease 'git add' something."
-              process.exit 1
+              &Git.printStatus()
+              .then ->
+                log "\nNothing is staged in git.\nPlease 'git add' something."
+                process.exit 1
           .then -> Promise.deepAll {}
             &Tracker.stories
             &Tracker.members
