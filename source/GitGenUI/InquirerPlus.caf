@@ -1,0 +1,20 @@
+import &StandardImport
+&inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
+
+class InquirerPlus
+  @Inquirer: (prompts...) -> &inquirer.prompt compactFlatten prompts
+
+  @AutoCompleteFromStrings: (options) ->
+    merge
+      type:     :autocomplete
+      source:   autocompleteFromStrings compactFlatten options.strings
+      options
+
+  @YesNo: (options) ->
+    merge
+      type:     :expand
+      default:  :no
+      choices:
+        key: :N value: :no name: "" no
+        key: :y value: :yes name: "" yes
+      options

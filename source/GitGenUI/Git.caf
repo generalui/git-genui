@@ -4,10 +4,10 @@ SimpleGit = require(:simple-git/promise)()
 class Git
 
   @commit: (options) ->
-    SimpleGit.commit answersToCommit options
+    Promise.then -> SimpleGit.commit answersToCommit options
 
   @status: ->
-    SimpleGit.status()
+    Promise.then -> SimpleGit.status()
     .then (o) -> object k in Object.keys o with o[k]
 
   @printStatus: ->
@@ -38,7 +38,7 @@ class Git
       ?: :created
 
     @status()
-    .then (status) ->
+    .tap (status) ->
       log "branch: #{colors.green status.current} #{colors.grey "(#{status.tracking})"}"
       outputOne = ({path}, status, _colors) ->
         status = statuses[status] ? status
