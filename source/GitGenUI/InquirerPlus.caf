@@ -4,17 +4,27 @@ import &StandardImport
 class InquirerPlus
   @Inquirer: (prompts...) -> &inquirer.prompt compactFlatten prompts
 
-  @AutoCompleteFromStrings: (options) ->
+  @AutoCompleteQ: (options) ->
     merge
       type:     :autocomplete
-      source:   autocompleteFromStrings compactFlatten options.strings
+      source:   AutoCompleteQ compactFlatten options.strings
       options
 
-  @YesNo: (options) ->
+  @YesNoQ: (options) ->
     merge
       type:     :expand
       default:  :no
       choices:
         key: :N value: :no name: "" no
         key: :y value: :yes name: "" yes
+      options
+
+  @InputQ: (options) ->
+    merge
+      type: :input
+      options
+
+  @PasswordQ: (options) ->
+    merge
+      type: :password
       options

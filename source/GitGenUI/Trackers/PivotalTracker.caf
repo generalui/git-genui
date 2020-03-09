@@ -26,7 +26,8 @@ class PivotalTracker extends BaseClass
           createdAt: created_at
 
   @getMyAccount: =>
-    config.trackers.pivotalTracker.account
+    &ArtRestClient.getJson :https://www.pivotaltracker.com/services/v5/me?date_format=millis @commonRestOptions
+    .then @_processPivotalTrackerMe
 
   @getMembers: (projectId) =>
     &ArtRestClient.getJson "#{baseUrl}/projects/#{projectId}/memberships" @commonRestOptions
@@ -36,3 +37,15 @@ class PivotalTracker extends BaseClass
 
   @openInBrowser: (projectId) ->
     &open "" https://www.pivotaltracker.com/n/projects/#{projectId}
+
+  @_processPivotalTrackerMe: (account) ->
+    merge
+      object v, k from account when k != :api_token && k != :kind with-key lowerCamelCase k
+      tracker: :PivotalTracker
+
+  @authenticate: ({username, password}) ->
+    &ArtRestClient.getJson :https://www.pivotaltracker.com/services/v5/me merge
+      verbose: true
+      headers:
+        Authorization: "" Basic #{} &btoa "#{username}:#{password}"
+    .then @_processPivotalTrackerMe

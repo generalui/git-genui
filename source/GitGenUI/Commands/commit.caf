@@ -21,7 +21,7 @@ import &StandardImport, &InquirerPlus
         process.exit 1
 
       Promise.then -> Inquirer
-        AutoCompleteFromStrings
+        AutoCompleteQ
           name:     :story
           message:  "" What story does this commit advance?
           pageSize: 20
@@ -35,12 +35,12 @@ import &StandardImport, &InquirerPlus
               id = m[1]
               find story in stories when "#{story.id}" == id
 
-        YesNo
+        YesNoQ
           name:     :storyFinished
           when:     ({story}) -> story?
           message:  "" Is the story finished?
 
-        AutoCompleteFromStrings
+        AutoCompleteQ
           name:     :type
           pageSize: 20
           message:  "" What type of commit is this?
@@ -60,14 +60,13 @@ import &StandardImport, &InquirerPlus
 
       .then (answers) ->
         Inquirer
-          {}
-            type:     :input
+          InputQ
             name:     :subject
             default:  answers.story?.name
             message:  "" Enter git commit message:
             validate: (v) -> if present(v) then true else "" Please enter a message
 
-          # merge yesNoOptions,
+          # merge YesNoQOptions,
           #   name:     :wantLongMessage
           #   message:  "" Do you want to add details to your git commit?
 
@@ -79,7 +78,7 @@ import &StandardImport, &InquirerPlus
           #   filter:   (v) -> v?.trim()
 
           if (coauthorList = array member in members when member.id != myAccount.id).length > 0
-            AutoCompleteFromStrings
+            AutoCompleteQ
               name:     :coauthor
               message:  "" Are you pairing with someone?
               default:  null
@@ -97,7 +96,7 @@ import &StandardImport, &InquirerPlus
         log "\ncommit-message: #{&colors.green answersToCommit answers}\n"
 
         Inquirer
-          YesNo
+          YesNoQ
             type:     :expand
             default:  :no
             choices:

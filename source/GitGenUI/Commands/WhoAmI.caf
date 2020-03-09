@@ -1,0 +1,6 @@
+import &StandardImport
+
+(options) ->
+  &Tracker.myAccount
+  .then (account) ->
+    log object v from account when !(v is Array) && !(v is Object)

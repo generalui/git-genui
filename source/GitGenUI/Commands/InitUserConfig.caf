@@ -1,0 +1,18 @@
+import &StandardImport, &InquirerPlus
+
+(options) ->
+  log "ok"
+  Inquirer
+
+    InputQ
+      name: :username
+      message: "" What is your PivotalTracker email?
+
+    PasswordQ
+      name: :password
+      message: "" What is your PivotalTracker password? (used only to fetch API token)
+
+  .then (answers)->
+    &Tracker.authenticate answers
+  # .then ({token}) ->
+  #   &Config.

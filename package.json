@@ -1,8 +1,10 @@
 {
   "dependencies": {
     "approx-string-match": "^1.1.0",
+    "art-binary": "^1.1.3",
     "art-rest-client": "^1.7.0",
     "art-testbench": "^1.17.2",
+    "btoa": "^1.2.1",
     "caffeine-script": "^0.72.1",
     "chai": "^4.2.0",
     "fs-extra": "^8.1.0",

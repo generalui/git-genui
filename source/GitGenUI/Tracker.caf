@@ -10,3 +10,5 @@ class Tracker extends BaseClass
     myAccount:    -> @tracker.getMyAccount @projectId
 
   @openInBrowser:  -> @tracker.openInBrowser @projectId
+
+  @authenticate:   (options) -> @tracker.authenticate options

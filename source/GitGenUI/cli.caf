@@ -18,6 +18,16 @@ run: ->
         -> log {} &Config.config
 
       .command
+        :who-am-i
+        "" show which tracker account you are logged in with
+        WhoAmI
+
+      .command
+        :init-user-config
+        "" initialize ~/git-genui.config.js with your PivotalTracker information
+        InitUserConfig
+
+      .command
         :status
         "" show git status
         ->
@@ -26,7 +36,6 @@ run: ->
       .command
         :commit
         "" interactive commit
-
         Commit
 
       .option

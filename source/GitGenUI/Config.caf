@@ -7,7 +7,6 @@ class Config extends BaseClass
 
   @registerLoadersFilename: :register.js
   @configBasename: :git-genui.config
-  @prefsBasename: :git-genui.config
   @sourceRootIndicatorFiles:
     "" .git
     "" #{@configBasename}.*
@@ -17,29 +16,49 @@ class Config extends BaseClass
 
   @config: {}
 
-  @classGetter repoRootPromise: -> @_repoRoot ?=
-    new SourceRoots @sourceRootIndicatorFiles
-    .findSourceRoot process.cwd()
+  @classGetter
+    userConfigPath: -> @userHome.then (dir) -> "#{dir}/#{@configBasename}"
+    repoConfigPath: -> @repoRoot.then (dir) -> "#{dir}/#{@configBasename}"
+    userHome: -> @_registerLoaders().then -> &os.homedir()
+    repoRoot: -> @_repoRoot ?=
+      new SourceRoots @sourceRootIndicatorFiles
+      .findSourceRoot process.cwd()
 
-  @load: =>
-    @_registerLoaders()
-    .then -> @repoRootPromise
-    .then (repoRoot) ->
+    userConfig:     -> @_userConfig    ?= @userHome.then @_loadOneConfig
+    projectConfig:  -> @_projectConfig ?= @repoRoot.then @_loadOneConfig
+
+    configPromise: =>
       Promise.all []
-        @_loadOneConfig &os.homedir()
-        @_loadOneConfig repoRoot
-    .then (results) -> mergeInto @config, deepMerge @config, results...
+        @userConfig
+        @projectConfig
+      .then (results) -> deepMerge @config, results...
+
+  @writeUserConfig: (newConfig, mergeWithExisting = true) =>
+    Promise.all []
+      @getUpdatedUserConfig newConfig, mergeWithExisting
+      @userConfigPath
+    .then (str, userConfigPath) ->
+      &fsExtra.writeFile filePath = userConfigPath + ".js", str
+      .then -> filePath
+
+  @getUpdatedUserConfig: (newConfig, mergeWithExisting = true) =>
+    if mergeWithExisting then @userConfig.then (existingConfig) -> deepMerge existingConfig, newConfig
+    else Promise.resolve newConfig
+    .then (configToWrite) -> "" module.export = #{} JSON.stringify configToWrite, null, "  "
+
+  @load: => @configPromise.then (config) -> mergeInto @config, config
 
   #######################################
     PRIVATE
   #######################################
-  @_registerLoaders: (repoRoot = @repoRootPromise) =>
-    Promise.resolve repoRoot
-    .then (repoRoot) ->
-      file = path.join repoRoot, @registerLoadersFilename
-      if fs.existsSync file
+  @_prepForConfigLoad: =>
 
-        realRequire file
+  @_registerLoaders: (repoRoot = @repoRoot) =>
+    @__registerLoaders ?=
+      Promise.then -> repoRoot
+      .then (repoRoot) ->
+        if fs.existsSync file = path.join repoRoot, @registerLoadersFilename
+          realRequire file
 
   @_loadOneConfig: (dir, name = @configBasename) =>
     baseName = path.join dir, name

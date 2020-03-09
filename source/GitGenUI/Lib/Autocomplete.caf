@@ -1,6 +1,6 @@
 import &StandardImport, &SearchSort
 {}
-  autocompleteFromStrings = (strings) ->
+  AutoCompleteQ = (strings) ->
     (answersSoFar, input) ->
       process.stdout extract columns
 

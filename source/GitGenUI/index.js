@@ -7,6 +7,7 @@
   Cli:            require('./cli'),
   Config:         require('./Config'),
   Git:            require('./Git'),
+  InquirerPlus:   require('./InquirerPlus'),
   Pizza:          require('./pizza'),
   StandardImport: require('./StandardImport'),
   Tracker:        require('./Tracker')
