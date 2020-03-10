@@ -44,5 +44,6 @@ import &StandardImport, &InquirerPlus, {} &colors
         &Config.writeUserConfig accounts:
           pivotalTracker: {} token
           git: email: gitEmail
+
       .then (writtenFile) ->
         log colors.green "Success. Wrote: #{writtenFile}"

@@ -1,4 +1,4 @@
-import &StandardImport, &Config
+import &StandardImport, &Config, &ArtRestClient
 
 baseUrl = :https://www.pivotaltracker.com/services/v5
 
@@ -6,31 +6,24 @@ class PivotalTracker extends BaseClass
   @classGetter commonRestOptions: ->
     normalizedHeaders: X-TrackerToken: config.accounts.pivotalTracker.token
 
+  #####################################
+    READ
+  #####################################
   @getProjects: =>
-    &ArtRestClient.getJson :https://www.pivotaltracker.com/services/v5/projects @commonRestOptions
+    getJson :https://www.pivotaltracker.com/services/v5/projects @commonRestOptions
 
   @getStories: (projectId, options) ->
     options extract? states
     states ?= :started :rejected :planned :unstarted :unscheduled
-    &ArtRestClient.getJson "#{baseUrl}/projects/#{projectId}/stories?limit=500&date_format=millis&filter=state:#{states.join ','}" @commonRestOptions
-    .then (stories) ->
-      array {id, requested_by_id, current_state, story_type, name, updated_at, created_at, url, owner_ids} in stories
-        {}
-          id
-          url
-          name
-          requestedById: requested_by_id
-          ownerIds: owner_ids
-          state: current_state
-          updatedAt: updated_at
-          createdAt: created_at
+    getJson "#{baseUrl}/projects/#{projectId}/stories?limit=500&date_format=millis&filter=state:#{states.join ','}" @commonRestOptions
+    .then (stories) -> stories.map @_normalizeStory
 
   @getMyAccount: =>
-    &ArtRestClient.getJson :https://www.pivotaltracker.com/services/v5/me?date_format=millis @commonRestOptions
-    .then @_processPivotalTrackerMe
+    getJson :https://www.pivotaltracker.com/services/v5/me?date_format=millis @commonRestOptions
+    .then @_normalizeAccount
 
   @getMembers: (projectId) =>
-    &ArtRestClient.getJson "#{baseUrl}/projects/#{projectId}/memberships" @commonRestOptions
+    getJson "#{baseUrl}/projects/#{projectId}/memberships" @commonRestOptions
     .then (memberships) ->
       array {person} in memberships
         {id, name, email} = person
@@ -38,16 +31,39 @@ class PivotalTracker extends BaseClass
   @openInBrowser: (projectId) ->
     &open "" https://www.pivotaltracker.com/n/projects/#{projectId}
 
-  @_processPivotalTrackerMe: (account) ->
+  @authenticate: ({username, password}) ->
+    getJson :https://www.pivotaltracker.com/services/v5/me merge
+      headers:
+        Authorization: "" Basic #{} &btoa "#{username}:#{password}"
+    .then @_normalizeAccount
+
+  #####################################
+    UPDATE
+  #####################################
+  @updateStoryStatus: (projectId, storyId, status) ->
+    throw new Error "invalid status: #{status}" unless status == "finished" or status == "started"
+    putJson
+      "" #{baseUrl}/projects/#{projectId}/stories/#{storyId}"
+      current_state: status
+
+  #####################################
+    PRIVATE
+  #####################################
+  @_normalizeStory: ({id, requested_by_id, current_state, story_type, name, updated_at, created_at, url, owner_ids}) ->
+    {}
+      id
+      url
+      name
+      requestedById: requested_by_id
+      ownerIds: owner_ids
+      state: current_state
+      updatedAt: updated_at
+      createdAt: created_at
+
+  @_normalizeAccount: (account) ->
     merge
       object v, k from account with-key
         if k == :api_token
           :token
         else lowerCamelCase k
       tracker: :PivotalTracker
-
-  @authenticate: ({username, password}) ->
-    &ArtRestClient.getJson :https://www.pivotaltracker.com/services/v5/me merge
-      headers:
-        Authorization: "" Basic #{} &btoa "#{username}:#{password}"
-    .then @_processPivotalTrackerMe

@@ -122,6 +122,20 @@ import &StandardImport, &InquirerPlus
                 summary: object v in {changes, insertions, deletions} when v > 0
                 message: message
 
+            .then ->
+              answersToCommit extract story, storyFinished
+              if story?.id
+                newStatus = if story.status == :unstarted && !storyFinished
+                  :started
+                else if story.status == :unstarted || story.status == :started
+                  :finished
+
+                if newStatus
+                  log "" Updating tracker status: #{story.status} >> #{newStatus}
+                  &Tracker.updateStoryStatus answers.story?.id, newStatus
+                  .then ->
+                    log "" Tracker status updated successfully.
+
             .catch (error) -> log.error error
 
           else
