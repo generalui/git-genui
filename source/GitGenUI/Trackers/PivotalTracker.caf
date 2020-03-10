@@ -40,7 +40,7 @@ class PivotalTracker extends BaseClass
   #####################################
     UPDATE
   #####################################
-  @updateStoryStatus: (projectId, storyId, status) ->
+  @updateStoryState: (projectId, storyId, status) ->
     throw new Error "invalid status: #{status}" unless status == "finished" or status == "started"
     putJson
       "" #{baseUrl}/projects/#{projectId}/stories/#{storyId}"
