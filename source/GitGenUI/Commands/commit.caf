@@ -124,6 +124,7 @@ import &StandardImport, &InquirerPlus
 
             .then ->
               answersToCommit extract story, storyFinished
+              log {} story, storyFinished
               if story?.id
                 newStatus = if story.status == :unstarted && !storyFinished
                   :started
