@@ -2,9 +2,9 @@ import &StandardImport, &InquirerPlus
 
 (options) ->
   &Git.printStatus()
-  .then (status) ->
+  .then (state) ->
     log ''
-    if status.staged.length == 0
+    if state.staged.length == 0
       log "\nNothing is staged in git.\nPlease 'git add' something."
       process.exit 1
 
@@ -126,16 +126,16 @@ import &StandardImport, &InquirerPlus
               answers extract story, storyFinished
               log {} story, storyFinished
               if story?.id
-                newStatus = if story.status == :unstarted && !storyFinished
+                newState = if story.state == :unstarted && !storyFinished
                   :started
-                else if story.status == :unstarted || story.status == :started
+                else if story.state == :unstarted || story.state == :started
                   :finished
 
-                if newStatus
-                  log "" Updating tracker status: #{story.status} >> #{newStatus}
-                  &Tracker.updateStoryStatus answers.story?.id, newStatus
+                if newState
+                  log "" Updating tracker state: #{story.state} >> #{newState}
+                  &Tracker.updateStoryState answers.story?.id, newState
                   .then ->
-                    log "" Tracker status updated successfully.
+                    log "" Tracker state updated successfully.
 
             .catch (error) -> log.error error
 
