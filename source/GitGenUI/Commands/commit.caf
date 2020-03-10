@@ -123,7 +123,7 @@ import &StandardImport, &InquirerPlus
                 message: message
 
             .then ->
-              answersToCommit extract story, storyFinished
+              answers extract story, storyFinished
               log {} story, storyFinished
               if story?.id
                 newStatus = if story.status == :unstarted && !storyFinished
