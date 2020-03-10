@@ -43,7 +43,7 @@ class Git extends BaseClass
       M: :modified
       ?: :created
 
-    @status()
+    @status
     .tap (status) ->
       log "branch: #{colors.green status.current} #{colors.grey "(#{status.tracking})"}"
       outputOne = ({path}, status, _colors) ->
