@@ -3,8 +3,8 @@ import &StandardImport, &Config
 class Tracker extends BaseClass
 
   @classGetter
-    projectId:    -> config.tracker?.projectId
-    tracker:      -> &Trackers[config.tracker?.name]
+    projectId:    -> config.project?.tracker?.projectId
+    tracker:      -> &Trackers[config.project?.tracker?.name]
     stories:      -> @tracker.getStories @projectId
     members:      -> @tracker.getMembers @projectId
     myAccount:    -> @tracker.getMyAccount @projectId

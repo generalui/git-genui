@@ -1,14 +1,20 @@
 import &StandardImport, {} &colors
 SimpleGit = require(:simple-git/promise)()
 
-class Git
+class Git extends BaseClass
 
   @commit: (options) ->
     Promise.then -> SimpleGit.commit answersToCommit options
 
-  @status: ->
-    Promise.then -> SimpleGit.status()
-    .then (o) -> object k in Object.keys o with o[k]
+  @classGetter
+    @email: ->
+      SimpleGit.raw []
+        :config
+        :user.email
+
+    @status: ->
+      Promise.then -> SimpleGit.status()
+      .then (o) -> object k in Object.keys o with o[k]
 
   @printStatus: ->
     unstagedColors =

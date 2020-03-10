@@ -1,18 +1,48 @@
-import &StandardImport, &InquirerPlus
+import &StandardImport, &InquirerPlus, {} &colors
 
 (options) ->
-  log "ok"
-  Inquirer
+  _username = null
 
-    InputQ
-      name: :username
-      message: "" What is your PivotalTracker email?
+  &Git.email
+  .catch -> null
+  .then (gitEmail) ->
+    _username = gitEmail = gitEmail?.trim()
+    auth = ->
+      Inquirer
+        InputQ
+          name: :username
+          default: _username
+          message: "" What is your PivotalTracker email?
 
-    PasswordQ
-      name: :password
-      message: "" What is your PivotalTracker password? (used only to fetch API token)
+        PasswordQ
+          name: :password
+          message: "" What is your PivotalTracker password? (used only to fetch API token)
+      .then ({password, username})->
+        _username = username
+        &Tracker.authenticate {} password, username
 
-  .then (answers)->
-    &Tracker.authenticate answers
-  # .then ({token}) ->
-  #   &Config.
+      .catch (error) ->
+        if error.status == clientFailureNotAuthorized
+          log.warn "" Invalid password. Please try again.
+
+        else
+          log.error {}
+            error.message
+            error.status
+
+        auth()
+
+    auth()
+
+    .then ({token, email}) ->
+      Inquirer InputQ
+        name: :gitEmail
+        message: "" What is your git email?
+        default: gitEmail || email
+
+      .then ({gitEmail}) ->
+        &Config.writeUserConfig accounts:
+          pivotalTracker: {} token
+          git: email: gitEmail
+      .then (writtenFile) ->
+        log colors.green "Success. Wrote: #{writtenFile}"

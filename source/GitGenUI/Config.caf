@@ -37,14 +37,16 @@ class Config extends BaseClass
     Promise.all []
       @getUpdatedUserConfig newConfig, mergeWithExisting
       @userConfigPath
-    .then (str, userConfigPath) ->
-      &fsExtra.writeFile filePath = userConfigPath + ".js", str
+    .then ([str, userConfigPath]) ->
+      &fsExtra.writeFile
+        filePath = userConfigPath + ".js"
+        str
       .then -> filePath
 
   @getUpdatedUserConfig: (newConfig, mergeWithExisting = true) =>
     if mergeWithExisting then @userConfig.then (existingConfig) -> deepMerge existingConfig, newConfig
     else Promise.resolve newConfig
-    .then (configToWrite) -> "" module.export = #{} JSON.stringify configToWrite, null, "  "
+    .then (configToWrite) -> "" module.exports = #{} JSON.stringify configToWrite, null, "  "
 
   @load: => @configPromise.then (config) -> mergeInto @config, config
 

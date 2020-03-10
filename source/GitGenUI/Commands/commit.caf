@@ -13,7 +13,7 @@ import &StandardImport, &InquirerPlus
     &Tracker.members
     &Tracker.myAccount
   .then ({stories, members, myAccount, verbose}) ->
-    &Git.status()
+    &Git.status
     .then (status) ->
       status = object key in Object.keys status with status[key]
       if status.staged.length == 0
@@ -93,7 +93,9 @@ import &StandardImport, &InquirerPlus
 
       .then (answers) ->
 
-        log "\ncommit-message: #{&colors.green answersToCommit answers}\n"
+        message = answersToCommit answers
+
+        log "\ncommit-message: #{&colors.green message}\n"
 
         Inquirer
           YesNoQ
@@ -108,7 +110,18 @@ import &StandardImport, &InquirerPlus
         .then ({commit}) ->
           if commit
             &Git.commit answers
-            .then (results) -> log success: results
+            .then (results) ->
+              {branch, commit, summary: {changes, insertions, deletions}} = results
+              changes = changes | 0
+              insertions = insertions | 0
+              deletions = deletions | 0
+
+              log success: {}
+                branch
+                commit
+                summary: object v in {changes, insertions, deletions} when v > 0
+                message: message
+
             .catch (error) -> log.error error
 
           else

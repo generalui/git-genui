@@ -1,3 +1,4 @@
-tracker:
-  name:       :PivotalTracker
-  projectId:  2437171
+project:
+  tracker:
+    name:       :PivotalTracker
+    projectId:  2437171
