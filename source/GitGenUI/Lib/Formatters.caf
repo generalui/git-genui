@@ -1,0 +1,4 @@
+import &StandardImport
+
+formatStory: (story) ->
+  "" [#{story.id}] (#{story.state}) #{story.name}

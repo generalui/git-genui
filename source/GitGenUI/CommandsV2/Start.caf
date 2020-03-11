@@ -10,7 +10,7 @@ run:
       if started.length > 0
         log &colors.cyan "" Stories already started:
         each story in started
-          log "  [#{story.id}] (#{story.state}) #{story.name}"
+          log "  " + formatStory story
         log ''
       Inquirer SelectStoryQ
         array story in stories when story.state == :unstarted || story.state == :rejected

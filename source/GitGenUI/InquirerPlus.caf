@@ -36,7 +36,7 @@ class InquirerPlus
       message:  "" Select a story...
       pageSize: 20
       strings: compactFlatten []
-        array {id, state, name} in stories with "" [#{id}] (#{state}) #{name}
+        stories.map formatStory
         "(none)"
 
       filter: (val) ->

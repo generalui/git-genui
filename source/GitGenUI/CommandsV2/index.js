@@ -11,5 +11,6 @@
   ShowCommit:  require('./ShowCommit'),
   Start:       require('./Start'),
   Status:      require('./Status'),
+  Stories:     require('./Stories'),
   WhoAmI:      require('./WhoAmI')
 });
