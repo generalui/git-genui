@@ -3,15 +3,17 @@ import &StandardImport, &Config
 class Tracker extends BaseClass
 
   @classGetter
-    projectId:    -> config.project?.tracker?.projectId
-    tracker:      -> &Trackers[config.project?.tracker?.name]
-    stories:      -> @tracker.getStories @projectId
-    members:      -> @tracker.getMembers @projectId
-    myAccount:    -> @tracker.getMyAccount @projectId
+    projectId:        -> config.project?.tracker?.projectId
+    tracker:          -> &Trackers[config.project?.tracker?.name]
+    stories:          -> @tracker.getStories @projectId
+    members:          -> @tracker.getMembers @projectId
+    myAccount:        -> @tracker.getMyAccount @projectId
 
-  @openInBrowser:  -> @tracker.openInBrowser @projectId
+  @getStoryUrl:       (storyId) -> @tracker.getStoryUrl @projectId, storyId
+  @getProjectUrl:     -> @tracker.getProjectUrl @projectId
+  @openInBrowser:     -> @tracker.openInBrowser @projectId
 
   @updateStoryState:  (storyId, state) -> @tracker.updateStoryState @projectId, storyId, state
   @createComment:     (storyId, text) -> @tracker.createComment @projectId, storyId, text
 
-  @authenticate:   (options) -> @tracker.authenticate options
+  @authenticate:      (options) -> @tracker.authenticate options

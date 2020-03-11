@@ -29,7 +29,13 @@ class PivotalTracker extends BaseClass
         {id, name, email} = person
 
   @openInBrowser: (projectId) ->
-    &open "" https://www.pivotaltracker.com/n/projects/#{projectId}
+    &open @getProjectUrl projectId
+
+  @getProjectUrl: (projectId) -> "" https://www.pivotaltracker.com/n/projects/#{projectId}
+
+  @getStoryUrl: (projectId, storyId) ->
+    @getProjectUrl projectId
+    + "" /#{storyId}
 
   @authenticate: ({username, password}) ->
     getJson :https://www.pivotaltracker.com/services/v5/me merge

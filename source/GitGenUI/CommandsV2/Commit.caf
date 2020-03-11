@@ -123,17 +123,16 @@ run: (options) ->
                   :finished
 
                 if newState
-                  log "" Updating tracker state: #{story.state} >> #{newState}
+                  # log "" Updating tracker state: #{story.state} >> #{newState}
                   &Tracker.updateStoryState story.id, newState
-                  .then ->
-                    log "" Story is now '#{newState}'
+                  .then -> log "" Story is now '#{newState}'
                 else Promise.resolve()
                 .then ->
                   &Tracker.createComment
                     story.id
                     "" #{newState || :progressed} with commit: #{commit}\n\n#{message}
                 .then ->
-                  log "" Commit message added to story.
+                  log "" Commit message added to story: #{} &Tracker.getStoryUrl story.id
 
             .catch (error) -> log.error error
 
