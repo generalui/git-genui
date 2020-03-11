@@ -90,7 +90,7 @@ import &StandardImport, &InquirerPlus
         Inquirer
           YesNoQ
             type:     :expand
-            default:  :no
+            default:  :true
             choices:
               key: :y value: true   name: "" yes
               key: :c value: false  name: "" cancel
@@ -100,7 +100,7 @@ import &StandardImport, &InquirerPlus
         .then ({commit}) ->
           if commit
             &Git.commit answers
-            .then (results) ->
+            .tap (results) ->
               {branch, commit, summary: {changes, insertions, deletions}} = results
               changes = changes | 0
               insertions = insertions | 0
@@ -112,7 +112,7 @@ import &StandardImport, &InquirerPlus
                 summary: object v in {changes, insertions, deletions} when v > 0
                 message: message
 
-            .then ->
+            .tap ({commit})->
               answers extract story, storyFinished
               log {} story, storyFinished
               if story?.id
@@ -123,9 +123,14 @@ import &StandardImport, &InquirerPlus
 
                 if newState
                   log "" Updating tracker state: #{story.state} >> #{newState}
-                  &Tracker.updateStoryState answers.story?.id, newState
+                  &Tracker.updateStoryState story.id, newState
                   .then ->
-                    log "" Tracker state updated successfully.
+                    log "" Story is now '#{newState}'
+                else Promise.resolve()
+                .then ->
+                  &Tracker.createComment
+                    story.id
+                    "" #{newState || :progressed} with commit #{commit}
 
             .catch (error) -> log.error error
 

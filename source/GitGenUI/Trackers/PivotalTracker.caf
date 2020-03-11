@@ -47,6 +47,12 @@ class PivotalTracker extends BaseClass
       current_state: status
       @commonRestOptions
 
+  @createComment: (projectId, storyId, text) ->
+    postJson
+      "" #{baseUrl}/projects/#{projectId}/stories/#{storyId}/comments
+      {} text
+      @commonRestOptions
+
   #####################################
     PRIVATE
   #####################################
