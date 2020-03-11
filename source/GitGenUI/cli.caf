@@ -22,6 +22,12 @@ run: ->
         "" show which tracker account you are logged in with
         WhoAmI
 
+
+      .command
+        :start
+        "" start a story
+        Start
+
       .command
         :init
         "" initialize ~/git-genui.config.js with your PivotalTracker information

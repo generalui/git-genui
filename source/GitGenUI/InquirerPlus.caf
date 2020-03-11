@@ -28,3 +28,21 @@ class InquirerPlus
     merge
       type: :password
       options
+
+
+  @SelectStoryQ: (stories, options) =>
+    @AutoCompleteQ merge
+      name:     :story
+      message:  "" Select a story...
+      pageSize: 20
+      strings: compactFlatten []
+        array {id, state, name} in stories with "" [#{id}] (#{state}) #{name}
+        "(none)"
+
+      filter: (val) ->
+        if val == "(none)" then null
+        else if m = val.match /// ^ \[ ([^\]]+)
+          id = m[1]
+          find story in stories when "#{story.id}" == id
+
+      options

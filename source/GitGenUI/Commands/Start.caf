@@ -1,0 +1,12 @@
+import &StandardImport, &InquirerPlus
+
+(options) ->
+  &Tracker.stories
+  .then (stories) ->
+    Inquirer SelectStoryQ
+      array story in stories when story.state == :unstarted
+      message:  "" What story does this commit advance?
+  .then ({story}) ->
+    &Tracker.updateStoryState story.id, :started
+    .then ->
+      log "" Story #{story.id} is now 'started'

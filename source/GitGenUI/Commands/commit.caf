@@ -21,19 +21,9 @@ import &StandardImport, &InquirerPlus
         process.exit 1
 
       Promise.then -> Inquirer
-        AutoCompleteQ
-          name:     :story
+        SelectStoryQ
+          stories
           message:  "" What story does this commit advance?
-          pageSize: 20
-          strings: compactFlatten []
-            array {id, state, name} in stories with "" [#{id}] (#{state}) #{name}
-            "(none)"
-
-          filter: (val) ->
-            if val == "(none)" then null
-            else if m = val.match /// ^ \[ ([^\]]+)
-              id = m[1]
-              find story in stories when "#{story.id}" == id
 
         YesNoQ
           name:     :storyFinished

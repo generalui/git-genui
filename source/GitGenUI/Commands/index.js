@@ -6,5 +6,6 @@
 .addModules({
   Commit:         require('./commit'),
   InitUserConfig: require('./InitUserConfig'),
+  Start:          require('./Start'),
   WhoAmI:         require('./WhoAmI')
 });
