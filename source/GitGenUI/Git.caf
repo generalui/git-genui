@@ -6,6 +6,7 @@ class Git extends BaseClass
   @commit: (options) ->
     Promise.then -> SimpleGit.commit answersToCommit options
 
+
   @classGetter
     @email: ->
       SimpleGit.raw []
