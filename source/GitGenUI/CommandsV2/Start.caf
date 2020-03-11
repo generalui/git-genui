@@ -13,7 +13,7 @@ run:
           log "  [#{story.id}] (#{story.state}) #{story.name}"
         log ''
       Inquirer SelectStoryQ
-        array story in stories when story.state == :unstarted
+        array story in stories when story.state == :unstarted || story.state == :rejected
         message:  "" What story do you want to start?
     .then ({story}) ->
       if story

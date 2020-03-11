@@ -35,7 +35,7 @@ class PivotalTracker extends BaseClass
 
   @getStoryUrl: (projectId, storyId) ->
     @getProjectUrl projectId
-    + "" /#{storyId}
+    + "" /stories/#{storyId}
 
   @authenticate: ({username, password}) ->
     getJson :https://www.pivotaltracker.com/services/v5/me merge
