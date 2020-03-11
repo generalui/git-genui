@@ -1,4 +1,4 @@
-import &ArtStandardLib, &Commands
+import &ArtStandardLib
 fs = &fsExtra
 
 run: ->
@@ -6,51 +6,20 @@ run: ->
 
   &Config.load()
   .then ->
-    {argv} = &yargs
-      .command
-        :open-tracker
-        "" open tracker in the browser
-        -> &Tracker.openInBrowser()
-
-      .command
-        :show-config
-        "" show the merged configurarion for git-genui
-        -> log {} &Config.config
-
-      .command
-        :who-am-i
-        "" show which tracker account you are logged in with
-        WhoAmI
+    yargs = &yargs
 
 
-      .command
-        :start
-        "" start a story
-        Start
+    each {description, run}, command in &CommandsV2.modules
+      yargs = yargs.command
+        dashCase command
+        description
+        run
 
-      .command
-        :comment
-        "" comment on a story
-        Comment
+    yargs
+    .option
+      :verbose
+      alias:        :v
+      type:         :boolean
+      description:  "" Run with verbose logging
 
-      .command
-        :init
-        "" initialize ~/git-genui.config.js with your PivotalTracker information
-        InitUserConfig
-
-      .command
-        :status
-        "" show git status
-        ->
-          &Git.printStatus()
-
-      .command
-        :commit
-        "" interactive commit
-        Commit
-
-      .option
-        :verbose
-        alias:        :v
-        type:         :boolean
-        description:  "" Run with verbose logging
+    .argv

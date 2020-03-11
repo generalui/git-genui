@@ -1,6 +1,7 @@
 import &StandardImport, &InquirerPlus
 
-(options) ->
+description: "" comment on a story
+run: (options) ->
 
   &Tracker.stories
   .then (stories) ->

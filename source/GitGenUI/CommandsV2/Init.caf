@@ -1,6 +1,7 @@
 import &StandardImport, &InquirerPlus, {} &colors
 
-(options) ->
+description: "" initialize ~/git-genui.config.js with your PivotalTracker information
+run: (options) ->
   _username = null
 
   &Git.email

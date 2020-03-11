@@ -1,6 +1,7 @@
 import &StandardImport, &InquirerPlus
 
-(options) ->
+description: "" interactive commit
+run: (options) ->
   &Git.printStatus()
   .then (state) ->
     log ''

@@ -12,6 +12,6 @@
   StandardImport: require('./StandardImport'),
   Tracker:        require('./Tracker')
 });
-require('./Commands');
+require('./CommandsV2');
 require('./Lib');
 require('./Trackers');
