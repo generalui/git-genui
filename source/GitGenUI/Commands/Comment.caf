@@ -1,0 +1,19 @@
+import &StandardImport, &InquirerPlus
+
+(options) ->
+
+  &Tracker.stories
+  .then (stories) ->
+    Inquirer SelectStoryQ
+      stories
+      message:  "" What story do you want to comment on?
+  .then ({story}) ->
+    if story
+      Inquirer InputQ
+        name: :comment
+        message: "" Comment:
+      .then ({comment}) ->
+        &Tracker.createComment
+          story.id
+          comment
+    else log "Canceled"

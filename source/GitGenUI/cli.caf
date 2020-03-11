@@ -29,6 +29,11 @@ run: ->
         Start
 
       .command
+        :comment
+        "" comment on a story
+        Comment
+
+      .command
         :init
         "" initialize ~/git-genui.config.js with your PivotalTracker information
         InitUserConfig
