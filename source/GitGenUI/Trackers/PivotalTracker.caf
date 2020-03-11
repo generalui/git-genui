@@ -45,6 +45,7 @@ class PivotalTracker extends BaseClass
     putJson
       "" #{baseUrl}/projects/#{projectId}/stories/#{storyId}
       current_state: status
+      @commonRestOptions
 
   #####################################
     PRIVATE
