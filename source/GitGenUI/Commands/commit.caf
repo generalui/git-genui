@@ -130,7 +130,9 @@ import &StandardImport, &InquirerPlus
                 .then ->
                   &Tracker.createComment
                     story.id
-                    "" #{newState || :progressed} with commit #{commit}
+                    "" #{newState || :progressed} with commit: #{commit}\n\n#{message}
+                .then ->
+                  log "" Commit message added to story.
 
             .catch (error) -> log.error error
 
