@@ -124,7 +124,7 @@ run: (options) ->
 
                 if newState
                   # log "" Updating tracker state: #{story.state} >> #{newState}
-                  &Tracker.updateStoryState story.id, newState
+                  &Tracker.updateStory story.id, state: newState
                   .then -> log "" Story is now '#{newState}'
                 else Promise.resolve()
                 .then ->
