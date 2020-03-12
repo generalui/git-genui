@@ -13,9 +13,12 @@ searchMatch = (pattern, string) ->
   prepSearchMatch(pattern).test string
 
 sortByMatchQuality = (a, b) ->
-  a extract string as aString, errors as aErrors
-  b extract string as bString, errors as bErrors
-  aErrors - bErrors
+  a extract string as aString, errors as aErrors, position as aPos
+  b extract string as bString, errors as bErrors, position as bPos
+  if aErrors == bErrors
+    aPos - bPos
+  else
+    aErrors - bErrors
 
 {}
   searchSort = (pattern, strings) ->
@@ -29,8 +32,8 @@ sortByMatchQuality = (a, b) ->
     sortedStringsWithErrors =
       stableSort
         array string in strings
-          if match = (string.match r)?[0]
-            {} string, errors: match.length - pattern.length
+          if match = (fullMatch = r.exec string)?[0]
+            {} string, position: fullMatch.index, errors: match.length - pattern.length
           else {} string, errors: 1/0
         sortByMatchQuality
     array {string} in sortedStringsWithErrors with string
