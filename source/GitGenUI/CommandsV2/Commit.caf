@@ -30,17 +30,18 @@ run: (options) ->
         message:  "" What type of commit is this?
         filter: (val) -> val.split(":")[0].toLowerCase()
         strings:
-          "" patch/test:      tests added, improved or fixed   version + 0.0.1 ()
-          "" patch/fix:       code fixed and passing tests     version + 0.0.1 ()
-          "" patch/perf:      performance improved             version + 0.0.1 ()
-          "" patch/refactor:  code quality improved            version + 0.0.1 ()
-          "" patch/doc:       documentation updated            version + 0.0.1 ()
-          "" patch/asset:     asset/string added/improved      version + 0.0.1 ()
-          "" patch/other:     other changes                    version + 0.0.1 ()
-          "" minor/feature:   feature added or extended        version + 0.1.0 ()
-          "" minor/depricate: feature depricated               version + 0.1.0 ()
-          "" major/change:    breaking change                  version + 1.0.0 ()
-          "" major/removal:   breaking removal                 version + 1.0.0 ()
+          "" patch/test:        tests added, improved or fixed   version + 0.0.1 ()
+          "" patch/fix:         code fixed and passing tests     version + 0.0.1 ()
+          "" patch/perf:        performance improved             version + 0.0.1 ()
+          "" patch/refactor:    code quality improved            version + 0.0.1 ()
+          "" patch/doc:         documentation updated            version + 0.0.1 ()
+          "" patch/asset:       asset/string added/improved      version + 0.0.1 ()
+          "" patch/improvement: patch-sized feature improvement  version + 0.0.1 ()
+          "" patch/other:       other changes                    version + 0.0.1 ()
+          "" minor/feature:     feature added or extended        version + 0.1.0 ()
+          "" minor/depricate:   feature depricated               version + 0.1.0 ()
+          "" major/change:      breaking change                  version + 1.0.0 ()
+          "" major/removal:     breaking removal                 version + 1.0.0 ()
 
     .then (answers) ->
       Inquirer
