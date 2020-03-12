@@ -29,7 +29,7 @@ run:
               name: i
         else Promise.resolve {}
         .then (updates) -> merge updates, state: :started
-        .then (updates) -> &Tracker.updateStory story.id, log updates
+        .then (updates) -> &Tracker.updateStory story.id, updates
         .then ->
-          log "" Story #{story.id} was 'started' at #{} formatDate "" yyyy mmmm d, h:MMtt (Z o)
+          log &colors.blue "Story [##{story.id}]: " + &colors.green "'started' at #{formatDate "h:MMtt (Z mmmm d, yyyy)"}"
       else log "Canceled"
