@@ -13,7 +13,7 @@ class Tracker extends BaseClass
   @getProjectUrl:     -> @tracker.getProjectUrl @projectId
   @openInBrowser:     -> @tracker.openInBrowser @projectId
 
-  @updateStoryState:  (storyId, state) -> @tracker.updateStoryState @projectId, storyId, state
+  @updateStory:       (storyId, updates) -> @tracker.updateStory @projectId, storyId, updates
   @createComment:     (storyId, text) -> @tracker.createComment @projectId, storyId, text
 
   @authenticate:      (options) -> @tracker.authenticate options

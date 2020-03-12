@@ -17,7 +17,19 @@ run:
         message:  "" What story do you want to start?
     .then ({story}) ->
       if story
-        &Tracker.updateStoryState story.id, :started
+        if !present story.estimate
+          Inquirer
+            type:     :expand
+            name:     :estimate
+            default:  :no
+            message:  "" Estimate story to start it:
+            choices: array i to 3
+              key: "#{i}"
+              value: i
+              name: i
+        else Promise.resolve {}
+        .then (updates) -> merge updates, state: :started
+        .then (updates) -> &Tracker.updateStory story.id, log updates
         .then ->
           log "" Story #{story.id} was 'started' at #{} formatDate "" yyyy mmmm d, h:MMtt (Z o)
       else log "Canceled"

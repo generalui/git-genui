@@ -15,7 +15,7 @@ class InquirerPlus
       type:     :expand
       default:  :no
       choices:
-        key: :N value: :no name: "" no
+        key: :N value: :no  name: "" no
         key: :y value: :yes name: "" yes
       options
 

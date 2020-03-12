@@ -46,11 +46,18 @@ class PivotalTracker extends BaseClass
   #####################################
     UPDATE
   #####################################
-  @updateStoryState: (projectId, storyId, status) ->
-    throw new Error "invalid status: #{status}" unless status == "finished" or status == "started"
+  @updateStory: (projectId, storyId, updates) ->
+    {state, estimate} = updates
+    if state
+      throw new Error "invalid state: #{state}" unless state == "finished" or state == "started"
+
     putJson
       "" #{baseUrl}/projects/#{projectId}/stories/#{storyId}
-      current_state: status
+
+      merge {}
+        estimate
+        current_state: state
+
       @commonRestOptions
 
   @createComment: (projectId, storyId, text) ->
@@ -62,11 +69,15 @@ class PivotalTracker extends BaseClass
   #####################################
     PRIVATE
   #####################################
-  @_normalizeStory: ({id, requested_by_id, current_state, story_type, name, updated_at, created_at, url, owner_ids}) ->
+  @_normalizeStory: (story) ->
+    story extract
+      id, requested_by_id, current_state, story_type, name, updated_at, created_at, url, owner_ids
+      estimate
     {}
       id
       url
       name
+      estimate
       requestedById: requested_by_id
       ownerIds: owner_ids
       state: current_state

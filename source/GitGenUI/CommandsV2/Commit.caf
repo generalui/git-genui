@@ -115,8 +115,8 @@ run: (options) ->
 
             .tap ({commit})->
               answers extract story, storyFinished
-              log {} story, storyFinished
               if story?.id
+                log {} story, storyFinished
                 newState = if story.state == :unstarted && !storyFinished
                   :started
                 else if story.state == :unstarted || story.state == :started
