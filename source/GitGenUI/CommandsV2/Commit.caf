@@ -3,9 +3,9 @@ import &StandardImport, &InquirerPlus
 description: "" interactive commit
 run: (options) ->
   &Git.printStatus()
-  .then (state) ->
+  .then (status) ->
     log ''
-    if state.staged.length == 0
+    if status.staged.length == 0 && status.renamed.length == 0
       log "\nNothing is staged in git.\nPlease 'git add' something."
       process.exit 1
 
@@ -14,127 +14,120 @@ run: (options) ->
     &Tracker.members
     &Tracker.myAccount
   .then ({stories, members, myAccount, verbose}) ->
-    &Git.status
-    .then (status) ->
-      status = object key in Object.keys status with status[key]
-      if status.staged.length == 0
-        log "Nothing is staged in git.\nPlease 'git add' something."
-        process.exit 1
+    Promise.then -> Inquirer
+      SelectStoryQ
+        stories
+        message:  "" What story does this commit advance?
 
-      Promise.then -> Inquirer
-        SelectStoryQ
-          stories
-          message:  "" What story does this commit advance?
+      YesNoQ
+        name:     :storyFinished
+        when:     ({story}) -> story?
+        message:  "" Is the story finished?
 
+      AutoCompleteQ
+        name:     :type
+        pageSize: 20
+        message:  "" What type of commit is this?
+        filter: (val) -> val.split(":")[0].toLowerCase()
+        strings:
+          "" patch/test:      tests added, improved or fixed   version + 0.0.1 ()
+          "" patch/fix:       code fixed and passing tests     version + 0.0.1 ()
+          "" patch/perf:      performance improved             version + 0.0.1 ()
+          "" patch/refactor:  code quality improved            version + 0.0.1 ()
+          "" patch/doc:       documentation updated            version + 0.0.1 ()
+          "" patch/asset:     asset/string added/improved      version + 0.0.1 ()
+          "" patch/other:     other changes                    version + 0.0.1 ()
+          "" minor/feature:   feature added or extended        version + 0.1.0 ()
+          "" minor/depricate: feature depricated               version + 0.1.0 ()
+          "" major/change:    breaking change                  version + 1.0.0 ()
+          "" major/removal:   breaking removal                 version + 1.0.0 ()
+
+    .then (answers) ->
+      Inquirer
+        InputQ
+          name:     :subject
+          default:  answers.story?.name
+          message:  "" Enter git commit message:
+          validate: (v) -> if present(v) then true else "" Please enter a message
+
+        # merge YesNoQOptions,
+        #   name:     :wantLongMessage
+        #   message:  "" Do you want to add details to your git commit?
+
+        # {}
+        #   type:     :editor
+        #   name:     :body
+        #   message:  "" Git commit details
+        #   when:     ({wantLongMessage}) -> wantLongMessage == :yes
+        #   filter:   (v) -> v?.trim()
+
+        if (coauthorList = array member in members when member.id != myAccount.id).length > 0
+          AutoCompleteQ
+            name:     :coauthor
+            message:  "" Are you pairing with someone?
+            default:  null
+            strings:
+              "(no one)"
+              array {email, name} in coauthorList with "" #{name} <#{email}>
+
+      .then (_a) -> merge answers, _a
+
+    .tap (answers) ->
+      answers.coauthor = null if answers.coauthor == "(no one)"
+
+    .then (answers) ->
+
+      message = answersToCommit answers
+
+      log "\ncommit-message: #{&colors.green message}\n"
+
+      Inquirer
         YesNoQ
-          name:     :storyFinished
-          when:     ({story}) -> story?
-          message:  "" Is the story finished?
+          type:     :expand
+          default:  :true
+          choices:
+            key: :y value: true   name: "" yes
+            key: :c value: false  name: "" cancel
+          name:     :commit
+          message:  "" 'git commit' now?
 
-        AutoCompleteQ
-          name:     :type
-          pageSize: 20
-          message:  "" What type of commit is this?
-          filter: (val) -> val.split(":")[0].toLowerCase()
-          strings:
-            "" patch/test:      tests added, improved or fixed   version + 0.0.1 ()
-            "" patch/fix:       code fixed and passing tests     version + 0.0.1 ()
-            "" patch/perf:      performance improved             version + 0.0.1 ()
-            "" patch/refactor:  code quality improved            version + 0.0.1 ()
-            "" patch/doc:       documentation updated            version + 0.0.1 ()
-            "" patch/asset:     asset/string added/improved      version + 0.0.1 ()
-            "" patch/other:     other changes                    version + 0.0.1 ()
-            "" minor/feature:   feature added or extended        version + 0.1.0 ()
-            "" minor/depricate: feature depricated               version + 0.1.0 ()
-            "" major/change:    breaking change                  version + 1.0.0 ()
-            "" major/removal:   breaking removal                 version + 1.0.0 ()
+      .then ({commit}) ->
+        if commit
+          &Git.commit answers
+          .tap (results) ->
+            {branch, commit, summary: {changes, insertions, deletions}} = results
+            changes = changes | 0
+            insertions = insertions | 0
+            deletions = deletions | 0
 
-      .then (answers) ->
-        Inquirer
-          InputQ
-            name:     :subject
-            default:  answers.story?.name
-            message:  "" Enter git commit message:
-            validate: (v) -> if present(v) then true else "" Please enter a message
+            log success: {}
+              branch
+              commit
+              summary: object v in {changes, insertions, deletions} when v > 0
+              message: message
 
-          # merge YesNoQOptions,
-          #   name:     :wantLongMessage
-          #   message:  "" Do you want to add details to your git commit?
+          .tap ({commit})->
+            answers extract story, storyFinished
+            if story?.id
+              log {} story, storyFinished
+              newState = if story.state == :unstarted && !storyFinished
+                :started
+              else if story.state == :unstarted || story.state == :started
+                :finished
 
-          # {}
-          #   type:     :editor
-          #   name:     :body
-          #   message:  "" Git commit details
-          #   when:     ({wantLongMessage}) -> wantLongMessage == :yes
-          #   filter:   (v) -> v?.trim()
+              if newState
+                # log "" Updating tracker state: #{story.state} >> #{newState}
+                &Tracker.updateStory story.id, state: newState
+                .then -> log "" Story is now '#{newState}'
+              else Promise.resolve()
+              .then ->
+                &Tracker.createComment
+                  story.id
+                  "" #{newState || :progressed} with commit: #{commit}\n\n#{message}
+              .then ->
+                log "" Commit message added to story: #{} &Tracker.getStoryUrl story.id
 
-          if (coauthorList = array member in members when member.id != myAccount.id).length > 0
-            AutoCompleteQ
-              name:     :coauthor
-              message:  "" Are you pairing with someone?
-              default:  null
-              strings:
-                "(no one)"
-                array {email, name} in coauthorList with "" #{name} <#{email}>
+          .catch (error) -> log.error error
 
-        .then (_a) -> merge answers, _a
-
-      .tap (answers) ->
-        answers.coauthor = null if answers.coauthor == "(no one)"
-
-      .then (answers) ->
-
-        message = answersToCommit answers
-
-        log "\ncommit-message: #{&colors.green message}\n"
-
-        Inquirer
-          YesNoQ
-            type:     :expand
-            default:  :true
-            choices:
-              key: :y value: true   name: "" yes
-              key: :c value: false  name: "" cancel
-            name:     :commit
-            message:  "" 'git commit' now?
-
-        .then ({commit}) ->
-          if commit
-            &Git.commit answers
-            .tap (results) ->
-              {branch, commit, summary: {changes, insertions, deletions}} = results
-              changes = changes | 0
-              insertions = insertions | 0
-              deletions = deletions | 0
-
-              log success: {}
-                branch
-                commit
-                summary: object v in {changes, insertions, deletions} when v > 0
-                message: message
-
-            .tap ({commit})->
-              answers extract story, storyFinished
-              if story?.id
-                log {} story, storyFinished
-                newState = if story.state == :unstarted && !storyFinished
-                  :started
-                else if story.state == :unstarted || story.state == :started
-                  :finished
-
-                if newState
-                  # log "" Updating tracker state: #{story.state} >> #{newState}
-                  &Tracker.updateStory story.id, state: newState
-                  .then -> log "" Story is now '#{newState}'
-                else Promise.resolve()
-                .then ->
-                  &Tracker.createComment
-                    story.id
-                    "" #{newState || :progressed} with commit: #{commit}\n\n#{message}
-                .then ->
-                  log "" Commit message added to story: #{} &Tracker.getStoryUrl story.id
-
-            .catch (error) -> log.error error
-
-          else
-            log " canceled..."
+        else
+          log " canceled..."

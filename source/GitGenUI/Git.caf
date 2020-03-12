@@ -23,8 +23,8 @@ class Git extends BaseClass
       conflicted: :magenta
       added:      :yellow
       renamed:    :blue
-      modified:   :cyan
-      created:        :gray
+      modified:   :red
+      created:    :red
       staged:     :green
 
     stagedColors =
@@ -33,7 +33,7 @@ class Git extends BaseClass
       added:      :brightYellow
       renamed:    :brightBlue
       modified:   :brightCyan
-      created:        :brightGray
+      created:    :brightGray
       staged:     :brightGreen
 
     statuses =
@@ -46,25 +46,31 @@ class Git extends BaseClass
 
     @status
     .tap (status) ->
-      log "branch: #{colors.green status.current} #{colors.grey "(#{status.tracking})"}"
-      outputOne = ({path}, status, _colors) ->
+      log "Branch:\n  #{colors.green status.current}                       #{colors.grey "(tracking: #{status.tracking})"}"
+      outputOne = ({path}, status, clr) ->
         status = statuses[status] ? status
-        colors[_colors[status] ? :gray] "  #{status} #{path}"
+        colors[clr] "  #{pad status + ':', 12} #{path}"
 
       staged = []
       unstaged = []
+      untracked = []
       each file in status.files
         if !present file.working_dir
-          staged.push outputOne file, file.index, stagedColors
+          staged.push outputOne file, file.index, :green
+        else if file.working_dir == :?
+          untracked.push outputOne file, file.working_dir, :red
         else
-          unstaged.push outputOne file, file.working_dir, {}
+          unstaged.push outputOne file, file.working_dir, :red
 
       if staged.length > 0
-        log "" \nstaged to commit:
+        log "" \nChanges to be committed:       #{colors.grey "(#{pluralize :file, staged.length})"}
         log staged.sort().join :\n
 
-
       if unstaged.length > 0
-        log "" \nnot staged to commit:
+        log "" \nChanges not staged to commit:  #{colors.grey "(#{pluralize :file, unstaged.length})"}
         log unstaged.sort().join :\n
+
+      if untracked.length > 0
+        log "" \nUntracked files:               #{colors.grey "(#{pluralize :file, untracked.length})"}
+        log untracked.sort().join :\n
 
