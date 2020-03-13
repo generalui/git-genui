@@ -4,6 +4,7 @@
 (module.exports = require('./namespace'))
 
 .addModules({
+  Add:         require('./Add'),
   Comment:     require('./Comment'),
   Commit:      require('./Commit'),
   Init:        require('./Init'),

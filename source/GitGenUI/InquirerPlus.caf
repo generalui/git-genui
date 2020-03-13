@@ -1,13 +1,22 @@
 import &StandardImport
 &inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
+&inquirer.registerPrompt :checkbox-plus &inquirer-checkbox-plus-prompt
 
 class InquirerPlus
   @Inquirer: (prompts...) -> &inquirer.prompt compactFlatten prompts
+  @inquire: (prompts...) -> &inquirer.prompt compactFlatten prompts
+
+  @ask: (prompts...) =>
+    p = &inquirer.prompt compactFlatten prompts
+    p.thenAsk = (prompts...) ->
+      p.then (a1) ->
+        @inquire prompts
+        .then (a2) -> deepMerge a1, a2
 
   @AutoCompleteQ: (options) ->
     merge
       type:     :autocomplete
-      source:   AutoCompleteQ compactFlatten options.strings
+      source:   autocompleteFromStrings compactFlatten options.strings
       options
 
   @YesNoQ: (options) ->

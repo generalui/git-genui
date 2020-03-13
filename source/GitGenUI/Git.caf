@@ -15,7 +15,27 @@ class Git extends BaseClass
 
     @status: ->
       Promise.then -> SimpleGit.status()
-      .then (o) -> object k in Object.keys o with o[k]
+      .then (o) -> object k in Object.keys o
+        status = o[k]
+        if k == :files
+          status = array file in status
+            merge
+              objectWithout file, :working_dir
+              index:      decodeStatus file.index
+              workingDir: decodeStatus file.working_dir
+        else status
+
+  statusCodes =
+    D:  :deleted
+    C:  :conflicted
+    R:  :renamed
+    A:  :added
+    M:  :modified
+    ?:  :untracked
+    ' ': null
+
+  decodeStatus = (statusCode) ->
+    statusCodes[statusCode]
 
   @printStatus: ->
     unstagedColors =
@@ -24,7 +44,7 @@ class Git extends BaseClass
       added:      :yellow
       renamed:    :blue
       modified:   :red
-      created:    :red
+      untracked:    :red
       staged:     :green
 
     stagedColors =
@@ -33,34 +53,26 @@ class Git extends BaseClass
       added:      :brightYellow
       renamed:    :brightBlue
       modified:   :brightCyan
-      created:    :brightGray
+      untracked:    :brightGray
       staged:     :brightGreen
-
-    statuses =
-      D: :deleted
-      C: :conflicted
-      R: :renamed
-      A: :added
-      M: :modified
-      ?: :created
 
     @status
     .tap (status) ->
+      log {} status.files
       log "Branch:\n  #{colors.green status.current}                       #{colors.grey "(tracking: #{status.tracking})"}"
       outputOne = ({path}, status, clr) ->
-        status = statuses[status] ? status
         colors[clr] "  #{pad status + ':', 12} #{path}"
 
       staged = []
       unstaged = []
       untracked = []
       each file in status.files
-        if !present file.working_dir
+        if !present file.workingDir
           staged.push outputOne file, file.index, :green
-        else if file.working_dir == :?
-          untracked.push outputOne file, file.working_dir, :red
+        else if file.workingDir == :untracked
+          untracked.push outputOne file, file.workingDir, :red
         else
-          unstaged.push outputOne file, file.working_dir, :red
+          unstaged.push outputOne file, file.workingDir, :red
 
       if staged.length > 0
         log "" \nChanges to be committed:       #{colors.grey "(#{pluralize :file, staged.length})"}

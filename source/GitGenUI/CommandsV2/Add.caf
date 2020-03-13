@@ -1,0 +1,19 @@
+import &StandardImport
+
+description: "" add (or remove) files staged to commit
+run: ->
+  &Git.getStatus()
+  .then ({files}) ->
+    strings =
+      array file in files
+        "" #{pad '(#{file.workingDir || :staged})', 15} #{} file.path
+      .sort()
+    ask
+      type: :checkbox-plus
+      name: :stagedFiles
+      message: "" Select files to add to staged. Unselect files remove from staged.
+      pageSize:   25
+      highlight:  true
+      searchable: true
+      default: array string in strings when /\(staged/.test string
+      source: autocompleteFromStrings strings
