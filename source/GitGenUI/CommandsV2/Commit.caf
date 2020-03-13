@@ -111,10 +111,12 @@ run: (options) ->
             answers extract story, storyFinished
             if story?.id
               log {} story, storyFinished
-              newState = if story.state == :unstarted && !storyFinished
-                :started
-              else if story.state == :unstarted || story.state == :started
-                :finished
+              newState =
+                if story.state == :unstarted || story.state == :started
+                  if storyFinished
+                    :finished
+                  else
+                    :started
 
               if newState
                 # log "" Updating tracker state: #{story.state} >> #{newState}
