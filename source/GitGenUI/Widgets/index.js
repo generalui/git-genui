@@ -4,5 +4,6 @@
 (module.exports = require('./namespace'))
 
 .addModules({
-  InteractiveAdd: require('./InteractiveAdd')
+  InteractiveAdd: require('./InteractiveAdd'),
+  StandardImport: require('./StandardImport')
 });

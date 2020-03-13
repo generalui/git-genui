@@ -18,6 +18,7 @@ run: (options) ->
     &Tracker.stories
     &Tracker.members
     &Tracker.myAccount
+
   .then ({stories, members, myAccount, verbose}) ->
     Promise.then -> Inquirer
       SelectStoryQ

@@ -10,6 +10,7 @@
   Init:           require('./Init'),
   OpenTracker:    require('./OpenTracker'),
   ShowCommit:     require('./ShowCommit'),
+  Stage:          require('./Stage'),
   StandardImport: require('./StandardImport'),
   Start:          require('./Start'),
   Status:         require('./Status'),

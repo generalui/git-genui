@@ -1,5 +1,4 @@
 import &StandardImport, &Widgets
 
-description: "" add (or remove) files staged to commit
-run: ->
-  InteractiveAdd()
+description: "" alias for stage
+run: InteractiveAdd
