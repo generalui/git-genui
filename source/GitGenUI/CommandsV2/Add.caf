@@ -4,16 +4,29 @@ description: "" add (or remove) files staged to commit
 run: ->
   &Git.getStatus()
   .then ({files}) ->
+    files = array file in files when file.index != :renamed
     strings =
       array file in files
         "" #{pad '(#{file.workingDir || :staged})', 15} #{} file.path
       .sort()
+
     ask
-      type: :checkbox-plus
-      name: :stagedFiles
-      message: "" Select files to add to staged. Unselect files remove from staged.
-      pageSize:   25
-      highlight:  true
-      searchable: true
-      default: array string in strings when /\(staged/.test string
-      source: autocompleteFromStrings strings
+      CheckboxQ {}
+        name: :stagedFiles
+        message: "" Select files to staged. Unselect files to unstage.
+        default: array string in strings when /\(staged/.test string
+        strings
+
+    .then ({stagedFiles}) ->
+      array string in stagedFiles with string.split(/^\(\w+\)\s+/)[1]
+
+    .then (selectedFiles) ->
+      each file in files
+        if file.workingDir
+          if (file.path in selectedFiles)
+            &Git.stage file.path
+        else
+          if !(file.path in selectedFiles)
+            &Git.unstage file.path
+
+    .then -> &Git.printStatus()

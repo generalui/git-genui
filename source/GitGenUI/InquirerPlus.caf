@@ -12,6 +12,7 @@ class InquirerPlus
       p.then (a1) ->
         @inquire prompts
         .then (a2) -> deepMerge a1, a2
+    p
 
   @AutoCompleteQ: (options) ->
     merge
@@ -38,6 +39,14 @@ class InquirerPlus
       type: :password
       options
 
+  @CheckboxQ: (options) ->
+    merge
+      type: :checkbox-plus
+      pageSize:   20
+      highlight:  true
+      searchable: true
+      source: autocompleteFromStrings compactFlatten options.strings
+      options
 
   @SelectStoryQ: (stories, options) =>
     @AutoCompleteQ merge

@@ -6,6 +6,11 @@ class Git extends BaseClass
   @commit: (options) ->
     Promise.then -> SimpleGit.commit answersToCommit options
 
+  @stage: (files...) ->
+    Promise.then -> SimpleGit.add compactFlatten files
+
+  @unstage: (files...) ->
+    Promise.then -> SimpleGit.reset [] :head, compactFlatten(files)...
 
   @classGetter
     @email: ->
@@ -58,7 +63,6 @@ class Git extends BaseClass
 
     @status
     .tap (status) ->
-      log {} status.files
       log "Branch:\n  #{colors.green status.current}                       #{colors.grey "(tracking: #{status.tracking})"}"
       outputOne = ({path}, status, clr) ->
         colors[clr] "  #{pad status + ':', 12} #{path}"
