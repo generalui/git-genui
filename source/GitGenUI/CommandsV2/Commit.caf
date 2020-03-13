@@ -2,12 +2,17 @@ import &StandardImport, &InquirerPlus
 
 description: "" interactive commit
 run: (options) ->
-  &Widgets.InteractiveAdd()
+  &Git.status
   .then (status) ->
-    log ''
     if status.staged.length == 0 && status.renamed.length == 0
-      log "\nNothing is staged in git.\nPlease 'git add' something."
-      process.exit 1
+      &Widgets.InteractiveAdd()
+      .then (status) ->
+        if status.staged.length == 0 && status.renamed.length == 0
+          log "\nNothing is staged in git.\nPlease 'git add' something."
+          process.exit 1
+    else
+      &Git.printStatus()
+      .then -> log ''
 
   .then -> Promise.deepAll {}
     &Tracker.stories
