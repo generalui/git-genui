@@ -5,9 +5,8 @@ import &StandardImport
   .then ({files}) ->
     files = array file in files when file.index != :renamed
     strings =
-      array file in files
+      array file in files.sort (a, b) -> a.path.localeCompare b.path
         "" #{pad '(#{file.workingDir || :staged})', 15} #{} file.path
-      .sort()
 
     ask
       CheckboxQ {}
@@ -27,4 +26,6 @@ import &StandardImport
         else
           if !(file.path in selectedFiles)
             &Git.unstage file.path
+
+
   .then -> &Git.printStatus()
