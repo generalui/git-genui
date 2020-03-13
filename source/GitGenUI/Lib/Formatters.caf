@@ -1,4 +1,7 @@
 import &StandardImport
 
-formatStory: (story) ->
-  "" [#{story.id}] (#{story.state}) #{story.name}
+formatStory: (story, addLinks) ->
+  idString = "[##{story.id}]"
+  idString = &terminalLink idString, &Tracker.getStoryUrl story.id if addLinks
+
+  "" #{idString} (#{story.state}) #{story.name}

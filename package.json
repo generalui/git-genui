@@ -18,6 +18,7 @@
     "pivotaljs": "^1.0.3",
     "simple-git": "^1.131.0",
     "stable": "^0.1.8",
+    "terminal-link": "^2.1.1",
     "yargs": "^15.1.0"
   },
   "devDependencies": {},

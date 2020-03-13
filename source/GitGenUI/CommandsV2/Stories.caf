@@ -7,4 +7,4 @@ run:
     &Tracker.stories
     .then (stories) ->
       each story in stories
-        log "  " + formatStory story
+        log "  " + formatStory story, true

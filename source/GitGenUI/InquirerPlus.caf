@@ -59,7 +59,7 @@ class InquirerPlus
 
       filter: (val) ->
         if val == "(none)" then null
-        else if m = val.match /// ^ \[ ([^\]]+)
+        else if m = val.match /// ^ \[# ([^\]]+)
           id = m[1]
           find story in stories when "#{story.id}" == id
 
