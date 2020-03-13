@@ -9,13 +9,18 @@ run: ->
     yargs = &yargs
 
 
-    each {description, run}, command in &CommandsV2.modules
+    each {description, run}, command in &CommandsV2.modules when description is String
       yargs = yargs.command
         dashCase command
         description
         run
 
     yargs
+    .command
+      :$0
+      "show short help"
+      -> log "git-genui: Use --help to list commands."
+
     .option
       :verbose
       alias:        :v
