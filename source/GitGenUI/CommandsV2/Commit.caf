@@ -2,7 +2,7 @@ import &StandardImport, &InquirerPlus
 
 description: "" interactive commit
 run: (options) ->
-  &Git.printStatus()
+  &Widgets.InteractiveAdd()
   .then (status) ->
     log ''
     if status.staged.length == 0 && status.renamed.length == 0
@@ -118,17 +118,18 @@ run: (options) ->
                   else
                     :started
 
-              if newState
-                # log "" Updating tracker state: #{story.state} >> #{newState}
-                &Tracker.updateStory story.id, state: newState
-                .then -> log "" Story is now '#{newState}'
-              else Promise.resolve()
-              .then ->
+              Promise.all []
+                if newState
+                  # log "" Updating tracker state: #{story.state} >> #{newState}
+                  &Tracker.updateStory story.id, state: newState
+                  .then -> log "" Story is now '#{newState}'
+                else Promise.resolve()
+
                 &Tracker.createComment
                   story.id
                   "" #{newState || :progressed} with commit: #{commit}\n\n#{message}
-              .then ->
-                log "" Commit message added to story: #{} &Tracker.getStoryUrl story.id
+                .then ->
+                  log "" Commit message added to story: #{} &Tracker.getStoryUrl story.id
 
           .catch (error) -> log.error error
 

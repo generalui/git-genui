@@ -9,3 +9,4 @@ module.exports = require('neptune-namespaces').addNamespace(
 require('./CommandsV2/namespace');
 require('./Lib/namespace');
 require('./Trackers/namespace');
+require('./Widgets/namespace');

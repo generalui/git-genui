@@ -4,14 +4,15 @@
 (module.exports = require('./namespace'))
 
 .addModules({
-  Add:         require('./Add'),
-  Comment:     require('./Comment'),
-  Commit:      require('./Commit'),
-  Init:        require('./Init'),
-  OpenTracker: require('./OpenTracker'),
-  ShowCommit:  require('./ShowCommit'),
-  Start:       require('./Start'),
-  Status:      require('./Status'),
-  Stories:     require('./Stories'),
-  WhoAmI:      require('./WhoAmI')
+  Add:            require('./Add'),
+  Comment:        require('./Comment'),
+  Commit:         require('./Commit'),
+  Init:           require('./Init'),
+  OpenTracker:    require('./OpenTracker'),
+  ShowCommit:     require('./ShowCommit'),
+  StandardImport: require('./StandardImport'),
+  Start:          require('./Start'),
+  Status:         require('./Status'),
+  Stories:        require('./Stories'),
+  WhoAmI:         require('./WhoAmI')
 });

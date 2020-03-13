@@ -15,3 +15,4 @@
 require('./CommandsV2');
 require('./Lib');
 require('./Trackers');
+require('./Widgets');
