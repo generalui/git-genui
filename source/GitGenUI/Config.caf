@@ -19,7 +19,7 @@ class Config extends BaseClass
   @classGetter
     userConfigPath: -> @userHome.then (dir) -> "#{dir}/#{@configBasename}"
     repoConfigPath: -> @repoRoot.then (dir) -> "#{dir}/#{@configBasename}"
-    userHome: -> @_registerLoaders().then -> &os.homedir()
+    userHome: -> Promise.then -> &os.homedir()
     repoRoot: -> @_repoRoot ?=
       new SourceRoots @sourceRootIndicatorFiles
       .findSourceRoot process.cwd()
@@ -39,30 +39,22 @@ class Config extends BaseClass
       @userConfigPath
     .then ([str, userConfigPath]) ->
       &fsExtra.writeFile
-        filePath = userConfigPath + ".js"
+        filePath = userConfigPath + ".json"
         str
       .then -> filePath
 
   @getUpdatedUserConfig: (newConfig, mergeWithExisting = true) =>
     if mergeWithExisting then @userConfig.then (existingConfig) -> deepMerge existingConfig, newConfig
     else Promise.resolve newConfig
-    .then (configToWrite) -> "" module.exports = #{} JSON.stringify configToWrite, null, "  "
+    .then (configToWrite) -> JSON.stringify configToWrite, null, "  "
 
   @load: => @configPromise.then (config) -> mergeInto @config, config
 
   #######################################
     PRIVATE
   #######################################
-  @_prepForConfigLoad: =>
-
-  @_registerLoaders: (repoRoot = @repoRoot) =>
-    @__registerLoaders ?=
-      Promise.then -> repoRoot
-      .then (repoRoot) ->
-        if fs.existsSync file = path.join repoRoot, @registerLoadersFilename
-          realRequire file
 
   @_loadOneConfig: (dir, name = @configBasename) =>
-    baseName = path.join dir, name
-    glob baseName + ".*"
-    .then (results) -> realRequire baseName if results.length > 0
+    Promise.then ->
+      if &fsExtra.existsSync log baseName = path.join dir, name + ".json"
+        realRequire baseName
