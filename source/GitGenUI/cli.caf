@@ -5,6 +5,7 @@ run: ->
   serve = -> log :serving
 
   &Config.load()
+  .tap (config) -> &Tracker.tracker.init config
   .then ->
     yargs = &yargs
 

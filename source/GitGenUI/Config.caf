@@ -56,5 +56,5 @@ class Config extends BaseClass
 
   @_loadOneConfig: (dir, name = @configBasename) =>
     Promise.then ->
-      if &fsExtra.existsSync log baseName = path.join dir, name + ".json"
+      if &fsExtra.existsSync baseName = path.join dir, name + ".json"
         realRequire baseName

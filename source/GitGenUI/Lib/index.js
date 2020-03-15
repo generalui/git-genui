@@ -5,7 +5,6 @@
 .includeInNamespace(require('./Lib'))
 .addModules({
   Autocomplete:   require('./Autocomplete'),
-  Formatters:     require('./Formatters'),
   Git:            require('./Git'),
   SearchSort:     require('./SearchSort'),
   SourceRoots:    require('./SourceRoots'),

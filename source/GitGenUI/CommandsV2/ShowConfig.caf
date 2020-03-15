@@ -1,4 +1,4 @@
 import &StandardImport
 
 description: "" show the merged configurarion for git-genui
-run: -> log {} &Config.config
+run: -> log &Config.config

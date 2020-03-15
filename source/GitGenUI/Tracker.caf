@@ -1,19 +1,35 @@
-import &StandardImport, &Config
+import &ArtStandardLib, &ArtClassSystem
 
 class Tracker extends BaseClass
+  @singletonClass()
 
-  @classGetter
-    projectId:        -> config.project?.tracker?.projectId
-    tracker:          -> &Trackers[config.project?.tracker?.name]
+  constructor: (cfg) ->
+    @init cfg
+
+  init: (cfg) ->
+    cfg?.project?.tracker extract? projectId, name
+    @_tracker = &Trackers[name]
+    @_projectId = projectId
+
+  @getter
+    :projectId
+    :tracker
     stories:          -> @tracker.getStories @projectId
     members:          -> @tracker.getMembers @projectId
     myAccount:        -> @tracker.getMyAccount @projectId
+    projects:         -> @tracker.projects
 
-  @getStoryUrl:       (storyId) -> @tracker.getStoryUrl @projectId, storyId
-  @getProjectUrl:     -> @tracker.getProjectUrl @projectId
-  @openInBrowser:     -> @tracker.openInBrowser @projectId
+  getStoryUrl:       (storyId) -> @tracker.getStoryUrl @projectId, storyId
+  getProjectUrl:     -> @tracker.getProjectUrl @projectId
+  openInBrowser:     -> @tracker.openInBrowser @projectId
 
-  @updateStory:       (storyId, updates) -> @tracker.updateStory @projectId, storyId, updates
-  @createComment:     (storyId, text) -> @tracker.createComment @projectId, storyId, text
+  updateStory:       (storyId, updates) -> @tracker.updateStory @projectId, storyId, updates
+  createComment:     (storyId, text) -> @tracker.createComment @projectId, storyId, text
 
-  @authenticate:      (options) -> @tracker.authenticate options
+  authenticate:      (options) -> @tracker.authenticate options
+
+  formatStory: (story, addLinks) ->
+    idString = "[##{story.id}]"
+    idString = &terminalLink idString, @getStoryUrl story.id if addLinks
+
+    "" #{idString} (#{story.state}) #{story.name}

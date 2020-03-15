@@ -4,13 +4,13 @@ description: "" start a story
 run:
   (options) ->
 
-    &Tracker.stories
+    &Tracker.tracker.stories
     .then (stories) ->
       started = array story in stories when story.state == :started
       if started.length > 0
         log &colors.cyan "" Stories already started:
         each story in started
-          log "  " + formatStory story
+          log "  " + tracker.formatStory story
         log ''
       Inquirer SelectStoryQ
         array story in stories when story.state == :unstarted || story.state == :rejected
@@ -29,7 +29,7 @@ run:
               name: i
         else Promise.resolve {}
         .then (updates) -> merge updates, state: :started
-        .then (updates) -> &Tracker.updateStory story.id, updates
+        .then (updates) -> &Tracker.tracker.updateStory story.id, updates
         .then ->
           log &colors.blue "Story [##{story.id}]: " + &colors.green "'started' at #{formatDate "h:MMtt (Z mmmm d, yyyy)"}"
       else log "Canceled"

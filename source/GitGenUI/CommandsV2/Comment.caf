@@ -3,7 +3,7 @@ import &StandardImport, &InquirerPlus
 description: "" comment on a story
 run: (options) ->
 
-  &Tracker.stories
+  &Tracker.tracker.stories
   .then (stories) ->
     Inquirer SelectStoryQ
       stories
@@ -14,7 +14,7 @@ run: (options) ->
         name: :comment
         message: "" Comment:
       .then ({comment}) ->
-        &Tracker.createComment
+        &Tracker.tracker.createComment
           story.id
           comment
     else log "Canceled"

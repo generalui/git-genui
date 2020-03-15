@@ -1,4 +1,4 @@
 import &StandardImport
 
 description: "" open tracker in the browser
-run: -> &Tracker.openInBrowser()
+run: -> &Tracker.tracker.openInBrowser()

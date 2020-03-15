@@ -4,7 +4,7 @@ description: "" list all open stories
 run:
   (options) ->
 
-    &Tracker.stories
+    &Tracker.tracker.stories
     .then (stories) ->
       each story in stories
-        log "  " + formatStory story, true
+        log "  " + tracker.formatStory story, true

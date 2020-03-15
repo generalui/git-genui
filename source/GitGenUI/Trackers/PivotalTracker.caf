@@ -1,4 +1,4 @@
-import &StandardImport, &Config, &ArtRestClient
+import &ArtStandardLib, &ArtClassSystem, &Config, &ArtRestClient
 
 baseUrl = :https://www.pivotaltracker.com/services/v5
 
@@ -9,18 +9,22 @@ class PivotalTracker extends BaseClass
   #####################################
     READ
   #####################################
-  @getProjects: =>
-    getJson :https://www.pivotaltracker.com/services/v5/projects @commonRestOptions
+  @classGetter
+    projects: ->
+      getJson :https://www.pivotaltracker.com/services/v5/projects @commonRestOptions
 
+    myAccount: ->
+      getJson :https://www.pivotaltracker.com/services/v5/me?date_format=millis @commonRestOptions
+      .then @_normalizeAccount
+
+  #####################################
+    READ PROJECT DETAILS
+  #####################################
   @getStories: (projectId, options) ->
     options extract? states
     states ?= :started :rejected :planned :unstarted :unscheduled :finished :delivered
     getJson "#{baseUrl}/projects/#{projectId}/stories?limit=500&date_format=millis&filter=state:#{states.join ','}" @commonRestOptions
     .then (stories) -> stories.map @_normalizeStory
-
-  @getMyAccount: =>
-    getJson :https://www.pivotaltracker.com/services/v5/me?date_format=millis @commonRestOptions
-    .then @_normalizeAccount
 
   @getMembers: (projectId) =>
     getJson "#{baseUrl}/projects/#{projectId}/memberships" @commonRestOptions

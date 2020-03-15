@@ -15,9 +15,9 @@ run: (options) ->
       .then -> log ''
 
   .then -> Promise.deepAll {}
-    &Tracker.stories
-    &Tracker.members
-    &Tracker.myAccount
+    &Tracker.tracker.stories
+    &Tracker.tracker.members
+    &Tracker.tracker.myAccount
 
   .then ({stories, members, myAccount, verbose}) ->
     Promise.then -> Inquirer
@@ -127,15 +127,15 @@ run: (options) ->
               Promise.all []
                 if newState
                   # log "" Updating tracker state: #{story.state} >> #{newState}
-                  &Tracker.updateStory story.id, state: newState
+                  &Tracker.tracker.updateStory story.id, state: newState
                   .then -> log "" Story is now '#{newState}'
                 else Promise.resolve()
 
-                &Tracker.createComment
+                &Tracker.tracker.createComment
                   story.id
                   "" #{newState || :progressed} with commit: #{commit}\n\n#{message}
                 .then ->
-                  log "" Commit message added to story: #{} &Tracker.getStoryUrl story.id
+                  log "" Commit message added to story: #{} &Tracker.tracker.getStoryUrl story.id
 
           .catch (error) -> log.error error
 

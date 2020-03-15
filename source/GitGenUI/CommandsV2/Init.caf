@@ -9,7 +9,7 @@ run: (options) ->
   .then (gitEmail) ->
     _username = gitEmail = gitEmail?.trim()
     auth = ->
-      Inquirer
+      ask
         InputQ
           name: :username
           default: _username
@@ -20,31 +20,43 @@ run: (options) ->
           message: "" What is your PivotalTracker password? (used only to fetch API token)
       .then ({password, username})->
         _username = username
-        &Tracker.authenticate {} password, username
+        &Tracker.tracker.authenticate {} password, username
 
-      .catch (error) ->
-        if error.status == clientFailureNotAuthorized
-          log.warn "" Invalid password. Please try again.
+        .catch (error) ->
+          if error.status == clientFailureNotAuthorized
+            log.warn "" Invalid password. Please try again.
 
-        else
-          log.error {}
-            error.message
-            error.status
+          else
+            log.error {}
+              error.message
+              error.status
 
-        auth()
+          auth()
 
     auth()
-
-    .then ({token, email}) ->
-      Inquirer InputQ
+    .thenAsk ({email}) ->
+      InputQ
         name: :gitEmail
         message: "" What is your git email?
         default: gitEmail || email
 
-      .then ({gitEmail}) ->
-        &Config.writeUserConfig accounts:
+    .thenAsk ({token}) ->
+      tracker.init
+        accounts:
           pivotalTracker: {} token
-          git: email: gitEmail
 
-      .then (writtenFile) ->
-        log colors.green "Success. Wrote: #{writtenFile}"
+        project:
+          tracker:
+            name:      :PivotalTracker
+
+      tracker.projects
+      .then (projects) ->
+        log {} projects
+
+    .then ({token, gitEmail}) ->
+      &Config.writeUserConfig accounts:
+        pivotalTracker: {} token
+        git: email: gitEmail
+
+    .then (writtenFile) ->
+      log colors.green "Success. Wrote: #{writtenFile}"
