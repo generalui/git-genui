@@ -10,6 +10,7 @@ class Tracker extends BaseClass
     cfg?.project?.tracker extract? projectId, name
     @_tracker = &Trackers[name]
     @_projectId = projectId
+    @formatStory = @formatStory.bind @
 
   @getter
     :projectId
@@ -30,6 +31,6 @@ class Tracker extends BaseClass
 
   formatStory: (story, addLinks) ->
     idString = "[##{story.id}]"
-    idString = &terminalLink idString, @getStoryUrl story.id if addLinks
+    # idString = &terminalLink idString, @getStoryUrl story.id if addLinks
 
     "" #{idString} (#{story.state}) #{story.name}
