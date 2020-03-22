@@ -91,11 +91,8 @@ run: (options) ->
       ask
         YesNoQ
           type:     :expand
-          default:  :true
-          choices:
-            key: :y value: true   name: "" yes
-            key: :c value: false  name: "" cancel
           name:     :commit
+          default:  true
           message:  "" 'git commit' now?
 
       .then ({commit}) ->

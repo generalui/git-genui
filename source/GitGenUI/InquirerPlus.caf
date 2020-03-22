@@ -41,10 +41,10 @@ class InquirerPlus
   @YesNoQ: (options) ->
     merge
       type:     :expand
-      default:  :no
+      default:  if options.default == true || options.default == :yes then :yes else :no
       choices:
-        key: :N value: :no  name: "" no
         key: :y value: :yes name: "" yes
+        key: :n value: :no  name: "" no
       options
 
   @InputQ: (options) ->
