@@ -15,19 +15,19 @@ class Tracker extends BaseClass
   @getter
     :projectId
     :tracker
-    stories:          -> @tracker.getStories @projectId
-    members:          -> @tracker.getMembers @projectId
-    myAccount:        -> @tracker.getMyAccount @projectId
-    projects:         -> @tracker.projects
+    stories:          -> @tracker?.getStories @projectId
+    members:          -> @tracker?.getMembers @projectId
+    myAccount:        -> @tracker?.getMyAccount @projectId
+    projects:         -> @tracker?.projects
 
-  getStoryUrl:       (storyId) -> @tracker.getStoryUrl @projectId, storyId
-  getProjectUrl:     -> @tracker.getProjectUrl @projectId
-  openInBrowser:     -> @tracker.openInBrowser @projectId
+  getStoryUrl:       (storyId) -> @tracker?.getStoryUrl @projectId, storyId
+  getProjectUrl:     -> @tracker?.getProjectUrl @projectId
+  openInBrowser:     -> @tracker?.openInBrowser @projectId
 
-  updateStory:       (storyId, updates) -> @tracker.updateStory @projectId, storyId, updates
-  createComment:     (storyId, text) -> @tracker.createComment @projectId, storyId, text
+  updateStory:       (storyId, updates) -> @tracker?.updateStory @projectId, storyId, updates
+  createComment:     (storyId, text) -> @tracker?.createComment @projectId, storyId, text
 
-  authenticate:      (options) -> @tracker.authenticate options
+  authenticate:      (options) -> @tracker?.authenticate options
 
   formatStory: (story, addLinks) ->
     idString = "[##{story.id}]"

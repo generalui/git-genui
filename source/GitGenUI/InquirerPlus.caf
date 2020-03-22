@@ -67,7 +67,7 @@ class InquirerPlus
       options
 
   @SelectStoryQ: (stories, options) =>
-    @AutoCompleteQ merge
+    stories && @AutoCompleteQ merge
       name:     :story
       message:  "" Select a story...
       pageSize: 20
