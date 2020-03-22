@@ -5,12 +5,12 @@ run: (options) ->
 
   &Tracker.tracker.stories
   .then (stories) ->
-    Inquirer SelectStoryQ
+    ask SelectStoryQ
       stories
       message:  "" What story do you want to comment on?
   .then ({story}) ->
     if story
-      Inquirer InputQ
+      ask InputQ
         name: :comment
         message: "" Comment:
       .then ({comment}) ->

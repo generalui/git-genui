@@ -12,13 +12,13 @@ run:
         each story in started
           log "  " + tracker.formatStory story
         log ''
-      Inquirer SelectStoryQ
+      ask SelectStoryQ
         array story in stories when story.state == :unstarted || story.state == :rejected
         message:  "" What story do you want to start?
     .then ({story}) ->
       if story
         if !present story.estimate
-          Inquirer
+          ask
             type:     :expand
             name:     :estimate
             default:  :no
@@ -29,7 +29,5 @@ run:
               name: i
         else Promise.resolve {}
         .then (updates) -> merge updates, state: :started
-        .then (updates) -> &Tracker.tracker.updateStory story.id, updates
-        .then ->
-          log &colors.blue "Story [##{story.id}]: " + &colors.green "'started' at #{formatDate "h:MMtt (Z mmmm d, yyyy)"}"
+        .then (updates) -> &Tracker.tracker.updateStoryWithMessage story.id, updates
       else log "Canceled"

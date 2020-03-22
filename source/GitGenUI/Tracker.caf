@@ -1,4 +1,4 @@
-import &ArtStandardLib, &ArtClassSystem
+import &ArtStandardLib, &ArtClassSystem, &colors
 
 class Tracker extends BaseClass
   @singletonClass()
@@ -34,3 +34,27 @@ class Tracker extends BaseClass
     # idString = &terminalLink idString, @getStoryUrl story.id if addLinks
 
     "" #{idString} (#{story.state}) #{story.name}
+
+  createCommentWithMessage:     (storyId, text) ->
+    @createComment storyId, text
+    .tap ->
+      @logStoryUpdateMessage storyId,
+        """
+          comment added:
+          #{dashes = '-'.repeat process.stdout.columns - 1}
+            #{text.replace /\n/g, "\n  "}
+          #{dashes}
+
+  updateStoryWithMessage: (storyId, updates) ->
+    @updateStory storyId, updates
+    .tap ->
+      @logStoryUpdateMessage storyId,
+        if present updates.state
+          "'#{updates.state}'"
+        else :updated
+        + " at #{formatDate "h:MMtt (Z mmmm d, yyyy)"}"
+
+  logStoryUpdateMessage: (storyId, message) ->
+    log
+      blue "Story [##{storyId}]: "
+      + green message
