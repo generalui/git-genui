@@ -20,7 +20,7 @@ run: (options) ->
     &Tracker.tracker.myAccount
 
   .then ({stories, members, myAccount, verbose}) ->
-    Promise.then -> Inquirer
+    Promise.then -> ask
       SelectStoryQ
         stories
         message:  "" What story does this commit advance?
@@ -50,7 +50,7 @@ run: (options) ->
           "" major/removal:     breaking removal                 version + 1.0.0 ()
 
     .then (answers) ->
-      Inquirer
+      ask
         InputQ
           name:     :subject
           default:  answers.story?.name
@@ -88,7 +88,7 @@ run: (options) ->
 
       log "\ncommit-message: #{&colors.green message}\n"
 
-      Inquirer
+      ask
         YesNoQ
           type:     :expand
           default:  :true
@@ -107,16 +107,17 @@ run: (options) ->
             insertions = insertions | 0
             deletions = deletions | 0
 
-            log success: {}
-              branch
-              commit
-              summary: object v in {changes, insertions, deletions} when v > 0
-              message: message
+            # log success: {}
+            #   branch
+            #   commit
+            #   summary: object v in {changes, insertions, deletions} when v > 0
+            #   message: message
 
           .tap ({commit})->
             answers extract story, storyFinished
+            storyFinished = storyFinished == true || storyFinished == :yes # TODO: should be true, but currently it's :yes for true
             if story?.id
-              log {} story, storyFinished
+              # log {} story, storyFinished
               newState =
                 if story.state == :unstarted || story.state == :started
                   if storyFinished
@@ -127,15 +128,14 @@ run: (options) ->
               Promise.all []
                 if newState
                   # log "" Updating tracker state: #{story.state} >> #{newState}
-                  &Tracker.tracker.updateStory story.id, state: newState
-                  .then -> log "" Story is now '#{newState}'
+                  &Tracker.tracker.updateStoryWithMessage story.id, state: newState
                 else Promise.resolve()
 
-                &Tracker.tracker.createComment
+                &Tracker.tracker.createCommentWithMessage
                   story.id
-                  "" #{newState || :progressed} with commit: #{commit}\n\n#{message}
-                .then ->
-                  log "" Commit message added to story: #{} &Tracker.tracker.getStoryUrl story.id
+                  """
+                    #{newState || :progressed} with commit: #{commit}\n\n#{message}
+                    by git-genui v#{&package.version}
 
           .catch (error) -> log.error error
 
