@@ -33,7 +33,6 @@ class Tracker extends BaseClass
 
   formatStory: (story, addLinks) ->
     idString = "[##{story.id}]"
-    # idString = &terminalLink idString, @getStoryUrl story.id if addLinks
 
     "" #{idString} (#{story.state}) #{story.name}
 
