@@ -1,2 +1,1 @@
-require('./register')
-require('./source/GitGenUI')
+module.exports = require('./build')

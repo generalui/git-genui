@@ -1,3 +1,2 @@
-#!/usr/local/bin/node
-require('caffeine-script/register')
-require('./source/GitGenUI').run()
+#!/usr/bin/env node
+require('./build').run()
