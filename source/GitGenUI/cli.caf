@@ -1,31 +1,15 @@
 import &ArtStandardLib
 fs = &fsExtra
 
-run: ->
-  serve = -> log :serving
 
+run: ->
   &Config.load()
   .tap (config) -> &Tracker.tracker.init config
   .then ->
-    yargs = &yargs
-
-
-    each {description, run}, command in &CommandsV2.modules when description is String
-      yargs = yargs.command
-        dashCase command
-        description
-        run
-
-    yargs
-    .command
-      :$0
-      "show short help"
-      -> log "git-genui: Use --help to list commands."
-
-    .option
-      :verbose
-      alias:        :v
-      type:         :boolean
-      description:  "" Run with verbose logging
-
-    .argv
+    commandsMap = object m from &CommandsV2.modules when m.description is String
+    require :@art-suite/cli
+    .start
+      commands: object {run} in commandsMap with run
+      help: commands: object m in commandsMap
+        merge m, options:
+          verbose: "" run with verbose logging

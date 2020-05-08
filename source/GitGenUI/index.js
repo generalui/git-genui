@@ -4,7 +4,7 @@
 (module.exports = require('./namespace'))
 .includeInNamespace(require('./GitGenUI'))
 .addModules({
-  Cli:            require('./cli'),
+  Cli:            require('./Cli'),
   Config:         require('./Config'),
   Git:            require('./Git'),
   InquirerPlus:   require('./InquirerPlus'),

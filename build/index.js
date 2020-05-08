@@ -175,18 +175,18 @@ Caf.defMod(module, () => {
 (module.exports = __webpack_require__(/*! ./namespace */ 5))
 .includeInNamespace(__webpack_require__(/*! ./GitGenUI */ 12))
 .addModules({
-  Cli:            __webpack_require__(/*! ./cli */ 13),
+  Cli:            __webpack_require__(/*! ./Cli */ 13),
   Config:         __webpack_require__(/*! ./Config */ 16),
-  Git:            __webpack_require__(/*! ./Git */ 49),
-  InquirerPlus:   __webpack_require__(/*! ./InquirerPlus */ 42),
+  Git:            __webpack_require__(/*! ./Git */ 48),
+  InquirerPlus:   __webpack_require__(/*! ./InquirerPlus */ 41),
   Pizza:          __webpack_require__(/*! ./pizza */ 61),
   StandardImport: __webpack_require__(/*! ./StandardImport */ 17),
   Tracker:        __webpack_require__(/*! ./Tracker */ 31)
 });
-__webpack_require__(/*! ./CommandsV2 */ 39);
+__webpack_require__(/*! ./CommandsV2 */ 38);
 __webpack_require__(/*! ./Lib */ 19);
 __webpack_require__(/*! ./Trackers */ 33);
-__webpack_require__(/*! ./Widgets */ 46);
+__webpack_require__(/*! ./Widgets */ 45);
 
 /***/ }),
 /* 5 */
@@ -227,7 +227,7 @@ module.exports = require('neptune-namespaces' /* ABC - not inlining fellow NPM *
 /*! exports provided: author, bin, bugs, dependencies, description, devDependencies, homepage, license, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"author\":\"GenUI LLC\",\"bin\":{\"s3p\":\"./s3p\"},\"bugs\":\"https:/github.com/generalui/git-genui/issues\",\"dependencies\":{\"art-rest-client\":\"^1.7.0\",\"btoa\":\"^1.2.1\",\"fs-extra\":\"^9.0.0\",\"inquirer\":\"^7.1.0\",\"inquirer-autocomplete-prompt\":\"^1.0.2\",\"inquirer-checkbox-plus-prompt\":\"^1.0.1\",\"neptune-namespaces\":\"^4.0.0\",\"open\":\"^7.0.3\",\"pivotaljs\":\"^1.0.3\",\"simple-git\":\"^1.132.0\",\"stable\":\"^0.1.8\",\"yargs\":\"^15.3.1\"},\"description\":\"git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning\",\"devDependencies\":{\"art-build-configurator\":\"^1.26.9\",\"art-testbench\":\"^1.17.2\",\"caffeine-script\":\"^0.72.1\",\"case-sensitive-paths-webpack-plugin\":\"^2.2.0\",\"chai\":\"^4.2.0\",\"coffee-loader\":\"^0.7.3\",\"css-loader\":\"^3.0.0\",\"json-loader\":\"^0.5.7\",\"mocha\":\"^7.1.1\",\"mock-fs\":\"^4.11.0\",\"script-loader\":\"^0.7.2\",\"style-loader\":\"^1.0.0\",\"webpack\":\"^4.39.1\",\"webpack-cli\":\"*\",\"webpack-dev-server\":\"^3.7.2\",\"webpack-merge\":\"^4.2.1\",\"webpack-node-externals\":\"^1.7.2\",\"webpack-stylish\":\"^0.1.8\"},\"homepage\":\"https://github.com/generalui/git-genui\",\"license\":\"ISC\",\"name\":\"git-genui\",\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/generalui/git-genui.git\"},\"scripts\":{\"build\":\"webpack --progress\",\"start\":\"webpack-dev-server --hot --inline --progress --env.devServer\",\"test\":\"nn -s;mocha -u tdd\",\"testInBrowser\":\"webpack-dev-server --progress --env.devServer\"},\"version\":\"0.1.0\"}");
+module.exports = JSON.parse("{\"author\":\"GenUI LLC\",\"bin\":{\"s3p\":\"./s3p\"},\"bugs\":\"https:/github.com/generalui/git-genui/issues\",\"dependencies\":{\"@art-suite/cli\":\"^1.1.1\",\"art-rest-client\":\"^1.7.0\",\"btoa\":\"^1.2.1\",\"fs-extra\":\"^9.0.0\",\"inquirer\":\"^7.1.0\",\"inquirer-autocomplete-prompt\":\"^1.0.2\",\"inquirer-checkbox-plus-prompt\":\"^1.0.1\",\"neptune-namespaces\":\"^4.0.0\",\"open\":\"^7.0.3\",\"pivotaljs\":\"^1.0.3\",\"simple-git\":\"^1.132.0\",\"stable\":\"^0.1.8\",\"yargs\":\"^15.3.1\"},\"description\":\"git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning\",\"devDependencies\":{\"art-build-configurator\":\"^1.26.9\",\"art-testbench\":\"^1.17.2\",\"caffeine-script\":\"^0.72.1\",\"case-sensitive-paths-webpack-plugin\":\"^2.2.0\",\"chai\":\"^4.2.0\",\"coffee-loader\":\"^0.7.3\",\"css-loader\":\"^3.0.0\",\"json-loader\":\"^0.5.7\",\"mocha\":\"^7.1.1\",\"mock-fs\":\"^4.11.0\",\"script-loader\":\"^0.7.2\",\"style-loader\":\"^1.0.0\",\"webpack\":\"^4.39.1\",\"webpack-cli\":\"*\",\"webpack-dev-server\":\"^3.7.2\",\"webpack-merge\":\"^4.2.1\",\"webpack-node-externals\":\"^1.7.2\",\"webpack-stylish\":\"^0.1.8\"},\"homepage\":\"https://github.com/generalui/git-genui\",\"license\":\"ISC\",\"name\":\"git-genui\",\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/generalui/git-genui.git\"},\"scripts\":{\"build\":\"webpack --progress\",\"start\":\"webpack-dev-server --hot --inline --progress --env.devServer\",\"test\":\"nn -s;mocha -u tdd\",\"testInBrowser\":\"webpack-dev-server --progress --env.devServer\"},\"version\":\"0.1.0\"}");
 
 /***/ }),
 /* 8 */
@@ -309,7 +309,7 @@ module.exports = __webpack_require__(/*! ../namespace */ 5).addNamespace(
 /* WEBPACK VAR INJECTION */(function(module) {
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
-  return [__webpack_require__(/*! ./cli */ 13), __webpack_require__(/*! ./Lib */ 19)];
+  return [__webpack_require__(/*! ./Cli */ 13), __webpack_require__(/*! ./Lib */ 19)];
 });
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/webpack/buildin/module.js */ 1)(module)))
@@ -317,7 +317,7 @@ Caf.defMod(module, () => {
 /***/ }),
 /* 13 */
 /*!*********************************!*\
-  !*** ./source/GitGenUI/cli.caf ***!
+  !*** ./source/GitGenUI/Cli.caf ***!
   \*********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -327,36 +327,33 @@ Caf.defMod(module, () => {
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["log", "dashCase", "String"],
+    ["String", "merge"],
     [global, __webpack_require__(/*! art-standard-lib */ 14)],
-    (log, dashCase, String) => {
+    (String, merge) => {
       let fs;
       fs = __webpack_require__(/*! fs-extra */ 15);
       return {
         run: function() {
-          let serve;
-          serve = () => log("serving");
           return __webpack_require__(/*! ./Config */ 16)
             .load()
             .tap(config => __webpack_require__(/*! ./Tracker */ 31).tracker.init(config))
             .then(() => {
-              let yargs;
-              yargs = __webpack_require__(/*! yargs */ 38);
-              Caf.each2(
-                __webpack_require__(/*! ./CommandsV2 */ 39).modules,
-                ({ description, run }, command) =>
-                  (yargs = yargs.command(dashCase(command), description, run)),
-                ({ description, run }, command) => Caf.is(description, String)
+              let commandsMap;
+              commandsMap = Caf.object(
+                __webpack_require__(/*! ./CommandsV2 */ 38).modules,
+                null,
+                m => Caf.is(m.description, String)
               );
-              return yargs
-                .command("$0", "show short help", () =>
-                  log("git-genui: Use --help to list commands.")
-                )
-                .option("verbose", {
-                  alias: "v",
-                  type: "boolean",
-                  description: "Run with verbose logging"
-                }).argv;
+              return __webpack_require__(/*! @art-suite/cli */ 60).start({
+                commands: Caf.object(commandsMap, ({ run }) => run),
+                help: {
+                  commands: Caf.object(commandsMap, m =>
+                    merge(m, {
+                      options: { verbose: "run with verbose logging" }
+                    })
+                  )
+                }
+              });
             });
         }
       };
@@ -1361,16 +1358,6 @@ module.exports = require('btoa' /* ABC - not inlining fellow NPM */);
 
 /***/ }),
 /* 38 */
-/*!************************************************************************!*\
-  !*** external "require('yargs' /* ABC - not inlining fellow NPM *_/)" ***!
-  \************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require('yargs' /* ABC - not inlining fellow NPM */);
-
-/***/ }),
-/* 39 */
 /*!*********************************************!*\
   !*** ./source/GitGenUI/CommandsV2/index.js ***!
   \*********************************************/
@@ -1383,22 +1370,22 @@ module.exports = require('yargs' /* ABC - not inlining fellow NPM */);
 (module.exports = __webpack_require__(/*! ./namespace */ 8))
 
 .addModules({
-  Add:            __webpack_require__(/*! ./Add */ 40),
-  Comment:        __webpack_require__(/*! ./Comment */ 51),
-  Commit:         __webpack_require__(/*! ./Commit */ 52),
-  Init:           __webpack_require__(/*! ./Init */ 53),
-  OpenTracker:    __webpack_require__(/*! ./OpenTracker */ 54),
-  ShowConfig:     __webpack_require__(/*! ./ShowConfig */ 55),
-  Stage:          __webpack_require__(/*! ./Stage */ 56),
-  StandardImport: __webpack_require__(/*! ./StandardImport */ 41),
-  Start:          __webpack_require__(/*! ./Start */ 57),
-  Status:         __webpack_require__(/*! ./Status */ 58),
-  Stories:        __webpack_require__(/*! ./Stories */ 59),
-  WhoAmI:         __webpack_require__(/*! ./WhoAmI */ 60)
+  Add:            __webpack_require__(/*! ./Add */ 39),
+  Comment:        __webpack_require__(/*! ./Comment */ 50),
+  Commit:         __webpack_require__(/*! ./Commit */ 51),
+  Init:           __webpack_require__(/*! ./Init */ 52),
+  OpenTracker:    __webpack_require__(/*! ./OpenTracker */ 53),
+  ShowConfig:     __webpack_require__(/*! ./ShowConfig */ 54),
+  Stage:          __webpack_require__(/*! ./Stage */ 55),
+  StandardImport: __webpack_require__(/*! ./StandardImport */ 40),
+  Start:          __webpack_require__(/*! ./Start */ 56),
+  Status:         __webpack_require__(/*! ./Status */ 57),
+  Stories:        __webpack_require__(/*! ./Stories */ 58),
+  WhoAmI:         __webpack_require__(/*! ./WhoAmI */ 59)
 });
 
 /***/ }),
-/* 40 */
+/* 39 */
 /*!********************************************!*\
   !*** ./source/GitGenUI/CommandsV2/Add.caf ***!
   \********************************************/
@@ -1411,7 +1398,7 @@ let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["InteractiveAdd"],
-    [global, __webpack_require__(/*! ./StandardImport */ 41), __webpack_require__(/*! ../Widgets */ 46)],
+    [global, __webpack_require__(/*! ./StandardImport */ 40), __webpack_require__(/*! ../Widgets */ 45)],
     InteractiveAdd => {
       return { description: "alias for stage", run: InteractiveAdd };
     }
@@ -1421,7 +1408,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 41 */
+/* 40 */
 /*!*******************************************************!*\
   !*** ./source/GitGenUI/CommandsV2/StandardImport.caf ***!
   \*******************************************************/
@@ -1433,7 +1420,7 @@ Caf.defMod(module, () => {
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return __webpack_require__(/*! ../StandardImport */ 17).mergeWithSelf(
-    __webpack_require__(/*! ../InquirerPlus */ 42),
+    __webpack_require__(/*! ../InquirerPlus */ 41),
     { tracker: __webpack_require__(/*! ../Tracker */ 31).tracker }
   );
 });
@@ -1441,7 +1428,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 42 */
+/* 41 */
 /*!******************************************!*\
   !*** ./source/GitGenUI/InquirerPlus.caf ***!
   \******************************************/
@@ -1476,13 +1463,13 @@ Caf.defMod(module, () => {
       autocompleteFromStrings
     ) => {
       let InquirerPlus;
-      __webpack_require__(/*! inquirer */ 43).registerPrompt(
+      __webpack_require__(/*! inquirer */ 42).registerPrompt(
         "autocomplete",
-        __webpack_require__(/*! inquirer-autocomplete-prompt */ 44)
+        __webpack_require__(/*! inquirer-autocomplete-prompt */ 43)
       );
-      __webpack_require__(/*! inquirer */ 43).registerPrompt(
+      __webpack_require__(/*! inquirer */ 42).registerPrompt(
         "checkbox-plus",
-        __webpack_require__(/*! inquirer-checkbox-plus-prompt */ 45)
+        __webpack_require__(/*! inquirer-checkbox-plus-prompt */ 44)
       );
       return (InquirerPlus = Caf.defClass(
         class InquirerPlus extends Object {},
@@ -1498,7 +1485,7 @@ Caf.defMod(module, () => {
             ).then(merge);
           };
           this._inquireOne = function(prompt) {
-            return __webpack_require__(/*! inquirer */ 43).prompt.then(result => {
+            return __webpack_require__(/*! inquirer */ 42).prompt.then(result => {
               if (prompt.postprocess) {
                 result[prompt.name] = prompt.postprocess(result[prompt.name]);
               }
@@ -1521,7 +1508,7 @@ Caf.defMod(module, () => {
               },
               thenAsk: function(...prompts) {
                 return this.then(a1 =>
-                  __webpack_require__(/*! inquirer */ 43)
+                  __webpack_require__(/*! inquirer */ 42)
                     .prompt(
                       compactFlatten(
                         Caf.is(prompts, Function) ? prompts(a1) : prompts
@@ -1536,7 +1523,7 @@ Caf.defMod(module, () => {
             extendAskPromise(Promise.resolve(defaultAnswers));
           this.ask = (...prompts) =>
             extendAskPromise(
-              __webpack_require__(/*! inquirer */ 43).prompt(compactFlatten(prompts))
+              __webpack_require__(/*! inquirer */ 42).prompt(compactFlatten(prompts))
             );
           this.AutoCompleteQ = function(options) {
             return merge(
@@ -1619,7 +1606,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 43 */
+/* 42 */
 /*!***************************************************************************!*\
   !*** external "require('inquirer' /* ABC - not inlining fellow NPM *_/)" ***!
   \***************************************************************************/
@@ -1629,7 +1616,7 @@ Caf.defMod(module, () => {
 module.exports = require('inquirer' /* ABC - not inlining fellow NPM */);
 
 /***/ }),
-/* 44 */
+/* 43 */
 /*!***********************************************************************************************!*\
   !*** external "require('inquirer-autocomplete-prompt' /* ABC - not inlining fellow NPM *_/)" ***!
   \***********************************************************************************************/
@@ -1639,7 +1626,7 @@ module.exports = require('inquirer' /* ABC - not inlining fellow NPM */);
 module.exports = require('inquirer-autocomplete-prompt' /* ABC - not inlining fellow NPM */);
 
 /***/ }),
-/* 45 */
+/* 44 */
 /*!************************************************************************************************!*\
   !*** external "require('inquirer-checkbox-plus-prompt' /* ABC - not inlining fellow NPM *_/)" ***!
   \************************************************************************************************/
@@ -1649,7 +1636,7 @@ module.exports = require('inquirer-autocomplete-prompt' /* ABC - not inlining fe
 module.exports = require('inquirer-checkbox-plus-prompt' /* ABC - not inlining fellow NPM */);
 
 /***/ }),
-/* 46 */
+/* 45 */
 /*!******************************************!*\
   !*** ./source/GitGenUI/Widgets/index.js ***!
   \******************************************/
@@ -1662,12 +1649,12 @@ module.exports = require('inquirer-checkbox-plus-prompt' /* ABC - not inlining f
 (module.exports = __webpack_require__(/*! ./namespace */ 11))
 
 .addModules({
-  InteractiveAdd: __webpack_require__(/*! ./InteractiveAdd */ 47),
-  StandardImport: __webpack_require__(/*! ./StandardImport */ 48)
+  InteractiveAdd: __webpack_require__(/*! ./InteractiveAdd */ 46),
+  StandardImport: __webpack_require__(/*! ./StandardImport */ 47)
 });
 
 /***/ }),
-/* 47 */
+/* 46 */
 /*!****************************************************!*\
   !*** ./source/GitGenUI/Widgets/InteractiveAdd.caf ***!
   \****************************************************/
@@ -1680,10 +1667,10 @@ let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["ask", "CheckboxQ", "pad"],
-    [global, __webpack_require__(/*! ./StandardImport */ 48)],
+    [global, __webpack_require__(/*! ./StandardImport */ 47)],
     (ask, CheckboxQ, pad) => {
       return function() {
-        return __webpack_require__(/*! ../Git */ 49)
+        return __webpack_require__(/*! ../Git */ 48)
           .getStatus()
           .then(({ files }) => {
             let strings;
@@ -1715,15 +1702,15 @@ Caf.defMod(module, () => {
                 Caf.each2(files, file =>
                   file.workingDir
                     ? Caf.in(file.path, selectedFiles)
-                      ? __webpack_require__(/*! ../Git */ 49).stage(file.path)
+                      ? __webpack_require__(/*! ../Git */ 48).stage(file.path)
                       : undefined
                     : !Caf.in(file.path, selectedFiles)
-                    ? __webpack_require__(/*! ../Git */ 49).unstage(file.path)
+                    ? __webpack_require__(/*! ../Git */ 48).unstage(file.path)
                     : undefined
                 )
               );
           })
-          .then(() => __webpack_require__(/*! ../Git */ 49).printStatus());
+          .then(() => __webpack_require__(/*! ../Git */ 48).printStatus());
       };
     }
   );
@@ -1732,7 +1719,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 48 */
+/* 47 */
 /*!****************************************************!*\
   !*** ./source/GitGenUI/Widgets/StandardImport.caf ***!
   \****************************************************/
@@ -1743,13 +1730,13 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */(function(module) {
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
-  return __webpack_require__(/*! ../StandardImport */ 17).mergeWithSelf(__webpack_require__(/*! ../InquirerPlus */ 42));
+  return __webpack_require__(/*! ../StandardImport */ 17).mergeWithSelf(__webpack_require__(/*! ../InquirerPlus */ 41));
 });
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 49 */
+/* 48 */
 /*!*********************************!*\
   !*** ./source/GitGenUI/Git.caf ***!
   \*********************************/
@@ -1791,7 +1778,7 @@ Caf.defMod(module, () => {
       present
     ) => {
       let SimpleGit, Git;
-      SimpleGit = __webpack_require__(/*! simple-git/promise */ 50)();
+      SimpleGit = __webpack_require__(/*! simple-git/promise */ 49)();
       return (Git = Caf.defClass(class Git extends BaseClass {}, function(
         Git,
         classSuper,
@@ -1925,7 +1912,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 50 */
+/* 49 */
 /*!*************************************************************************************!*\
   !*** external "require('simple-git/promise' /* ABC - not inlining fellow NPM *_/)" ***!
   \*************************************************************************************/
@@ -1935,7 +1922,7 @@ Caf.defMod(module, () => {
 module.exports = require('simple-git/promise' /* ABC - not inlining fellow NPM */);
 
 /***/ }),
-/* 51 */
+/* 50 */
 /*!************************************************!*\
   !*** ./source/GitGenUI/CommandsV2/Comment.caf ***!
   \************************************************/
@@ -1948,7 +1935,7 @@ let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["ask", "SelectStoryQ", "InputQ", "log"],
-    [global, __webpack_require__(/*! ./StandardImport */ 41), __webpack_require__(/*! ../InquirerPlus */ 42)],
+    [global, __webpack_require__(/*! ./StandardImport */ 40), __webpack_require__(/*! ../InquirerPlus */ 41)],
     (ask, SelectStoryQ, InputQ, log) => {
       return {
         description: "comment on a story",
@@ -1982,7 +1969,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 52 */
+/* 51 */
 /*!***********************************************!*\
   !*** ./source/GitGenUI/CommandsV2/Commit.caf ***!
   \***********************************************/
@@ -2008,7 +1995,7 @@ Caf.defMod(module, () => {
       "merge",
       "answersToCommit"
     ],
-    [global, __webpack_require__(/*! ./StandardImport */ 41), __webpack_require__(/*! ../InquirerPlus */ 42)],
+    [global, __webpack_require__(/*! ./StandardImport */ 40), __webpack_require__(/*! ../InquirerPlus */ 41)],
     (
       log,
       process,
@@ -2035,10 +2022,10 @@ Caf.defMod(module, () => {
       return {
         description: "interactive commit",
         run: function(options) {
-          return __webpack_require__(/*! ../Git */ 49)
+          return __webpack_require__(/*! ../Git */ 48)
             .status.then(status =>
               nothingStaged(status)
-                ? __webpack_require__(/*! ../Widgets */ 46)
+                ? __webpack_require__(/*! ../Widgets */ 45)
                     .InteractiveAdd()
                     .then(status =>
                       nothingStaged(status)
@@ -2048,7 +2035,7 @@ Caf.defMod(module, () => {
                           process.exit(1))
                         : undefined
                     )
-                : __webpack_require__(/*! ../Git */ 49)
+                : __webpack_require__(/*! ../Git */ 48)
                     .printStatus()
                     .then(() => log(""))
             )
@@ -2151,7 +2138,7 @@ Caf.defMod(module, () => {
                     })
                   ).then(({ commit }) =>
                     commit
-                      ? __webpack_require__(/*! ../Git */ 49)
+                      ? __webpack_require__(/*! ../Git */ 48)
                           .commit(answers)
                           .tap(results => {
                             let branch, changes, insertions, deletions;
@@ -2211,7 +2198,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 53 */
+/* 52 */
 /*!*********************************************!*\
   !*** ./source/GitGenUI/CommandsV2/Init.caf ***!
   \*********************************************/
@@ -2234,8 +2221,8 @@ Caf.defMod(module, () => {
     ],
     [
       global,
-      __webpack_require__(/*! ./StandardImport */ 41),
-      __webpack_require__(/*! ../InquirerPlus */ 42),
+      __webpack_require__(/*! ./StandardImport */ 40),
+      __webpack_require__(/*! ../InquirerPlus */ 41),
       { colors: __webpack_require__(/*! colors */ 32) }
     ],
     (
@@ -2253,7 +2240,7 @@ Caf.defMod(module, () => {
         run: function(options) {
           let _username;
           _username = null;
-          return __webpack_require__(/*! ../Git */ 49)
+          return __webpack_require__(/*! ../Git */ 48)
             .email.catch(() => null)
             .then(gitEmail => {
               let auth;
@@ -2324,7 +2311,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 54 */
+/* 53 */
 /*!****************************************************!*\
   !*** ./source/GitGenUI/CommandsV2/OpenTracker.caf ***!
   \****************************************************/
@@ -2348,7 +2335,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 55 */
+/* 54 */
 /*!***************************************************!*\
   !*** ./source/GitGenUI/CommandsV2/ShowConfig.caf ***!
   \***************************************************/
@@ -2361,7 +2348,7 @@ let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["log"],
-    [global, __webpack_require__(/*! ./StandardImport */ 41)],
+    [global, __webpack_require__(/*! ./StandardImport */ 40)],
     log => {
       return {
         description: "show the merged configurarion for git-genui",
@@ -2376,7 +2363,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 56 */
+/* 55 */
 /*!**********************************************!*\
   !*** ./source/GitGenUI/CommandsV2/Stage.caf ***!
   \**********************************************/
@@ -2389,7 +2376,7 @@ let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["InteractiveAdd"],
-    [global, __webpack_require__(/*! ./StandardImport */ 41), __webpack_require__(/*! ../Widgets */ 46)],
+    [global, __webpack_require__(/*! ./StandardImport */ 40), __webpack_require__(/*! ../Widgets */ 45)],
     InteractiveAdd => {
       return {
         description: "add (stage) or remove (unstage) files to commit",
@@ -2402,7 +2389,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 57 */
+/* 56 */
 /*!**********************************************!*\
   !*** ./source/GitGenUI/CommandsV2/Start.caf ***!
   \**********************************************/
@@ -2415,7 +2402,7 @@ let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["tracker", "log", "ask", "SelectStoryQ", "present", "Promise", "merge"],
-    [global, __webpack_require__(/*! ./StandardImport */ 41), __webpack_require__(/*! ../InquirerPlus */ 42)],
+    [global, __webpack_require__(/*! ./StandardImport */ 40), __webpack_require__(/*! ../InquirerPlus */ 41)],
     (tracker, log, ask, SelectStoryQ, present, Promise, merge) => {
       return {
         description: "start a story",
@@ -2487,7 +2474,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 58 */
+/* 57 */
 /*!***********************************************!*\
   !*** ./source/GitGenUI/CommandsV2/Status.caf ***!
   \***********************************************/
@@ -2502,7 +2489,7 @@ Caf.defMod(module, () => {
     return {
       description: "show git status",
       run: function() {
-        return __webpack_require__(/*! ../Git */ 49).printStatus();
+        return __webpack_require__(/*! ../Git */ 48).printStatus();
       }
     };
   })();
@@ -2511,7 +2498,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 59 */
+/* 58 */
 /*!************************************************!*\
   !*** ./source/GitGenUI/CommandsV2/Stories.caf ***!
   \************************************************/
@@ -2524,7 +2511,7 @@ let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["log", "tracker"],
-    [global, __webpack_require__(/*! ./StandardImport */ 41), __webpack_require__(/*! ../InquirerPlus */ 42)],
+    [global, __webpack_require__(/*! ./StandardImport */ 40), __webpack_require__(/*! ../InquirerPlus */ 41)],
     (log, tracker) => {
       return {
         description: "list all open stories",
@@ -2543,7 +2530,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 60 */
+/* 59 */
 /*!***********************************************!*\
   !*** ./source/GitGenUI/CommandsV2/WhoAmI.caf ***!
   \***********************************************/
@@ -2556,7 +2543,7 @@ let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["log", "Array", "Object"],
-    [global, __webpack_require__(/*! ./StandardImport */ 41)],
+    [global, __webpack_require__(/*! ./StandardImport */ 40)],
     (log, Array, Object) => {
       return {
         description: "show which tracker account you are logged in with",
@@ -2577,6 +2564,16 @@ Caf.defMod(module, () => {
 });
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
+
+/***/ }),
+/* 60 */
+/*!*********************************************************************************!*\
+  !*** external "require('@art-suite/cli' /* ABC - not inlining fellow NPM *_/)" ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require('@art-suite/cli' /* ABC - not inlining fellow NPM */);
 
 /***/ }),
 /* 61 */
@@ -2662,7 +2659,7 @@ Caf.defMod(module, () => {
             when: answers => answers.comments !== "Nope, all good!"
           }
         ];
-        return __webpack_require__(/*! inquirer */ 43)
+        return __webpack_require__(/*! inquirer */ 42)
           .prompt(questions)
           .then(answers => {
             log("\nOrder receipt:");
