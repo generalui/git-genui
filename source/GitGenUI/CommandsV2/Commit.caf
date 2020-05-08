@@ -1,13 +1,16 @@
 import &StandardImport, &InquirerPlus
 
+nothingStaged = (status) ->
+  status.staged.length == 0 && status.renamed.length == 0 && status.created.length == 0 && status.deleted.length == 0
+
 description: "" interactive commit
 run: (options) ->
   &Git.status
   .then (status) ->
-    if status.staged.length == 0 && status.renamed.length == 0
+    if nothingStaged status
       &Widgets.InteractiveAdd()
       .then (status) ->
-        if status.staged.length == 0 && status.renamed.length == 0
+        if nothingStaged status
           log "\nNothing is staged in git.\nPlease 'git add' something."
           process.exit 1
     else
@@ -15,9 +18,9 @@ run: (options) ->
       .then -> log ''
 
   .then -> Promise.deepAll {}
-    &Tracker.tracker.stories
-    &Tracker.tracker.members
-    &Tracker.tracker.myAccount
+    tracker.stories
+    tracker.members
+    tracker.myAccount
 
   .then ({stories, members, myAccount, verbose}) ->
     Promise.then -> ask
@@ -36,18 +39,21 @@ run: (options) ->
         message:  "" What type of commit is this?
         filter: (val) -> val.split(":")[0].toLowerCase()
         strings:
-          "" patch/test:        tests added, improved or fixed   version + 0.0.1 ()
-          "" patch/fix:         code fixed and passing tests     version + 0.0.1 ()
-          "" patch/perf:        performance improved             version + 0.0.1 ()
-          "" patch/refactor:    code quality improved            version + 0.0.1 ()
-          "" patch/doc:         documentation updated            version + 0.0.1 ()
-          "" patch/asset:       asset/string added/improved      version + 0.0.1 ()
-          "" patch/improvement: patch-sized feature improvement  version + 0.0.1 ()
-          "" patch/other:       other changes                    version + 0.0.1 ()
-          "" minor/feature:     feature added or extended        version + 0.1.0 ()
-          "" minor/depricate:   feature depricated               version + 0.1.0 ()
-          "" major/change:      breaking change                  version + 1.0.0 ()
-          "" major/removal:     breaking removal                 version + 1.0.0 ()
+          "" wip:               work-in-progress, possibly non-working, no version change (yet)
+          "" patch/test:        tests added, improved or fixed          version + 0.0.1
+          "" patch/fix:         code fixed and passing tests            version + 0.0.1
+          "" patch/improvement: patch-sized feature improvement         version + 0.0.1
+          "" patch/refactor:    code quality improved                   version + 0.0.1
+          "" patch/perf:        performance improved                    version + 0.0.1
+          "" patch/constants:   strings / non-functional constants      version + 0.0.1
+          "" patch/asset:       assets: images, fonts, etc...           version + 0.0.1
+          "" patch/doc:         README/documentation/comments updated   version + 0.0.1
+          "" patch/whitespace:  code formatting / non-functional change version + 0.0.1
+          "" patch/other:       other patch-level change                version + 0.0.1
+          "" minor/feature:     feature added or extended               version + 0.1.0
+          "" minor/depricate:   feature depricated                      version + 0.1.0
+          "" major/change:      breaking feature change                 version + 1.0.0
+          "" major/removal:     breaking feature removal                version + 1.0.0
 
     .then (answers) ->
       ask
@@ -81,6 +87,7 @@ run: (options) ->
 
     .tap (answers) ->
       answers.coauthor = null if answers.coauthor == "(no one)"
+      answers.storyFinished = answers.storyFinished == true || answers.storyFinished == :yes # TODO: should be true, but currently it's :yes for true
 
     .then (answers) ->
 
@@ -112,11 +119,11 @@ run: (options) ->
 
           .tap ({commit})->
             answers extract story, storyFinished
-            storyFinished = storyFinished == true || storyFinished == :yes # TODO: should be true, but currently it's :yes for true
+
             if story?.id
               # log {} story, storyFinished
               newState =
-                if story.state == :unstarted || story.state == :started
+                if story.state == :started || tracker.storyIsStartable story
                   if storyFinished
                     :finished
                   else
@@ -125,10 +132,10 @@ run: (options) ->
               Promise.all []
                 if newState
                   # log "" Updating tracker state: #{story.state} >> #{newState}
-                  &Tracker.tracker.updateStoryWithMessage story.id, state: newState
+                  tracker.updateStoryWithMessage story.id, state: newState
                 else Promise.resolve()
 
-                &Tracker.tracker.createCommentWithMessage
+                tracker.createCommentWithMessage
                   story.id
                   """
                     #{newState || :progressed} with commit: #{commit}\n\n#{message}

@@ -29,6 +29,8 @@ class Tracker extends BaseClass
 
   authenticate:      (options) -> @tracker?.authenticate options
 
+  storyIsStartable: (story) -> @tracker?.storyIsStartable story
+
   formatStory: (story, addLinks) ->
     idString = "[##{story.id}]"
     # idString = &terminalLink idString, @getStoryUrl story.id if addLinks

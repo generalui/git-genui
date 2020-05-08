@@ -4,7 +4,7 @@ description: "" start a story
 run:
   (options) ->
 
-    &Tracker.tracker.stories
+    tracker.stories
     .then (stories) ->
       started = array story in stories when story.state == :started
       if started.length > 0
@@ -13,7 +13,7 @@ run:
           log "  " + tracker.formatStory story
         log ''
       ask SelectStoryQ
-        array story in stories when story.state == :unstarted || story.state == :rejected
+        array story in stories when tracker.storyIsStartable story
         message:  "" What story do you want to start?
     .then ({story}) ->
       if story
@@ -29,5 +29,5 @@ run:
               name: i
         else Promise.resolve {}
         .then (updates) -> merge updates, state: :started
-        .then (updates) -> &Tracker.tracker.updateStoryWithMessage story.id, updates
+        .then (updates) -> tracker.updateStoryWithMessage story.id, updates
       else log "Canceled"
