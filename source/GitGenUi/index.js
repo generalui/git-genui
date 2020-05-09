@@ -12,7 +12,7 @@
   StandardImport: require('./StandardImport'),
   Tracker:        require('./Tracker')
 });
-require('./CommandsV2');
+require('./Commands');
 require('./Lib');
 require('./Trackers');
 require('./Widgets');

@@ -6,7 +6,7 @@ module.exports = require('neptune-namespaces').addNamespace(
   (class GitGenUi extends Neptune.PackageNamespace {})
   ._configureNamespace(require('../../package.json'))
 );
-require('./CommandsV2/namespace');
+require('./Commands/namespace');
 require('./Lib/namespace');
 require('./Trackers/namespace');
 require('./Widgets/namespace');
