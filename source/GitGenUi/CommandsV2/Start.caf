@@ -1,0 +1,33 @@
+import &StandardImport, &InquirerPlus
+
+description: "" start a story
+run:
+  (options) ->
+
+    tracker.stories
+    .then (stories) ->
+      started = array story in stories when story.state == :started
+      if started.length > 0
+        log &colors.cyan "" Stories already started:
+        each story in started
+          log "  " + tracker.formatStory story
+        log ''
+      ask SelectStoryQ
+        array story in stories when tracker.storyIsStartable story
+        message:  "" What story do you want to start?
+    .then ({story}) ->
+      if story
+        if !present story.estimate
+          ask
+            type:     :expand
+            name:     :estimate
+            default:  :no
+            message:  "" Estimate story to start it:
+            choices: array i to 3
+              key: "#{i}"
+              value: i
+              name: i
+        else Promise.resolve {}
+        .then (updates) -> merge updates, state: :started
+        .then (updates) -> tracker.updateStoryWithMessage story.id, updates
+      else log "Canceled"

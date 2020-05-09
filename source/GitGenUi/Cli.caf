@@ -1,0 +1,14 @@
+import &ArtStandardLib
+fs = &fsExtra
+
+
+run: ->
+  &Config.load()
+  .tap (config) -> &Tracker.tracker.init config
+  .then ->
+    commands = object m from &CommandsV2.modules when m.description is String
+    require :@art-suite/cli
+    .start
+      commands: object {run} in commands with run
+      help: commands: object m in commands
+        merge m, options: verbose: "" run with verbose logging

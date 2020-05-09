@@ -1,0 +1,4 @@
+import &StandardImport
+
+description: "" open tracker in the browser
+run: -> &Tracker.tracker.openInBrowser()
