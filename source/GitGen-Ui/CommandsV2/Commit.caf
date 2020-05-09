@@ -49,8 +49,8 @@ run: (options) ->
           "" patch/asset:       assets: images, fonts, etc...           version + 0.0.1
           "" patch/doc:         README/documentation/comments updated   version + 0.0.1
           "" patch/whitespace:  code formatting / non-functional change version + 0.0.1
-          "" patch/other:       other patch-level change                version + 0.0.1
-          "" minor/feature:     feature added or extended               version + 0.1.0
+          "" patch/other:       other patch-level change or chore       version + 0.0.1
+          "" minor/feature:     new feature added or extended           version + 0.1.0
           "" minor/depricate:   feature depricated                      version + 0.1.0
           "" major/change:      breaking feature change                 version + 1.0.0
           "" major/removal:     breaking feature removal                version + 1.0.0
