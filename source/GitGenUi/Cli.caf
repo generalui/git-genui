@@ -6,7 +6,7 @@ run: ->
   &Config.load()
   .tap (config) -> &Tracker.tracker.init config
   .then ->
-    commands = object m from &CommandsV2.modules when m.description is String
+    commands = object m from &Commands.modules when m.description is String
     require :@art-suite/cli
     .start
       commands: object {run} in commands with run
