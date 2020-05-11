@@ -1,0 +1,16 @@
+import &StandardImport, {} &path
+
+class ProjectConfig extends &ConfigShared
+  @singletonClass()
+
+  @configBasename: :git-genui.config.json
+  @sourceRootIndicatorFiles:
+    :.git
+    @configBasename
+
+  @classGetter
+    configFilePathPromise: -> @repoRootPromise.then (dir) -> &path.join dir, @configBasename
+    repoRootPromise: -> @_repoRoot ?= Promise.then ->
+      new SourceRoots @sourceRootIndicatorFiles
+      .findSourceRoot process.cwd()
+

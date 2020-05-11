@@ -1,4 +1,4 @@
-import &ArtStandardLib, &ArtClassSystem, &Config, &ArtRestClient, &UserConfig
+import &ArtStandardLib, &ArtClassSystem, &ArtRestClient, &UserConfig
 
 baseUrl = :https://www.pivotaltracker.com/services/v5
 

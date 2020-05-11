@@ -16,6 +16,7 @@
   Start:          require('./Start'),
   Status:         require('./Status'),
   Stories:        require('./Stories'),
+  Version:        require('./Version'),
   WhoAmI:         require('./WhoAmI')
 });
 require('./CommitLib');

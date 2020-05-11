@@ -1,4 +1,4 @@
 import &StandardImport
 
 description: "" show git status
-run: -> &Git.printStatus()
+run: -> &Git.printStatus(); null
