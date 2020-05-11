@@ -8,3 +8,5 @@ run:
     .then (stories) ->
       each story in stories
         log "  " + tracker.formatStory story, true
+
+    null

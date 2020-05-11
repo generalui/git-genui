@@ -1,7 +1,4 @@
-import &StandardImport, {}
-  &path
-  fs:   &fsExtra
-  glob: &globPromise
+import &StandardImport, {} &path
 
 class Config extends BaseClass
 
@@ -17,14 +14,11 @@ class Config extends BaseClass
   @config: {}
 
   @classGetter
-    userConfigPath: -> @userHome.then (dir) -> "#{dir}/#{@configBasename}"
     repoConfigPath: -> @repoRoot.then (dir) -> "#{dir}/#{@configBasename}"
-    userHome: -> Promise.then -> &os.homedir()
     repoRoot: -> @_repoRoot ?=
       new SourceRoots @sourceRootIndicatorFiles
       .findSourceRoot process.cwd()
 
-    userConfig:     -> @_userConfig    ?= @userHome.then @_loadOneConfig
     projectConfig:  -> @_projectConfig ?= @repoRoot.then @_loadOneConfig
 
     configPromise: =>
@@ -32,21 +26,6 @@ class Config extends BaseClass
         @userConfig
         @projectConfig
       .then (results) -> deepMerge @config, results...
-
-  @writeUserConfig: (newConfig, mergeWithExisting = true) =>
-    Promise.all []
-      @getUpdatedUserConfig newConfig, mergeWithExisting
-      @userConfigPath
-    .then ([str, userConfigPath]) ->
-      &fsExtra.writeFile
-        filePath = userConfigPath + ".json"
-        str
-      .then -> filePath
-
-  @getUpdatedUserConfig: (newConfig, mergeWithExisting = true) =>
-    if mergeWithExisting then @userConfig.then (existingConfig) -> deepMerge existingConfig, newConfig
-    else Promise.resolve newConfig
-    .then (configToWrite) -> JSON.stringify configToWrite, null, "  "
 
   @load: => @configPromise.then (config) -> mergeInto @config, config
 

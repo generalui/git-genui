@@ -1,4 +1,4 @@
-import &StandardImport, &InquirerPlus, {} &colors
+import &StandardImport, &InquirerPlus, &UserConfig, {} &colors
 
 description: "" initialize ~/git-genui.config.js with your PivotalTracker information
 run: (options) ->
@@ -54,9 +54,11 @@ run: (options) ->
         log {} projects
 
     .then ({token, gitEmail}) ->
-      &Config.writeUserConfig accounts:
-        pivotalTracker: {} token
-        git: email: gitEmail
+      userConfig.readyPromise
+      .then ->
+        userConfig.accounts =
+          pivotalTracker: {} token
+          git: email: gitEmail
 
     .then (writtenFile) ->
       log colors.green "Success. Wrote: #{writtenFile}"

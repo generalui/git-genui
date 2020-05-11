@@ -4,6 +4,10 @@
 (module.exports = require('./namespace'))
 
 .addModules({
-  ActionMenu: require('./ActionMenu'),
-  StoryMenu:  require('./StoryMenu')
+  ActionMenu:        require('./ActionMenu'),
+  EditCommitMessage: require('./EditCommitMessage'),
+  EditGitStage:      require('./EditGitStage'),
+  SelectCommitType:  require('./SelectCommitType'),
+  SelectPairs:       require('./SelectPairs'),
+  StoryMenu:         require('./StoryMenu')
 });

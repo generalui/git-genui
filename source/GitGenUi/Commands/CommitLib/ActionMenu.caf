@@ -71,6 +71,7 @@ ActionMenu = (state) ->
         ActionMenu newState if newState
 
 ->
+  log "Loading..."
   Promise.deepAll {}
     &Git.status
     tracker.stories

@@ -1,0 +1,50 @@
+import &StandardImport, {}
+  &path
+
+class UserConfig extends BaseClass
+  @singletonClass()
+
+  userConfigBasename = :git-genui.user.config
+  userConfigFilePath = &path.join
+    &os.homedir()
+    userConfigBasename + :.json
+
+  constructor: ->
+    @_load()
+
+  @property :config
+
+  setConfigProperty: (key, value) ->
+    @_config = merge @_config
+    @_config[key] = value
+    @_save()
+
+  @getter
+    readyPromise: -> @_readyPromise
+    accounts: -> @config.accounts ? {}
+
+  @setter
+    accounts: (a) -> @setConfigProperty :accounts, a
+
+  #####################################
+    PRIVATE
+  #####################################
+  _save: ->
+    &fsExtra.writeFile
+      filePath = userConfigFilePath
+      JSON.stringify @config, null, "  "
+    .then -> @config
+
+  _load: ->
+    @_readyPromise =
+      Promise.then ->
+        &fsExtra.exists userConfigFilePath
+      .then (exists) ->
+        log {} exists, userConfigFilePath
+        if exists
+          &fsExtra.readFile userConfigFilePath
+          .then (data) -> JSON.parse data.toString()
+
+        else {}
+
+      .then (config) -> @setConfig config

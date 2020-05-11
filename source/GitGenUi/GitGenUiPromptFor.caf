@@ -2,10 +2,10 @@ import &StandardImport
 
 &Tracker.tracker extract formatStory
 
-story: (stories, message) =>
+story: (stories, prompt) =>
   Promise.then -> if stories
     &PromptFor.selectList
-      message: message ? "" Select a story...
+      prompt: prompt ? "" Select a story...
       items:
         array story from stories into [] storyId: null value: "(none)"
           {} story, value: formatStory story

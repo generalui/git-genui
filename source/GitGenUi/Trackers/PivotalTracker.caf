@@ -1,10 +1,10 @@
-import &ArtStandardLib, &ArtClassSystem, &Config, &ArtRestClient
+import &ArtStandardLib, &ArtClassSystem, &Config, &ArtRestClient, &UserConfig
 
 baseUrl = :https://www.pivotaltracker.com/services/v5
 
 class PivotalTracker extends BaseClass
   @classGetter commonRestOptions: ->
-    normalizedHeaders: X-TrackerToken: config.accounts.pivotalTracker.token
+    normalizedHeaders: X-TrackerToken: userConfig.accounts.pivotalTracker.token
 
   #####################################
     READ

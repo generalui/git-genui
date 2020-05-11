@@ -9,9 +9,9 @@
   Git:               require('./Git'),
   GitGenUiPromptFor: require('./GitGenUiPromptFor'),
   InquirerPlus:      require('./InquirerPlus'),
-  Pizza:             require('./pizza'),
   StandardImport:    require('./StandardImport'),
-  Tracker:           require('./Tracker')
+  Tracker:           require('./Tracker'),
+  UserConfig:        require('./UserConfig')
 });
 require('./Commands');
 require('./Lib');

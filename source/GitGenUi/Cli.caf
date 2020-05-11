@@ -4,6 +4,7 @@ fs = &fsExtra
 
 run: ->
   &Config.load()
+  .tap -> &UserConfig.userConfig.readyPromise
   .tap (config) -> &Tracker.tracker.init config
   .then ->
     commands = object m from &Commands.modules when m.description is String
