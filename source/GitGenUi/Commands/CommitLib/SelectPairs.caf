@@ -1,0 +1,21 @@
+import &StandardImport
+
+(state) ->
+  myId = state.myAccount?.id
+  otherMembers = array member in state.members when member.id != myId
+
+  if otherMembers.length > 0
+    &PromptFor.selectList
+      prompt:  "" Who are you pairing with?
+      items:
+        array {email, name} in otherMembers
+          {} email, value: "" #{name} <#{email}>
+
+    .then (items) ->
+      log {} items
+      log.warn "" debug-exiting
+      process.exit 1
+      # merge state, {} commitType
+
+  else
+    state

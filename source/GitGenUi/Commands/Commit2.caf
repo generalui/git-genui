@@ -1,0 +1,5 @@
+import &StandardImport, &CommitLib
+
+description: "" interactive commit2
+run: (options) ->
+  ActionMenu()

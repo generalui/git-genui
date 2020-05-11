@@ -4,15 +4,17 @@
 (module.exports = require('./namespace'))
 .includeInNamespace(require('./GitGenUi'))
 .addModules({
-  Cli:            require('./Cli'),
-  Config:         require('./Config'),
-  Git:            require('./Git'),
-  InquirerPlus:   require('./InquirerPlus'),
-  Pizza:          require('./pizza'),
-  StandardImport: require('./StandardImport'),
-  Tracker:        require('./Tracker')
+  Cli:               require('./Cli'),
+  Config:            require('./Config'),
+  Git:               require('./Git'),
+  GitGenUiPromptFor: require('./GitGenUiPromptFor'),
+  InquirerPlus:      require('./InquirerPlus'),
+  Pizza:             require('./pizza'),
+  StandardImport:    require('./StandardImport'),
+  Tracker:           require('./Tracker')
 });
 require('./Commands');
 require('./Lib');
+require('./PromptFor');
 require('./Trackers');
 require('./Widgets');

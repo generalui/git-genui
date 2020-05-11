@@ -1,8 +1,5 @@
 import &StandardImport, &InquirerPlus
 
-nothingStaged = (status) ->
-  status.staged.length == 0 && status.renamed.length == 0 && status.created.length == 0 && status.deleted.length == 0
-
 description: "" interactive commit
 run: (options) ->
   &Git.status

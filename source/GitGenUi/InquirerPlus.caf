@@ -33,7 +33,7 @@ class InquirerPlus
   @ask: (prompts...) => extendAskPromise &inquirer.prompt compactFlatten prompts
 
   @AutoCompleteQ: (options) ->
-    merge
+    log :autoCompleteQ, merge
       type:     :autocomplete
       source:   autocompleteFromStrings compactFlatten options.strings
       options

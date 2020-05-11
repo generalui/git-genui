@@ -1,0 +1,23 @@
+import &StandardImport
+
+(state) ->
+  &PromptFor.selectList
+    prompt:  "" Select action:
+    items:
+      commitType: :wip               value: "" wip:               work-in-progress, possibly non-working, no version change (yet)
+      commitType: :patch/test        value: "" patch/test:        tests added, improved or fixed          version + 0.0.1
+      commitType: :patch/fix         value: "" patch/fix:         code fixed and passing tests            version + 0.0.1
+      commitType: :patch/improvement value: "" patch/improvement: patch-sized feature improvement         version + 0.0.1
+      commitType: :patch/refactor    value: "" patch/refactor:    code quality improved                   version + 0.0.1
+      commitType: :patch/perf        value: "" patch/perf:        performance improved                    version + 0.0.1
+      commitType: :patch/constants   value: "" patch/constants:   strings / non-functional constants      version + 0.0.1
+      commitType: :patch/asset       value: "" patch/asset:       assets: images, fonts, etc...           version + 0.0.1
+      commitType: :patch/doc         value: "" patch/doc:         README/documentation/comments updated   version + 0.0.1
+      commitType: :patch/whitespace  value: "" patch/whitespace:  code formatting / non-functional change version + 0.0.1
+      commitType: :patch/other       value: "" patch/other:       other patch-level change or chore       version + 0.0.1
+      commitType: :minor/feature     value: "" minor/feature:     new feature added or extended           version + 0.1.0
+      commitType: :minor/depricate   value: "" minor/depricate:   feature depricated                      version + 0.1.0
+      commitType: :major/change      value: "" major/change:      breaking feature change                 version + 1.0.0
+      commitType: :major/removal     value: "" major/removal:     breaking feature removal                version + 1.0.0
+
+  .then ({commitType}) -> merge state, {} commitType

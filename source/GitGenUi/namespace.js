@@ -8,5 +8,6 @@ module.exports = require('neptune-namespaces').addNamespace(
 );
 require('./Commands/namespace');
 require('./Lib/namespace');
+require('./PromptFor/namespace');
 require('./Trackers/namespace');
 require('./Widgets/namespace');

@@ -58,35 +58,38 @@ class Git extends BaseClass
       added:      :brightYellow
       renamed:    :brightBlue
       modified:   :brightCyan
-      untracked:    :brightGray
+      untracked:  :brightGray
       staged:     :brightGreen
 
     @status
     .tap (status) ->
       log "Branch:\n  #{colors.green status.current}                       #{colors.grey "(tracking: #{status.tracking})"}"
-      outputOne = ({path}, status, clr) ->
-        colors[clr] "  #{pad status + ':', 12} #{path}"
+      outputOne = ({path, status}) -> "  #{pad status + ':', 12} #{path}"
 
-      staged = []
-      unstaged = []
-      untracked = []
-      each file in status.files
-        if !present file.workingDir
-          staged.push outputOne file, file.index, :green
-        else if file.workingDir == :untracked
-          untracked.push outputOne file, file.workingDir, :red
-        else
-          unstaged.push outputOne file, file.workingDir, :red
+      {staged, unstaged, untracked} = normalizeGitStatus status
 
       if staged.length > 0
         log "" \nChanges to be committed:       #{colors.grey "(#{pluralize :file, staged.length})"}
-        log staged.sort().join :\n
+        log
+          array file in staged with
+            if file.status == :modified
+              colors.yellow outputOne file
+            else
+              colors.green outputOne file
+          .sort()
+          .join :\n
 
       if unstaged.length > 0
         log "" \nChanges not staged to commit:  #{colors.grey "(#{pluralize :file, unstaged.length})"}
-        log unstaged.sort().join :\n
+        log colors.red
+          array file in unstaged with outputOne file
+          .sort()
+          .join :\n
 
       if untracked.length > 0
         log "" \nUntracked files:               #{colors.grey "(#{pluralize :file, untracked.length})"}
-        log untracked.sort().join :\n
+        log colors.red
+          array file in untracked with outputOne file
+          .sort()
+          .join :\n
 
