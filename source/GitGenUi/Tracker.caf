@@ -6,8 +6,8 @@ class Tracker extends BaseClass
   constructor: (cfg) ->
     @init cfg
 
-  init: (cfg) ->
-    cfg?.project?.tracker extract? projectId, name
+  init: (projectConfig) ->
+    projectConfig?.project?.tracker extract? projectId, name
     @_tracker = &Trackers[name]
     @_projectId = projectId
     @formatStory = @formatStory.bind @

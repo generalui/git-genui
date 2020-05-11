@@ -1,16 +1,15 @@
 import &ArtStandardLib
-fs = &fsExtra
-
 
 run: ->
-  &Config.load()
-  .tap -> &UserConfig.initSingleton()
-  .tap -> &ProjectConfig.initSingleton()
-  .tap (config) -> &Tracker.tracker.init config
+  Promise.all []
+    &UserConfig.initSingleton()
+    &ProjectConfig.initSingleton()
+
+  .tap -> &Tracker.tracker.init &ProjectConfig.projectConfig
   .then ->
     commands = object m from &Commands.modules when m.description is String
     require :@art-suite/cli
     .start
-      commands: object {run} in commands with run
+      commands:       object {run} in commands with run
       help: commands: object m in commands
         merge m, options: verbose: "" run with verbose logging

@@ -8,6 +8,9 @@ class ProjectConfig extends &ConfigShared
     :.git
     @configBasename
 
+  @getter
+    project: -> @config.project
+
   @classGetter
     configFilePathPromise: -> @repoRootPromise.then (dir) -> &path.join dir, @configBasename
     repoRootPromise: -> @_repoRoot ?= Promise.then ->
