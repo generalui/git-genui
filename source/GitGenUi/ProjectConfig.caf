@@ -16,4 +16,3 @@ class ProjectConfig extends &ConfigShared
     repoRootPromise: -> @_repoRoot ?= Promise.then ->
       new SourceRoots @sourceRootIndicatorFiles
       .findSourceRoot process.cwd()
-

@@ -4,10 +4,11 @@ class ConfigShared extends BaseClass
 
   @initSingleton: ->
     @getConfigFilePathPromise()
-    .then (configFilePath) ->
-      @singleton.setConfigFilePath configFilePath
+    .then (configFilePath) -> @singleton.init configFilePath
+    .then -> @singleton.readyPromise
+    .then -> @singleton
 
-  constructor: (@configFilePath)->
+  init: (@configFilePath) -> Promise.resolve()
 
   @property :config
 

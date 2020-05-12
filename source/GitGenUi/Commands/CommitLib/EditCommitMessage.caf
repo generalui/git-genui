@@ -2,4 +2,4 @@ import &StandardImport
 
 (state) ->
   &PromptFor.input message: "" Enter your git-commit message:
-  .then (commitMessage) -> merge state, {} commitMessage
+  .then (message) -> merge state, {} message

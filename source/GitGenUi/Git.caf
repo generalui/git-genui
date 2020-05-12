@@ -21,6 +21,11 @@ class Git extends BaseClass
     @remotes: ->
       Promise.then -> SimpleGit.getRemotes true
 
+    @origin: ->
+      @remotes.then (remotes) ->
+        find remote in remotes when remote.name == :origin
+          remote.refs.fetch
+
     @status: ->
       Promise.then -> SimpleGit.status()
       .then (o) -> object k in Object.keys o
@@ -64,9 +69,12 @@ class Git extends BaseClass
       untracked:  :brightGray
       staged:     :brightGreen
 
-    @status
-    .tap (status) ->
-      log "Branch:\n  #{colors.green status.current}                       #{colors.grey "(tracking: #{status.tracking})"}"
+    Promise.all [] @status, @origin
+    .tap ([status, origin]) ->
+      log "" Origin:        #{colors.green origin}
+      log "" Branch:        #{colors.green status.current}
+      log "" Tracking:      #{colors.green status.tracking}
+
       outputOne = ({path, status}) -> "  #{pad status + ':', 12} #{path}"
 
       {staged, unstaged, untracked} = normalizeGitStatus status
@@ -75,7 +83,7 @@ class Git extends BaseClass
         log "" \nChanges to be committed:       #{colors.grey "(#{pluralize :file, staged.length})"}
         log
           array file in staged with
-            if file.status == :modified
+            if file.status == :modified && file.index != :modified
               colors.yellow outputOne file
             else
               colors.green outputOne file

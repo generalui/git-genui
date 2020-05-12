@@ -4,7 +4,6 @@
 (module.exports = require('./namespace'))
 
 .addModules({
-  ActionMenu:        require('./ActionMenu'),
   EditCommitMessage: require('./EditCommitMessage'),
   EditGitStage:      require('./EditGitStage'),
   SelectCommitType:  require('./SelectCommitType'),

@@ -15,7 +15,7 @@ import &StandardImport
       log {} items
       log.warn "" debug-exiting
       process.exit 1
-      # merge state, {} commitType
+      # merge state, {} type
 
   else
     state
