@@ -1,6 +1,40 @@
 import &StandardImport
 suite:
 
+  getMatchQuality: ->
+    test "regression where the first match is not the best match" ->
+      string = "" [#172038196] (started) make BATCH/ECS work in VPC private subnets
+      assert.eq
+        getMatchQuality
+          string
+          getSearchRegExp :ecs
+
+        300000034
+
+    test "exact match" ->
+      assert.eq
+        getMatchQuality
+          string = "" test ECS
+          getSearchRegExp :ECS
+
+        300010005
+
+    test "wrong-case, exact match" ->
+      assert.eq
+        getMatchQuality
+          string = "" test ECs
+          getSearchRegExp :ECS
+
+        300000005
+
+    test "regression - should not match" ->
+      assert.eq
+        getMatchQuality
+          string = "[#171681296] (started) Port existing LIMS deployment in Packer"
+          getSearchRegExp :ecs
+
+        Infinity
+
   approximateSearchSort: ->
     test :basics ->
       assert.eq
@@ -39,10 +73,8 @@ suite:
           "" [170466089] (unscheduled) The navigation needs to appear in opposite colors (light bg, dark links) when it is displayed on a page that has a light background top slat.
 
     test :regression2 ->
-      # this returns too many results, and in the wrong order.
-      # Also, I'd prefer exact case matches have priority over wrong-case
       assert.eq
-        approximateSearchSort :ecs []
+        approximateSearchSort :ecs strings = []
           "" [#171681296] (started) Port existing LIMS deployment in Packer
           "" [#171681331] (started) Create MVP Terraform resources for building LIMS infrastructure
           "" [#171774768] (started) DynamoDB copy dry run
@@ -83,9 +115,29 @@ suite:
           "" [#171680665] (unscheduled) all secrets out of repos
         []
           "" [#172038196] (started) make BATCH/ECS work in VPC private subnets
-          "" ...
+          "" [#171680665] (unscheduled) all secrets out of repos
+          "" [#171680672] (unstarted) ElasticSearch Cluster
+          "" [#171681331] (started) Create MVP Terraform resources for building LIMS infrastructure
+          "" [#171934654] (unscheduled) S3 cross-account dry run
+          "" [#171737252] (unscheduled) Security Test Plan
+          "" [#171985502] (delivered) update pipeline with parameterized containers
+          "" [#171774144] (unscheduled) S3 Bucket copy pre-pass
+          "" [#171731205] (unstarted) Add S3 state target instructions and code to repo
+          "" [#172008673] (delivered) fix ECR container resource ARN
+          "" [#171934660] (unscheduled) DynamoDB cross-account dry-run
+          "" [#171738159] (unscheduled) Add AWS RDS CA chain retrieve/copy to Packer script
+          "" [#171934647] (unscheduled) RDS dynamodb cross-account dry run
+          "" [#171714406] (unstarted) Re-factor Gitlab Terraform code for ResBio
+          "" [#171714386] (unstarted) Publish AWS internal DNS to local DNS server
+          "" [#172024942] (unscheduled) fix hard-coded aws_launch_template snapshot_id: snap-024061058e23ced93
+          "" [#171680668] (unscheduled) LIMS > Docker > K8S
+          "" [#172006427] (unscheduled) remove -dev from S3 bucket names (Validate with Kevin)
+          "" [#171714372] (unscheduled) Test IPSEC VPN functionality on Sophos XG firewall
+          "" [#171774137] (unscheduled) Identify Priority-1 S3 buckets to migrate
+          "" [#171778115] (unstarted) Clean up Packer to only copy needed files to image
+          "" [#171734707] (unscheduled) Fix LIMS NTP config to use AWS internal servers
 
-    test :regression2 ->
+    test :regression3 ->
       assert.eq
         approximateSearchSort :fix []
           "" FIX:      bug fix
@@ -94,35 +146,3 @@ suite:
           "" FIX:      bug fix
           "" TEST:     tests added, improved or fixed
 
-
-  searchSort: ->
-    test :empty_results ->
-      assert.eq
-        searchSort "hi", [] :ho :hum
-        []
-
-    test :one_exact_result ->
-      assert.eq
-        searchSort "hi", [] :ho :hum :hi
-        [] :hi
-
-    test :approximate_matches ->
-      assert.eq
-        searchSort "hi", [] :hi :hooi "h i" "shoot it"
-        [] :hi "h i" :hooi  "shoot it"
-
-
-    test :almost_matches ->
-      assert.eq
-        searchSort "hi", [] :ih :i :h :shoot :it
-        []
-
-    test :mixed_matches ->
-      assert.eq
-        searchSort "hi", [] :ih :hi :ho :shoot_it
-        [] :hi :shoot_it
-
-    test :priorizied_matches ->
-      assert.eq
-        searchSort "hi", [] :h__i :h___i :h_i :hi
-        [] :hi, :h_i, :h__i, :h___i

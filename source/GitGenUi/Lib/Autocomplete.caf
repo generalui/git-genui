@@ -7,5 +7,5 @@ import &StandardImport, &SearchSort
       autocompleteFromStrings input, strings
 
       Promise.resolve
-        array str in searchSort input, strings
+        array str in approximateSearchSort input, strings
           str.slice 0, columns - 3
