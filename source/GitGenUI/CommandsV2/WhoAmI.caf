@@ -1,7 +1,0 @@
-import &StandardImport
-
-description: "" show which tracker account you are logged in with
-run: (options) ->
-  &Tracker.tracker.myAccount
-  .then (account) ->
-    log object v from account when !(v is Array) && !(v is Object)

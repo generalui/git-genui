@@ -1,0 +1,106 @@
+import &StandardImport, {} &colors
+SimpleGit = require(:simple-git/promise)()
+
+class Git extends BaseClass
+
+  @commit: (options) ->
+    Promise.then -> SimpleGit.commit getGitCommitMessage options
+
+  @stage: (files...) ->
+    Promise.then -> SimpleGit.add compactFlatten files
+
+  @unstage: (files...) ->
+    Promise.then -> SimpleGit.reset [] :head, compactFlatten(files)...
+
+  @classGetter
+    @email: ->
+      SimpleGit.raw []
+        :config
+        :user.email
+
+    @remotes: ->
+      Promise.then -> SimpleGit.getRemotes true
+
+    @origin: ->
+      @remotes.then (remotes) ->
+        find remote in remotes when remote.name == :origin
+          remote.refs.fetch
+
+    @status: ->
+      Promise.then -> SimpleGit.status()
+      .then (o) -> object k in Object.keys o
+        status = o[k]
+        if k == :files
+          status = array file in status
+            merge
+              objectWithout file, :working_dir
+              index:      decodeStatus file.index
+              workingDir: decodeStatus file.working_dir
+        else status
+
+  statusCodes =
+    D:  :deleted
+    C:  :conflicted
+    R:  :renamed
+    A:  :added
+    M:  :modified
+    ?:  :untracked
+    ' ': null
+
+  decodeStatus = (statusCode) ->
+    statusCodes[statusCode]
+
+  @printStatus: ->
+    unstagedColors =
+      deleted:    :red
+      conflicted: :magenta
+      added:      :yellow
+      renamed:    :blue
+      modified:   :red
+      untracked:    :red
+      staged:     :green
+
+    stagedColors =
+      deleted:    :brightRed
+      conflicted: :brightMagenta
+      added:      :brightYellow
+      renamed:    :brightBlue
+      modified:   :brightCyan
+      untracked:  :brightGray
+      staged:     :brightGreen
+
+    Promise.all [] @status, @origin
+    .tap ([status, origin]) ->
+      log "" Origin:        #{colors.green origin}
+      log "" Branch:        #{colors.green status.current}
+      log "" Tracking:      #{colors.green status.tracking}
+
+      outputOne = ({path, status}) -> "  #{pad status + ':', 12} #{path}"
+
+      {staged, unstaged, untracked} = normalizeGitStatus status
+
+      if staged.length > 0
+        log "" \nChanges to be committed:       #{colors.grey "(#{pluralize :file, staged.length})"}
+        log
+          array file in staged with
+            if file.status == :modified && file.index != :modified
+              colors.yellow outputOne file
+            else
+              colors.green outputOne file
+          .sort()
+          .join :\n
+
+      if unstaged.length > 0
+        log "" \nChanges not staged to commit:  #{colors.grey "(#{pluralize :file, unstaged.length})"}
+        log colors.red
+          array file in unstaged with outputOne file
+          .sort()
+          .join :\n
+
+      if untracked.length > 0
+        log "" \nUntracked files:               #{colors.grey "(#{pluralize :file, untracked.length})"}
+        log colors.red
+          array file in untracked with outputOne file
+          .sort()
+          .join :\n
+

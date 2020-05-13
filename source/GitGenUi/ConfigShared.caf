@@ -1,0 +1,49 @@
+import &StandardImport
+
+class ConfigShared extends BaseClass
+
+  @initSingleton: ->
+    @getConfigFilePathPromise()
+    .then (configFilePath) -> @singleton.init configFilePath
+    .then -> @singleton.readyPromise
+    .then -> @singleton
+
+  init: (@configFilePath) -> Promise.resolve()
+
+  @property :config
+
+  @getter
+    :configFilePath
+    readyPromise: -> @_readyPromise
+    inspectedObjects: -> toInspectedObjects @config
+
+  @setter
+    configFilePath: (cfp) ->
+      @_configFilePath = cfp
+      @_load()
+
+  setConfigProperty: (key, value) ->
+    @_config = merge @_config
+    @_config[key] = value
+    @_save()
+
+  #####################################
+    PRIVATE
+  #####################################
+  _save: ->
+    &fsExtra.writeFile
+      filePath = @configFilePath
+      JSON.stringify @config, null, "  "
+    .then -> @config
+
+  _load: ->
+    @_readyPromise =
+      Promise.then -> &fsExtra.exists @configFilePath
+      .then (exists) ->
+        if exists
+          &fsExtra.readFile @configFilePath
+          .then (data) -> JSON.parse data.toString()
+
+        else {}
+
+      .then (config) -> @setConfig config

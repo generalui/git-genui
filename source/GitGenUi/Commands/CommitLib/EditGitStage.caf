@@ -1,0 +1,6 @@
+import &StandardImport
+
+(state) ->
+  &Widgets.InteractiveAdd()
+  .then -> &Git.status
+  .then (status) -> merge state, {} status

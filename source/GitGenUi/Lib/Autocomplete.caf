@@ -1,0 +1,11 @@
+import &StandardImport, &SearchSort
+{}
+  autocompleteFromStrings = (strings) ->
+    (answersSoFar, input) ->
+      process.stdout extract columns
+
+      autocompleteFromStrings input, strings
+
+      Promise.resolve
+        array str in approximateSearchSort input, strings
+          str.slice 0, columns - 3

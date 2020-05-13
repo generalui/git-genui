@@ -1,0 +1,84 @@
+import &ArtStandardLib, &ArtClassSystem, &Lib
+
+&inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
+&inquirer.registerPrompt :checkbox-plus &inquirer-checkbox-plus-prompt
+
+class InquirerPlus
+  # @Inquirer: (prompts...) -> &inquirer.prompt compactFlatten prompts
+  @inquire: (prompts...) ->
+    serializer = new Promise.Serializer
+    Promise.all array prompt in compactFlatten prompts
+      serializer.then -> @_inquireOne prompt
+    .then merge
+
+  @_inquireOne: (prompt) ->
+    &inquirer.prompt
+    .then (result) ->
+      if prompt.postprocess
+        result[prompt.name] = prompt.postprocess result[prompt.name]
+      result
+
+  extendAskPromise = (askPromise) =>
+    then:   (a, b) ~> extendAskPromise askPromise.then a, b
+    tap:    (f) ~> @then (a) -> f(a); a
+    catch:  (f) ~> @then ((a) -> a), f
+    thenAsk: (prompts...) ~>
+      @then (a1) ->
+        &inquirer.prompt compactFlatten if prompts is Function then prompts a1 else prompts
+        .then (a2) -> deepMerge a1, a2
+
+  @prime: (defaultAnswers) =>
+    extendAskPromise Promise.resolve defaultAnswers
+
+  @ask: (prompts...) => extendAskPromise &inquirer.prompt compactFlatten prompts
+
+  @AutoCompleteQ: (options) ->
+    log :autoCompleteQ, merge
+      type:     :autocomplete
+      source:   autocompleteFromStrings compactFlatten options.strings
+      options
+
+  @YesNoQ: (options) ->
+    merge
+      type:     :expand
+      default:  if options.default == true || options.default == :yes then :yes else :no
+      choices:
+        key: :y value: :yes name: "" yes
+        key: :n value: :no  name: "" no
+      options
+
+  @InputQ: (options) ->
+    merge
+      type: :input
+      options
+
+  @PasswordQ: (options) ->
+    merge
+      type: :password
+      options
+
+  @CheckboxQ: (options) ->
+    merge
+      type: :checkbox-plus
+      pageSize:   20
+      highlight:  true
+      searchable: true
+      source: autocompleteFromStrings compactFlatten options.strings
+      options
+
+  @SelectStoryQ: (stories, options) =>
+    stories && @AutoCompleteQ merge
+      name:     :story
+      message:  "" Select a story...
+      pageSize: 20
+      strings: compactFlatten []
+        stories.map &Tracker.tracker.formatStory
+        "(none)"
+
+      filter: (val) ->
+        if val == "(none)" then null
+        else if m = val.match /// ^ \[# ([^\]]+)
+          id = m[1]
+          find story in stories when "#{story.id}" == id
+
+      options

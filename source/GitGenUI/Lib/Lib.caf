@@ -1,7 +1,0 @@
-import &ArtStandardLib
-
-[]
-  &Autocomplete
-  &Git
-  &SearchSort
-  &SourceRoots

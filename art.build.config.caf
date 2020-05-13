@@ -19,9 +19,6 @@ npm: (currentJson) -> merge currentJson,
     pivotaljs:                      :^1.0.3   # pivotal API
     simple-git:                     :^1.132.0 # git API
     stable:                         :^0.1.8   # stableSort
-    yargs:                          :^15.3.1
-    # terminal-link: :^2.1.1
-    # approx-string-match: :^1.1.0
 
   devDependencies: merge &package.devDependencies, currentJson.devDependencies,
     art-build-configurator:   :^1.26.9

@@ -1,0 +1,61 @@
+import &ArtStandardLib, &ArtClassSystem, &Lib
+
+&inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
+&inquirer.registerPrompt :checkbox-plus &inquirer-checkbox-plus-prompt
+
+inquire = (options) ->
+  throw new Error "no need to specify 'name' - just your value is returned w/o a wrapping object" if present options.name
+  &inquirer.prompt merge options, name: :value, message: options.prompt
+  .then ({value}) -> value
+
+class Core
+  ##
+    IN:
+      items:
+        array of strings, presented in order
+        OR array of objects with at least a 'value' property:
+          [{value}, {value}]
+
+      multiselect: false
+
+      prompt: string for prompt
+
+    OUT: selected item, as passed in
+
+  @selectList: ({items, multiselect, prompt}) ->
+    strings = if present items?[0]?.value
+      array {value} from-array items with value
+    else items
+
+    inquire {}
+      prompt
+      type:       if multiselect then :checkbox-plus else :autocomplete
+      pageSize:   20
+      source:     autocompleteFromStrings strings
+      highlight:  true
+      searchable: true
+
+    .then (value) ->
+      if items != strings
+        items[strings.indexOf value]
+
+      else value
+
+  @yesNo: (options) ->
+    inquire merge
+      type:     :expand
+      default:  if options.default == true || options.default == :yes then :yes else :no
+      choices:
+        key: :y value: :yes name: "" yes
+        key: :n value: :no  name: "" no
+      options
+
+  @input: (options) ->
+    inquire merge
+      type: :input
+      options
+
+  @password: (options) ->
+    inquire merge
+      type: :password
+      options

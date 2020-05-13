@@ -1,0 +1,19 @@
+import &ArtStandardLib
+
+run: ->
+  &UserConfig.initSingleton()
+  .then -> &ProjectConfig.initSingleton()
+  .then (projectConfig) -> &Tracker.tracker.init projectConfig
+  .then ->
+    commands = object m from &Commands.modules when m.description is String
+    require :@art-suite/cli
+    .start
+      commands: object {run}, command in commands
+        (params) ->
+          !params.quiet && log &colors.bold &colors.brightWhite "" git genui #{dashCase command}
+          run params
+
+      help: commands: object m in commands
+        merge m, options:
+          quiet:   "" no extra output
+          verbose: "" run with verbose logging

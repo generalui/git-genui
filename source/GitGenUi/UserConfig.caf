@@ -1,0 +1,32 @@
+import &StandardImport
+
+class UserConfig extends &ConfigShared
+  @singletonClass()
+
+  @classGetter
+    configFilePathPromise: -> Promise.then -> &path.join &os.homedir(), :git-genui.user.config.json
+
+  @getter
+    :currentProjectKey
+    accounts: -> @config.accounts ? {}
+    commitOptions: -> @config.commitOptions ? {}
+    commitOptionsForProject: (projectKey = @currentProjectKey) ->
+      @commitOptions[projectKey]
+
+  @setter
+    accounts: (a) -> @setConfigProperty :accounts, a
+
+  init: ->
+    super
+    .then -> &git.origin
+    .then (origin) -> @_currentProjectKey = origin
+
+  saveCommitOptionsForProject: (commitOptions, projectKey = @currentProjectKey) ->
+    @setConfigProperty
+      :commitOptions
+      merge @commitOptions,
+        [projectKey]: merge
+          commitOptions
+          {}
+            updatedAt = toSeconds()
+            createdAt: @commitOptions[projectKey]?.createdAt ? updatedAt

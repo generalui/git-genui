@@ -1,0 +1,5 @@
+import &StandardImport
+
+(state) ->
+  &GitGenUiPromptFor.story state.stories, "" What story does this commit advance most?
+  .then (story) -> merge state, {} story

@@ -1,0 +1,21 @@
+import &StandardImport
+
+(state) ->
+  myId = state.myAccount?.id
+  otherMembers = array member in state.members when member.id != myId
+
+  if otherMembers.length > 0
+    &PromptFor.selectList
+      prompt:  "" Who did you coauthor this commit with?
+      items:
+        array {email, name} in otherMembers
+          {} email, value: "" #{name} <#{email}>
+
+    .then (items) ->
+      log {} items
+      log.warn "" debug-exiting
+      process.exit 1
+      # return list of emails
+
+  else
+    state

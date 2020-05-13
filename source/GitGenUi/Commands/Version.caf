@@ -1,0 +1,2 @@
+description: "" show version
+run: -> &package.version
