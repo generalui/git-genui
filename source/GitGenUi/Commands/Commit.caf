@@ -45,6 +45,8 @@ CommitNow = (state) ->
       summary: object v in summary with v | 0
     null
 
+  .tap -> saveState objectWithout state, :message
+
 ActionMenu = (state) ->
   return unless state
   state extract
@@ -126,6 +128,10 @@ run: (options) ->
       options
 
   .then validateStory
+  .tap ({status}) ->
+    if status.staged.length + status.unstaged.length + status.untracked.length == 0
+      log.warn "" No local changes to commit.
+      process.exit 1
   .then fillInMissingState
   .then saveState
   .then ActionMenu
