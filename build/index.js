@@ -231,7 +231,7 @@ module.exports = require('neptune-namespaces' /* ABC - not inlining fellow NPM *
 /*! exports provided: author, bin, bugs, dependencies, description, devDependencies, homepage, license, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"author\":\"GenUI LLC\",\"bin\":{\"s3p\":\"./s3p\"},\"bugs\":\"https:/github.com/generalui/git-genui/issues\",\"dependencies\":{\"@art-suite/cli\":\"^1.1.1\",\"art-rest-client\":\"^1.7.0\",\"btoa\":\"^1.2.1\",\"fs-extra\":\"^9.0.0\",\"inquirer\":\"^7.1.0\",\"inquirer-autocomplete-prompt\":\"^1.0.2\",\"inquirer-checkbox-plus-prompt\":\"^1.0.1\",\"neptune-namespaces\":\"^4.0.0\",\"open\":\"^7.0.3\",\"pivotaljs\":\"^1.0.3\",\"simple-git\":\"^1.132.0\",\"stable\":\"^0.1.8\"},\"description\":\"git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning\",\"devDependencies\":{\"art-build-configurator\":\"^1.26.9\",\"art-testbench\":\"^1.17.2\",\"caffeine-script\":\"^0.72.1\",\"case-sensitive-paths-webpack-plugin\":\"^2.2.0\",\"chai\":\"^4.2.0\",\"coffee-loader\":\"^0.7.3\",\"css-loader\":\"^3.0.0\",\"json-loader\":\"^0.5.7\",\"mocha\":\"^7.1.1\",\"mock-fs\":\"^4.11.0\",\"script-loader\":\"^0.7.2\",\"style-loader\":\"^1.0.0\",\"webpack\":\"^4.39.1\",\"webpack-cli\":\"*\",\"webpack-dev-server\":\"^3.7.2\",\"webpack-merge\":\"^4.2.1\",\"webpack-node-externals\":\"^1.7.2\",\"webpack-stylish\":\"^0.1.8\"},\"homepage\":\"https://github.com/generalui/git-genui\",\"license\":\"ISC\",\"name\":\"git-genui\",\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/generalui/git-genui.git\"},\"scripts\":{\"build\":\"webpack --progress\",\"start\":\"webpack-dev-server --hot --inline --progress --env.devServer\",\"test\":\"nn -s;mocha -u tdd\",\"testInBrowser\":\"webpack-dev-server --progress --env.devServer\"},\"version\":\"0.2.2\"}");
+module.exports = JSON.parse("{\"author\":\"GenUI LLC\",\"bin\":{\"s3p\":\"./s3p\"},\"bugs\":\"https:/github.com/generalui/git-genui/issues\",\"dependencies\":{\"@art-suite/cli\":\"^1.1.1\",\"art-rest-client\":\"^1.7.0\",\"btoa\":\"^1.2.1\",\"fs-extra\":\"^9.0.0\",\"inquirer\":\"^7.1.0\",\"inquirer-autocomplete-prompt\":\"^1.0.2\",\"inquirer-checkbox-plus-prompt\":\"^1.0.1\",\"neptune-namespaces\":\"^4.0.0\",\"open\":\"^7.0.3\",\"pivotaljs\":\"^1.0.3\",\"simple-git\":\"^1.132.0\",\"stable\":\"^0.1.8\"},\"description\":\"git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning\",\"devDependencies\":{\"art-build-configurator\":\"^1.26.9\",\"art-testbench\":\"^1.17.2\",\"caffeine-script\":\"^0.72.1\",\"case-sensitive-paths-webpack-plugin\":\"^2.2.0\",\"chai\":\"^4.2.0\",\"coffee-loader\":\"^0.7.3\",\"css-loader\":\"^3.0.0\",\"json-loader\":\"^0.5.7\",\"mocha\":\"^7.1.1\",\"mock-fs\":\"^4.11.0\",\"script-loader\":\"^0.7.2\",\"style-loader\":\"^1.0.0\",\"webpack\":\"^4.39.1\",\"webpack-cli\":\"*\",\"webpack-dev-server\":\"^3.7.2\",\"webpack-merge\":\"^4.2.1\",\"webpack-node-externals\":\"^1.7.2\",\"webpack-stylish\":\"^0.1.8\"},\"homepage\":\"https://github.com/generalui/git-genui\",\"license\":\"ISC\",\"name\":\"git-genui\",\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/generalui/git-genui.git\"},\"scripts\":{\"build\":\"webpack --progress\",\"start\":\"webpack-dev-server --hot --inline --progress --env.devServer\",\"test\":\"nn -s;mocha -u tdd\",\"testInBrowser\":\"webpack-dev-server --progress --env.devServer\"},\"version\":\"0.2.3\"}");
 
 /***/ }),
 /* 8 */
@@ -572,14 +572,26 @@ module.exports = require('art-class-system' /* ABC - not inlining fellow NPM */)
 /* WEBPACK VAR INJECTION */(function(module) {
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
-  return (() => {
-    return [
-      __webpack_require__(/*! ./Autocomplete */ 22),
-      __webpack_require__(/*! ./Git */ 26),
-      __webpack_require__(/*! ./SearchSort */ 24),
-      __webpack_require__(/*! ./SourceRoots */ 27)
-    ];
-  })();
+  return Caf.importInvoke(
+    ["formatDate", "toSeconds"],
+    [global, __webpack_require__(/*! art-standard-lib */ 16)],
+    (formatDate, toSeconds) => {
+      return [
+        __webpack_require__(/*! ./Autocomplete */ 22),
+        __webpack_require__(/*! ./Git */ 26),
+        __webpack_require__(/*! ./SearchSort */ 24),
+        __webpack_require__(/*! ./SourceRoots */ 27),
+        {
+          standardFormatDate: function(date) {
+            return formatDate(
+              date != null ? date : toSeconds(),
+              "yyyy-mm-dd HH:MM:ss"
+            );
+          }
+        }
+      ];
+    }
+  );
 });
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
@@ -1836,7 +1848,7 @@ module.exports = require('btoa' /* ABC - not inlining fellow NPM */);
   Status:         __webpack_require__(/*! ./Status */ 70),
   Stories:        __webpack_require__(/*! ./Stories */ 71),
   Version:        __webpack_require__(/*! ./Version */ 72),
-  WhoAmI:         __webpack_require__(/*! ./WhoAmI */ 73)
+  Whoami:         __webpack_require__(/*! ./Whoami */ 73)
 });
 __webpack_require__(/*! ./CommitLib */ 56);
 
@@ -2345,7 +2357,7 @@ Caf.defMod(module, () => {
             ({ staged } = state.status);
             log({
               success: {
-                committed: Caf.array(staged, ({ path }) => path),
+                committed: staged,
                 branch,
                 commit,
                 summary: Caf.object(summary, v => v | 0)
@@ -3330,7 +3342,7 @@ Caf.defMod(module, () => {
 /***/ }),
 /* 73 */
 /*!*********************************************!*\
-  !*** ./source/GitGenUi/Commands/WhoAmI.caf ***!
+  !*** ./source/GitGenUi/Commands/Whoami.caf ***!
   \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -3340,21 +3352,23 @@ Caf.defMod(module, () => {
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["log", "Array", "Object"],
+    ["log", "objectWithout", "standardFormatDate", "Array", "Object"],
     [global, __webpack_require__(/*! ./StandardImport */ 46)],
-    (log, Array, Object) => {
+    (log, objectWithout, standardFormatDate, Array, Object) => {
       return {
         description: "show which tracker account you are logged in with",
         run: function(options) {
-          return __webpack_require__(/*! ../Tracker */ 38).tracker.myAccount.then(account =>
-            log(
-              Caf.object(
-                account,
-                null,
-                v => !Caf.is(v, Array) && !Caf.is(v, Object)
+          return __webpack_require__(/*! ../Tracker */ 38).tracker.myAccount.then(account => {
+            log({
+              [account.tracker]: Caf.object(
+                objectWithout(account, "tracker", "kind"),
+                (v, k) =>
+                  /^(created|updated)At$/.test(k) ? standardFormatDate(v) : v,
+                (v, k) => !Caf.is(v, Array) && !Caf.is(v, Object)
               )
-            )
-          );
+            });
+            return null;
+          });
         }
       };
     }
