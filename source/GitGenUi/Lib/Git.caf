@@ -1,6 +1,7 @@
 import &StandardImport
 {}
   normalizeGitStatus = (status) ->
+    return status unless status.files # already normalized
     staged = []
     unstaged = []
     untracked = []
@@ -13,7 +14,10 @@ import &StandardImport
         if file.workingDir == :untracked then    untracked.push merge file, status: file.workingDir
         else                                     unstaged.push  merge file, status: file.workingDir
 
-    {} staged, unstaged, untracked
+    {}
+      staged, unstaged, untracked
+      status.current, status.traking
+      status.ahead, status.behind
 
   nothingStaged = (status) ->
     status.staged.length == 0 && status.renamed.length == 0 && status.created.length == 0 && status.deleted.length == 0
