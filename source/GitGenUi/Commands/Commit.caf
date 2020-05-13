@@ -29,6 +29,9 @@ noop = (a) -> a
 
 CommitNow = (state) ->
   &Git.commit state
+  .then (result) ->
+    log git: result
+    null
 
 ActionMenu = (state) ->
   state extract
@@ -64,7 +67,7 @@ ActionMenu = (state) ->
 
       # key: :autoPush    value: "" auto-push on/off
       # key: :storyStatus value: "" update story status: started -> finished / (no change: finished)
-      key: :commitNow             value: "" 6. Commit now              #{} &colors.grey getGitCommitMessage state
+      action: CommitNow,          value: "" 6. Commit now              #{} &colors.grey getGitCommitMessage state
       key: :abort                 value: "" 0. Abort / quit
 
   .then ({action}) ->
@@ -72,7 +75,7 @@ ActionMenu = (state) ->
       log {} action
       Promise.then -> action state
       .then (newState) ->
-        {message, type, story, coauthors} = newState
+        newState extract? message, type, story, coauthors
         userConfig.saveCommitOptionsForProject {}
           message, type, coauthors, story
         ActionMenu newState if newState
