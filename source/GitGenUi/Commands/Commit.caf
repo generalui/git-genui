@@ -29,8 +29,8 @@ noop = (a) -> a
 
 CommitNow = (state) ->
   &Git.commit state
-  .then (result) ->
-    log git: result
+  .then ({branch, commit, summary}) ->
+    log success: {} branch, commit, summary
     null
 
 ActionMenu = (state) ->
