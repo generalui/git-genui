@@ -115,7 +115,7 @@ validateStory = (state) ->
 
   state
 
-description: "" interactive commit2
+description: "" main interactive commit interface
 run: (options) ->
   Promise.deepAll merge
     userConfig.commitOptionsForProject
