@@ -37,7 +37,7 @@ ActionMenu = (state) ->
     message
     type
     story
-    pairs
+    coauthors
 
   otherMembers = array member in members when member.id != myAccount.id
   {staged, unstaged, untracked} = nStatus = normalizeGitStatus status
@@ -53,25 +53,25 @@ ActionMenu = (state) ->
   &PromptFor.selectList
     prompt:  "" Select action:
     items: compactFlatten []
-      action: EditGitStage,      value: "" 1. Edit staged files:      #{} statusSummary
-      action: StoryMenu,         value: "" 2. Select story:           #{} if !myAccount then colorNotPresent("configure tracker") else presentValue(if story then tracker.formatStory story)
-      action: SelectCommitType,  value: "" 3. Select type:            #{} presentValue type
-      action: EditCommitMessage, value: "" 4. Edit message:           #{} presentValue message
-      action: SelectPairs,       value: "" 5. Change selected pairs:  #{} if !myAccount then colorNotPresent("configure tracker") else if otherMembers.length == 0 then colorNotPresent("only you") else presentValue pairs
+      action: EditGitStage,       value: "" 1. Edit staged files:      #{} statusSummary
+      action: StoryMenu,          value: "" 2. Select story:           #{} if !myAccount then colorNotPresent("configure tracker") else presentValue(if story then stripAnsi tracker.formatStory story)
+      action: SelectCommitType,   value: "" 3. Select type:            #{} presentValue type
+      action: EditCommitMessage,  value: "" 4. Edit message:           #{} presentValue message
+      action: SelectCoauthors,    value: "" 5. Change coauthors:       #{} if !myAccount then colorNotPresent("configure tracker") else if otherMembers.length == 0 then colorNotPresent("only you") else presentValue coauthors
 
       # key: :autoPush    value: "" auto-push on/off
       # key: :storyStatus value: "" update story status: started -> finished / (no change: finished)
-      key: :commitNow   value: "" 6. Commit now
-      key: :abort       value: "" 0. Abort / quit
+      key: :commitNow             value: "" 6. Commit now              #{} &colors.grey getGitCommitMessage state
+      key: :abort                 value: "" 0. Abort / quit
 
   .then ({action}) ->
     if action?
+      log {} action
       Promise.then -> action state
       .then (newState) ->
-        {message, type, story, pairs} = newState
+        {message, type, story, coauthors} = newState
         userConfig.saveCommitOptionsForProject {}
-          message, type, pairs
-          storyId:  story?.id
+          message, type, coauthors, story
         ActionMenu newState if newState
 
 
@@ -79,7 +79,7 @@ description: "" interactive commit2
 run: (options) ->
   Promise.deepAll merge
     userConfig.commitOptionsForProject
-    {message, pairs, type, storyId} = options
+    {message, coauthors, type, storyId} = options
     {}
       &Git.status
       tracker.stories
@@ -87,9 +87,8 @@ run: (options) ->
       tracker.myAccount
 
   .then (loadedOptions) ->
-    loadedOptions extract storyId, story, stories
-    if storyId || story
-      storyId ?= story?.id
+    loadedOptions extract story, stories
+    if storyId = story?.id
       unless story = find story in stories when story.id == storyId
         log.warn merge {}
           message: "" Invalid story or storyId

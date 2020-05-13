@@ -7,7 +7,7 @@ story: (stories, prompt) =>
     &PromptFor.selectList
       prompt: prompt ? "" Select a story...
       items:
-        array story from stories into [] storyId: null value: "(none)"
+        array story from stories into [] value: "(none)" story: {}
           {} story, value: formatStory story
 
     .then ({story}) -> story

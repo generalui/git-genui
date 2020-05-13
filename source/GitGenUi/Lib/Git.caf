@@ -34,18 +34,17 @@ import &StandardImport
       if body then "\n\n#{body.replace(/\n[\n\s]*/g, "\n")}"
       if coauthor then "\n\n\nCoauthored-by: #{coauthor}"
     .join ''
-    ##
-      <type>(<scope>): [(Starts|Finishes) #TRACKER_STORY_ID] <subject>
-      <BLANK LINE>
-      <body>
-      <BLANK LINE>
-      <footer>
-      <BLANK LINE>
-      <BLANK LINE>
-      Co-authored-by: name <name@example.com>
-      Co-authored-by: another-name <another-name@example.com>
-        changeType:      :feat
-      story:           '[171339446] (started) Update "About Page" with collage, move Kayak photo to Careers.'
-      subject:         ""
-      wantLongMessage: true
-      body:
+
+  getGitCommitMessage = ({type, story, message, coauthors, storyStatus}) ->
+    compactFlattenAll
+      type ? "(type)"
+      ": "
+      if story
+        "" [##{story.id}]#{if storyStatus && storyStatus != story.status then " (#{storyStatus})"}\_
+
+      message ? "(message)"
+      if coauthors
+        "\n\n\n" + array coauthor in coauthors
+          "" Coauthored-by: #{coauthor}"
+          .join "\n"
+    .join ''

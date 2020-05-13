@@ -6,7 +6,7 @@ import &StandardImport
 
   if otherMembers.length > 0
     &PromptFor.selectList
-      prompt:  "" Who are you pairing with?
+      prompt:  "" Who did you coauthor this commit with?
       items:
         array {email, name} in otherMembers
           {} email, value: "" #{name} <#{email}>
@@ -15,7 +15,7 @@ import &StandardImport
       log {} items
       log.warn "" debug-exiting
       process.exit 1
-      # merge state, {} type
+      # return list of emails
 
   else
     state

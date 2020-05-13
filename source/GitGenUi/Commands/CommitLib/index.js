@@ -6,7 +6,7 @@
 .addModules({
   EditCommitMessage: require('./EditCommitMessage'),
   EditGitStage:      require('./EditGitStage'),
+  SelectCoauthors:   require('./SelectCoauthors'),
   SelectCommitType:  require('./SelectCommitType'),
-  SelectPairs:       require('./SelectPairs'),
   StoryMenu:         require('./StoryMenu')
 });

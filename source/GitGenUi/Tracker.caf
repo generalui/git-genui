@@ -32,9 +32,11 @@ class Tracker extends BaseClass
   storyIsStartable: (story) -> @tracker?.storyIsStartable story
 
   formatStory: (story, addLinks) ->
-    idString = "[##{story.id}]"
-
-    "" #{idString} (#{story.state}) #{story.name}
+    if story.id
+      "" #{blue "[##{story.id}]"} #{grey "(#{story.state})"} #{story.name}
+      # "" [##{story.id}] (#{story.state}) #{story.name}
+    else
+      "(none)"
 
   createCommentWithMessage:     (storyId, text) ->
     @createComment storyId, text
