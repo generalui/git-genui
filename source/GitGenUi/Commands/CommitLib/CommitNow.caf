@@ -12,7 +12,7 @@ import &StandardImport, &CommitLib, &UserConfig
   .then ({branch, commit, summary}) ->
     {staged} = state.status
     log success: {}
-      committed: staged
+      committed: array {path} from staged with path
       branch
       commit
       summary: object v in summary with v | 0
