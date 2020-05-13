@@ -231,7 +231,7 @@ module.exports = require('neptune-namespaces' /* ABC - not inlining fellow NPM *
 /*! exports provided: author, bin, bugs, dependencies, description, devDependencies, homepage, license, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"author\":\"GenUI LLC\",\"bin\":{\"s3p\":\"./s3p\"},\"bugs\":\"https:/github.com/generalui/git-genui/issues\",\"dependencies\":{\"@art-suite/cli\":\"^1.1.1\",\"art-rest-client\":\"^1.7.0\",\"btoa\":\"^1.2.1\",\"fs-extra\":\"^9.0.0\",\"inquirer\":\"^7.1.0\",\"inquirer-autocomplete-prompt\":\"^1.0.2\",\"inquirer-checkbox-plus-prompt\":\"^1.0.1\",\"neptune-namespaces\":\"^4.0.0\",\"open\":\"^7.0.3\",\"pivotaljs\":\"^1.0.3\",\"simple-git\":\"^1.132.0\",\"stable\":\"^0.1.8\"},\"description\":\"git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning\",\"devDependencies\":{\"art-build-configurator\":\"^1.26.9\",\"art-testbench\":\"^1.17.2\",\"caffeine-script\":\"^0.72.1\",\"case-sensitive-paths-webpack-plugin\":\"^2.2.0\",\"chai\":\"^4.2.0\",\"coffee-loader\":\"^0.7.3\",\"css-loader\":\"^3.0.0\",\"json-loader\":\"^0.5.7\",\"mocha\":\"^7.1.1\",\"mock-fs\":\"^4.11.0\",\"script-loader\":\"^0.7.2\",\"style-loader\":\"^1.0.0\",\"webpack\":\"^4.39.1\",\"webpack-cli\":\"*\",\"webpack-dev-server\":\"^3.7.2\",\"webpack-merge\":\"^4.2.1\",\"webpack-node-externals\":\"^1.7.2\",\"webpack-stylish\":\"^0.1.8\"},\"homepage\":\"https://github.com/generalui/git-genui\",\"license\":\"ISC\",\"name\":\"git-genui\",\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/generalui/git-genui.git\"},\"scripts\":{\"build\":\"webpack --progress\",\"start\":\"webpack-dev-server --hot --inline --progress --env.devServer\",\"test\":\"nn -s;mocha -u tdd\",\"testInBrowser\":\"webpack-dev-server --progress --env.devServer\"},\"version\":\"0.2.1\"}");
+module.exports = JSON.parse("{\"author\":\"GenUI LLC\",\"bin\":{\"s3p\":\"./s3p\"},\"bugs\":\"https:/github.com/generalui/git-genui/issues\",\"dependencies\":{\"@art-suite/cli\":\"^1.1.1\",\"art-rest-client\":\"^1.7.0\",\"btoa\":\"^1.2.1\",\"fs-extra\":\"^9.0.0\",\"inquirer\":\"^7.1.0\",\"inquirer-autocomplete-prompt\":\"^1.0.2\",\"inquirer-checkbox-plus-prompt\":\"^1.0.1\",\"neptune-namespaces\":\"^4.0.0\",\"open\":\"^7.0.3\",\"pivotaljs\":\"^1.0.3\",\"simple-git\":\"^1.132.0\",\"stable\":\"^0.1.8\"},\"description\":\"git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning\",\"devDependencies\":{\"art-build-configurator\":\"^1.26.9\",\"art-testbench\":\"^1.17.2\",\"caffeine-script\":\"^0.72.1\",\"case-sensitive-paths-webpack-plugin\":\"^2.2.0\",\"chai\":\"^4.2.0\",\"coffee-loader\":\"^0.7.3\",\"css-loader\":\"^3.0.0\",\"json-loader\":\"^0.5.7\",\"mocha\":\"^7.1.1\",\"mock-fs\":\"^4.11.0\",\"script-loader\":\"^0.7.2\",\"style-loader\":\"^1.0.0\",\"webpack\":\"^4.39.1\",\"webpack-cli\":\"*\",\"webpack-dev-server\":\"^3.7.2\",\"webpack-merge\":\"^4.2.1\",\"webpack-node-externals\":\"^1.7.2\",\"webpack-stylish\":\"^0.1.8\"},\"homepage\":\"https://github.com/generalui/git-genui\",\"license\":\"ISC\",\"name\":\"git-genui\",\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/generalui/git-genui.git\"},\"scripts\":{\"build\":\"webpack --progress\",\"start\":\"webpack-dev-server --hot --inline --progress --env.devServer\",\"test\":\"nn -s;mocha -u tdd\",\"testInBrowser\":\"webpack-dev-server --progress --env.devServer\"},\"version\":\"0.2.2\"}");
 
 /***/ }),
 /* 8 */
@@ -2265,6 +2265,7 @@ Caf.defMod(module, () => {
       "formattedInspect",
       "Promise",
       "log",
+      "objectWithout",
       "compactFlatten",
       "EditGitStage",
       "StoryMenu",
@@ -2276,7 +2277,8 @@ Caf.defMod(module, () => {
       "getGitCommitMessage",
       "userConfig",
       "merge",
-      "normalizeGitStatus"
+      "normalizeGitStatus",
+      "process"
     ],
     [
       global,
@@ -2291,6 +2293,7 @@ Caf.defMod(module, () => {
       formattedInspect,
       Promise,
       log,
+      objectWithout,
       compactFlatten,
       EditGitStage,
       StoryMenu,
@@ -2302,7 +2305,8 @@ Caf.defMod(module, () => {
       getGitCommitMessage,
       userConfig,
       merge,
-      normalizeGitStatus
+      normalizeGitStatus,
+      process
     ) => {
       let colorizeValue,
         colorNotPresent,
@@ -2335,19 +2339,21 @@ Caf.defMod(module, () => {
               summary: { changes: 123, insertions: 456, deletions: 789 }
             })
           : __webpack_require__(/*! ../Git */ 34).commit(state)
-        ).then(({ branch, commit, summary }) => {
-          let staged;
-          ({ staged } = state.status);
-          log({
-            success: {
-              committed: Caf.array(staged, ({ path }) => path),
-              branch,
-              commit,
-              summary: Caf.object(summary, v => v | 0)
-            }
-          });
-          return null;
-        });
+        )
+          .then(({ branch, commit, summary }) => {
+            let staged;
+            ({ staged } = state.status);
+            log({
+              success: {
+                committed: Caf.array(staged, ({ path }) => path),
+                branch,
+                commit,
+                summary: Caf.object(summary, v => v | 0)
+              }
+            });
+            return null;
+          })
+          .tap(() => saveState(objectWithout(state, "message")));
       };
       ActionMenu = function(state) {
         let status,
@@ -2518,6 +2524,14 @@ Caf.defMod(module, () => {
             )
           )
             .then(validateStory)
+            .tap(({ status }) =>
+              status.staged.length +
+                status.unstaged.length +
+                status.untracked.length ===
+              0
+                ? (log.warn("No local changes to commit."), process.exit(1))
+                : undefined
+            )
             .then(fillInMissingState)
             .then(saveState)
             .then(ActionMenu);
