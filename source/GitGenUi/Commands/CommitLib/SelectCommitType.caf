@@ -2,7 +2,7 @@ import &StandardImport
 
 (state) ->
   &PromptFor.selectList
-    prompt:  "" Select action:
+    prompt:  "" Select commit type:
     items:
       type: :wip               value: "" wip:               work-in-progress, possibly non-working, no version change (yet)
       type: :patch/test        value: "" patch/test:        tests added, improved or fixed          version + 0.0.1

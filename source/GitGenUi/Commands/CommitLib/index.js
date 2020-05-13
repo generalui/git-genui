@@ -2,10 +2,12 @@
 // file: GitGenUi/Commands/CommitLib/index.js
 
 (module.exports = require('./namespace'))
-
+.includeInNamespace(require('./CommitLib'))
 .addModules({
+  CommitNow:         require('./CommitNow'),
   EditCommitMessage: require('./EditCommitMessage'),
   EditGitStage:      require('./EditGitStage'),
+  Lib:               require('./Lib'),
   SelectCoauthors:   require('./SelectCoauthors'),
   SelectCommitType:  require('./SelectCommitType'),
   StoryMenu:         require('./StoryMenu')

@@ -27,26 +27,6 @@ noop = (a) -> a
     members:    tracker members
     myAccount:  current user's tracker account
 
-CommitNow = (state) ->
-  if state.pretend
-    Promise.resolve {}
-      branch: state.status.current
-      commit: :pretending
-      summary: changes: 123 insertions: 456 deletions: 789
-  else
-    &Git.commit state
-
-  .then ({branch, commit, summary}) ->
-    {staged} = state.status
-    log success: {}
-      committed: staged
-      branch
-      commit
-      summary: object v in summary with v | 0
-    null
-
-  .tap -> saveState objectWithout state, :message
-
 ActionMenu = (state) ->
   return unless state
   state extract
@@ -66,6 +46,7 @@ ActionMenu = (state) ->
     staged: :green
     unstaged: :red
     untracked: :red
+
   statusSummary =
     compactFlatten array statusCat from :staged :unstaged :untracked when status[statusCat]?.length > 0
       &colors[statusColors[statusCat]] "" #{status[statusCat].length} #{statusCat}
@@ -91,10 +72,6 @@ ActionMenu = (state) ->
       .then saveState
       .then ActionMenu
 
-saveState = (state) ->
-  userConfig.saveCommitOptionsForProject {message, type, coauthors, story} = state if state
-  state
-
 fillInMissingState = (state) ->
   Promise.resolve state
   .then (state) -> if state.status.staged.length == 0 then EditGitStage       state else state
@@ -102,20 +79,19 @@ fillInMissingState = (state) ->
   .then (state) -> unless present state.type          then SelectCommitType   state else state
   .then (state) -> unless present state.message       then EditCommitMessage  state else state
 
-validateStory = (state) ->
-  state extract story, stories
-  if storyId = story?.id
-    unless story = find story in stories when story.id == storyId
-      log.warn merge {}
-        message: "" Invalid story or storyId
-        story
-        storyId
-
-    state.story = story
-
-  state
+validateType = (state) ->
+  unless !present(state.type) || /^(patch|major|minor)\/\w+$/.test state.type
+    log.warn "" Commit type should be of the form: [major, minor or patch]/short-word (you provided: #{state.type})
+    merge state, type: null
+  else state
 
 description: "" main interactive commit interface
+options:
+  message:    :message      "" entier your git-commit message on the command-line
+  coauthors:  :authors      "" one more more coauthor emails (separated by spaces)
+  type:       :type         "" Commit type string. Should be of the form: [major, minor or patch]/short-word
+  story-id:   :id           "" Input the tracker story id directly on the command-line. It will be validated against existing stories.
+
 run: (options) ->
   Promise.deepAll merge
     userConfig.commitOptionsForProject
@@ -128,6 +104,8 @@ run: (options) ->
       options
 
   .then validateStory
+  .then validateType
+
   .tap ({status}) ->
     if status.staged.length + status.unstaged.length + status.untracked.length == 0
       log.warn "" No local changes to commit.

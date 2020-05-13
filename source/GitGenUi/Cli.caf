@@ -14,6 +14,7 @@ run: ->
           run params
 
       help: commands: object m in commands
-        merge m, options:
+        merge m, options: merge
           quiet:   "" no extra output
           verbose: "" run with verbose logging
+          m.options

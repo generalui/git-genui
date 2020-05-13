@@ -1,0 +1,21 @@
+import &StandardImport, &CommitLib, &UserConfig
+
+(state) ->
+  if state.pretend
+    Promise.resolve {}
+      branch: state.status.current
+      commit: :pretending
+      summary: changes: 123 insertions: 456 deletions: 789
+  else
+    &Git.commit state
+
+  .then ({branch, commit, summary}) ->
+    {staged} = state.status
+    log success: {}
+      committed: staged
+      branch
+      commit
+      summary: object v in summary with v | 0
+    null
+
+  .tap -> saveState objectWithout state, :message
