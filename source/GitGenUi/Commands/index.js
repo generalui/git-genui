@@ -7,7 +7,6 @@
   Add:            require('./Add'),
   Comment:        require('./Comment'),
   Commit:         require('./Commit'),
-  Commit2:        require('./Commit2'),
   Init:           require('./Init'),
   OpenTracker:    require('./OpenTracker'),
   ShowConfig:     require('./ShowConfig'),

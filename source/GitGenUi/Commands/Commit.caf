@@ -1,144 +1,104 @@
-import &StandardImport, &InquirerPlus
+import &StandardImport, &UserConfig, &CommitLib
 
-description: "" interactive commit
-run: (options) ->
-  &Git.status
-  .then (status) ->
-    if nothingStaged status
-      &Widgets.InteractiveAdd()
-      .then (status) ->
-        if nothingStaged status
-          log "\nNothing is staged in git.\nPlease 'git add' something."
-          process.exit 1
+colorizeValue = &colors.yellow
+colorNotPresent = &colors.grey
+
+presentValue = (value, noneValue = :none) ->
+  if present value
+    if (value is Array) and value[0] is String
+      array v in value
+        colorizeValue v
+      .join ', '
+
+    else if value is String
+      colorizeValue value
+
     else
-      &Git.printStatus()
-      .then -> log ''
+      formattedInspect value, color: true
+  else
+    colorNotPresent noneValue
 
-  .then -> Promise.deepAll {}
-    tracker.stories
-    tracker.members
-    tracker.myAccount
+noop = (a) -> a
 
-  .then ({stories, members, myAccount, verbose}) ->
-    Promise.then -> ask
-      SelectStoryQ
-        stories
-        message:  "" What story does this commit advance?
+##
+  IN: state:
+    status:     git status
+    stories:    tracker stories
+    members:    tracker members
+    myAccount:  current user's tracker account
 
-      YesNoQ
-        name:     :storyFinished
-        when:     ({story}) -> story?
-        message:  "" Is the story finished?
+CommitNow = (state) ->
+  &Git.commit state
 
-      AutoCompleteQ
-        name:     :type
-        pageSize: 20
-        message:  "" What type of commit is this?
-        filter: (val) -> val.split(":")[0].toLowerCase()
-        strings:
-          "" wip:               work-in-progress, possibly non-working, no version change (yet)
-          "" patch/test:        tests added, improved or fixed          version + 0.0.1
-          "" patch/fix:         code fixed and passing tests            version + 0.0.1
-          "" patch/improvement: patch-sized feature improvement         version + 0.0.1
-          "" patch/refactor:    code quality improved                   version + 0.0.1
-          "" patch/perf:        performance improved                    version + 0.0.1
-          "" patch/constants:   strings / non-functional constants      version + 0.0.1
-          "" patch/asset:       assets: images, fonts, etc...           version + 0.0.1
-          "" patch/doc:         README/documentation/comments updated   version + 0.0.1
-          "" patch/whitespace:  code formatting / non-functional change version + 0.0.1
-          "" patch/other:       other patch-level change or chore       version + 0.0.1
-          "" minor/feature:     new feature added or extended           version + 0.1.0
-          "" minor/depricate:   feature depricated                      version + 0.1.0
-          "" major/change:      breaking feature change                 version + 1.0.0
-          "" major/removal:     breaking feature removal                version + 1.0.0
+ActionMenu = (state) ->
+  state extract
+    status
+    stories
+    members
+    myAccount
 
-    .then (answers) ->
-      ask
-        InputQ
-          name:     :subject
-          default:  answers.story?.name
-          message:  "" Enter git commit message:
-          validate: (v) -> if present(v) then true else "" Please enter a message
+    message
+    type
+    story
+    coauthors
 
-        # merge YesNoQOptions,
-        #   name:     :wantLongMessage
-        #   message:  "" Do you want to add details to your git commit?
+  otherMembers = array member in members when member.id != myAccount.id
+  {staged, unstaged, untracked} = nStatus = normalizeGitStatus status
+  statusColors =
+    staged: :green
+    unstaged: :red
+    untracked: :red
+  statusSummary =
+    compactFlatten array statusCat from :staged :unstaged :untracked when nStatus[statusCat]?.length > 0
+      &colors[statusColors[statusCat]] "" #{nStatus[statusCat].length} #{statusCat}
+    .join ', '
 
-        # {}
-        #   type:     :editor
-        #   name:     :body
-        #   message:  "" Git commit details
-        #   when:     ({wantLongMessage}) -> wantLongMessage == :yes
-        #   filter:   (v) -> v?.trim()
+  &PromptFor.selectList
+    prompt:  "" Select action:
+    items: compactFlatten []
+      action: EditGitStage,       value: "" 1. Edit staged files:      #{} statusSummary
+      action: StoryMenu,          value: "" 2. Select story:           #{} if !myAccount then colorNotPresent("configure tracker") else presentValue(if story then stripAnsi tracker.formatStory story)
+      action: SelectCommitType,   value: "" 3. Select type:            #{} presentValue type
+      action: EditCommitMessage,  value: "" 4. Edit message:           #{} presentValue message
+      action: SelectCoauthors,    value: "" 5. Change coauthors:       #{} if !myAccount then colorNotPresent("configure tracker") else if otherMembers.length == 0 then colorNotPresent("only you") else presentValue coauthors
 
-        if (coauthorList = array member in members when member.id != myAccount.id).length > 0
-          AutoCompleteQ
-            name:     :coauthor
-            message:  "" Are you pairing with someone?
-            default:  null
-            strings:
-              "(no one)"
-              array {email, name} in coauthorList with "" #{name} <#{email}>
+      # key: :autoPush    value: "" auto-push on/off
+      # key: :storyStatus value: "" update story status: started -> finished / (no change: finished)
+      key: :commitNow             value: "" 6. Commit now              #{} &colors.grey getGitCommitMessage state
+      key: :abort                 value: "" 0. Abort / quit
 
-      .then (_a) -> merge answers, _a
+  .then ({action}) ->
+    if action?
+      log {} action
+      Promise.then -> action state
+      .then (newState) ->
+        {message, type, story, coauthors} = newState
+        userConfig.saveCommitOptionsForProject {}
+          message, type, coauthors, story
+        ActionMenu newState if newState
 
-    .tap (answers) ->
-      answers.coauthor = null if answers.coauthor == "(no one)"
-      answers.storyFinished = answers.storyFinished == true || answers.storyFinished == :yes # TODO: should be true, but currently it's :yes for true
 
-    .then (answers) ->
+description: "" interactive commit2
+run: (options) ->
+  Promise.deepAll merge
+    userConfig.commitOptionsForProject
+    {message, coauthors, type, storyId} = options
+    {}
+      &Git.status
+      tracker.stories
+      tracker.members
+      tracker.myAccount
 
-      message = answersToCommit answers
+  .then (loadedOptions) ->
+    loadedOptions extract story, stories
+    if storyId = story?.id
+      unless story = find story in stories when story.id == storyId
+        log.warn merge {}
+          message: "" Invalid story or storyId
+          story
+          storyId
 
-      log "\ncommit-message: #{&colors.green message}\n"
+      loadedOptions.story = story
 
-      ask
-        YesNoQ
-          type:     :expand
-          name:     :commit
-          default:  true
-          message:  "" 'git commit' now?
+    ActionMenu loadedOptions
 
-      .then ({commit}) ->
-        if commit
-          &Git.commit answers
-          .tap (results) ->
-            {branch, commit, summary: {changes, insertions, deletions}} = results
-            changes = changes | 0
-            insertions = insertions | 0
-            deletions = deletions | 0
-
-            # log success: {}
-            #   branch
-            #   commit
-            #   summary: object v in {changes, insertions, deletions} when v > 0
-            #   message: message
-
-          .tap ({commit})->
-            answers extract story, storyFinished
-
-            if story?.id
-              # log {} story, storyFinished
-              newState =
-                if story.state == :started || tracker.storyIsStartable story
-                  if storyFinished
-                    :finished
-                  else
-                    :started
-
-              Promise.all []
-                if newState
-                  # log "" Updating tracker state: #{story.state} >> #{newState}
-                  tracker.updateStoryWithMessage story.id, state: newState
-                else Promise.resolve()
-
-                tracker.createCommentWithMessage
-                  story.id
-                  """
-                    #{newState || :progressed} with commit: #{commit}\n\n#{message}
-                    by git-genui v#{&package.version}
-
-          .catch (error) -> log.error error
-
-        else
-          log " canceled..."

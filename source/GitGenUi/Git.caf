@@ -4,7 +4,7 @@ SimpleGit = require(:simple-git/promise)()
 class Git extends BaseClass
 
   @commit: (options) ->
-    Promise.then -> SimpleGit.commit answersToCommit options
+    Promise.then -> SimpleGit.commit getGitCommitMessage options
 
   @stage: (files...) ->
     Promise.then -> SimpleGit.add compactFlatten files
