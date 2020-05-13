@@ -16,6 +16,6 @@
   Status:         require('./Status'),
   Stories:        require('./Stories'),
   Version:        require('./Version'),
-  WhoAmI:         require('./WhoAmI')
+  Whoami:         require('./Whoami')
 });
 require('./CommitLib');

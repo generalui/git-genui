@@ -1,0 +1,12 @@
+import &StandardImport
+
+description: "" show which tracker account you are logged in with
+run: (options) ->
+  &Tracker.tracker.myAccount
+  .then (account) ->
+    log
+      [account.tracker]: object v, k from objectWithout account, :tracker, :kind when !(v is Array) && !(v is Object)
+        if /^(created|updated)At$/.test k
+          standardFormatDate v
+        else v
+    null
