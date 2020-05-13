@@ -43,7 +43,7 @@ import &StandardImport
     compactFlattenAll
       type ? "(type)"
       ": "
-      if story
+      if story?.id
         "" [##{story.id}]#{if storyStatus && storyStatus != story.status then " (#{storyStatus})"}\_
 
       message ? "(message)"
