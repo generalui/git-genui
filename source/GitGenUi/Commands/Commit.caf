@@ -39,7 +39,7 @@ CommitNow = (state) ->
   .then ({branch, commit, summary}) ->
     {staged} = state.status
     log success: {}
-      committed: array {path} in staged with path
+      committed: staged
       branch
       commit
       summary: object v in summary with v | 0
