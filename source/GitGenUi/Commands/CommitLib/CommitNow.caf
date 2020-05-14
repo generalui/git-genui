@@ -11,6 +11,7 @@ import &StandardImport, &CommitLib, &UserConfig
 
   .then ({branch, commit, summary}) ->
     {staged} = state.status
+    log commit-message: getGitCommitMessage state
     log success: {}
       committed: array {path} from staged with path
       branch
@@ -18,4 +19,4 @@ import &StandardImport, &CommitLib, &UserConfig
       summary: object v in summary with v | 0
     null
 
-  .tap -> saveState objectWithout state, :message
+  # .tap -> saveState objectWithout state, :message
