@@ -1,7 +1,6 @@
-import &StandardImport
+import &StandardImport, &UserConfig, &ProjectConfig
 
 description: "" show the merged configurarion for git-genui
 run: ->
-  {}
-    &UserConfig.userConfig
-    &ProjectConfig.projectConfig
+  [userConfig.homeDirRelativeConfigFilePath]:    userConfig
+  [projectConfig.homeDirRelativeConfigFilePath]: projectConfig
