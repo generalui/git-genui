@@ -29,9 +29,13 @@ class PivotalTracker extends BaseClass
     delivered:      5
     unknown:        5
 
-  @getStories: (projectId, options) ->
+  @storyStates: :started :rejected :planned :unstarted :unscheduled :finished :delivered
+
+  @settableStoryStates: :unstarted :started :finished
+
+  @getStories: (projectId, options) =>
     options extract? states
-    states ?= :started :rejected :planned :unstarted :unscheduled :finished :delivered
+    states ?= @storyStates
     getJson "#{baseUrl}/projects/#{projectId}/stories?limit=500&date_format=millis&filter=state:#{states.join ','}" @commonRestOptions
     .then (stories) -> stories.map @_normalizeStory
     .then (stories) -> stories.sort (a, b) ->

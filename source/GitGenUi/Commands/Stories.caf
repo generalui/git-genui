@@ -8,5 +8,8 @@ run:
     .then (stories) ->
       each story in stories
         log "  " + tracker.formatStory story, true
+      # &GitGenUiPromptFor.story stories, "" Select a story to update:
+      # .then (story) ->
+      #   &CommitLib/SelectStoryState {} story
 
     null

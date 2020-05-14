@@ -1,6 +1,14 @@
 import &StandardImport, &UserConfig
 
 {}
+  updateStateWithPrompt = (statePropName, promptF) ->
+    (state) ->
+      Promise.then -> promptF state
+      .then (value) ->
+        if value == undefined then state[statePropName]
+        else value
+      .then (value) -> merge state, [statePropName]: value
+
   saveState = (state) ->
     userConfig.saveCommitOptionsForProject {message, type, coauthors, story} = state if state
     state

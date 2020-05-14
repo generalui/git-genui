@@ -5,30 +5,60 @@ import &ArtStandardLib, &ArtClassSystem, &Lib
 
 inquire = (options) ->
   throw new Error "no need to specify 'name' - just your value is returned w/o a wrapping object" if present options.name
-  &inquirer.prompt merge options, name: :value, message: options.prompt
+  Promise.then -> &inquirer.prompt merge options, name: :value, message: options.prompt
   .then ({value}) -> value
 
+# if the terminal window is not wide enough, autocomplete truncates the strings
+# FINE FINE - but, it returns the truncated string, not the full string.
+# This re-selects the full string
+patchAutocompleteResult = (value, strings) ->
+  return value if value in strings
+  find v in strings when value.length < v.length && value == v.slice 0, value.length
+  ? value # just in case
+
 class Core
+
+  # all props in a match b
+  partialEq = (a, b)->
+    !find v, k in a when b[k] != v
+
+  findDefaultItem = (items, _default) ->
+    switch
+    when _default is Object then  find item from items when partialEq _default, item
+    when _default is String then  find item from items when item.value == _default
+    else                          find item from items when item.default
   ##
     IN:
       items:
         array of strings, presented in order
         OR array of objects with at least a 'value' property:
-          [{value}, {value}]
+          value: string presentation value
+          default: if true, select this one as the default
 
       multiselect: false
 
       prompt: string for prompt
 
+      default: string exactly matching default item
+
     OUT: selected item, as passed in
 
-  @selectList: ({items, multiselect, prompt}) ->
-    strings = if present items?[0]?.value
-      array {value} from-array items with value
-    else items
+  @selectList: ({items, multiselect, prompt, default: _default}) ->
+    if items[0] is String
+      items = array string from strings with value: strings
+
+    if defaultItem = findDefaultItem items, _default
+      items = array item from items into [defaultItem] when item != defaultItem
+
+    strings = array {value} from items with value
+
+    log {}
+      _default, defaultItem
+      items, strings
 
     inquire {}
       prompt
+      default:    _default
       type:       if multiselect then :checkbox-plus else :autocomplete
       pageSize:   20
       source:     autocompleteFromStrings strings
@@ -36,10 +66,10 @@ class Core
       searchable: true
 
     .then (value) ->
-      if items != strings
-        items[strings.indexOf value]
 
-      else value
+      value = patchAutocompleteResult value, strings
+
+      items[strings.indexOf value]
 
   @yesNo: (options) ->
     inquire merge
@@ -51,7 +81,7 @@ class Core
       options
 
   @input: (options) ->
-    inquire merge
+    inquire log merge
       type: :input
       options
 

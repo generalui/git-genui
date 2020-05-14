@@ -1,0 +1,7 @@
+import &StandardImport
+
+&Lib.updateStateWithPrompt :storyState ({storyState, story}) ->
+  &PromptFor.selectList
+    prompt:  "" Select story state:
+    default: storyState ? story?.state
+    items: &Tracker.tracker.settableStoryStates

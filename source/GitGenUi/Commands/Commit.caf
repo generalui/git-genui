@@ -18,8 +18,6 @@ presentValue = (value, noneValue = :none) ->
   else
     colorNotPresent noneValue
 
-noop = (a) -> a
-
 ##
   IN: state:
     status:     git status

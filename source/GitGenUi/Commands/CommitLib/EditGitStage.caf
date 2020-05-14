@@ -1,7 +1,6 @@
 import &StandardImport
 
-(state) ->
+&Lib.updateStateWithPrompt :status ->
   &Widgets.InteractiveAdd()
   .then -> &Git.status
   .then normalizeGitStatus
-  .then (status) -> merge state, {} status

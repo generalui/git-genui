@@ -1,8 +1,9 @@
 import &StandardImport
 
-(state) ->
+&Lib.updateStateWithPrompt :type ({type}) ->
   &PromptFor.selectList
     prompt:  "" Select commit type:
+    default: {} type
     items:
       type: :wip               value: "" wip:               work-in-progress, possibly non-working, no version change (yet)
       type: :patch/test        value: "" patch/test:        tests added, improved or fixed          version + 0.0.1
@@ -19,5 +20,4 @@ import &StandardImport
       type: :minor/depricate   value: "" minor/depricate:   feature depricated                      version + 0.1.0
       type: :major/change      value: "" major/change:      breaking feature change                 version + 1.0.0
       type: :major/removal     value: "" major/removal:     breaking feature removal                version + 1.0.0
-
-  .then ({type}) -> merge state, {} type
+  .then ({type}) -> type

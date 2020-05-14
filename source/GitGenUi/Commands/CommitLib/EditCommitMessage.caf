@@ -1,5 +1,7 @@
 import &StandardImport
 
-(state) ->
-  &PromptFor.input message: "" Enter your git-commit message:
-  .then (message) -> merge state, {} message
+&Lib.updateStateWithPrompt :message ({message}) ->
+  &PromptFor.input
+    message: "" Enter your git-commit message:
+    default: message
+  .then (m) -> if present m then m else message

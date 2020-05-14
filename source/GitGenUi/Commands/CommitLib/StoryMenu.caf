@@ -1,5 +1,7 @@
 import &StandardImport
 
-(state) ->
-  &GitGenUiPromptFor.story state.stories, "" What story does this commit advance most?
-  .then (story) -> merge state, {} story
+&Lib.updateStateWithPrompt :story ({stories, story}) ->
+  &GitGenUiPromptFor.story
+    stories
+    "" What story does this commit advance most?
+    story

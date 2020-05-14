@@ -15,10 +15,11 @@ class Tracker extends BaseClass
   @getter
     :projectId
     :tracker
-    stories:          -> @tracker?.getStories @projectId
-    members:          -> @tracker?.getMembers @projectId
-    myAccount:        -> @tracker?.getMyAccount @projectId
-    projects:         -> @tracker?.projects
+    settableStoryStates:  -> @tracker?.settableStoryStates
+    stories:              -> @tracker?.getStories @projectId
+    members:              -> @tracker?.getMembers @projectId
+    myAccount:            -> @tracker?.getMyAccount @projectId
+    projects:             -> @tracker?.projects
 
   getStoryUrl:       (storyId) -> @tracker?.getStoryUrl @projectId, storyId
   getProjectUrl:     -> @tracker?.getProjectUrl @projectId
