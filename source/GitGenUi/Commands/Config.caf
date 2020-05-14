@@ -1,0 +1,13 @@
+import &StandardImport, &UserConfig, &ProjectConfig
+
+description: "" configure git-genui
+run: ->
+  &PromptFor.selectList
+    prompt:  "" Select action:
+    items: compactFlatten []
+      action: null,  value: "" 1. Edit staged files:
+      action: null,  value: "" 2. Select story:
+      action: null,  value: "" 3. Select type:
+      action: null,  value: "" 4. Edit message:
+      action: null,  value: "" 5. Change coauthors:
+

@@ -1,22 +1,4 @@
-import &StandardImport, &UserConfig, &CommitLib
-
-colorizeValue = &colors.yellow
-colorNotPresent = &colors.grey
-
-presentValue = (value, noneValue = :none) ->
-  if present value
-    if (value is Array) and value[0] is String
-      array v in value
-        colorizeValue v
-      .join ', '
-
-    else if value is String
-      colorizeValue value
-
-    else
-      formattedInspect value, color: true
-  else
-    colorNotPresent noneValue
+import &StandardImport, &UserConfig, &CommandsLib
 
 ##
   IN: state:
@@ -69,19 +51,6 @@ ActionMenu = (state) ->
       Promise.then -> action state
       .then saveState
       .then ActionMenu
-
-fillInMissingState = (state) ->
-  Promise.resolve state
-  .then (state) -> if state.status.staged.length == 0 then EditGitStage       state else state
-  .then (state) -> unless state.story                 then StoryMenu          state else state
-  .then (state) -> unless present state.type          then SelectCommitType   state else state
-  .then (state) -> unless present state.message       then EditCommitMessage  state else state
-
-validateType = (state) ->
-  unless !present(state.type) || /^(patch|major|minor)\/\w+$/.test state.type
-    log.warn "" Commit type should be of the form: [major, minor or patch]/short-word (you provided: #{state.type})
-    merge state, type: null
-  else state
 
 description: "" main interactive commit interface
 options:

@@ -6,6 +6,7 @@
 .addModules({
   Comment:        require('./Comment'),
   Commit:         require('./Commit'),
+  Config:         require('./Config'),
   Init:           require('./Init'),
   OpenTracker:    require('./OpenTracker'),
   ShowConfig:     require('./ShowConfig'),
@@ -17,4 +18,4 @@
   Version:        require('./Version'),
   Whoami:         require('./Whoami')
 });
-require('./CommitLib');
+require('./CommandsLib');

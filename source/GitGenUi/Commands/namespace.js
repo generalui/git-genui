@@ -5,4 +5,4 @@ module.exports = require('../namespace').addNamespace(
   'Commands',
   class Commands extends Neptune.PackageNamespace {}
 );
-require('./CommitLib/namespace');
+require('./CommandsLib/namespace');
