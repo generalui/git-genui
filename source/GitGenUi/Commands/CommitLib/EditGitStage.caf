@@ -3,4 +3,3 @@ import &StandardImport
 &Lib.updateStateWithPrompt :status ->
   &Widgets.InteractiveAdd()
   .then -> &Git.status
-  .then normalizeGitStatus

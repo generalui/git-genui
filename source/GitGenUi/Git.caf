@@ -26,7 +26,7 @@ class Git extends BaseClass
         find remote in remotes when remote.name == :origin
           remote.refs.fetch
 
-    @status: ->
+    @rawStatus: ->
       Promise.then -> SimpleGit.status()
       .then (o) -> object k in Object.keys o
         status = o[k]
@@ -37,6 +37,10 @@ class Git extends BaseClass
               index:      decodeStatus file.index
               workingDir: decodeStatus file.working_dir
         else status
+
+    @status: ->
+      @rawStatus
+      .then normalizeGitStatus
 
   statusCodes =
     D:  :deleted
@@ -77,7 +81,7 @@ class Git extends BaseClass
 
       outputOne = ({path, status}) -> "  #{pad status + ':', 12} #{path}"
 
-      {staged, unstaged, untracked} = normalizeGitStatus status
+      {staged, unstaged, untracked} = status
 
       if staged.length > 0
         log "" \nChanges to be committed:       #{colors.grey "(#{pluralize :file, staged.length})"}
@@ -104,3 +108,6 @@ class Git extends BaseClass
           .sort()
           .join :\n
 
+      log ''
+
+    .then ([status]) -> status

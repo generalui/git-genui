@@ -95,7 +95,7 @@ run: (options) ->
     userConfig.commitOptionsForProject
     {message, coauthors, type, storyId} = options
     {}
-      status: &Git.status.then normalizeGitStatus
+      status: &Git.printStatus()
       tracker.stories
       tracker.members
       tracker.myAccount

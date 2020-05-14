@@ -52,10 +52,6 @@ class Core
 
     strings = array {value} from items with value
 
-    log {}
-      _default, defaultItem
-      items, strings
-
     inquire {}
       prompt
       default:    _default
@@ -81,7 +77,7 @@ class Core
       options
 
   @input: (options) ->
-    inquire log merge
+    inquire merge
       type: :input
       options
 
