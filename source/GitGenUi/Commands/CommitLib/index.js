@@ -10,5 +10,6 @@
   Lib:               require('./Lib'),
   SelectCoauthors:   require('./SelectCoauthors'),
   SelectCommitType:  require('./SelectCommitType'),
+  SelectStoryState:  require('./SelectStoryState'),
   StoryMenu:         require('./StoryMenu')
 });
