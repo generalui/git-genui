@@ -20,11 +20,26 @@ class PivotalTracker extends BaseClass
   #####################################
     READ PROJECT DETAILS
   #####################################
+  stateOrder =
+    rejected:       0
+    started:        1
+    unstarted:      2
+    unscheduled:    3
+    finished:       4
+    delivered:      5
+    unknown:        5
+
   @getStories: (projectId, options) ->
     options extract? states
     states ?= :started :rejected :planned :unstarted :unscheduled :finished :delivered
     getJson "#{baseUrl}/projects/#{projectId}/stories?limit=500&date_format=millis&filter=state:#{states.join ','}" @commonRestOptions
     .then (stories) -> stories.map @_normalizeStory
+    .then (stories) -> stories.sort (a, b) ->
+        aStatus = stateOrder[a.state] ? stateOrder.unknown
+        bStatus = stateOrder[b.state] ? stateOrder.unknown
+        if aStatus != bStatus then aStatus - bStatus
+        else b.updatedAt - a.updatedAt
+
 
   @getMembers: (projectId) =>
     getJson "#{baseUrl}/projects/#{projectId}/memberships" @commonRestOptions

@@ -1,4 +1,6 @@
 import &StandardImport
 
 description: "" open tracker in the browser
-run: -> &Tracker.tracker.openInBrowser()
+run: ->
+  &Tracker.tracker.openInBrowser()
+  "" Tracker should now open in your browser.
