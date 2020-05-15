@@ -26,8 +26,9 @@ Caf.defMod(module, () => {
                           (({ id, url, name, estiamte, state } = story),
                           { id, url, name, estiamte, state })
                       }),
-                      SelectStoryState({ story }).then(({ storyState }) =>
-                        storyState !== story.state
+                      SelectStoryState({ story }).then(({ storyState }) => {
+                        let temp;
+                        return storyState !== story.state
                           ? (log(
                               require("colors").green(
                                 `Updating story state ${Caf.toString(
@@ -37,13 +38,15 @@ Caf.defMod(module, () => {
                             ),
                             require("../Tracker")
                               .tracker.updateStory(story.id, {
-                                state: storyState
+                                state: storyState,
+                                estimate:
+                                  (temp = story.estimate) != null ? temp : 1
                               })
                               .then(() =>
                                 log(require("colors").green("Success."))
                               ))
-                          : log("No changes.")
-                      ))
+                          : log("No changes.");
+                      }))
                     : undefined;
                 })
             )

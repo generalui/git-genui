@@ -16,7 +16,7 @@ run:
           .then ({storyState}) ->
             if storyState != story.state
               log &colors.green "" Updating story state #{story.state} => #{storyState}...
-              &Tracker.tracker.updateStory story.id, state: storyState
+              &Tracker.tracker.updateStory story.id, state: storyState, estimate: story.estimate ? 1
               .then ->
                 log &colors.green "" Success.
             else
