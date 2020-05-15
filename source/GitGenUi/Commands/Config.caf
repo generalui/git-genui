@@ -1,13 +1,87 @@
-import &StandardImport, &UserConfig, &ProjectConfig
+import &StandardImport, &UserConfig, &ProjectConfig, &CommandsLib, {} &colors
+
+getProjects = ->
+  tracker.projects
+  .then (projects) -> object v from projects with-key v.id
+
+selectProject = updateStateWithPrompt :projectId, ({projectId, projects}) ->
+  &PromptFor.selectList
+    prompt:  "" Select project:
+    items: array {id, name, account_id} in projects
+      projectId: id
+      default: id == projectId
+      value: "" #{presentValue name} #{colors.grey "(id: #{id}, account-id: #{account_id})"}
+  .then ({projectId}) -> projectId
+  .tap (projectId) -> projectConfig.deepMergeInto project: tracker: {} projectId, &Tracker.tracker.name
+
+editGitEmail = updateStateWithPrompt :email ({email, trackerEmail}) ->
+  &PromptFor.input
+    message: "" Enter your git email:
+    default: email ? trackerEmail
+  .tap (email) ->
+    userConfig.deepMergeInto accounts: git: {} email
+
+
+editTrackerToken = (state) ->
+  state extract trackerName
+  eTT = ->
+    &PromptFor.password
+      message: "" Enter your #{trackerName} token:
+    .tap (token) -> userConfig.deepMergeInto accounts: [lowerCamelCase trackerName]: {} token
+    .then (token) ->
+      getProjects()
+      .then
+        -> token
+        ->
+          log.warn "" Invalid token.
+          eTT()
+  eTT()
+  .then (token) ->
+    getProjects()
+    .then (projects) -> merge state, {} token, projects
+
+getTrackerToken = (state) ->
+  state extract email, trackerName, trackerEmail
+
+  Auth {}
+    email: trackerEmail ? email ? getEnv().USER
+    trackerName
+  .tap ({token, email}) -> userConfig.deepMergeInto accounts: [lowerCamelCase trackerName]: {} token, email
+  .then ({token, email}) ->
+    getProjects()
+    .then (projects) ->
+      merge
+        trackerEmail: email
+        state
+        {} token, projects
 
 description: "" configure git-genui
 run: ->
-  &PromptFor.selectList
-    prompt:  "" Select action:
-    items: compactFlatten []
-      action: null,  value: "" 1. Edit staged files:
-      action: null,  value: "" 2. Select story:
-      action: null,  value: "" 3. Select type:
-      action: null,  value: "" 4. Edit message:
-      action: null,  value: "" 5. Change coauthors:
+  getProjects()
+  .catch -> log.warn "" Tracker token is invalid.
+  .then (projects) ->
+    menuApp
+      {}
+        projects
+        userConfig.state.accounts?.git?.email
+        userConfig.state.accounts?.pivotalTracker?.token
+        projectConfig.project?.tracker?.projectId
+        trackerName: &Tracker.tracker.name
+        trackerEmail: userConfig.state.accounts?.pivotalTracker?.email
+
+      ({projects, email, token, projectId}) ->
+
+        &PromptFor.selectList
+          prompt:  "" Select action:
+          items: compactFlatten []
+            action: getTrackerToken,  value: "" 1. get PivotalTracker token via auth
+            action: editTrackerToken, value: "" 2. set PivotalTracker token manually  #{} presentValue repeat 'x', token?.length ? 0
+            action: editGitEmail,     value: "" 3. set your git email                 #{} presentValue email
+            action: selectProject,    value: "" 4. select tracker project             #{} presentValue projects[projectId]?.name
+            value: "" 0. exit
+            # action: null,  value: "" 2. Select story:
+            # action: null,  value: "" 3. Select type:
+            # action: null,  value: "" 4. Edit message:
+            # action: null,  value: "" 5. Change coauthors:
+
 

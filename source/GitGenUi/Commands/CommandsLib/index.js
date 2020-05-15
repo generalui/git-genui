@@ -4,6 +4,7 @@
 (module.exports = require('./namespace'))
 .includeInNamespace(require('./CommandsLib'))
 .addModules({
+  Auth:               require('./Auth'),
   CommitNow:          require('./CommitNow'),
   EditCommitMessage:  require('./EditCommitMessage'),
   EditGitStage:       require('./EditGitStage'),

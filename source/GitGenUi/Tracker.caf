@@ -8,13 +8,15 @@ class Tracker extends BaseClass
 
   init: (projectConfig) ->
     projectConfig?.project?.tracker extract? projectId, name
-    @_tracker = &Trackers[name]
+    @_name = name ? :PivotalTracker
+    @_tracker = &Trackers[@name]
     @_projectId = projectId
     @formatStory = @formatStory.bind @
 
   @getter
     :projectId
     :tracker
+    :name
     settableStoryStates:  -> @tracker?.settableStoryStates
     stories:              -> @tracker?.getStories @projectId
     members:              -> @tracker?.getMembers @projectId

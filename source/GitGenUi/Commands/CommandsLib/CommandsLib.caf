@@ -2,6 +2,7 @@ import &StandardImport, &UserConfig
 
 []
   &Lib
+  &CommandMenuLib
   {}
     saveState = (state) ->
       userConfig.saveCommitOptionsForProject {message, type, coauthors, story} = state if state

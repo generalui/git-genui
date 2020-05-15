@@ -49,4 +49,3 @@ import &StandardImport, &UserConfig
       log.warn "" Commit type should be of the form: [major, minor or patch]/short-word (you provided: #{state.type})
       merge state, type: null
     else state
-

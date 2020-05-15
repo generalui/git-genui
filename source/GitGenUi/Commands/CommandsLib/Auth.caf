@@ -1,0 +1,27 @@
+import &StandardImport
+
+auth = ({email, username, trackerName}) ->
+  Promise.then -> &PromptFor.input
+    default: email ? username
+    message: "" What is your #{trackerName} email or username?
+  .then (username) ->
+    &PromptFor.password
+      default: email
+      message: "" What is your #{trackerName} password? (used only to fetch API token)
+
+    .then (password)->
+      &Tracker.tracker.authenticate {} password, username
+
+      .catch (error) ->
+        if error.status == clientFailureNotAuthorized
+          log.warn "" Invalid password. Please try again.
+
+        else
+          log.error {}
+            error.message
+            error.status
+
+        auth {} email, trackerName
+
+    .tap ({id, name, initials, username}) ->
+      log success: merge {} id, name, initials, username

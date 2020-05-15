@@ -14,6 +14,7 @@ class ConfigShared extends BaseClass
 
   @getter
     :configFilePath
+    state: -> @config
     homeDirRelativeConfigFilePath: -> @configFilePath.replace &os.homedir(), "~"
     readyPromise: -> @_readyPromise
     inspectedObjects: -> toInspectedObjects @config
@@ -28,13 +29,17 @@ class ConfigShared extends BaseClass
     @_config[key] = value
     @_save()
 
+  deepMergeInto: (config) ->
+    @_config = deepMerge @_config, config
+    @_save()
+
   #####################################
     PRIVATE
   #####################################
   _save: ->
     &fsExtra.writeFile
       filePath = @configFilePath
-      JSON.stringify @config, null, "  "
+      consistentJsonStringify @config, "  "
     .then -> @config
 
   _load: ->

@@ -5,7 +5,7 @@ import &ArtStandardLib, &ArtClassSystem, &Lib
 
 inquire = (options) ->
   throw new Error "no need to specify 'name' - just your value is returned w/o a wrapping object" if present options.name
-  Promise.then -> &inquirer.prompt merge options, name: :value, message: options.prompt
+  Promise.then -> &inquirer.prompt merge options, name: :value, message: options.prompt ? options.message
   .then ({value}) -> value
 
 # if the terminal window is not wide enough, autocomplete truncates the strings
@@ -76,10 +76,19 @@ class Core
         key: :n value: :no  name: "" no
       options
 
+  ## input
+    IN: options
+      canBeBlank: t/f - unless true, if the result is an empty string, then default will be returned
   @input: (options) ->
     inquire merge
       type: :input
       options
+    .then (str) ->
+      unless options.canBeBlank
+        if present str then str else options.default
+
+  @password: (options) =>
+    @input merge options, type: :password
 
   @password: (options) ->
     inquire merge
