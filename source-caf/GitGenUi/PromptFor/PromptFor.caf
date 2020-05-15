@@ -44,8 +44,9 @@ class Core
     OUT: selected item, as passed in
 
   @selectList: ({items, multiselect, prompt, default: _default}) ->
-    if items[0] is String
-      items = array string from strings with value: strings
+    if isString items[0]
+      itemsWereStrings = true
+      items = array string from items with value: string
 
     if defaultItem = findDefaultItem items, _default
       items = array item from items into [defaultItem] when item != defaultItem
@@ -65,7 +66,10 @@ class Core
 
       value = patchAutocompleteResult value, strings
 
-      items[strings.indexOf value]
+      item = items[strings.indexOf value]
+      if itemsWereStrings
+        item.value
+      else item
 
   @yesNo: (options) ->
     inquire merge

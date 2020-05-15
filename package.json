@@ -1,7 +1,7 @@
 {
   "author": "GenUI LLC",
   "bin": {
-    "s3p": "./s3p"
+    "git-genui": "./git-genui"
   },
   "bugs": "https:/github.com/generalui/git-genui/issues",
   "dependencies": {
@@ -32,6 +32,7 @@
     "mock-fs": "^4.11.0",
     "script-loader": "^0.7.2",
     "style-loader": "^1.0.0",
+    "watch": "^1.0.2",
     "webpack": "^4.39.1",
     "webpack-cli": "*",
     "webpack-dev-server": "^3.7.2",
@@ -48,9 +49,8 @@
   },
   "scripts": {
     "build": "caf -p -c source-caf -o source;nn -s",
-    "start": "webpack-dev-server --hot --inline --progress --env.devServer",
     "test": "nn -s;mocha -u tdd",
-    "testInBrowser": "webpack-dev-server --progress --env.devServer"
+    "watch": "watch 'npm run build' ./source-caf"
   },
   "version": "0.3.3"
 }

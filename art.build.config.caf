@@ -2,13 +2,15 @@ import &ArtStandardLib
 
 target: node: true
 
-npm: (currentJson) -> log merge currentJson,
+npm: (currentJson) -> merge currentJson,
   author:       "" GenUI LLC
   description:  "" git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning
-  bin: s3p: :./s3p
+  bin: git-genui: :./git-genui
 
-  scripts: merge currentJson.scripts,
+  scripts: {}
+    currentJson.scripts.test
     build: "" caf -p -c source-caf -o source;nn -s
+    watch: "" watch 'npm run build' ./source-caf
 
   dependencies: merge &package.dependencies,
     art-rest-client:                :^1.7.0

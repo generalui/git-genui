@@ -9,6 +9,7 @@ Caf.defMod(module, () => {
       "merge",
       "Object",
       "String",
+      "isString",
       "autocompleteFromStrings"
     ],
     [
@@ -24,6 +25,7 @@ Caf.defMod(module, () => {
       merge,
       Object,
       String,
+      isString,
       autocompleteFromStrings
     ) => {
       let inquire, patchAutocompleteResult, Core;
@@ -91,10 +93,11 @@ Caf.defMod(module, () => {
           prompt,
           default: _default
         }) {
-          let defaultItem, strings;
-          if (Caf.is(items[0], String)) {
-            items = Caf.array(strings, string => {
-              return { value: strings };
+          let itemsWereStrings, defaultItem, strings;
+          if (isString(items[0])) {
+            itemsWereStrings = true;
+            items = Caf.array(items, string => {
+              return { value: string };
             });
           }
           if ((defaultItem = findDefaultItem(items, _default))) {
@@ -112,8 +115,10 @@ Caf.defMod(module, () => {
             highlight: true,
             searchable: true
           }).then(value => {
+            let item;
             value = patchAutocompleteResult(value, strings);
-            return items[strings.indexOf(value)];
+            item = items[strings.indexOf(value)];
+            return itemsWereStrings ? item.value : item;
           });
         };
         this.yesNo = function(options) {
