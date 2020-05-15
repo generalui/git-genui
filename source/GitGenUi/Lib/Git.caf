@@ -16,7 +16,7 @@ import &StandardImport
 
     {}
       staged, unstaged, untracked
-      status.current, status.traking
+      status.current, status.tracking
       status.ahead, status.behind
 
   nothingStaged = (status) ->
