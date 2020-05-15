@@ -173,11 +173,19 @@ Caf.defMod(module, () => {
             ).then(this._normalizeAccount);
           };
           this.storyIsStartable = function(story) {
-            return (
-              story.state === "unstarted" ||
-              story.state === "rejected" ||
-              story.state === "unscheduled"
-            );
+            return [
+              Caf.in(story.state, "unstarted"),
+              "rejected",
+              "unscheduled"
+            ];
+          };
+          this.storyIsFinishable = function(story) {
+            return Caf.in(story.state, [
+              "unstarted",
+              "rejected",
+              "unscheduled",
+              "started"
+            ]);
           };
           this.updateStory = function(projectId, storyId, updates) {
             let state, estimate;

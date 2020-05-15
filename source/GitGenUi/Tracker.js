@@ -152,6 +152,12 @@ Caf.defMod(module, () => {
               Caf.exists((base = this.tracker)) && base.storyIsStartable(story)
             );
           };
+          this.prototype.storyIsFinishable = function(story) {
+            let base;
+            return (
+              Caf.exists((base = this.tracker)) && base.storyIsFinishable(story)
+            );
+          };
           this.prototype.formatStory = function(story, addLinks) {
             return story.id
               ? `${Caf.toString(

@@ -86,10 +86,8 @@ class PivotalTracker extends BaseClass
     TOOLS
   #####################################
 
-  @storyIsStartable: (story) ->
-    story.state == :unstarted
-    || story.state == :rejected
-    || story.state == :unscheduled
+  @storyIsStartable:  (story) -> story.state in :unstarted :rejected :unscheduled
+  @storyIsFinishable: (story) -> story.state in [] :unstarted :rejected :unscheduled :started
 
   #####################################
     UPDATE STORIES

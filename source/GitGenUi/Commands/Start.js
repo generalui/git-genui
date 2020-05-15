@@ -2,13 +2,19 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["tracker", "log", "ask", "SelectStoryQ", "present", "Promise", "merge"],
-    [global, require("./StandardImport"), require("../InquirerPlus")],
-    (tracker, log, ask, SelectStoryQ, present, Promise, merge) => {
+    ["ensureTrackerConfigured", "log", "tracker"],
+    [
+      global,
+      require("./StandardImport"),
+      require("../InquirerPlus"),
+      require("./CommandsLib")
+    ],
+    (ensureTrackerConfigured, log, tracker) => {
       return {
         description: "start a story",
         run: function(options) {
-          return tracker.stories
+          return ensureTrackerConfigured()
+            .then(() => require("../Tracker").tracker.stories)
             .then(stories => {
               let started;
               started = Caf.array(
@@ -23,48 +29,22 @@ Caf.defMod(module, () => {
                 );
                 log("");
               }
-              return ask(
-                SelectStoryQ(
+              return require("../GitGenUiPromptFor")
+                .story(
                   Caf.array(stories, null, story =>
                     tracker.storyIsStartable(story)
                   ),
-                  { message: "What story do you want to start?" }
+                  "Select a story to start:"
                 )
-              );
-            })
-            .then(({ story }) => {
-              let into, i1;
-              return story
-                ? (!present(story.estimate)
-                    ? ask({
-                        type: "expand",
-                        name: "estimate",
-                        default: "no",
-                        message: "Estimate story to start it:",
-                        choices:
-                          ((into = []),
-                          (i1 = 0),
-                          (() => {
-                            while (i1 <= 3) {
-                              let i;
-                              i = i1;
-                              into.push({
-                                key: `${Caf.toString(i)}`,
-                                value: i,
-                                name: i
-                              });
-                              i1++;
-                            }
-                          })(),
-                          into)
+                .then(story => {
+                  let temp;
+                  return story.id
+                    ? require("../Tracker").tracker.updateStory(story.id, {
+                        state: "started",
+                        estimate: (temp = story.estimate) != null ? temp : 1
                       })
-                    : Promise.resolve({})
-                  )
-                    .then(updates => merge(updates, { state: "started" }))
-                    .then(updates =>
-                      tracker.updateStoryWithMessage(story.id, updates)
-                    )
-                : log("Canceled");
+                    : undefined;
+                });
             });
         }
       };
