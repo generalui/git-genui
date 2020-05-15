@@ -1,24 +1,17 @@
 import &ArtStandardLib, &ArtClassSystem, &ArtRestClient, &UserConfig
 
-baseUrl = :https://www.pivotaltracker.com/services/v5
 
 class PivotalTracker extends BaseClass
-  @classGetter commonRestOptions: ->
-    normalizedHeaders: X-TrackerToken: userConfig.accounts?.pivotalTracker?.token
-
-  #####################################
-    READ
-  #####################################
   @classGetter
-    projects: ->
-      getJson :https://www.pivotaltracker.com/services/v5/projects @commonRestOptions
+    accountConfig: -> userConfig.accounts?[@name]
 
-    myAccount: ->
-      getJson :https://www.pivotaltracker.com/services/v5/me?date_format=millis @commonRestOptions
-      .then @_normalizeAccount
+  @classGetter
+    token: -> @accountConfig?.token
+    commonRestOptions: ->
+      normalizedHeaders: X-TrackerToken: @token
 
   #####################################
-    READ PROJECT DETAILS
+    CONSTANTS
   #####################################
   stateOrder =
     rejected:       0
@@ -29,14 +22,37 @@ class PivotalTracker extends BaseClass
     delivered:      5
     unknown:        5
 
+  @baseUrl: :https://www.pivotaltracker.com/services/v5
+
   @storyStates: :started :rejected :planned :unstarted :unscheduled :finished :delivered
 
   @settableStoryStates: :unstarted :started :finished
 
+  @requireProjectId: (projectId) -> throw new Error "projectId required" unless present projectId
+
+  @getProjectUrl: (projectId) ->
+    @requireProjectId projectId
+    "" #{@projectsUrl}/#{projectId}
+
+  #####################################
+    GET ACCOUNT DETAILS
+  #####################################
+  @classGetter
+    projectsUrl:  -> "" #{@baseUrl}/projects
+    projects:     -> getJson @projectsUrl, @commonRestOptions
+
+    myAccount: ->
+      getJson "#{@baseUrl}/me?date_format=millis" @commonRestOptions
+      .then @_normalizeAccount
+
+  #####################################
+    GET PROJECT DETAILS
+  #####################################
+
   @getStories: (projectId, options) =>
     options extract? states
     states ?= @storyStates
-    getJson "#{baseUrl}/projects/#{projectId}/stories?limit=500&date_format=millis&filter=state:#{states.join ','}" @commonRestOptions
+    getJson "#{@getProjectUrl projectId}/stories?limit=500&date_format=millis&filter=state:#{states.join ','}" @commonRestOptions
     .then (stories) -> stories.map @_normalizeStory
     .then (stories) -> stories.sort (a, b) ->
         aStatus = stateOrder[a.state] ? stateOrder.unknown
@@ -44,17 +60,17 @@ class PivotalTracker extends BaseClass
         if aStatus != bStatus then aStatus - bStatus
         else b.updatedAt - a.updatedAt
 
+  @getProject: (projectId) => getJson (@getProjectUrl projectId), @commonRestOptions
 
   @getMembers: (projectId) =>
-    getJson "#{baseUrl}/projects/#{projectId}/memberships" @commonRestOptions
+    getJson "#{@getProjectUrl projectId}/memberships" @commonRestOptions
     .then (memberships) ->
       array {person} in memberships
         {id, name, email} = person
 
   @openInBrowser: (projectId) ->
-    &open @getProjectUrl projectId
-
-  @getProjectUrl: (projectId) -> "" https://www.pivotaltracker.com/n/projects/#{projectId}
+    @requireProjectId projectId
+    &open "" https://www.pivotaltracker.com/n/projects/#{projectId}
 
   @getStoryUrl: (projectId, storyId) ->
     @getProjectUrl projectId
@@ -76,7 +92,7 @@ class PivotalTracker extends BaseClass
     || story.state == :unscheduled
 
   #####################################
-    UPDATE
+    UPDATE STORIES
   #####################################
   @updateStory: (projectId, storyId, updates) ->
     {state, estimate} = updates
@@ -84,7 +100,7 @@ class PivotalTracker extends BaseClass
       throw new Error "invalid state: #{state}" unless state == "finished" or state == "started"
 
     putJson
-      "" #{baseUrl}/projects/#{projectId}/stories/#{storyId}
+      "" #{@getProjectUrl projectId}/stories/#{storyId}
 
       merge {}
         estimate
@@ -94,7 +110,7 @@ class PivotalTracker extends BaseClass
 
   @createComment: (projectId, storyId, text) ->
     postJson
-      "" #{baseUrl}/projects/#{projectId}/stories/#{storyId}/comments
+      "" #{@getProjectUrl projectId}/stories/#{storyId}/comments
       {} text
       @commonRestOptions
 
