@@ -1,7 +1,9 @@
 import &ArtStandardLib
 
 run: ->
+  log :start
   &UserConfig.initSingleton()
+  .tap -> log :userConfig
   .then -> &ProjectConfig.initSingleton()
   .then (projectConfig) -> &Tracker.tracker.init projectConfig
   .then ->

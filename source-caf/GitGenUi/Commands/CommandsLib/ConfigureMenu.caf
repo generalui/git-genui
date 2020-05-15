@@ -98,11 +98,12 @@ getTrackerToken = (state) ->
             action: getTrackerToken,  value: "" 1. get PivotalTracker token via auth  #{} presentValue me?.name
             action: editTrackerToken, value: "" 2. set PivotalTracker token manually  #{} presentValue repeat 'x', token?.length ? 0
             # action: editGitEmail,     value: "" 3. set your git email                 #{} presentValue email
-            if me?
-              action: selectProject,    value: "" 3. select tracker project             #{} presentValue projects[projectId]?.name
-            else
-              action: (state) -> state
-              value: colors.grey "" 3. select tracker project             configure token first
+            if projectConfig.configFilePath
+              if me?
+                action: selectProject,    value: "" 3. select tracker project             #{} presentValue projects[projectId]?.name
+              else
+                action: (state) -> state
+                value: colors.grey "" 3. select tracker project             configure token first
 
             value: "" 0. #{} exitPrompt ? :exit
 

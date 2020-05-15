@@ -16,11 +16,6 @@ class UserConfig extends &ConfigShared
   @setter
     accounts: (a) -> @setConfigProperty :accounts, a
 
-  init: ->
-    super
-    .then -> &git.origin
-    .then (origin) -> @_currentProjectKey = origin
-
   saveCommitOptionsForProject: (commitOptions, projectKey = @currentProjectKey) ->
     @setConfigProperty
       :commitOptions

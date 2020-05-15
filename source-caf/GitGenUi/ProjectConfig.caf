@@ -12,7 +12,12 @@ class ProjectConfig extends &ConfigShared
     project: -> @config.project
 
   @classGetter
-    configFilePathPromise: -> @repoRootPromise.then (dir) -> &path.join dir, @configBasename
-    repoRootPromise: -> @_repoRoot ?= Promise.then ->
-      new SourceRoots @sourceRootIndicatorFiles
-      .findSourceRoot process.cwd()
+    configFilePathPromise: -> @repoRootPromise.then (dir) -> dir && &path.join dir, @configBasename
+    repoRootPromise: -> @_repoRoot ?=
+      Promise.then ->
+        new SourceRoots @sourceRootIndicatorFiles
+        .findSourceRoot process.cwd()
+      .catch (error) ->
+        log {} error
+        log.warn "" No in a project. Expecing to find the ".git" folder a current or parent folder.
+        null

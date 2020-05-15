@@ -23,8 +23,7 @@ import &StandardImport, &UserConfig, &ProjectConfig
 
     getMyAccountOrNothing = ->
       Promise.then ->
-        projectConfig.project?.tracker extract? name
-        && userConfig.accounts?[name]?.token
+        userConfig.accounts?[tracker.name]?.token
         && tracker.myAccount
       .catch ->
 

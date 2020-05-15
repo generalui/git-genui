@@ -2,9 +2,9 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "SourceRoots", "process"],
+    ["Promise", "SourceRoots", "process", "log"],
     [global, require("./StandardImport"), { path: require("path") }],
-    (Promise, SourceRoots, process) => {
+    (Promise, SourceRoots, process, log) => {
       let ProjectConfig;
       return (ProjectConfig = Caf.defClass(
         class ProjectConfig extends require("./ConfigShared") {},
@@ -19,8 +19,8 @@ Caf.defMod(module, () => {
           });
           this.classGetter({
             configFilePathPromise: function() {
-              return this.repoRootPromise.then(dir =>
-                require("path").join(dir, this.configBasename)
+              return this.repoRootPromise.then(
+                dir => dir && require("path").join(dir, this.configBasename)
               );
             },
             repoRootPromise: function() {
@@ -31,7 +31,13 @@ Caf.defMod(module, () => {
                     new SourceRoots(
                       this.sourceRootIndicatorFiles
                     ).findSourceRoot(process.cwd())
-                  ));
+                  ).catch(error => {
+                    log({ error });
+                    log.warn(
+                      'No in a project. Expecing to find the ".git" folder a current or parent folder.'
+                    );
+                    return null;
+                  }));
             }
           });
         }

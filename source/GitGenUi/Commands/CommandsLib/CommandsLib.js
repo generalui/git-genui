@@ -2,14 +2,14 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["userConfig", "log", "merge", "Promise", "projectConfig", "tracker"],
+    ["userConfig", "log", "merge", "Promise", "tracker"],
     [
       global,
       require("../StandardImport"),
       require("../../UserConfig"),
       require("../../ProjectConfig")
     ],
-    (userConfig, log, merge, Promise, projectConfig, tracker) => {
+    (userConfig, log, merge, Promise, tracker) => {
       let saveState,
         validateStory,
         getMyAccountOrNothing,
@@ -52,16 +52,10 @@ Caf.defMod(module, () => {
           }),
           getMyAccountOrNothing: (getMyAccountOrNothing = function() {
             return Promise.then(() => {
-              let name, temp, base, base1, base2;
+              let base, base1;
               return (
-                (Caf.exists(
-                  (temp =
-                    Caf.exists((base = projectConfig.project)) && base.tracker)
-                )
-                  ? (name = temp.name)
-                  : undefined) &&
-                Caf.exists((base1 = userConfig.accounts)) &&
-                  Caf.exists((base2 = base1[name])) && base2.token &&
+                Caf.exists((base = userConfig.accounts)) &&
+                Caf.exists((base1 = base[tracker.name])) && base1.token &&
                 tracker.myAccount
               );
             }).catch(() => {});

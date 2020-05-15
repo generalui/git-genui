@@ -40,12 +40,6 @@ Caf.defMod(module, () => {
               return this.setConfigProperty("accounts", a);
             }
           });
-          this.prototype.init = function() {
-            return instanceSuper.init
-              .apply(this, arguments)
-              .then(() => require("./Git").origin)
-              .then(origin => (this._currentProjectKey = origin));
-          };
           this.prototype.saveCommitOptionsForProject = function(
             commitOptions,
             projectKey = this.currentProjectKey

@@ -239,22 +239,24 @@ Caf.defMod(module, () => {
                             )
                           )}`
                         },
-                        me != null
-                          ? {
-                              action: selectProject,
-                              value: `3. select tracker project             ${Caf.toString(
-                                presentValue(
-                                  Caf.exists((base3 = projects[projectId])) &&
-                                    base3.name
+                        projectConfig.configFilePath
+                          ? me != null
+                            ? {
+                                action: selectProject,
+                                value: `3. select tracker project             ${Caf.toString(
+                                  presentValue(
+                                    Caf.exists((base3 = projects[projectId])) &&
+                                      base3.name
+                                  )
+                                )}`
+                              }
+                            : {
+                                action: state => state,
+                                value: colors.grey(
+                                  "3. select tracker project             configure token first"
                                 )
-                              )}`
-                            }
-                          : {
-                              action: state => state,
-                              value: colors.grey(
-                                "3. select tracker project             configure token first"
-                              )
-                            },
+                              }
+                          : undefined,
                         {
                           value: `0. ${Caf.toString(
                             exitPrompt != null ? exitPrompt : "exit"

@@ -2,13 +2,15 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["String", "log", "dashCase", "merge"],
+    ["log", "String", "dashCase", "merge"],
     [global, require("art-standard-lib")],
-    (String, log, dashCase, merge) => {
+    (log, String, dashCase, merge) => {
       return {
         run: function() {
+          log("start");
           return require("./UserConfig")
             .initSingleton()
+            .tap(() => log("userConfig"))
             .then(() => require("./ProjectConfig").initSingleton())
             .then(projectConfig =>
               require("./Tracker").tracker.init(projectConfig)
