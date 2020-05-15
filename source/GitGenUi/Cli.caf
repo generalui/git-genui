@@ -13,8 +13,17 @@ run: ->
           !params.quiet && log &colors.bold &colors.brightWhite "" git genui #{dashCase command}
           run params
 
-      help: commands: object m in commands
-        merge m, options: merge
-          quiet:   "" no extra output
-          verbose: "" run with verbose logging
-          m.options
+      help:
+        description:
+          """
+            git-genui's goal is to streamline developer workflow in these areas:
+
+            * updating tracker stories
+            * tracking semantic changes
+            * tracking coauthors
+
+        commands: object m in commands
+          merge m, options: merge
+            quiet:   "" no extra output
+            verbose: "" run with verbose logging
+            m.options
