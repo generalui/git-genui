@@ -5,6 +5,7 @@
 .includeInNamespace(require('./CommandsLib'))
 .addModules({
   Auth:               require('./Auth'),
+  CommandMenuLib:     require('./CommandMenuLib'),
   CommitNow:          require('./CommitNow'),
   EditCommitMessage:  require('./EditCommitMessage'),
   EditGitStage:       require('./EditGitStage'),
