@@ -1,4 +1,4 @@
-import &StandardImport, &UserConfig, &CommandsLib
+import &StandardImport, &UserConfig, &CommandsLib, &ProjectConfig
 
 ##
   IN: state:
@@ -20,6 +20,17 @@ ActionMenu = (state) ->
     story
     coauthors
 
+  configure = (state) ->
+    ConfigureMenu exitPrompt: :back
+    .then -> Promise.deepAll {}
+      stories:    ignoreRejections -> tracker.stories
+      members:    ignoreRejections -> tracker.members
+      myAccount:  ignoreRejections -> tracker.myAccount
+
+    .then (updates) ->
+      log {} updates.stories
+      merge state, updates
+
   otherMembers = array member in members when member.id != myAccount.id
   {staged, unstaged, untracked} = status
   statusColors =
@@ -36,15 +47,24 @@ ActionMenu = (state) ->
     prompt:  "" Select action:
     items: compactFlatten []
       action: EditGitStage,       value: "" 1. Edit staged files:      #{} statusSummary
-      action: StoryMenu,          value: "" 2. Select story:           #{} if !myAccount then colorNotPresent("configure tracker") else presentValue(if story then stripAnsi tracker.formatStory story)
+      if myAccount && projectConfig.project
+        action: StoryMenu,        value: "" 2. Select story:           #{} presentValue(if story then stripAnsi tracker.formatStory story)
+      else
+        action: configure,        value: "" 2. Select story:           #{} colorNotPresent("configure tracker")
+
       action: SelectCommitType,   value: "" 3. Select type:            #{} presentValue type
       action: EditCommitMessage,  value: "" 4. Edit message:           #{} presentValue message
-      action: SelectCoauthors,    value: "" 5. Change coauthors:       #{} if !myAccount then colorNotPresent("configure tracker") else if otherMembers.length == 0 then colorNotPresent("only you") else presentValue coauthors
+
+      if myAccount
+        action: SelectCoauthors,  value: "" 5. Change coauthors:       #{} if otherMembers.length == 0 then colorNotPresent("only you") else presentValue coauthors
+      else
+        action: configure,        value: "" 5. Change coauthors:       #{} colorNotPresent("configure tracker")
 
       # key: :autoPush    value: "" auto-push on/off
       # key: :storyStatus value: "" update story status: started -> finished / (no change: finished)
       action: CommitNow,          value: "" 6. Commit now              #{} &colors.grey getGitCommitMessage state
-      key: :abort                 value: "" 0. Abort / quit
+      action: configure,          value: "" 9. Configure
+      key: :abort                 value: "" 0. exit
 
   .then ({action}) ->
     if action?
@@ -64,10 +84,10 @@ run: (options) ->
     userConfig.commitOptionsForProject
     {message, coauthors, type, storyId} = options
     {}
-      status: &Git.printStatus()
-      tracker.stories
-      tracker.members
-      tracker.myAccount
+      status:     &Git.printStatus()
+      stories:    ignoreRejections -> tracker.stories
+      members:    ignoreRejections -> tracker.members
+      myAccount:  ignoreRejections -> tracker.myAccount
       options
 
   .then validateStory

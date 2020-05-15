@@ -1,24 +1,22 @@
-import &ArtStandardLib, &ArtClassSystem, &colors
+import &ArtStandardLib, &ArtClassSystem, &colors, &ProjectConfig
 
 class Tracker extends BaseClass
   @singletonClass()
 
-  constructor: (cfg) ->
-    @init cfg
+  constructor: (_projectConfig = projectConfig) ->
+    @_projectConfig = _projectConfig
+    @init()
 
-  init: (projectConfig) ->
-    projectConfig?.project?.tracker extract? projectId, name
-    @_name = name ? :PivotalTracker
-    @_tracker = &Trackers[@name]
-    @_projectId = projectId
+  init: ->
     @formatStory = @formatStory.bind @
 
   @getter
-    :projectId
-    :tracker
-    :name
+    :projectConfig
+    tracker:              -> &Trackers[@name]
+    projectId:            -> @projectConfig?.project?.tracker?.projectId
+    name:                 -> @projectConfig?.project?.tracker?.name ? :PivotalTracker
     settableStoryStates:  -> @tracker?.settableStoryStates
-    stories:              -> @tracker?.getStories @projectId
+    stories:              -> @tracker?.getStories log @projectId
     members:              -> @tracker?.getMembers @projectId
     myAccount:            -> @tracker?.getMyAccount @projectId
     projects:             -> @tracker?.projects

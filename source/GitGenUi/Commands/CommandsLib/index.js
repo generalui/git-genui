@@ -7,6 +7,7 @@
   Auth:               require('./Auth'),
   CommandMenuLib:     require('./CommandMenuLib'),
   CommitNow:          require('./CommitNow'),
+  ConfigureMenu:      require('./ConfigureMenu'),
   EditCommitMessage:  require('./EditCommitMessage'),
   EditGitStage:       require('./EditGitStage'),
   FillInMissingState: require('./fillInMissingState'),

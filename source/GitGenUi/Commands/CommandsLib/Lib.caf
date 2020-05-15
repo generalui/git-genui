@@ -1,6 +1,12 @@
 import &StandardImport, &UserConfig
 
 {}
+  ignoreRejections = (a) ->
+    Promise.then a
+    .catch ({message}) ->
+      log.warn message
+      undefined
+
   updateStateWithPrompt = (statePropName, promptF) ->
     (state) ->
       Promise.then -> promptF state
