@@ -20,6 +20,7 @@ class Tracker extends BaseClass
     members:              -> @tracker?.getMembers @projectId
     myAccount:            -> @tracker?.getMyAccount @projectId
     projects:             -> @tracker?.projects
+    project:              -> @tracker?.getProject @projectId
 
   getStoryUrl:       (storyId) -> @tracker?.getStoryUrl @projectId, storyId
   getProjectUrl:     -> @tracker?.getProjectUrl @projectId

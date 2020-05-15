@@ -21,19 +21,23 @@ import &StandardImport, &UserConfig, &ProjectConfig
 
       state
 
-    ensureTrackerConfigured = ->
-      ensureTrackerTokenValid()
-      .then -> &ConfigureMenu() unless projectConfig.project?.tracker?.projectId
-
-
-    ensureTrackerTokenValid = ->
+    getMyAccountOrNothing = ->
       Promise.then ->
         projectConfig.project?.tracker extract? name
-        && userConfig.accounts?[lowerCamelCase name]?.token
+        && userConfig.accounts?[name]?.token
         && tracker.myAccount
       .catch ->
-      .then (myAccount) ->
-        unless myAccount
-          &ConfigureMenu()
+
+    getProjectOrNothing = ->
+      Promise.then -> tracker.project
+      .catch ->
+
+    ensureTrackerConfigured = ->
+      getProjectOrNothing()
+      .then (project) -> &ConfigureMenu exitPrompt: :continue prompt: "Please select a project." unless project
+
+    ensureTrackerTokenValid = ->
+      getMyAccountOrNothing()
+      .then (myAccount) -> &ConfigureMenu exitPrompt: :continue prompt: "Please configure your account." unless myAccount
 
     &fillInMissingState

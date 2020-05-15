@@ -27,7 +27,7 @@ editTrackerToken = (state) ->
   eTT = ->
     &PromptFor.password
       message: "" Enter your #{trackerName} token:
-    .tap (token) -> userConfig.deepMergeInto accounts: [lowerCamelCase trackerName]: {} token
+    .tap (token) -> userConfig.deepMergeInto accounts: [trackerName]: {} token
     .tap -> .tap (projectId) -> projectConfig.deepMergeInto project: tracker: name: trackerName
     .then (token) ->
       tracker.myAccount
@@ -35,7 +35,8 @@ editTrackerToken = (state) ->
         ->
           log colors.green "" Valid token.
           token
-        ->
+        (error) ->
+          log error
           log.warn "" Invalid token.
           eTT()
   eTT()
@@ -51,7 +52,8 @@ getTrackerToken = (state) ->
   &Auth {}
     email: trackerEmail ? email ? getEnv().USER
     trackerName
-  .tap ({token, email}) -> userConfig.deepMergeInto accounts: [lowerCamelCase trackerName]: {} token, email
+
+  .tap ({token, email}) -> userConfig.deepMergeInto accounts: [trackerName]: {} token, email
   .then ({token, email}) ->
     getProjects()
     .then (projects) ->
@@ -59,34 +61,49 @@ getTrackerToken = (state) ->
         trackerEmail: email
         state
         {} token, projects
+  .catch ->
+    log.warn "" Auth failed.
+    state
 
 (options)->
-  options extract? exitPrompt
+  options extract? exitPrompt, prompt
   getProjects()
   .catch -> log.warn "" Tracker token is invalid.
   .then (projects) ->
     menuApp
       {}
         projects
-        userConfig.state.accounts?.git?.email
-        userConfig.state.accounts?.pivotalTracker?.token
-        projectConfig.project?.tracker?.projectId
-        trackerName: &Tracker.tracker.name
-        trackerEmail: userConfig.state.accounts?.pivotalTracker?.email
+        &Tracker.tracker.projectId
+        trackerName = &Tracker.tracker.name
+        trackerAccount = userConfig.accounts?[trackerName]
+        trackerAccount?.token
+        trackerEmail: trackerAccount?.email
+
+        userConfig.accounts?.git?.email
 
       ({projects, email, token, projectId}) ->
 
-        &PromptFor.selectList
+        &Tracker.tracker.myAccount
+        .then
+          (me) ->
+            log colors.green prompt if present prompt
+            me
+          ->
+            log.warn "" Please configure your #{trackerName} token.
+            null
+
+        .then (me) -> &PromptFor.selectList
           prompt:  "" Select action:
           items: compactFlatten []
-            action: getTrackerToken,  value: "" 1. get PivotalTracker token via auth
+            action: getTrackerToken,  value: "" 1. get PivotalTracker token via auth  #{} presentValue me?.name
             action: editTrackerToken, value: "" 2. set PivotalTracker token manually  #{} presentValue repeat 'x', token?.length ? 0
-            action: editGitEmail,     value: "" 3. set your git email                 #{} presentValue email
-            action: selectProject,    value: "" 4. select tracker project             #{} presentValue projects[projectId]?.name
+            # action: editGitEmail,     value: "" 3. set your git email                 #{} presentValue email
+            if me?
+              action: selectProject,    value: "" 3. select tracker project             #{} presentValue projects[projectId]?.name
+            else
+              action: (state) -> state
+              value: colors.grey "" 3. select tracker project             configure token first
+
             value: "" 0. #{} exitPrompt ? :exit
-            # action: null,  value: "" 2. Select story:
-            # action: null,  value: "" 3. Select type:
-            # action: null,  value: "" 4. Edit message:
-            # action: null,  value: "" 5. Change coauthors:
 
 

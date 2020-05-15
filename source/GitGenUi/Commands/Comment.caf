@@ -10,12 +10,11 @@ run: (options) ->
       stories
       "" What story do you want to comment on?
 
-  .then ({story}) ->
+  .then (story) ->
     if story
-      ask InputQ
-        name: :comment
+      &PromptFor.input
         message: "" Comment:
-      .then ({comment}) ->
+      .then (comment) ->
         &Tracker.tracker.createComment
           story.id
           comment

@@ -12,6 +12,9 @@ auth = ({email, username, trackerName}) ->
     .then (password)->
       &Tracker.tracker.authenticate {} password, username
 
+      .tap ({id, name, initials, username}) ->
+        log success: merge {} id, name, initials, username
+
       .catch (error) ->
         if error.status == clientFailureNotAuthorized
           log.warn "" Invalid password. Please try again.
@@ -21,7 +24,5 @@ auth = ({email, username, trackerName}) ->
             error.message
             error.status
 
-        auth {} email, trackerName
+        throw Error
 
-    .tap ({id, name, initials, username}) ->
-      log success: merge {} id, name, initials, username
