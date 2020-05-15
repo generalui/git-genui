@@ -2,9 +2,9 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "merge", "toSeconds"],
+    ["Promise", "present", "Error", "merge", "toSeconds"],
     [global, require("./StandardImport")],
-    (Promise, merge, toSeconds) => {
+    (Promise, present, Error, merge, toSeconds) => {
       let UserConfig;
       return (UserConfig = Caf.defClass(
         class UserConfig extends require("./ConfigShared") {},
@@ -40,11 +40,21 @@ Caf.defMod(module, () => {
               return this.setConfigProperty("accounts", a);
             }
           });
+          this.prototype.init = function() {
+            return instanceSuper.init
+              .apply(this, arguments)
+              .then(() => require("./Git").origin)
+              .catch(() => {})
+              .then(origin => (this._currentProjectKey = origin));
+          };
           this.prototype.saveCommitOptionsForProject = function(
             commitOptions,
             projectKey = this.currentProjectKey
           ) {
             let updatedAt, temp, base;
+            if (!present(projectKey)) {
+              throw new Error("projectKey required to save default options");
+            }
             return this.setConfigProperty(
               "commitOptions",
               merge(this.commitOptions, {
