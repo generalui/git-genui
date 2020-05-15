@@ -37,6 +37,9 @@ Caf.defMod(module, () => {
           };
           this.property("config");
           this.getter("configFilePath", {
+            configPath: function() {
+              return require("path").dirname(this.configFilePath);
+            },
             state: function() {
               return this.config;
             },

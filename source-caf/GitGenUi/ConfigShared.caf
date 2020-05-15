@@ -14,6 +14,7 @@ class ConfigShared extends BaseClass
 
   @getter
     :configFilePath
+    configPath: -> &path.dirname @configFilePath
     state: -> @config
     homeDirRelativeConfigFilePath: -> @configFilePath.replace &os.homedir(), "~"
     readyPromise: -> @_readyPromise

@@ -1,5 +1,8 @@
 import &StandardImport
 
+getResolvedFilePath = (filePath) ->
+  &path.join &ProjectConfig.projectConfig.configPath, filePath
+
 ->
   &Git.rawStatus
   .then ({files}) ->
@@ -22,10 +25,10 @@ import &StandardImport
       each file in files
         if file.workingDir
           if (file.path in selectedFiles)
-            &Git.stage file.path
+            &Git.stage getResolvedFilePath file.path
         else
           if !(file.path in selectedFiles)
-            &Git.unstage file.path
+            &Git.unstage getResolvedFilePath file.path
 
 
   .then -> &Git.printStatus()

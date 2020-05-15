@@ -5,6 +5,13 @@ Caf.defMod(module, () => {
     ["ask", "CheckboxQ", "pad"],
     [global, require("./StandardImport")],
     (ask, CheckboxQ, pad) => {
+      let getResolvedFilePath;
+      getResolvedFilePath = function(filePath) {
+        return require("path").join(
+          require("../ProjectConfig").projectConfig.configPath,
+          filePath
+        );
+      };
       return function() {
         return require("../Git")
           .rawStatus.then(({ files }) => {
@@ -37,10 +44,10 @@ Caf.defMod(module, () => {
                 Caf.each2(files, file =>
                   file.workingDir
                     ? Caf.in(file.path, selectedFiles)
-                      ? require("../Git").stage(file.path)
+                      ? require("../Git").stage(getResolvedFilePath(file.path))
                       : undefined
                     : !Caf.in(file.path, selectedFiles)
-                    ? require("../Git").unstage(file.path)
+                    ? require("../Git").unstage(getResolvedFilePath(file.path))
                     : undefined
                 )
               );
