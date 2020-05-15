@@ -52,5 +52,5 @@
     "test": "nn -s;mocha -u tdd",
     "watch": "watch 'npm run build' ./source-caf"
   },
-  "version": "0.3.3"
+  "version": "0.4.0"
 }
