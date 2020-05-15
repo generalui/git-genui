@@ -41,6 +41,13 @@ ActionMenu = (state) ->
       &colors[statusColors[statusCat]] "" #{status[statusCat].length} #{statusCat}
     .join ', '
 
+  if present message
+    log "" Commit message:
+    log "  " +
+      &colors.grey getGitCommitMessage state
+      .replace /\n/g, "\n  "
+    log ''
+
   &PromptFor.selectList
     prompt:  "" Select action:
     items: compactFlatten []
@@ -60,7 +67,7 @@ ActionMenu = (state) ->
 
       # key: :autoPush    value: "" auto-push on/off
       # key: :storyStatus value: "" update story status: started -> finished / (no change: finished)
-      action: CommitNow,          value: "" 6. Commit now              #{} &colors.grey getGitCommitMessage state
+      if present message then action: CommitNow,          value: "" 6. Commit now
       # action: configure,          value: "" 9. Configure
       key: :abort                 value: "" 0. exit
 

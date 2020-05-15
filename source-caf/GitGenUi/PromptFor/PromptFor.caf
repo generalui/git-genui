@@ -48,7 +48,10 @@ class Core
       itemsWereStrings = true
       items = array string from items with value: string
 
-    if defaultItem = findDefaultItem items, _default
+    if multiselect
+      _default = array item in items when item.selected with item.value
+
+    else if defaultItem = findDefaultItem items, _default
       items = array item from items into [defaultItem] when item != defaultItem
 
     strings = array {value} from items with value
@@ -63,13 +66,18 @@ class Core
       searchable: true
 
     .then (value) ->
+      resolveValue = (value) ->
+        value = patchAutocompleteResult value, strings
 
-      value = patchAutocompleteResult value, strings
+        item = items[strings.indexOf value]
+        if itemsWereStrings
+          item.value
+        else item
 
-      item = items[strings.indexOf value]
-      if itemsWereStrings
-        item.value
-      else item
+      if value is Array
+        value.map resolveValue
+      else
+        resolveValue value
 
   @yesNo: (options) ->
     inquire merge

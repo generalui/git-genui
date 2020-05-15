@@ -47,8 +47,10 @@ import &StandardImport
         "" [##{story.id}]#{if storyStatus && storyStatus != story.status then " (#{storyStatus})"}\_
 
       message ? "(message)"
+
       if coauthors
-        "\n\n\n" + array coauthor in coauthors
-          "" Coauthored-by: #{coauthor}"
+        "\n\n\n" +
+          array coauthor in coauthors
+            "" Coauthored-by: #{coauthor}
           .join "\n"
     .join ''

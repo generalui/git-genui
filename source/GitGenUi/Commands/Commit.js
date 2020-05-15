@@ -4,6 +4,9 @@ Caf.defMod(module, () => {
   return Caf.importInvoke(
     [
       "compactFlatten",
+      "present",
+      "log",
+      "getGitCommitMessage",
       "EditGitStage",
       "projectConfig",
       "StoryMenu",
@@ -15,7 +18,6 @@ Caf.defMod(module, () => {
       "EditCommitMessage",
       "SelectCoauthors",
       "CommitNow",
-      "getGitCommitMessage",
       "ConfigureMenu",
       "Promise",
       "ignoreRejections",
@@ -25,7 +27,6 @@ Caf.defMod(module, () => {
       "validateStory",
       "validateType",
       "fillInMissingState",
-      "log",
       "process"
     ],
     [
@@ -37,6 +38,9 @@ Caf.defMod(module, () => {
     ],
     (
       compactFlatten,
+      present,
+      log,
+      getGitCommitMessage,
       EditGitStage,
       projectConfig,
       StoryMenu,
@@ -48,7 +52,6 @@ Caf.defMod(module, () => {
       EditCommitMessage,
       SelectCoauthors,
       CommitNow,
-      getGitCommitMessage,
       ConfigureMenu,
       Promise,
       ignoreRejections,
@@ -58,7 +61,6 @@ Caf.defMod(module, () => {
       validateStory,
       validateType,
       fillInMissingState,
-      log,
       process
     ) => {
       let ActionMenu;
@@ -123,6 +125,16 @@ Caf.defMod(module, () => {
             }
           )
         ).join(", ");
+        if (present(message)) {
+          log("Commit message:");
+          log(
+            "  " +
+              require("colors")
+                .grey(getGitCommitMessage(state))
+                .replace(/\n/g, "\n  ")
+          );
+          log("");
+        }
         return require("../PromptFor")
           .selectList({
             prompt: "Select action:",
@@ -177,12 +189,9 @@ Caf.defMod(module, () => {
                       colorNotPresent("configure tracker")
                     )}`
                   },
-              {
-                action: CommitNow,
-                value: `6. Commit now              ${Caf.toString(
-                  require("colors").grey(getGitCommitMessage(state))
-                )}`
-              },
+              present(message)
+                ? { action: CommitNow, value: "6. Commit now" }
+                : undefined,
               { key: "abort", value: "0. exit" }
             ])
           })

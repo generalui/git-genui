@@ -10,7 +10,8 @@ Caf.defMod(module, () => {
       "Object",
       "String",
       "isString",
-      "autocompleteFromStrings"
+      "autocompleteFromStrings",
+      "Array"
     ],
     [
       global,
@@ -26,7 +27,8 @@ Caf.defMod(module, () => {
       Object,
       String,
       isString,
-      autocompleteFromStrings
+      autocompleteFromStrings,
+      Array
     ) => {
       let inquire, patchAutocompleteResult, Core;
       require("inquirer").registerPrompt(
@@ -100,10 +102,18 @@ Caf.defMod(module, () => {
               return { value: string };
             });
           }
-          if ((defaultItem = findDefaultItem(items, _default))) {
-            items = Caf.array(items, null, item => item !== defaultItem, [
-              defaultItem
-            ]);
+          if (multiselect) {
+            _default = Caf.array(
+              items,
+              item => item.value,
+              item => item.selected
+            );
+          } else {
+            if ((defaultItem = findDefaultItem(items, _default))) {
+              items = Caf.array(items, null, item => item !== defaultItem, [
+                defaultItem
+              ]);
+            }
           }
           strings = Caf.array(items, ({ value }) => value);
           return inquire({
@@ -115,10 +125,16 @@ Caf.defMod(module, () => {
             highlight: true,
             searchable: true
           }).then(value => {
-            let item;
-            value = patchAutocompleteResult(value, strings);
-            item = items[strings.indexOf(value)];
-            return itemsWereStrings ? item.value : item;
+            let resolveValue;
+            resolveValue = value => {
+              let item;
+              value = patchAutocompleteResult(value, strings);
+              item = items[strings.indexOf(value)];
+              return itemsWereStrings ? item.value : item;
+            };
+            return Caf.is(value, Array)
+              ? value.map(resolveValue)
+              : resolveValue(value);
           });
         };
         this.yesNo = function(options) {

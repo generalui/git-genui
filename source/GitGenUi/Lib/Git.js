@@ -109,9 +109,10 @@ Caf.defMod(module, () => {
             message != null ? message : "(message)",
             coauthors
               ? "\n\n\n" +
-                  Caf.array(coauthors, coauthor =>
-                    `Coauthored-by: ${Caf.toString(coauthor)}"`.join("\n")
-                  )
+                  Caf.array(
+                    coauthors,
+                    coauthor => `Coauthored-by: ${Caf.toString(coauthor)}`
+                  ).join("\n")
               : undefined
           ).join("");
         })
