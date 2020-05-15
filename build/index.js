@@ -178,7 +178,7 @@ Caf.defMod(module, () => {
   Cli:               __webpack_require__(/*! ./Cli */ 15),
   ConfigShared:      __webpack_require__(/*! ./ConfigShared */ 33),
   Git:               __webpack_require__(/*! ./Git */ 34),
-  GitGenUiPromptFor: __webpack_require__(/*! ./GitGenUiPromptFor */ 62),
+  GitGenUiPromptFor: __webpack_require__(/*! ./GitGenUiPromptFor */ 65),
   InquirerPlus:      __webpack_require__(/*! ./InquirerPlus */ 47),
   ProjectConfig:     __webpack_require__(/*! ./ProjectConfig */ 37),
   StandardImport:    __webpack_require__(/*! ./StandardImport */ 18),
@@ -187,9 +187,9 @@ Caf.defMod(module, () => {
 });
 __webpack_require__(/*! ./Commands */ 44);
 __webpack_require__(/*! ./Lib */ 20);
-__webpack_require__(/*! ./PromptFor */ 63);
+__webpack_require__(/*! ./PromptFor */ 56);
 __webpack_require__(/*! ./Trackers */ 39);
-__webpack_require__(/*! ./Widgets */ 58);
+__webpack_require__(/*! ./Widgets */ 61);
 
 /***/ }),
 /* 5 */
@@ -231,7 +231,7 @@ module.exports = require('neptune-namespaces' /* ABC - not inlining fellow NPM *
 /*! exports provided: author, bin, bugs, dependencies, description, devDependencies, homepage, license, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"author\":\"GenUI LLC\",\"bin\":{\"s3p\":\"./s3p\"},\"bugs\":\"https:/github.com/generalui/git-genui/issues\",\"dependencies\":{\"@art-suite/cli\":\"^1.1.1\",\"art-rest-client\":\"^1.7.0\",\"btoa\":\"^1.2.1\",\"fs-extra\":\"^9.0.0\",\"inquirer\":\"^7.1.0\",\"inquirer-autocomplete-prompt\":\"^1.0.2\",\"inquirer-checkbox-plus-prompt\":\"^1.0.1\",\"neptune-namespaces\":\"^4.0.0\",\"open\":\"^7.0.3\",\"pivotaljs\":\"^1.0.3\",\"simple-git\":\"^1.132.0\",\"stable\":\"^0.1.8\"},\"description\":\"git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning\",\"devDependencies\":{\"art-build-configurator\":\"^1.26.9\",\"art-testbench\":\"^1.17.2\",\"caffeine-script\":\"^0.72.1\",\"case-sensitive-paths-webpack-plugin\":\"^2.2.0\",\"chai\":\"^4.2.0\",\"coffee-loader\":\"^0.7.3\",\"css-loader\":\"^3.0.0\",\"json-loader\":\"^0.5.7\",\"mocha\":\"^7.1.1\",\"mock-fs\":\"^4.11.0\",\"script-loader\":\"^0.7.2\",\"style-loader\":\"^1.0.0\",\"webpack\":\"^4.39.1\",\"webpack-cli\":\"*\",\"webpack-dev-server\":\"^3.7.2\",\"webpack-merge\":\"^4.2.1\",\"webpack-node-externals\":\"^1.7.2\",\"webpack-stylish\":\"^0.1.8\"},\"homepage\":\"https://github.com/generalui/git-genui\",\"license\":\"ISC\",\"name\":\"git-genui\",\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/generalui/git-genui.git\"},\"scripts\":{\"build\":\"webpack --progress\",\"start\":\"webpack-dev-server --hot --inline --progress --env.devServer\",\"test\":\"nn -s;mocha -u tdd\",\"testInBrowser\":\"webpack-dev-server --progress --env.devServer\"},\"version\":\"0.3.1\"}");
+module.exports = JSON.parse("{\"author\":\"GenUI LLC\",\"bin\":{\"s3p\":\"./s3p\"},\"bugs\":\"https:/github.com/generalui/git-genui/issues\",\"dependencies\":{\"@art-suite/cli\":\"^1.1.1\",\"art-rest-client\":\"^1.7.0\",\"btoa\":\"^1.2.1\",\"fs-extra\":\"^9.0.0\",\"inquirer\":\"^7.1.0\",\"inquirer-autocomplete-prompt\":\"^1.0.2\",\"inquirer-checkbox-plus-prompt\":\"^1.0.1\",\"neptune-namespaces\":\"^4.0.0\",\"open\":\"^7.0.3\",\"pivotaljs\":\"^1.0.3\",\"simple-git\":\"^1.132.0\",\"stable\":\"^0.1.8\"},\"description\":\"git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning\",\"devDependencies\":{\"art-build-configurator\":\"^1.26.9\",\"art-testbench\":\"^1.17.2\",\"caffeine-script\":\"^0.72.1\",\"case-sensitive-paths-webpack-plugin\":\"^2.2.0\",\"chai\":\"^4.2.0\",\"coffee-loader\":\"^0.7.3\",\"css-loader\":\"^3.0.0\",\"json-loader\":\"^0.5.7\",\"mocha\":\"^7.1.1\",\"mock-fs\":\"^4.11.0\",\"script-loader\":\"^0.7.2\",\"style-loader\":\"^1.0.0\",\"webpack\":\"^4.39.1\",\"webpack-cli\":\"*\",\"webpack-dev-server\":\"^3.7.2\",\"webpack-merge\":\"^4.2.1\",\"webpack-node-externals\":\"^1.7.2\",\"webpack-stylish\":\"^0.1.8\"},\"homepage\":\"https://github.com/generalui/git-genui\",\"license\":\"ISC\",\"name\":\"git-genui\",\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/generalui/git-genui.git\"},\"scripts\":{\"build\":\"webpack --progress\",\"start\":\"webpack-dev-server --hot --inline --progress --env.devServer\",\"test\":\"nn -s;mocha -u tdd\",\"testInBrowser\":\"webpack-dev-server --progress --env.devServer\"},\"version\":\"0.3.2\"}");
 
 /***/ }),
 /* 8 */
@@ -1433,12 +1433,12 @@ Caf.defMod(module, () => {
   return Caf.importInvoke(
     [
       "BaseClass",
-      "log",
       "blue",
       "grey",
       "process",
       "present",
       "formatDate",
+      "log",
       "green",
       "projectConfig"
     ],
@@ -1451,12 +1451,12 @@ Caf.defMod(module, () => {
     ],
     (
       BaseClass,
-      log,
       blue,
       grey,
       process,
       present,
       formatDate,
+      log,
       green,
       projectConfig
     ) => {
@@ -1505,7 +1505,7 @@ Caf.defMod(module, () => {
               let base;
               return (
                 Caf.exists((base = this.tracker)) &&
-                base.getStories(log(this.projectId))
+                base.getStories(this.projectId)
               );
             },
             members: function() {
@@ -1926,7 +1926,7 @@ module.exports = require('btoa' /* ABC - not inlining fellow NPM */);
 
 .addModules({
   Comment:        __webpack_require__(/*! ./Comment */ 45),
-  Commit:         __webpack_require__(/*! ./Commit */ 51),
+  Commit:         __webpack_require__(/*! ./Commit */ 71),
   Config:         __webpack_require__(/*! ./Config */ 72),
   OpenTracker:    __webpack_require__(/*! ./OpenTracker */ 73),
   ShowConfig:     __webpack_require__(/*! ./ShowConfig */ 74),
@@ -1938,7 +1938,7 @@ module.exports = require('btoa' /* ABC - not inlining fellow NPM */);
   Version:        __webpack_require__(/*! ./Version */ 79),
   Whoami:         __webpack_require__(/*! ./Whoami */ 80)
 });
-__webpack_require__(/*! ./CommandsLib */ 52);
+__webpack_require__(/*! ./CommandsLib */ 51);
 
 /***/ }),
 /* 45 */
@@ -1953,18 +1953,23 @@ __webpack_require__(/*! ./CommandsLib */ 52);
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["ask", "SelectStoryQ", "InputQ", "log"],
-    [global, __webpack_require__(/*! ./StandardImport */ 46), __webpack_require__(/*! ../InquirerPlus */ 47)],
-    (ask, SelectStoryQ, InputQ, log) => {
+    ["ensureTrackerConfigured", "ask", "InputQ", "log"],
+    [
+      global,
+      __webpack_require__(/*! ./StandardImport */ 46),
+      __webpack_require__(/*! ../InquirerPlus */ 47),
+      __webpack_require__(/*! ./CommandsLib */ 51)
+    ],
+    (ensureTrackerConfigured, ask, InputQ, log) => {
       return {
         description: "comment on a story",
         run: function(options) {
-          return __webpack_require__(/*! ../Tracker */ 38)
-            .tracker.stories.then(stories =>
-              ask(
-                SelectStoryQ(stories, {
-                  message: "What story do you want to comment on?"
-                })
+          return ensureTrackerConfigured()
+            .then(() => __webpack_require__(/*! ../Tracker */ 38).tracker.stories)
+            .then(stories =>
+              __webpack_require__(/*! ../GitGenUiPromptFor */ 65).story(
+                stories,
+                "What story do you want to comment on?"
               )
             )
             .then(({ story }) =>
@@ -2224,272 +2229,6 @@ module.exports = require('inquirer-checkbox-plus-prompt' /* ABC - not inlining f
 
 /***/ }),
 /* 51 */
-/*!*********************************************!*\
-  !*** ./source/GitGenUi/Commands/Commit.caf ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(module) {
-let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
-Caf.defMod(module, () => {
-  return Caf.importInvoke(
-    [
-      "compactFlatten",
-      "EditGitStage",
-      "projectConfig",
-      "StoryMenu",
-      "presentValue",
-      "stripAnsi",
-      "tracker",
-      "colorNotPresent",
-      "SelectCommitType",
-      "EditCommitMessage",
-      "SelectCoauthors",
-      "CommitNow",
-      "getGitCommitMessage",
-      "ConfigureMenu",
-      "Promise",
-      "ignoreRejections",
-      "log",
-      "merge",
-      "saveState",
-      "userConfig",
-      "validateStory",
-      "validateType",
-      "fillInMissingState",
-      "process"
-    ],
-    [
-      global,
-      __webpack_require__(/*! ./StandardImport */ 46),
-      __webpack_require__(/*! ../UserConfig */ 17),
-      __webpack_require__(/*! ./CommandsLib */ 52),
-      __webpack_require__(/*! ../ProjectConfig */ 37)
-    ],
-    (
-      compactFlatten,
-      EditGitStage,
-      projectConfig,
-      StoryMenu,
-      presentValue,
-      stripAnsi,
-      tracker,
-      colorNotPresent,
-      SelectCommitType,
-      EditCommitMessage,
-      SelectCoauthors,
-      CommitNow,
-      getGitCommitMessage,
-      ConfigureMenu,
-      Promise,
-      ignoreRejections,
-      log,
-      merge,
-      saveState,
-      userConfig,
-      validateStory,
-      validateType,
-      fillInMissingState,
-      process
-    ) => {
-      let ActionMenu;
-      ActionMenu = function(state) {
-        let status,
-          stories,
-          members,
-          myAccount,
-          message,
-          type,
-          story,
-          coauthors,
-          configure,
-          otherMembers,
-          staged,
-          unstaged,
-          untracked,
-          statusColors,
-          statusSummary;
-        if (!state) {
-          return;
-        }
-        status = state.status;
-        stories = state.stories;
-        members = state.members;
-        myAccount = state.myAccount;
-        message = state.message;
-        type = state.type;
-        story = state.story;
-        coauthors = state.coauthors;
-        configure = state =>
-          ConfigureMenu({ exitPrompt: "back" })
-            .then(() =>
-              Promise.deepAll({
-                stories: ignoreRejections(() => tracker.stories),
-                members: ignoreRejections(() => tracker.members),
-                myAccount: ignoreRejections(() => tracker.myAccount)
-              })
-            )
-            .then(updates => {
-              log({ stories: updates.stories });
-              return merge(state, updates);
-            });
-        otherMembers = Caf.array(
-          members,
-          null,
-          member => member.id !== myAccount.id
-        );
-        ({ staged, unstaged, untracked } = status);
-        statusColors = { staged: "green", unstaged: "red", untracked: "red" };
-        statusSummary = compactFlatten(
-          Caf.array(
-            ["staged", "unstaged", "untracked"],
-            statusCat =>
-              __webpack_require__(/*! colors */ 35)[statusColors[statusCat]](
-                `${Caf.toString(status[statusCat].length)} ${Caf.toString(
-                  statusCat
-                )}`
-              ),
-            statusCat => {
-              let base;
-              return (
-                (Caf.exists((base = status[statusCat])) && base.length) > 0
-              );
-            }
-          )
-        ).join(", ");
-        return __webpack_require__(/*! ../PromptFor */ 63)
-          .selectList({
-            prompt: "Select action:",
-            items: compactFlatten([
-              {
-                action: EditGitStage,
-                value: `1. Edit staged files:      ${Caf.toString(
-                  statusSummary
-                )}`
-              },
-              myAccount && projectConfig.project
-                ? {
-                    action: StoryMenu,
-                    value: `2. Select story:           ${Caf.toString(
-                      presentValue(
-                        story
-                          ? stripAnsi(tracker.formatStory(story))
-                          : undefined
-                      )
-                    )}`
-                  }
-                : {
-                    action: configure,
-                    value: `2. Select story:           ${Caf.toString(
-                      colorNotPresent("configure tracker")
-                    )}`
-                  },
-              {
-                action: SelectCommitType,
-                value: `3. Select type:            ${Caf.toString(
-                  presentValue(type)
-                )}`
-              },
-              {
-                action: EditCommitMessage,
-                value: `4. Edit message:           ${Caf.toString(
-                  presentValue(message)
-                )}`
-              },
-              myAccount
-                ? {
-                    action: SelectCoauthors,
-                    value: `5. Change coauthors:       ${Caf.toString(
-                      otherMembers.length === 0
-                        ? colorNotPresent("only you")
-                        : presentValue(coauthors)
-                    )}`
-                  }
-                : {
-                    action: configure,
-                    value: `5. Change coauthors:       ${Caf.toString(
-                      colorNotPresent("configure tracker")
-                    )}`
-                  },
-              {
-                action: CommitNow,
-                value: `6. Commit now              ${Caf.toString(
-                  __webpack_require__(/*! colors */ 35).grey(getGitCommitMessage(state))
-                )}`
-              },
-              { action: configure, value: "9. Configure" },
-              { key: "abort", value: "0. exit" }
-            ])
-          })
-          .then(({ action }) =>
-            action != null
-              ? Promise.then(() => action(state))
-                  .then(saveState)
-                  .then(ActionMenu)
-              : undefined
-          );
-      };
-      return {
-        description: "main interactive commit interface",
-        options: {
-          message: [
-            "message",
-            "entier your git-commit message on the command-line"
-          ],
-          coauthors: [
-            "authors",
-            "one more more coauthor emails (separated by spaces)"
-          ],
-          type: [
-            "type",
-            "Commit type string. Should be of the form: [major, minor or patch]/short-word"
-          ],
-          "story-id": [
-            "id",
-            "Input the tracker story id directly on the command-line. It will be validated against existing stories."
-          ]
-        },
-        run: function(options) {
-          let message, coauthors, type, storyId;
-          return Promise.deepAll(
-            merge(
-              userConfig.commitOptionsForProject,
-              (({ message, coauthors, type, storyId } = options),
-              { message, coauthors, type, storyId }),
-              {
-                status: __webpack_require__(/*! ../Git */ 34).printStatus(),
-                stories: ignoreRejections(() => tracker.stories),
-                members: ignoreRejections(() => tracker.members),
-                myAccount: ignoreRejections(() => tracker.myAccount),
-                options
-              }
-            )
-          )
-            .then(validateStory)
-            .then(validateType)
-            .tap(({ status }) =>
-              status.staged.length +
-                status.unstaged.length +
-                status.untracked.length ===
-              0
-                ? (log.warn("No local changes to commit."), process.exit(1))
-                : undefined
-            )
-            .then(fillInMissingState)
-            .then(saveState)
-            .then(ActionMenu);
-        }
-      };
-    }
-  );
-});
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
-
-/***/ }),
-/* 52 */
 /*!*******************************************************!*\
   !*** ./source/GitGenUi/Commands/CommandsLib/index.js ***!
   \*******************************************************/
@@ -2500,24 +2239,24 @@ Caf.defMod(module, () => {
 // file: GitGenUi/Commands/CommandsLib/index.js
 
 (module.exports = __webpack_require__(/*! ./namespace */ 9))
-.includeInNamespace(__webpack_require__(/*! ./CommandsLib */ 53))
+.includeInNamespace(__webpack_require__(/*! ./CommandsLib */ 52))
 .addModules({
-  Auth:               __webpack_require__(/*! ./Auth */ 67),
-  CommandMenuLib:     __webpack_require__(/*! ./CommandMenuLib */ 55),
+  Auth:               __webpack_require__(/*! ./Auth */ 58),
+  CommandMenuLib:     __webpack_require__(/*! ./CommandMenuLib */ 54),
   CommitNow:          __webpack_require__(/*! ./CommitNow */ 68),
-  ConfigureMenu:      __webpack_require__(/*! ./ConfigureMenu */ 69),
-  EditCommitMessage:  __webpack_require__(/*! ./EditCommitMessage */ 66),
-  EditGitStage:       __webpack_require__(/*! ./EditGitStage */ 57),
-  FillInMissingState: __webpack_require__(/*! ./fillInMissingState */ 56),
-  Lib:                __webpack_require__(/*! ./Lib */ 54),
-  SelectCoauthors:    __webpack_require__(/*! ./SelectCoauthors */ 70),
-  SelectCommitType:   __webpack_require__(/*! ./SelectCommitType */ 65),
-  SelectStoryState:   __webpack_require__(/*! ./SelectStoryState */ 71),
-  StoryMenu:          __webpack_require__(/*! ./StoryMenu */ 61)
+  ConfigureMenu:      __webpack_require__(/*! ./ConfigureMenu */ 55),
+  EditCommitMessage:  __webpack_require__(/*! ./EditCommitMessage */ 67),
+  EditGitStage:       __webpack_require__(/*! ./EditGitStage */ 60),
+  FillInMissingState: __webpack_require__(/*! ./fillInMissingState */ 59),
+  Lib:                __webpack_require__(/*! ./Lib */ 53),
+  SelectCoauthors:    __webpack_require__(/*! ./SelectCoauthors */ 69),
+  SelectCommitType:   __webpack_require__(/*! ./SelectCommitType */ 66),
+  SelectStoryState:   __webpack_require__(/*! ./SelectStoryState */ 70),
+  StoryMenu:          __webpack_require__(/*! ./StoryMenu */ 64)
 });
 
 /***/ }),
-/* 53 */
+/* 52 */
 /*!**************************************************************!*\
   !*** ./source/GitGenUi/Commands/CommandsLib/CommandsLib.caf ***!
   \**************************************************************/
@@ -2529,13 +2268,37 @@ Caf.defMod(module, () => {
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["userConfig", "log", "merge"],
-    [global, __webpack_require__(/*! ../StandardImport */ 46), __webpack_require__(/*! ../../UserConfig */ 17)],
-    (userConfig, log, merge) => {
-      let saveState, validateStory;
+    [
+      "userConfig",
+      "log",
+      "merge",
+      "projectConfig",
+      "Promise",
+      "lowerCamelCase",
+      "tracker"
+    ],
+    [
+      global,
+      __webpack_require__(/*! ../StandardImport */ 46),
+      __webpack_require__(/*! ../../UserConfig */ 17),
+      __webpack_require__(/*! ../../ProjectConfig */ 37)
+    ],
+    (
+      userConfig,
+      log,
+      merge,
+      projectConfig,
+      Promise,
+      lowerCamelCase,
+      tracker
+    ) => {
+      let saveState,
+        validateStory,
+        ensureTrackerConfigured,
+        ensureTrackerTokenValid;
       return [
-        __webpack_require__(/*! ./Lib */ 54),
-        __webpack_require__(/*! ./CommandMenuLib */ 55),
+        __webpack_require__(/*! ./Lib */ 53),
+        __webpack_require__(/*! ./CommandMenuLib */ 54),
         {
           saveState: (saveState = function(state) {
             let message, type, coauthors, story;
@@ -2567,7 +2330,39 @@ Caf.defMod(module, () => {
             }
             return state;
           }),
-          fillInMissingState: __webpack_require__(/*! ./fillInMissingState */ 56)
+          ensureTrackerConfigured: (ensureTrackerConfigured = function() {
+            return ensureTrackerTokenValid().then(() => {
+              let base, base1;
+              return !(
+                Caf.exists((base = projectConfig.project)) &&
+                Caf.exists((base1 = base.tracker)) && base1.projectId
+              )
+                ? __webpack_require__(/*! ./ConfigureMenu */ 55)()
+                : undefined;
+            });
+          }),
+          ensureTrackerTokenValid: (ensureTrackerTokenValid = function() {
+            return Promise.then(() => {
+              let name, temp, base, base1, base2;
+              return (
+                (Caf.exists(
+                  (temp =
+                    Caf.exists((base = projectConfig.project)) && base.tracker)
+                )
+                  ? (name = temp.name)
+                  : undefined) &&
+                Caf.exists((base1 = userConfig.accounts)) &&
+                  Caf.exists((base2 = base1[lowerCamelCase(name)])) &&
+                    base2.token &&
+                tracker.myAccount
+              );
+            })
+              .catch(() => {})
+              .then(myAccount =>
+                !myAccount ? __webpack_require__(/*! ./ConfigureMenu */ 55)() : undefined
+              );
+          }),
+          fillInMissingState: __webpack_require__(/*! ./fillInMissingState */ 59)
         }
       ];
     }
@@ -2577,7 +2372,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 54 */
+/* 53 */
 /*!******************************************************!*\
   !*** ./source/GitGenUi/Commands/CommandsLib/Lib.caf ***!
   \******************************************************/
@@ -2699,7 +2494,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 55 */
+/* 54 */
 /*!*****************************************************************!*\
   !*** ./source/GitGenUi/Commands/CommandsLib/CommandMenuLib.caf ***!
   \*****************************************************************/
@@ -2744,10 +2539,10 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 56 */
-/*!*********************************************************************!*\
-  !*** ./source/GitGenUi/Commands/CommandsLib/fillInMissingState.caf ***!
-  \*********************************************************************/
+/* 55 */
+/*!****************************************************************!*\
+  !*** ./source/GitGenUi/Commands/CommandsLib/ConfigureMenu.caf ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2756,228 +2551,251 @@ Caf.defMod(module, () => {
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "present"],
-    [global, __webpack_require__(/*! ../StandardImport */ 46)],
-    (Promise, present) => {
-      let fillInMissingState;
-      return (fillInMissingState = function(state) {
-        return Promise.resolve(state)
-          .then(state =>
-            state.status.staged.length === 0
-              ? __webpack_require__(/*! ./EditGitStage */ 57)(state)
-              : state
-          )
-          .then(state => (!state.story ? __webpack_require__(/*! ./StoryMenu */ 61)(state) : state))
-          .then(state =>
-            !present(state.type) ? __webpack_require__(/*! ./SelectCommitType */ 65)(state) : state
-          )
-          .then(state =>
-            !present(state.message)
-              ? __webpack_require__(/*! ./EditCommitMessage */ 66)(state)
-              : state
+    [
+      "updateStateWithPrompt",
+      "tracker",
+      "presentValue",
+      "colors",
+      "projectConfig",
+      "userConfig",
+      "lowerCamelCase",
+      "log",
+      "Promise",
+      "merge",
+      "getEnv",
+      "menuApp",
+      "compactFlatten",
+      "repeat"
+    ],
+    [
+      global,
+      __webpack_require__(/*! ../StandardImport */ 46),
+      __webpack_require__(/*! ../../UserConfig */ 17),
+      __webpack_require__(/*! ../../ProjectConfig */ 37),
+      __webpack_require__(/*! ./CommandMenuLib */ 54),
+      __webpack_require__(/*! ./Lib */ 53),
+      { colors: __webpack_require__(/*! colors */ 35) }
+    ],
+    (
+      updateStateWithPrompt,
+      tracker,
+      presentValue,
+      colors,
+      projectConfig,
+      userConfig,
+      lowerCamelCase,
+      log,
+      Promise,
+      merge,
+      getEnv,
+      menuApp,
+      compactFlatten,
+      repeat
+    ) => {
+      let getProjects,
+        selectProject,
+        editGitEmail,
+        editTrackerToken,
+        getTrackerToken;
+      getProjects = function() {
+        return tracker.projects.then(projects =>
+          Caf.object(projects, null, null, null, v => v.id)
+        );
+      };
+      selectProject = updateStateWithPrompt("projectId", function({
+        projectId,
+        projects
+      }) {
+        return __webpack_require__(/*! ../../PromptFor */ 56)
+          .selectList({
+            prompt: "Select project:",
+            items: Caf.array(projects, ({ id, name, account_id }) => {
+              return {
+                projectId: id,
+                default: id === projectId,
+                value: `${Caf.toString(presentValue(name))} ${Caf.toString(
+                  colors.grey(
+                    `(id: ${Caf.toString(id)}, account-id: ${Caf.toString(
+                      account_id
+                    )})`
+                  )
+                )}`
+              };
+            })
+          })
+          .then(({ projectId }) => projectId)
+          .tap(projectId =>
+            projectConfig.deepMergeInto({
+              project: {
+                tracker: {
+                  projectId,
+                  name: __webpack_require__(/*! ../../Tracker */ 38).tracker.name
+                }
+              }
+            })
           );
       });
-    }
-  );
-});
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
-
-/***/ }),
-/* 57 */
-/*!***************************************************************!*\
-  !*** ./source/GitGenUi/Commands/CommandsLib/EditGitStage.caf ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(module) {
-let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
-Caf.defMod(module, () => {
-  return (() => {
-    return __webpack_require__(/*! ./Lib */ 54).updateStateWithPrompt("status", function() {
-      return __webpack_require__(/*! ../../Widgets */ 58)
-        .InteractiveAdd()
-        .then(() => __webpack_require__(/*! ../../Git */ 34).status);
-    });
-  })();
-});
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
-
-/***/ }),
-/* 58 */
-/*!******************************************!*\
-  !*** ./source/GitGenUi/Widgets/index.js ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-// generated by Neptune Namespaces v4.x.x
-// file: GitGenUi/Widgets/index.js
-
-(module.exports = __webpack_require__(/*! ./namespace */ 13))
-
-.addModules({
-  InteractiveAdd: __webpack_require__(/*! ./InteractiveAdd */ 59),
-  StandardImport: __webpack_require__(/*! ./StandardImport */ 60)
-});
-
-/***/ }),
-/* 59 */
-/*!****************************************************!*\
-  !*** ./source/GitGenUi/Widgets/InteractiveAdd.caf ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(module) {
-let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
-Caf.defMod(module, () => {
-  return Caf.importInvoke(
-    ["ask", "CheckboxQ", "pad"],
-    [global, __webpack_require__(/*! ./StandardImport */ 60)],
-    (ask, CheckboxQ, pad) => {
-      return function() {
-        return __webpack_require__(/*! ../Git */ 34)
-          .rawStatus.then(({ files }) => {
-            let strings;
-            files = Caf.array(files, null, file => file.index !== "renamed");
-            strings = Caf.array(
-              files.sort((a, b) => a.path.localeCompare(b.path)),
-              file =>
-                `${Caf.toString(
-                  pad(`(${Caf.toString(file.workingDir || "staged")})`, 15)
-                )} ${Caf.toString(file.path)}`
-            );
-            return ask(
-              CheckboxQ({
-                name: "stagedFiles",
-                message: "Select files to staged. Unselect files to unstage.",
-                default: Caf.array(strings, null, string =>
-                  /\(staged/.test(string)
-                ),
-                strings,
-                filter: stagedFiles =>
-                  Caf.array(
-                    stagedFiles,
-                    string => string.split(/^\(\w+\)\s+/)[1]
-                  )
+      editGitEmail = updateStateWithPrompt("email", function({
+        email,
+        trackerEmail
+      }) {
+        return __webpack_require__(/*! ../../PromptFor */ 56)
+          .input({
+            message: "Enter your git email:",
+            default: email != null ? email : trackerEmail
+          })
+          .tap(email =>
+            userConfig.deepMergeInto({ accounts: { git: { email } } })
+          );
+      });
+      editTrackerToken = function(state) {
+        let trackerName, eTT;
+        trackerName = state.trackerName;
+        eTT = () =>
+          __webpack_require__(/*! ../../PromptFor */ 56)
+            .password({
+              message: `Enter your ${Caf.toString(trackerName)} token:`
+            })
+            .tap(token =>
+              userConfig.deepMergeInto({
+                accounts: { [lowerCamelCase(trackerName)]: { token } }
               })
             )
-              .then(({ stagedFiles }) => stagedFiles)
-              .then(selectedFiles =>
-                Caf.each2(files, file =>
-                  file.workingDir
-                    ? Caf.in(file.path, selectedFiles)
-                      ? __webpack_require__(/*! ../Git */ 34).stage(file.path)
-                      : undefined
-                    : !Caf.in(file.path, selectedFiles)
-                    ? __webpack_require__(/*! ../Git */ 34).unstage(file.path)
-                    : undefined
-                )
-              );
-          })
-          .then(() => __webpack_require__(/*! ../Git */ 34).printStatus());
+            .tap(() => {})
+            .tap(projectId =>
+              projectConfig.deepMergeInto({
+                project: { tracker: { name: trackerName } }
+              })
+            )
+            .then(token =>
+              tracker.myAccount.then(
+                () => {
+                  log(colors.green("Valid token."));
+                  return token;
+                },
+                () => {
+                  log.warn("Invalid token.");
+                  return eTT();
+                }
+              )
+            );
+        return eTT()
+          .then(token =>
+            Promise.deepAll({
+              token,
+              myAccount: tracker.myAccount,
+              projects: getProjects()
+            })
+          )
+          .then(({ token, myAccount, projects }) =>
+            merge(state, { token, projects, trackerEmail: myAccount.email })
+          );
+      };
+      getTrackerToken = function(state) {
+        let email, trackerName, trackerEmail, temp;
+        email = state.email;
+        trackerName = state.trackerName;
+        trackerEmail = state.trackerEmail;
+        return __webpack_require__(/*! ./Auth */ 58)({
+          email:
+            (temp = trackerEmail != null ? trackerEmail : email) != null
+              ? temp
+              : getEnv().USER,
+          trackerName
+        })
+          .tap(({ token, email }) =>
+            userConfig.deepMergeInto({
+              accounts: { [lowerCamelCase(trackerName)]: { token, email } }
+            })
+          )
+          .then(({ token, email }) =>
+            getProjects().then(projects =>
+              merge({ trackerEmail: email }, state, { token, projects })
+            )
+          );
+      };
+      return function(options) {
+        let exitPrompt;
+        if (Caf.exists(options)) {
+          exitPrompt = options.exitPrompt;
+        }
+        return getProjects()
+          .catch(() => log.warn("Tracker token is invalid."))
+          .then(projects => {
+            let base, base1, base2, base3, base4, base5, base6, base7;
+            return menuApp(
+              {
+                projects,
+                email:
+                  Caf.exists((base = userConfig.state.accounts)) &&
+                  Caf.exists((base1 = base.git)) && base1.email,
+                token:
+                  Caf.exists((base2 = userConfig.state.accounts)) &&
+                  Caf.exists((base3 = base2.pivotalTracker)) && base3.token,
+                projectId:
+                  Caf.exists((base4 = projectConfig.project)) &&
+                  Caf.exists((base5 = base4.tracker)) && base5.projectId,
+                trackerName: __webpack_require__(/*! ../../Tracker */ 38).tracker.name,
+                trackerEmail:
+                  Caf.exists((base6 = userConfig.state.accounts)) &&
+                  Caf.exists((base7 = base6.pivotalTracker)) && base7.email
+              },
+              ({ projects, email, token, projectId }) => {
+                let temp, base8;
+                return __webpack_require__(/*! ../../PromptFor */ 56).selectList({
+                  prompt: "Select action:",
+                  items: compactFlatten([
+                    {
+                      action: getTrackerToken,
+                      value: "1. get PivotalTracker token via auth"
+                    },
+                    {
+                      action: editTrackerToken,
+                      value: `2. set PivotalTracker token manually  ${Caf.toString(
+                        presentValue(
+                          repeat(
+                            "x",
+                            (temp = Caf.exists(token) && token.length) != null
+                              ? temp
+                              : 0
+                          )
+                        )
+                      )}`
+                    },
+                    {
+                      action: editGitEmail,
+                      value: `3. set your git email                 ${Caf.toString(
+                        presentValue(email)
+                      )}`
+                    },
+                    {
+                      action: selectProject,
+                      value: `4. select tracker project             ${Caf.toString(
+                        presentValue(
+                          Caf.exists((base8 = projects[projectId])) &&
+                            base8.name
+                        )
+                      )}`
+                    },
+                    {
+                      value: `0. ${Caf.toString(
+                        exitPrompt != null ? exitPrompt : "exit"
+                      )}`
+                    }
+                  ])
+                });
+              }
+            );
+          });
       };
     }
   );
-});
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
-
-/***/ }),
-/* 60 */
-/*!****************************************************!*\
-  !*** ./source/GitGenUi/Widgets/StandardImport.caf ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(module) {
-let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
-Caf.defMod(module, () => {
-  return __webpack_require__(/*! ../StandardImport */ 18).mergeWithSelf(__webpack_require__(/*! ../InquirerPlus */ 47));
-});
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
-
-/***/ }),
-/* 61 */
-/*!************************************************************!*\
-  !*** ./source/GitGenUi/Commands/CommandsLib/StoryMenu.caf ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(module) {
-let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
-Caf.defMod(module, () => {
-  return (() => {
-    return __webpack_require__(/*! ./Lib */ 54).updateStateWithPrompt("story", function({
-      stories,
-      story
-    }) {
-      return __webpack_require__(/*! ../../GitGenUiPromptFor */ 62).story(
-        stories,
-        "What story does this commit advance most?",
-        story
-      );
-    });
-  })();
 });
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 62 */
-/*!***********************************************!*\
-  !*** ./source/GitGenUi/GitGenUiPromptFor.caf ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(module) {
-let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
-Caf.defMod(module, () => {
-  return Caf.importInvoke(
-    ["Promise", "compactFlatten"],
-    [global, __webpack_require__(/*! ./StandardImport */ 18)],
-    (Promise, compactFlatten) => {
-      let formatStory;
-      formatStory = __webpack_require__(/*! ./Tracker */ 38).tracker.formatStory;
-      return {
-        story: (stories, prompt, defaultStory) =>
-          Promise.then(() =>
-            stories
-              ? __webpack_require__(/*! ./PromptFor */ 63)
-                  .selectList({
-                    prompt: prompt != null ? prompt : "Select a story...",
-                    default: defaultStory ? { story: defaultStory } : undefined,
-                    items: compactFlatten([
-                      Caf.array(stories, story => {
-                        return { story, value: formatStory(story) };
-                      }),
-                      { value: "(none)", story: {} }
-                    ])
-                  })
-                  .then(({ story }) => story)
-              : undefined
-          )
-      };
-    }
-  );
-});
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/webpack/buildin/module.js */ 1)(module)))
-
-/***/ }),
-/* 63 */
+/* 56 */
 /*!********************************************!*\
   !*** ./source/GitGenUi/PromptFor/index.js ***!
   \********************************************/
@@ -2988,11 +2806,11 @@ Caf.defMod(module, () => {
 // file: GitGenUi/PromptFor/index.js
 
 (module.exports = __webpack_require__(/*! ./namespace */ 11))
-.includeInNamespace(__webpack_require__(/*! ./PromptFor */ 64))
+.includeInNamespace(__webpack_require__(/*! ./PromptFor */ 57))
 ;
 
 /***/ }),
-/* 64 */
+/* 57 */
 /*!*************************************************!*\
   !*** ./source/GitGenUi/PromptFor/PromptFor.caf ***!
   \*************************************************/
@@ -3158,7 +2976,296 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
+/* 58 */
+/*!*******************************************************!*\
+  !*** ./source/GitGenUi/Commands/CommandsLib/Auth.caf ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {
+let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
+Caf.defMod(module, () => {
+  return Caf.importInvoke(
+    ["Promise", "clientFailureNotAuthorized", "log", "merge"],
+    [global, __webpack_require__(/*! ../StandardImport */ 46)],
+    (Promise, clientFailureNotAuthorized, log, merge) => {
+      let auth;
+      return (auth = function({ email, username, trackerName }) {
+        return Promise.then(() =>
+          __webpack_require__(/*! ../../PromptFor */ 56).input({
+            default: email != null ? email : username,
+            message: `What is your ${Caf.toString(
+              trackerName
+            )} email or username?`
+          })
+        ).then(username =>
+          __webpack_require__(/*! ../../PromptFor */ 56)
+            .password({
+              default: email,
+              message: `What is your ${Caf.toString(
+                trackerName
+              )} password? (used only to fetch API token)`
+            })
+            .then(password =>
+              __webpack_require__(/*! ../../Tracker */ 38)
+                .tracker.authenticate({ password, username })
+                .catch(error => {
+                  if (error.status === clientFailureNotAuthorized) {
+                    log.warn("Invalid password. Please try again.");
+                  } else {
+                    log.error({ message: error.message, status: error.status });
+                  }
+                  return auth({ email, trackerName });
+                })
+            )
+            .tap(({ id, name, initials, username }) =>
+              log({ success: merge({ id, name, initials, username }) })
+            )
+        );
+      });
+    }
+  );
+});
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
+
+/***/ }),
+/* 59 */
+/*!*********************************************************************!*\
+  !*** ./source/GitGenUi/Commands/CommandsLib/fillInMissingState.caf ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {
+let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
+Caf.defMod(module, () => {
+  return Caf.importInvoke(
+    ["Promise", "present"],
+    [global, __webpack_require__(/*! ../StandardImport */ 46)],
+    (Promise, present) => {
+      let fillInMissingState;
+      return (fillInMissingState = function(state) {
+        return Promise.resolve(state)
+          .then(state =>
+            state.status.staged.length === 0
+              ? __webpack_require__(/*! ./EditGitStage */ 60)(state)
+              : state
+          )
+          .then(state => (!state.story ? __webpack_require__(/*! ./StoryMenu */ 64)(state) : state))
+          .then(state =>
+            !present(state.type) ? __webpack_require__(/*! ./SelectCommitType */ 66)(state) : state
+          )
+          .then(state =>
+            !present(state.message)
+              ? __webpack_require__(/*! ./EditCommitMessage */ 67)(state)
+              : state
+          );
+      });
+    }
+  );
+});
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
+
+/***/ }),
+/* 60 */
+/*!***************************************************************!*\
+  !*** ./source/GitGenUi/Commands/CommandsLib/EditGitStage.caf ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {
+let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
+Caf.defMod(module, () => {
+  return (() => {
+    return __webpack_require__(/*! ./Lib */ 53).updateStateWithPrompt("status", function() {
+      return __webpack_require__(/*! ../../Widgets */ 61)
+        .InteractiveAdd()
+        .then(() => __webpack_require__(/*! ../../Git */ 34).status);
+    });
+  })();
+});
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
+
+/***/ }),
+/* 61 */
+/*!******************************************!*\
+  !*** ./source/GitGenUi/Widgets/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// generated by Neptune Namespaces v4.x.x
+// file: GitGenUi/Widgets/index.js
+
+(module.exports = __webpack_require__(/*! ./namespace */ 13))
+
+.addModules({
+  InteractiveAdd: __webpack_require__(/*! ./InteractiveAdd */ 62),
+  StandardImport: __webpack_require__(/*! ./StandardImport */ 63)
+});
+
+/***/ }),
+/* 62 */
+/*!****************************************************!*\
+  !*** ./source/GitGenUi/Widgets/InteractiveAdd.caf ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {
+let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
+Caf.defMod(module, () => {
+  return Caf.importInvoke(
+    ["ask", "CheckboxQ", "pad"],
+    [global, __webpack_require__(/*! ./StandardImport */ 63)],
+    (ask, CheckboxQ, pad) => {
+      return function() {
+        return __webpack_require__(/*! ../Git */ 34)
+          .rawStatus.then(({ files }) => {
+            let strings;
+            files = Caf.array(files, null, file => file.index !== "renamed");
+            strings = Caf.array(
+              files.sort((a, b) => a.path.localeCompare(b.path)),
+              file =>
+                `${Caf.toString(
+                  pad(`(${Caf.toString(file.workingDir || "staged")})`, 15)
+                )} ${Caf.toString(file.path)}`
+            );
+            return ask(
+              CheckboxQ({
+                name: "stagedFiles",
+                message: "Select files to staged. Unselect files to unstage.",
+                default: Caf.array(strings, null, string =>
+                  /\(staged/.test(string)
+                ),
+                strings,
+                filter: stagedFiles =>
+                  Caf.array(
+                    stagedFiles,
+                    string => string.split(/^\(\w+\)\s+/)[1]
+                  )
+              })
+            )
+              .then(({ stagedFiles }) => stagedFiles)
+              .then(selectedFiles =>
+                Caf.each2(files, file =>
+                  file.workingDir
+                    ? Caf.in(file.path, selectedFiles)
+                      ? __webpack_require__(/*! ../Git */ 34).stage(file.path)
+                      : undefined
+                    : !Caf.in(file.path, selectedFiles)
+                    ? __webpack_require__(/*! ../Git */ 34).unstage(file.path)
+                    : undefined
+                )
+              );
+          })
+          .then(() => __webpack_require__(/*! ../Git */ 34).printStatus());
+      };
+    }
+  );
+});
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
+
+/***/ }),
+/* 63 */
+/*!****************************************************!*\
+  !*** ./source/GitGenUi/Widgets/StandardImport.caf ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {
+let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
+Caf.defMod(module, () => {
+  return __webpack_require__(/*! ../StandardImport */ 18).mergeWithSelf(__webpack_require__(/*! ../InquirerPlus */ 47));
+});
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
+
+/***/ }),
+/* 64 */
+/*!************************************************************!*\
+  !*** ./source/GitGenUi/Commands/CommandsLib/StoryMenu.caf ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {
+let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
+Caf.defMod(module, () => {
+  return (() => {
+    return __webpack_require__(/*! ./Lib */ 53).updateStateWithPrompt("story", function({
+      stories,
+      story
+    }) {
+      return __webpack_require__(/*! ../../GitGenUiPromptFor */ 65).story(
+        stories,
+        "What story does this commit advance most?",
+        story
+      );
+    });
+  })();
+});
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
+
+/***/ }),
 /* 65 */
+/*!***********************************************!*\
+  !*** ./source/GitGenUi/GitGenUiPromptFor.caf ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {
+let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
+Caf.defMod(module, () => {
+  return Caf.importInvoke(
+    ["Promise", "compactFlatten"],
+    [global, __webpack_require__(/*! ./StandardImport */ 18)],
+    (Promise, compactFlatten) => {
+      let formatStory;
+      formatStory = __webpack_require__(/*! ./Tracker */ 38).tracker.formatStory;
+      return {
+        story: (stories, prompt, defaultStory) =>
+          Promise.then(() =>
+            stories
+              ? __webpack_require__(/*! ./PromptFor */ 56)
+                  .selectList({
+                    prompt: prompt != null ? prompt : "Select a story...",
+                    default: defaultStory ? { story: defaultStory } : undefined,
+                    items: compactFlatten([
+                      Caf.array(stories, story => {
+                        return { story, value: formatStory(story) };
+                      }),
+                      { value: "(none)", story: {} }
+                    ])
+                  })
+                  .then(({ story }) => story)
+              : undefined
+          )
+      };
+    }
+  );
+});
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/webpack/buildin/module.js */ 1)(module)))
+
+/***/ }),
+/* 66 */
 /*!*******************************************************************!*\
   !*** ./source/GitGenUi/Commands/CommandsLib/SelectCommitType.caf ***!
   \*******************************************************************/
@@ -3170,8 +3277,8 @@ Caf.defMod(module, () => {
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return (() => {
-    return __webpack_require__(/*! ./Lib */ 54).updateStateWithPrompt("type", function({ type }) {
-      return __webpack_require__(/*! ../../PromptFor */ 63)
+    return __webpack_require__(/*! ./Lib */ 53).updateStateWithPrompt("type", function({ type }) {
+      return __webpack_require__(/*! ../../PromptFor */ 56)
         .selectList({
           prompt: "Select commit type:",
           default: { type },
@@ -3261,7 +3368,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 66 */
+/* 67 */
 /*!********************************************************************!*\
   !*** ./source/GitGenUi/Commands/CommandsLib/EditCommitMessage.caf ***!
   \********************************************************************/
@@ -3276,71 +3383,15 @@ Caf.defMod(module, () => {
     ["present"],
     [global, __webpack_require__(/*! ../StandardImport */ 46)],
     present => {
-      return __webpack_require__(/*! ./Lib */ 54).updateStateWithPrompt("message", function({
+      return __webpack_require__(/*! ./Lib */ 53).updateStateWithPrompt("message", function({
         message
       }) {
-        return __webpack_require__(/*! ../../PromptFor */ 63)
+        return __webpack_require__(/*! ../../PromptFor */ 56)
           .input({
             message: "Enter your git-commit message:",
             default: message
           })
           .then(m => (present(m) ? m : message));
-      });
-    }
-  );
-});
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
-
-/***/ }),
-/* 67 */
-/*!*******************************************************!*\
-  !*** ./source/GitGenUi/Commands/CommandsLib/Auth.caf ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(module) {
-let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
-Caf.defMod(module, () => {
-  return Caf.importInvoke(
-    ["Promise", "clientFailureNotAuthorized", "log", "merge"],
-    [global, __webpack_require__(/*! ../StandardImport */ 46)],
-    (Promise, clientFailureNotAuthorized, log, merge) => {
-      let auth;
-      return (auth = function({ email, username, trackerName }) {
-        return Promise.then(() =>
-          __webpack_require__(/*! ../../PromptFor */ 63).input({
-            default: email != null ? email : username,
-            message: `What is your ${Caf.toString(
-              trackerName
-            )} email or username?`
-          })
-        ).then(username =>
-          __webpack_require__(/*! ../../PromptFor */ 63)
-            .password({
-              default: email,
-              message: `What is your ${Caf.toString(
-                trackerName
-              )} password? (used only to fetch API token)`
-            })
-            .then(password =>
-              __webpack_require__(/*! ../../Tracker */ 38)
-                .tracker.authenticate({ password, username })
-                .catch(error => {
-                  if (error.status === clientFailureNotAuthorized) {
-                    log.warn("Invalid password. Please try again.");
-                  } else {
-                    log.error({ message: error.message, status: error.status });
-                  }
-                  return auth({ email, trackerName });
-                })
-            )
-            .tap(({ id, name, initials, username }) =>
-              log({ success: merge({ id, name, initials, username }) })
-            )
-        );
       });
     }
   );
@@ -3365,7 +3416,7 @@ Caf.defMod(module, () => {
     [
       global,
       __webpack_require__(/*! ../StandardImport */ 46),
-      __webpack_require__(/*! ./CommandsLib */ 53),
+      __webpack_require__(/*! ./CommandsLib */ 52),
       __webpack_require__(/*! ../../UserConfig */ 17)
     ],
     (Promise, log, merge, getGitCommitMessage) => {
@@ -3403,256 +3454,6 @@ Caf.defMod(module, () => {
 
 /***/ }),
 /* 69 */
-/*!****************************************************************!*\
-  !*** ./source/GitGenUi/Commands/CommandsLib/ConfigureMenu.caf ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(module) {
-let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
-Caf.defMod(module, () => {
-  return Caf.importInvoke(
-    [
-      "updateStateWithPrompt",
-      "tracker",
-      "presentValue",
-      "colors",
-      "projectConfig",
-      "userConfig",
-      "lowerCamelCase",
-      "log",
-      "Promise",
-      "merge",
-      "getEnv",
-      "menuApp",
-      "compactFlatten",
-      "repeat"
-    ],
-    [
-      global,
-      __webpack_require__(/*! ../StandardImport */ 46),
-      __webpack_require__(/*! ../../UserConfig */ 17),
-      __webpack_require__(/*! ../../ProjectConfig */ 37),
-      __webpack_require__(/*! ./CommandMenuLib */ 55),
-      __webpack_require__(/*! ./Lib */ 54),
-      { colors: __webpack_require__(/*! colors */ 35) }
-    ],
-    (
-      updateStateWithPrompt,
-      tracker,
-      presentValue,
-      colors,
-      projectConfig,
-      userConfig,
-      lowerCamelCase,
-      log,
-      Promise,
-      merge,
-      getEnv,
-      menuApp,
-      compactFlatten,
-      repeat
-    ) => {
-      let getProjects,
-        selectProject,
-        editGitEmail,
-        editTrackerToken,
-        getTrackerToken;
-      getProjects = function() {
-        return tracker.projects.then(projects =>
-          Caf.object(projects, null, null, null, v => v.id)
-        );
-      };
-      selectProject = updateStateWithPrompt("projectId", function({
-        projectId,
-        projects
-      }) {
-        return __webpack_require__(/*! ../../PromptFor */ 63)
-          .selectList({
-            prompt: "Select project:",
-            items: Caf.array(projects, ({ id, name, account_id }) => {
-              return {
-                projectId: id,
-                default: id === projectId,
-                value: `${Caf.toString(presentValue(name))} ${Caf.toString(
-                  colors.grey(
-                    `(id: ${Caf.toString(id)}, account-id: ${Caf.toString(
-                      account_id
-                    )})`
-                  )
-                )}`
-              };
-            })
-          })
-          .then(({ projectId }) => projectId)
-          .tap(projectId =>
-            projectConfig.deepMergeInto({
-              project: {
-                tracker: {
-                  projectId,
-                  name: __webpack_require__(/*! ../../Tracker */ 38).tracker.name
-                }
-              }
-            })
-          );
-      });
-      editGitEmail = updateStateWithPrompt("email", function({
-        email,
-        trackerEmail
-      }) {
-        return __webpack_require__(/*! ../../PromptFor */ 63)
-          .input({
-            message: "Enter your git email:",
-            default: email != null ? email : trackerEmail
-          })
-          .tap(email =>
-            userConfig.deepMergeInto({ accounts: { git: { email } } })
-          );
-      });
-      editTrackerToken = function(state) {
-        let trackerName, eTT;
-        trackerName = state.trackerName;
-        eTT = () =>
-          __webpack_require__(/*! ../../PromptFor */ 63)
-            .password({
-              message: `Enter your ${Caf.toString(trackerName)} token:`
-            })
-            .tap(token =>
-              userConfig.deepMergeInto({
-                accounts: { [lowerCamelCase(trackerName)]: { token } }
-              })
-            )
-            .then(token =>
-              tracker.myAccount.then(
-                () => {
-                  log(colors.green("Valid token."));
-                  return token;
-                },
-                () => {
-                  log.warn("Invalid token.");
-                  return eTT();
-                }
-              )
-            );
-        return eTT()
-          .then(token =>
-            Promise.deepAll({
-              token,
-              myAccount: tracker.myAccount,
-              projects: getProjects()
-            })
-          )
-          .then(({ token, myAccount, projects }) =>
-            merge(state, { token, projects, trackerEmail: myAccount.email })
-          );
-      };
-      getTrackerToken = function(state) {
-        let email, trackerName, trackerEmail, temp;
-        email = state.email;
-        trackerName = state.trackerName;
-        trackerEmail = state.trackerEmail;
-        return __webpack_require__(/*! ./Auth */ 67)({
-          email:
-            (temp = trackerEmail != null ? trackerEmail : email) != null
-              ? temp
-              : getEnv().USER,
-          trackerName
-        })
-          .tap(({ token, email }) =>
-            userConfig.deepMergeInto({
-              accounts: { [lowerCamelCase(trackerName)]: { token, email } }
-            })
-          )
-          .then(({ token, email }) =>
-            getProjects().then(projects =>
-              merge({ trackerEmail: email }, state, { token, projects })
-            )
-          );
-      };
-      return function(options) {
-        let exitPrompt;
-        if (Caf.exists(options)) {
-          exitPrompt = options.exitPrompt;
-        }
-        return getProjects()
-          .catch(() => log.warn("Tracker token is invalid."))
-          .then(projects => {
-            let base, base1, base2, base3, base4, base5, base6, base7;
-            return menuApp(
-              {
-                projects,
-                email:
-                  Caf.exists((base = userConfig.state.accounts)) &&
-                  Caf.exists((base1 = base.git)) && base1.email,
-                token:
-                  Caf.exists((base2 = userConfig.state.accounts)) &&
-                  Caf.exists((base3 = base2.pivotalTracker)) && base3.token,
-                projectId:
-                  Caf.exists((base4 = projectConfig.project)) &&
-                  Caf.exists((base5 = base4.tracker)) && base5.projectId,
-                trackerName: __webpack_require__(/*! ../../Tracker */ 38).tracker.name,
-                trackerEmail:
-                  Caf.exists((base6 = userConfig.state.accounts)) &&
-                  Caf.exists((base7 = base6.pivotalTracker)) && base7.email
-              },
-              ({ projects, email, token, projectId }) => {
-                let temp, base8;
-                return __webpack_require__(/*! ../../PromptFor */ 63).selectList({
-                  prompt: "Select action:",
-                  items: compactFlatten([
-                    {
-                      action: getTrackerToken,
-                      value: "1. get PivotalTracker token via auth"
-                    },
-                    {
-                      action: editTrackerToken,
-                      value: `2. set PivotalTracker token manually  ${Caf.toString(
-                        presentValue(
-                          repeat(
-                            "x",
-                            (temp = Caf.exists(token) && token.length) != null
-                              ? temp
-                              : 0
-                          )
-                        )
-                      )}`
-                    },
-                    {
-                      action: editGitEmail,
-                      value: `3. set your git email                 ${Caf.toString(
-                        presentValue(email)
-                      )}`
-                    },
-                    {
-                      action: selectProject,
-                      value: `4. select tracker project             ${Caf.toString(
-                        presentValue(
-                          Caf.exists((base8 = projects[projectId])) &&
-                            base8.name
-                        )
-                      )}`
-                    },
-                    {
-                      value: `0. ${Caf.toString(
-                        exitPrompt != null ? exitPrompt : "exit"
-                      )}`
-                    }
-                  ])
-                });
-              }
-            );
-          });
-      };
-    }
-  );
-});
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
-
-/***/ }),
-/* 70 */
 /*!******************************************************************!*\
   !*** ./source/GitGenUi/Commands/CommandsLib/SelectCoauthors.caf ***!
   \******************************************************************/
@@ -3676,7 +3477,7 @@ Caf.defMod(module, () => {
           member => member.id !== myId
         );
         return otherMembers.length > 0
-          ? __webpack_require__(/*! ../../PromptFor */ 63)
+          ? __webpack_require__(/*! ../../PromptFor */ 56)
               .selectList({
                 prompt: "Who did you coauthor this commit with?",
                 items: Caf.array(otherMembers, ({ email, name }) => {
@@ -3700,7 +3501,7 @@ Caf.defMod(module, () => {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
-/* 71 */
+/* 70 */
 /*!*******************************************************************!*\
   !*** ./source/GitGenUi/Commands/CommandsLib/SelectStoryState.caf ***!
   \*******************************************************************/
@@ -3712,11 +3513,11 @@ Caf.defMod(module, () => {
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return (() => {
-    return __webpack_require__(/*! ./Lib */ 54).updateStateWithPrompt("storyState", function({
+    return __webpack_require__(/*! ./Lib */ 53).updateStateWithPrompt("storyState", function({
       storyState,
       story
     }) {
-      return __webpack_require__(/*! ../../PromptFor */ 63).selectList({
+      return __webpack_require__(/*! ../../PromptFor */ 56).selectList({
         prompt: "Select story state:",
         default:
           storyState != null ? storyState : Caf.exists(story) && story.state,
@@ -3727,6 +3528,269 @@ Caf.defMod(module, () => {
 });
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/module.js */ 1)(module)))
+
+/***/ }),
+/* 71 */
+/*!*********************************************!*\
+  !*** ./source/GitGenUi/Commands/Commit.caf ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {
+let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
+Caf.defMod(module, () => {
+  return Caf.importInvoke(
+    [
+      "compactFlatten",
+      "EditGitStage",
+      "projectConfig",
+      "StoryMenu",
+      "presentValue",
+      "stripAnsi",
+      "tracker",
+      "colorNotPresent",
+      "SelectCommitType",
+      "EditCommitMessage",
+      "SelectCoauthors",
+      "CommitNow",
+      "getGitCommitMessage",
+      "ConfigureMenu",
+      "Promise",
+      "ignoreRejections",
+      "merge",
+      "saveState",
+      "userConfig",
+      "validateStory",
+      "validateType",
+      "fillInMissingState",
+      "log",
+      "process"
+    ],
+    [
+      global,
+      __webpack_require__(/*! ./StandardImport */ 46),
+      __webpack_require__(/*! ../UserConfig */ 17),
+      __webpack_require__(/*! ./CommandsLib */ 51),
+      __webpack_require__(/*! ../ProjectConfig */ 37)
+    ],
+    (
+      compactFlatten,
+      EditGitStage,
+      projectConfig,
+      StoryMenu,
+      presentValue,
+      stripAnsi,
+      tracker,
+      colorNotPresent,
+      SelectCommitType,
+      EditCommitMessage,
+      SelectCoauthors,
+      CommitNow,
+      getGitCommitMessage,
+      ConfigureMenu,
+      Promise,
+      ignoreRejections,
+      merge,
+      saveState,
+      userConfig,
+      validateStory,
+      validateType,
+      fillInMissingState,
+      log,
+      process
+    ) => {
+      let ActionMenu;
+      ActionMenu = function(state) {
+        let status,
+          stories,
+          members,
+          myAccount,
+          message,
+          type,
+          story,
+          coauthors,
+          configure,
+          otherMembers,
+          staged,
+          unstaged,
+          untracked,
+          statusColors,
+          statusSummary;
+        if (!state) {
+          return;
+        }
+        status = state.status;
+        stories = state.stories;
+        members = state.members;
+        myAccount = state.myAccount;
+        message = state.message;
+        type = state.type;
+        story = state.story;
+        coauthors = state.coauthors;
+        configure = state =>
+          ConfigureMenu({ exitPrompt: "back" })
+            .then(() =>
+              Promise.deepAll({
+                stories: ignoreRejections(() => tracker.stories),
+                members: ignoreRejections(() => tracker.members),
+                myAccount: ignoreRejections(() => tracker.myAccount)
+              })
+            )
+            .then(updates => merge(state, updates));
+        otherMembers = Caf.array(
+          members,
+          null,
+          member => member.id !== myAccount.id
+        );
+        ({ staged, unstaged, untracked } = status);
+        statusColors = { staged: "green", unstaged: "red", untracked: "red" };
+        statusSummary = compactFlatten(
+          Caf.array(
+            ["staged", "unstaged", "untracked"],
+            statusCat =>
+              __webpack_require__(/*! colors */ 35)[statusColors[statusCat]](
+                `${Caf.toString(status[statusCat].length)} ${Caf.toString(
+                  statusCat
+                )}`
+              ),
+            statusCat => {
+              let base;
+              return (
+                (Caf.exists((base = status[statusCat])) && base.length) > 0
+              );
+            }
+          )
+        ).join(", ");
+        return __webpack_require__(/*! ../PromptFor */ 56)
+          .selectList({
+            prompt: "Select action:",
+            items: compactFlatten([
+              {
+                action: EditGitStage,
+                value: `1. Edit staged files:      ${Caf.toString(
+                  statusSummary
+                )}`
+              },
+              myAccount && projectConfig.project
+                ? {
+                    action: StoryMenu,
+                    value: `2. Select story:           ${Caf.toString(
+                      presentValue(
+                        story
+                          ? stripAnsi(tracker.formatStory(story))
+                          : undefined
+                      )
+                    )}`
+                  }
+                : {
+                    action: configure,
+                    value: `2. Select story:           ${Caf.toString(
+                      colorNotPresent("configure tracker")
+                    )}`
+                  },
+              {
+                action: SelectCommitType,
+                value: `3. Select type:            ${Caf.toString(
+                  presentValue(type)
+                )}`
+              },
+              {
+                action: EditCommitMessage,
+                value: `4. Edit message:           ${Caf.toString(
+                  presentValue(message)
+                )}`
+              },
+              myAccount
+                ? {
+                    action: SelectCoauthors,
+                    value: `5. Change coauthors:       ${Caf.toString(
+                      otherMembers.length === 0
+                        ? colorNotPresent("only you")
+                        : presentValue(coauthors)
+                    )}`
+                  }
+                : {
+                    action: configure,
+                    value: `5. Change coauthors:       ${Caf.toString(
+                      colorNotPresent("configure tracker")
+                    )}`
+                  },
+              {
+                action: CommitNow,
+                value: `6. Commit now              ${Caf.toString(
+                  __webpack_require__(/*! colors */ 35).grey(getGitCommitMessage(state))
+                )}`
+              },
+              { action: configure, value: "9. Configure" },
+              { key: "abort", value: "0. exit" }
+            ])
+          })
+          .then(({ action }) =>
+            action != null
+              ? Promise.then(() => action(state))
+                  .then(saveState)
+                  .then(ActionMenu)
+              : undefined
+          );
+      };
+      return {
+        description: "main interactive commit interface",
+        options: {
+          message: [
+            "message",
+            "entier your git-commit message on the command-line"
+          ],
+          coauthors: [
+            "authors",
+            "one more more coauthor emails (separated by spaces)"
+          ],
+          type: [
+            "type",
+            "Commit type string. Should be of the form: [major, minor or patch]/short-word"
+          ],
+          "story-id": [
+            "id",
+            "Input the tracker story id directly on the command-line. It will be validated against existing stories."
+          ]
+        },
+        run: function(options) {
+          let message, coauthors, type, storyId;
+          return Promise.deepAll(
+            merge(
+              userConfig.commitOptionsForProject,
+              (({ message, coauthors, type, storyId } = options),
+              { message, coauthors, type, storyId }),
+              {
+                status: __webpack_require__(/*! ../Git */ 34).printStatus(),
+                stories: ignoreRejections(() => tracker.stories),
+                members: ignoreRejections(() => tracker.members),
+                myAccount: ignoreRejections(() => tracker.myAccount),
+                options
+              }
+            )
+          )
+            .then(validateStory)
+            .then(validateType)
+            .tap(({ status }) =>
+              status.staged.length +
+                status.unstaged.length +
+                status.untracked.length ===
+              0
+                ? (log.warn("No local changes to commit."), process.exit(1))
+                : undefined
+            )
+            .then(fillInMissingState)
+            .then(saveState)
+            .then(ActionMenu);
+        }
+      };
+    }
+  );
+});
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/module.js */ 1)(module)))
 
 /***/ }),
 /* 72 */
@@ -3747,7 +3811,7 @@ Caf.defMod(module, () => {
       __webpack_require__(/*! ./StandardImport */ 46),
       __webpack_require__(/*! ../UserConfig */ 17),
       __webpack_require__(/*! ../ProjectConfig */ 37),
-      __webpack_require__(/*! ./CommandsLib */ 52),
+      __webpack_require__(/*! ./CommandsLib */ 51),
       { colors: __webpack_require__(/*! colors */ 35) }
     ],
     ConfigureMenu => {
@@ -3833,7 +3897,7 @@ let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["InteractiveAdd"],
-    [global, __webpack_require__(/*! ./StandardImport */ 46), __webpack_require__(/*! ../Widgets */ 58)],
+    [global, __webpack_require__(/*! ./StandardImport */ 46), __webpack_require__(/*! ../Widgets */ 61)],
     InteractiveAdd => {
       return {
         description: "add (stage) or remove (unstage) files to commit",
@@ -4024,29 +4088,38 @@ let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     [
-      "ConfigureMenu",
+      "ensureTrackerTokenValid",
       "log",
       "objectWithout",
       "standardFormatDate",
       "Array",
       "Object"
     ],
-    [global, __webpack_require__(/*! ./StandardImport */ 46), __webpack_require__(/*! ./CommandsLib */ 52)],
-    (ConfigureMenu, log, objectWithout, standardFormatDate, Array, Object) => {
+    [global, __webpack_require__(/*! ./StandardImport */ 46), __webpack_require__(/*! ./CommandsLib */ 51)],
+    (
+      ensureTrackerTokenValid,
+      log,
+      objectWithout,
+      standardFormatDate,
+      Array,
+      Object
+    ) => {
       return {
         description: "show which tracker account you are logged in with",
         run: function(options) {
-          return __webpack_require__(/*! ../Tracker */ 38).tracker.myAccount.then(account => {
-            log({
-              [account.tracker]: Caf.object(
-                objectWithout(account, "tracker", "kind"),
-                (v, k) =>
-                  /^(created|updated)At$/.test(k) ? standardFormatDate(v) : v,
-                (v, k) => !Caf.is(v, Array) && !Caf.is(v, Object)
-              )
+          return ensureTrackerTokenValid()
+            .then(() => __webpack_require__(/*! ../Tracker */ 38).tracker.myAccount)
+            .then(account => {
+              log({
+                [account.tracker]: Caf.object(
+                  objectWithout(account, "tracker", "kind"),
+                  (v, k) =>
+                    /^(created|updated)At$/.test(k) ? standardFormatDate(v) : v,
+                  (v, k) => !Caf.is(v, Array) && !Caf.is(v, Object)
+                )
+              });
+              return null;
             });
-            return null;
-          }, ConfigureMenu);
         }
       };
     }
