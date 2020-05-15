@@ -231,7 +231,7 @@ module.exports = require('neptune-namespaces' /* ABC - not inlining fellow NPM *
 /*! exports provided: author, bin, bugs, dependencies, description, devDependencies, homepage, license, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"author\":\"GenUI LLC\",\"bin\":{\"s3p\":\"./s3p\"},\"bugs\":\"https:/github.com/generalui/git-genui/issues\",\"dependencies\":{\"@art-suite/cli\":\"^1.1.1\",\"art-rest-client\":\"^1.7.0\",\"btoa\":\"^1.2.1\",\"fs-extra\":\"^9.0.0\",\"inquirer\":\"^7.1.0\",\"inquirer-autocomplete-prompt\":\"^1.0.2\",\"inquirer-checkbox-plus-prompt\":\"^1.0.1\",\"neptune-namespaces\":\"^4.0.0\",\"open\":\"^7.0.3\",\"pivotaljs\":\"^1.0.3\",\"simple-git\":\"^1.132.0\",\"stable\":\"^0.1.8\"},\"description\":\"git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning\",\"devDependencies\":{\"art-build-configurator\":\"^1.26.9\",\"art-testbench\":\"^1.17.2\",\"caffeine-script\":\"^0.72.1\",\"case-sensitive-paths-webpack-plugin\":\"^2.2.0\",\"chai\":\"^4.2.0\",\"coffee-loader\":\"^0.7.3\",\"css-loader\":\"^3.0.0\",\"json-loader\":\"^0.5.7\",\"mocha\":\"^7.1.1\",\"mock-fs\":\"^4.11.0\",\"script-loader\":\"^0.7.2\",\"style-loader\":\"^1.0.0\",\"webpack\":\"^4.39.1\",\"webpack-cli\":\"*\",\"webpack-dev-server\":\"^3.7.2\",\"webpack-merge\":\"^4.2.1\",\"webpack-node-externals\":\"^1.7.2\",\"webpack-stylish\":\"^0.1.8\"},\"homepage\":\"https://github.com/generalui/git-genui\",\"license\":\"ISC\",\"name\":\"git-genui\",\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/generalui/git-genui.git\"},\"scripts\":{\"build\":\"webpack --progress\",\"start\":\"webpack-dev-server --hot --inline --progress --env.devServer\",\"test\":\"nn -s;mocha -u tdd\",\"testInBrowser\":\"webpack-dev-server --progress --env.devServer\"},\"version\":\"0.3.2\"}");
+module.exports = JSON.parse("{\"author\":\"GenUI LLC\",\"bin\":{\"s3p\":\"./s3p\"},\"bugs\":\"https:/github.com/generalui/git-genui/issues\",\"dependencies\":{\"@art-suite/cli\":\"^1.1.1\",\"art-rest-client\":\"^1.7.0\",\"btoa\":\"^1.2.1\",\"fs-extra\":\"^9.0.0\",\"inquirer\":\"^7.1.0\",\"inquirer-autocomplete-prompt\":\"^1.0.2\",\"inquirer-checkbox-plus-prompt\":\"^1.0.1\",\"neptune-namespaces\":\"^4.0.0\",\"open\":\"^7.0.3\",\"pivotaljs\":\"^1.0.3\",\"simple-git\":\"^1.132.0\",\"stable\":\"^0.1.8\"},\"description\":\"git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning\",\"devDependencies\":{\"art-build-configurator\":\"^1.26.9\",\"art-testbench\":\"^1.17.2\",\"caffeine-script\":\"^0.72.1\",\"case-sensitive-paths-webpack-plugin\":\"^2.2.0\",\"chai\":\"^4.2.0\",\"coffee-loader\":\"^0.7.3\",\"css-loader\":\"^3.0.0\",\"json-loader\":\"^0.5.7\",\"mocha\":\"^7.1.1\",\"mock-fs\":\"^4.11.0\",\"script-loader\":\"^0.7.2\",\"style-loader\":\"^1.0.0\",\"webpack\":\"^4.39.1\",\"webpack-cli\":\"*\",\"webpack-dev-server\":\"^3.7.2\",\"webpack-merge\":\"^4.2.1\",\"webpack-node-externals\":\"^1.7.2\",\"webpack-stylish\":\"^0.1.8\"},\"homepage\":\"https://github.com/generalui/git-genui\",\"license\":\"ISC\",\"name\":\"git-genui\",\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/generalui/git-genui.git\"},\"scripts\":{\"build\":\"webpack --progress\",\"start\":\"webpack-dev-server --hot --inline --progress --env.devServer\",\"test\":\"nn -s;mocha -u tdd\",\"testInBrowser\":\"webpack-dev-server --progress --env.devServer\"},\"version\":\"0.3.3\"}");
 
 /***/ }),
 /* 8 */
@@ -394,6 +394,8 @@ Caf.defMod(module, () => {
                   return run(params);
                 }),
                 help: {
+                  description:
+                    "git-genui's goal is to streamline developer workflow in these areas:\n\n* updating tracker stories\n* tracking semantic changes\n* tracking coauthors",
                   commands: Caf.object(commands, m =>
                     merge(m, {
                       options: merge(
@@ -1525,6 +1527,13 @@ Caf.defMod(module, () => {
             projects: function() {
               let base;
               return Caf.exists((base = this.tracker)) && base.projects;
+            },
+            project: function() {
+              let base;
+              return (
+                Caf.exists((base = this.tracker)) &&
+                base.getProject(this.projectId)
+              );
             }
           });
           this.prototype.getStoryUrl = function(storyId) {
@@ -1653,9 +1662,10 @@ Caf.defMod(module, () => {
     [
       "BaseClass",
       "userConfig",
+      "present",
+      "Error",
       "getJson",
       "merge",
-      "Error",
       "putJson",
       "postJson",
       "lowerCamelCase"
@@ -1670,43 +1680,34 @@ Caf.defMod(module, () => {
     (
       BaseClass,
       userConfig,
+      present,
+      Error,
       getJson,
       merge,
-      Error,
       putJson,
       postJson,
       lowerCamelCase
     ) => {
-      let baseUrl, PivotalTracker;
-      baseUrl = "https://www.pivotaltracker.com/services/v5";
+      let PivotalTracker;
       return (PivotalTracker = Caf.defClass(
         class PivotalTracker extends BaseClass {},
         function(PivotalTracker, classSuper, instanceSuper) {
           let stateOrder;
           this.classGetter({
-            commonRestOptions: function() {
-              let base, base1;
-              return {
-                normalizedHeaders: {
-                  "X-TrackerToken":
-                    Caf.exists((base = userConfig.accounts)) &&
-                    Caf.exists((base1 = base.pivotalTracker)) && base1.token
-                }
-              };
+            accountConfig: function() {
+              let base;
+              return (
+                Caf.exists((base = userConfig.accounts)) && base[this.name]
+              );
             }
           });
           this.classGetter({
-            projects: function() {
-              return getJson(
-                "https://www.pivotaltracker.com/services/v5/projects",
-                this.commonRestOptions
-              );
+            token: function() {
+              let base;
+              return Caf.exists((base = this.accountConfig)) && base.token;
             },
-            myAccount: function() {
-              return getJson(
-                "https://www.pivotaltracker.com/services/v5/me?date_format=millis",
-                this.commonRestOptions
-              ).then(this._normalizeAccount);
+            commonRestOptions: function() {
+              return { normalizedHeaders: { "X-TrackerToken": this.token } };
             }
           });
           stateOrder = {
@@ -1718,6 +1719,7 @@ Caf.defMod(module, () => {
             delivered: 5,
             unknown: 5
           };
+          this.baseUrl = "https://www.pivotaltracker.com/services/v5";
           this.storyStates = [
             "started",
             "rejected",
@@ -1728,6 +1730,33 @@ Caf.defMod(module, () => {
             "delivered"
           ];
           this.settableStoryStates = ["unstarted", "started", "finished"];
+          this.requireProjectId = function(projectId) {
+            return !present(projectId)
+              ? (() => {
+                  throw new Error("projectId required");
+                })()
+              : undefined;
+          };
+          this.getProjectUrl = function(projectId) {
+            this.requireProjectId(projectId);
+            return `${Caf.toString(this.projectsUrl)}/${Caf.toString(
+              projectId
+            )}`;
+          };
+          this.classGetter({
+            projectsUrl: function() {
+              return `${Caf.toString(this.baseUrl)}/projects`;
+            },
+            projects: function() {
+              return getJson(this.projectsUrl, this.commonRestOptions);
+            },
+            myAccount: function() {
+              return getJson(
+                `${Caf.toString(this.baseUrl)}/me?date_format=millis`,
+                this.commonRestOptions
+              ).then(this._normalizeAccount);
+            }
+          });
           this.getStories = (projectId, options) => {
             let states;
             if (Caf.exists(options)) {
@@ -1735,8 +1764,8 @@ Caf.defMod(module, () => {
             }
             states != null ? states : (states = this.storyStates);
             return getJson(
-              `${Caf.toString(baseUrl)}/projects/${Caf.toString(
-                projectId
+              `${Caf.toString(
+                this.getProjectUrl(projectId)
               )}/stories?limit=500&date_format=millis&filter=state:${Caf.toString(
                 states.join(",")
               )}`,
@@ -1760,11 +1789,11 @@ Caf.defMod(module, () => {
                 })
               );
           };
+          this.getProject = projectId =>
+            getJson(this.getProjectUrl(projectId), this.commonRestOptions);
           this.getMembers = projectId =>
             getJson(
-              `${Caf.toString(baseUrl)}/projects/${Caf.toString(
-                projectId
-              )}/memberships`,
+              `${Caf.toString(this.getProjectUrl(projectId))}/memberships`,
               this.commonRestOptions
             ).then(memberships =>
               Caf.array(memberships, ({ person }) => {
@@ -1773,12 +1802,12 @@ Caf.defMod(module, () => {
               })
             );
           this.openInBrowser = function(projectId) {
-            return __webpack_require__(/*! open */ 42)(this.getProjectUrl(projectId));
-          };
-          this.getProjectUrl = function(projectId) {
-            return `https://www.pivotaltracker.com/n/projects/${Caf.toString(
-              projectId
-            )}`;
+            this.requireProjectId(projectId);
+            return __webpack_require__(/*! open */ 42)(
+              `https://www.pivotaltracker.com/n/projects/${Caf.toString(
+                projectId
+              )}`
+            );
           };
           this.getStoryUrl = function(projectId, storyId) {
             return (
@@ -1816,8 +1845,8 @@ Caf.defMod(module, () => {
               }
             }
             return putJson(
-              `${Caf.toString(baseUrl)}/projects/${Caf.toString(
-                projectId
+              `${Caf.toString(
+                this.getProjectUrl(projectId)
               )}/stories/${Caf.toString(storyId)}`,
               merge({ estimate, current_state: state }),
               this.commonRestOptions
@@ -1825,8 +1854,8 @@ Caf.defMod(module, () => {
           };
           this.createComment = function(projectId, storyId, text) {
             return postJson(
-              `${Caf.toString(baseUrl)}/projects/${Caf.toString(
-                projectId
+              `${Caf.toString(
+                this.getProjectUrl(projectId)
               )}/stories/${Caf.toString(storyId)}/comments`,
               { text },
               this.commonRestOptions
@@ -1953,14 +1982,14 @@ __webpack_require__(/*! ./CommandsLib */ 51);
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["ensureTrackerConfigured", "ask", "InputQ", "log"],
+    ["ensureTrackerConfigured", "log"],
     [
       global,
       __webpack_require__(/*! ./StandardImport */ 46),
       __webpack_require__(/*! ../InquirerPlus */ 47),
       __webpack_require__(/*! ./CommandsLib */ 51)
     ],
-    (ensureTrackerConfigured, ask, InputQ, log) => {
+    (ensureTrackerConfigured, log) => {
       return {
         description: "comment on a story",
         run: function(options) {
@@ -1972,16 +2001,16 @@ Caf.defMod(module, () => {
                 "What story do you want to comment on?"
               )
             )
-            .then(({ story }) =>
+            .then(story =>
               story
-                ? ask(
-                    InputQ({ name: "comment", message: "Comment:" })
-                  ).then(({ comment }) =>
-                    __webpack_require__(/*! ../Tracker */ 38).tracker.createComment(
-                      story.id,
-                      comment
+                ? __webpack_require__(/*! ../PromptFor */ 56)
+                    .input({ message: "Comment:" })
+                    .then(comment =>
+                      __webpack_require__(/*! ../Tracker */ 38).tracker.createComment(
+                        story.id,
+                        comment
+                      )
                     )
-                  )
                 : log("Canceled")
             );
         }
@@ -2268,32 +2297,18 @@ module.exports = require('inquirer-checkbox-plus-prompt' /* ABC - not inlining f
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    [
-      "userConfig",
-      "log",
-      "merge",
-      "projectConfig",
-      "Promise",
-      "lowerCamelCase",
-      "tracker"
-    ],
+    ["userConfig", "log", "merge", "Promise", "projectConfig", "tracker"],
     [
       global,
       __webpack_require__(/*! ../StandardImport */ 46),
       __webpack_require__(/*! ../../UserConfig */ 17),
       __webpack_require__(/*! ../../ProjectConfig */ 37)
     ],
-    (
-      userConfig,
-      log,
-      merge,
-      projectConfig,
-      Promise,
-      lowerCamelCase,
-      tracker
-    ) => {
+    (userConfig, log, merge, Promise, projectConfig, tracker) => {
       let saveState,
         validateStory,
+        getMyAccountOrNothing,
+        getProjectOrNothing,
         ensureTrackerConfigured,
         ensureTrackerTokenValid;
       return [
@@ -2330,18 +2345,7 @@ Caf.defMod(module, () => {
             }
             return state;
           }),
-          ensureTrackerConfigured: (ensureTrackerConfigured = function() {
-            return ensureTrackerTokenValid().then(() => {
-              let base, base1;
-              return !(
-                Caf.exists((base = projectConfig.project)) &&
-                Caf.exists((base1 = base.tracker)) && base1.projectId
-              )
-                ? __webpack_require__(/*! ./ConfigureMenu */ 55)()
-                : undefined;
-            });
-          }),
-          ensureTrackerTokenValid: (ensureTrackerTokenValid = function() {
+          getMyAccountOrNothing: (getMyAccountOrNothing = function() {
             return Promise.then(() => {
               let name, temp, base, base1, base2;
               return (
@@ -2352,15 +2356,33 @@ Caf.defMod(module, () => {
                   ? (name = temp.name)
                   : undefined) &&
                 Caf.exists((base1 = userConfig.accounts)) &&
-                  Caf.exists((base2 = base1[lowerCamelCase(name)])) &&
-                    base2.token &&
+                  Caf.exists((base2 = base1[name])) && base2.token &&
                 tracker.myAccount
               );
-            })
-              .catch(() => {})
-              .then(myAccount =>
-                !myAccount ? __webpack_require__(/*! ./ConfigureMenu */ 55)() : undefined
-              );
+            }).catch(() => {});
+          }),
+          getProjectOrNothing: (getProjectOrNothing = function() {
+            return Promise.then(() => tracker.project).catch(() => {});
+          }),
+          ensureTrackerConfigured: (ensureTrackerConfigured = function() {
+            return getProjectOrNothing().then(project =>
+              !project
+                ? __webpack_require__(/*! ./ConfigureMenu */ 55)({
+                    exitPrompt: "continue",
+                    prompt: "Please select a project."
+                  })
+                : undefined
+            );
+          }),
+          ensureTrackerTokenValid: (ensureTrackerTokenValid = function() {
+            return getMyAccountOrNothing().then(myAccount =>
+              !myAccount
+                ? __webpack_require__(/*! ./ConfigureMenu */ 55)({
+                    exitPrompt: "continue",
+                    prompt: "Please configure your account."
+                  })
+                : undefined
+            );
           }),
           fillInMissingState: __webpack_require__(/*! ./fillInMissingState */ 59)
         }
@@ -2558,12 +2580,12 @@ Caf.defMod(module, () => {
       "colors",
       "projectConfig",
       "userConfig",
-      "lowerCamelCase",
       "log",
       "Promise",
       "merge",
       "getEnv",
       "menuApp",
+      "present",
       "compactFlatten",
       "repeat"
     ],
@@ -2583,12 +2605,12 @@ Caf.defMod(module, () => {
       colors,
       projectConfig,
       userConfig,
-      lowerCamelCase,
       log,
       Promise,
       merge,
       getEnv,
       menuApp,
+      present,
       compactFlatten,
       repeat
     ) => {
@@ -2658,7 +2680,7 @@ Caf.defMod(module, () => {
             })
             .tap(token =>
               userConfig.deepMergeInto({
-                accounts: { [lowerCamelCase(trackerName)]: { token } }
+                accounts: { [trackerName]: { token } }
               })
             )
             .tap(() => {})
@@ -2673,7 +2695,8 @@ Caf.defMod(module, () => {
                   log(colors.green("Valid token."));
                   return token;
                 },
-                () => {
+                error => {
+                  log(error);
                   log.warn("Invalid token.");
                   return eTT();
                 }
@@ -2705,86 +2728,112 @@ Caf.defMod(module, () => {
         })
           .tap(({ token, email }) =>
             userConfig.deepMergeInto({
-              accounts: { [lowerCamelCase(trackerName)]: { token, email } }
+              accounts: { [trackerName]: { token, email } }
             })
           )
           .then(({ token, email }) =>
             getProjects().then(projects =>
               merge({ trackerEmail: email }, state, { token, projects })
             )
-          );
+          )
+          .catch(() => {
+            log.warn("Auth failed.");
+            return state;
+          });
       };
       return function(options) {
-        let exitPrompt;
+        let exitPrompt, prompt;
         if (Caf.exists(options)) {
           exitPrompt = options.exitPrompt;
+          prompt = options.prompt;
         }
         return getProjects()
           .catch(() => log.warn("Tracker token is invalid."))
           .then(projects => {
-            let base, base1, base2, base3, base4, base5, base6, base7;
+            let trackerName, trackerAccount, base, base1, base2;
             return menuApp(
               {
                 projects,
-                email:
-                  Caf.exists((base = userConfig.state.accounts)) &&
-                  Caf.exists((base1 = base.git)) && base1.email,
-                token:
-                  Caf.exists((base2 = userConfig.state.accounts)) &&
-                  Caf.exists((base3 = base2.pivotalTracker)) && base3.token,
-                projectId:
-                  Caf.exists((base4 = projectConfig.project)) &&
-                  Caf.exists((base5 = base4.tracker)) && base5.projectId,
-                trackerName: __webpack_require__(/*! ../../Tracker */ 38).tracker.name,
+                projectId: __webpack_require__(/*! ../../Tracker */ 38).tracker.projectId,
+                trackerName: (trackerName = __webpack_require__(/*! ../../Tracker */ 38).tracker
+                  .name),
+                trackerAccount: (trackerAccount =
+                  Caf.exists((base = userConfig.accounts)) &&
+                  base[trackerName]),
+                token: Caf.exists(trackerAccount) && trackerAccount.token,
                 trackerEmail:
-                  Caf.exists((base6 = userConfig.state.accounts)) &&
-                  Caf.exists((base7 = base6.pivotalTracker)) && base7.email
+                  Caf.exists(trackerAccount) && trackerAccount.email,
+                email:
+                  Caf.exists((base1 = userConfig.accounts)) &&
+                  Caf.exists((base2 = base1.git)) && base2.email
               },
-              ({ projects, email, token, projectId }) => {
-                let temp, base8;
-                return __webpack_require__(/*! ../../PromptFor */ 56).selectList({
-                  prompt: "Select action:",
-                  items: compactFlatten([
-                    {
-                      action: getTrackerToken,
-                      value: "1. get PivotalTracker token via auth"
+              ({ projects, email, token, projectId }) =>
+                __webpack_require__(/*! ../../Tracker */ 38)
+                  .tracker.myAccount.then(
+                    me => {
+                      if (present(prompt)) {
+                        log(colors.green(prompt));
+                      }
+                      return me;
                     },
-                    {
-                      action: editTrackerToken,
-                      value: `2. set PivotalTracker token manually  ${Caf.toString(
-                        presentValue(
-                          repeat(
-                            "x",
-                            (temp = Caf.exists(token) && token.length) != null
-                              ? temp
-                              : 0
-                          )
-                        )
-                      )}`
-                    },
-                    {
-                      action: editGitEmail,
-                      value: `3. set your git email                 ${Caf.toString(
-                        presentValue(email)
-                      )}`
-                    },
-                    {
-                      action: selectProject,
-                      value: `4. select tracker project             ${Caf.toString(
-                        presentValue(
-                          Caf.exists((base8 = projects[projectId])) &&
-                            base8.name
-                        )
-                      )}`
-                    },
-                    {
-                      value: `0. ${Caf.toString(
-                        exitPrompt != null ? exitPrompt : "exit"
-                      )}`
+                    () => {
+                      log.warn(
+                        `Please configure your ${Caf.toString(
+                          trackerName
+                        )} token.`
+                      );
+                      return null;
                     }
-                  ])
-                });
-              }
+                  )
+                  .then(me => {
+                    let temp, base3;
+                    return __webpack_require__(/*! ../../PromptFor */ 56).selectList({
+                      prompt: "Select action:",
+                      items: compactFlatten([
+                        {
+                          action: getTrackerToken,
+                          value: `1. get PivotalTracker token via auth  ${Caf.toString(
+                            presentValue(Caf.exists(me) && me.name)
+                          )}`
+                        },
+                        {
+                          action: editTrackerToken,
+                          value: `2. set PivotalTracker token manually  ${Caf.toString(
+                            presentValue(
+                              repeat(
+                                "x",
+                                (temp = Caf.exists(token) && token.length) !=
+                                  null
+                                  ? temp
+                                  : 0
+                              )
+                            )
+                          )}`
+                        },
+                        me != null
+                          ? {
+                              action: selectProject,
+                              value: `3. select tracker project             ${Caf.toString(
+                                presentValue(
+                                  Caf.exists((base3 = projects[projectId])) &&
+                                    base3.name
+                                )
+                              )}`
+                            }
+                          : {
+                              action: state => state,
+                              value: colors.grey(
+                                "3. select tracker project             configure token first"
+                              )
+                            },
+                        {
+                          value: `0. ${Caf.toString(
+                            exitPrompt != null ? exitPrompt : "exit"
+                          )}`
+                        }
+                      ])
+                    });
+                  })
             );
           });
       };
@@ -2988,9 +3037,9 @@ Caf.defMod(module, () => {
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "clientFailureNotAuthorized", "log", "merge"],
+    ["Promise", "log", "merge", "clientFailureNotAuthorized", "Error"],
     [global, __webpack_require__(/*! ../StandardImport */ 46)],
-    (Promise, clientFailureNotAuthorized, log, merge) => {
+    (Promise, log, merge, clientFailureNotAuthorized, Error) => {
       let auth;
       return (auth = function({ email, username, trackerName }) {
         return Promise.then(() =>
@@ -3011,17 +3060,19 @@ Caf.defMod(module, () => {
             .then(password =>
               __webpack_require__(/*! ../../Tracker */ 38)
                 .tracker.authenticate({ password, username })
+                .tap(({ id, name, initials, username }) =>
+                  log({ success: merge({ id, name, initials, username }) })
+                )
                 .catch(error => {
                   if (error.status === clientFailureNotAuthorized) {
                     log.warn("Invalid password. Please try again.");
                   } else {
                     log.error({ message: error.message, status: error.status });
                   }
-                  return auth({ email, trackerName });
+                  return (() => {
+                    throw Error;
+                  })();
                 })
-            )
-            .tap(({ id, name, initials, username }) =>
-              log({ success: merge({ id, name, initials, username }) })
             )
         );
       });
@@ -3723,7 +3774,6 @@ Caf.defMod(module, () => {
                   __webpack_require__(/*! colors */ 35).grey(getGitCommitMessage(state))
                 )}`
               },
-              { action: configure, value: "9. Configure" },
               { key: "abort", value: "0. exit" }
             ])
           })
@@ -4032,17 +4082,24 @@ Caf.defMod(module, () => {
 let Caf = __webpack_require__(/*! caffeine-script-runtime */ 2);
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["log", "tracker"],
-    [global, __webpack_require__(/*! ./StandardImport */ 46), __webpack_require__(/*! ../InquirerPlus */ 47)],
-    (log, tracker) => {
+    ["ensureTrackerConfigured", "log", "tracker"],
+    [
+      global,
+      __webpack_require__(/*! ./StandardImport */ 46),
+      __webpack_require__(/*! ../InquirerPlus */ 47),
+      __webpack_require__(/*! ./CommandsLib */ 51)
+    ],
+    (ensureTrackerConfigured, log, tracker) => {
       return {
         description: "list all open stories",
         run: function(options) {
-          __webpack_require__(/*! ../Tracker */ 38).tracker.stories.then(stories =>
-            Caf.each2(stories, story =>
-              log("  " + tracker.formatStory(story, true))
-            )
-          );
+          ensureTrackerConfigured()
+            .then(() => __webpack_require__(/*! ../Tracker */ 38).tracker.stories)
+            .then(stories =>
+              Caf.each2(stories, story =>
+                log("  " + tracker.formatStory(story, true))
+              )
+            );
           return null;
         }
       };
