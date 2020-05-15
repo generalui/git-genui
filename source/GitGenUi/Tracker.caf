@@ -16,7 +16,7 @@ class Tracker extends BaseClass
     projectId:            -> @projectConfig?.project?.tracker?.projectId
     name:                 -> @projectConfig?.project?.tracker?.name ? :PivotalTracker
     settableStoryStates:  -> @tracker?.settableStoryStates
-    stories:              -> @tracker?.getStories log @projectId
+    stories:              -> @tracker?.getStories @projectId
     members:              -> @tracker?.getMembers @projectId
     myAccount:            -> @tracker?.getMyAccount @projectId
     projects:             -> @tracker?.projects

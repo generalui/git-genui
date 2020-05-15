@@ -28,7 +28,7 @@ editTrackerToken = (state) ->
     &PromptFor.password
       message: "" Enter your #{trackerName} token:
     .tap (token) -> userConfig.deepMergeInto accounts: [lowerCamelCase trackerName]: {} token
-    .then -> .tap (projectId) -> projectConfig.deepMergeInto project: tracker: name: trackerName
+    .tap -> .tap (projectId) -> projectConfig.deepMergeInto project: tracker: name: trackerName
     .then (token) ->
       tracker.myAccount
       .then

@@ -27,9 +27,7 @@ ActionMenu = (state) ->
       members:    ignoreRejections -> tracker.members
       myAccount:  ignoreRejections -> tracker.myAccount
 
-    .then (updates) ->
-      log {} updates.stories
-      merge state, updates
+    .then (updates) -> merge state, updates
 
   otherMembers = array member in members when member.id != myAccount.id
   {staged, unstaged, untracked} = status
