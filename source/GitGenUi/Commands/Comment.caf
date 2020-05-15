@@ -1,13 +1,15 @@
-import &StandardImport, &InquirerPlus
+import &StandardImport, &InquirerPlus, &CommandsLib
 
 description: "" comment on a story
 run: (options) ->
 
-  &Tracker.tracker.stories
+  ensureTrackerConfigured()
+  .then -> &Tracker.tracker.stories
   .then (stories) ->
-    ask SelectStoryQ
+    &GitGenUiPromptFor.story
       stories
-      message:  "" What story do you want to comment on?
+      "" What story do you want to comment on?
+
   .then ({story}) ->
     if story
       ask InputQ

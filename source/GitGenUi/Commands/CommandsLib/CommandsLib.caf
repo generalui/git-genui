@@ -1,4 +1,4 @@
-import &StandardImport, &UserConfig
+import &StandardImport, &UserConfig, &ProjectConfig
 
 []
   &Lib
@@ -20,5 +20,20 @@ import &StandardImport, &UserConfig
         state.story = story
 
       state
+
+    ensureTrackerConfigured = ->
+      ensureTrackerTokenValid()
+      .then -> &ConfigureMenu() unless projectConfig.project?.tracker?.projectId
+
+
+    ensureTrackerTokenValid = ->
+      Promise.then ->
+        projectConfig.project?.tracker extract? name
+        && userConfig.accounts?[lowerCamelCase name]?.token
+        && tracker.myAccount
+      .catch ->
+      .then (myAccount) ->
+        unless myAccount
+          &ConfigureMenu()
 
     &fillInMissingState
