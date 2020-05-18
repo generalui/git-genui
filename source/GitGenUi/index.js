@@ -5,6 +5,7 @@
 .includeInNamespace(require('./GitGenUi'))
 .addModules({
   Cli:               require('./Cli'),
+  Config:            require('./Config'),
   ConfigShared:      require('./ConfigShared'),
   Git:               require('./Git'),
   GitGenUiPromptFor: require('./GitGenUiPromptFor'),

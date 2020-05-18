@@ -8,10 +8,8 @@ Caf.defMod(module, () => {
       return {
         run: function() {
           log("start");
-          return require("./UserConfig")
-            .initSingleton()
-            .tap(() => log("userConfig"))
-            .then(() => require("./ProjectConfig").initSingleton())
+          return require("./Config")
+            .load()
             .then(projectConfig =>
               require("./Tracker").tracker.init(projectConfig)
             )

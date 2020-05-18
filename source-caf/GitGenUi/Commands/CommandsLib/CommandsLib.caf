@@ -2,41 +2,4 @@ import &StandardImport, &UserConfig, &ProjectConfig
 
 []
   &Lib
-  &CommandMenuLib
-  {}
-    saveState = (state) ->
-      userConfig.saveCommitOptionsForProject {message, type, coauthors, story} = state if state
-      state
-
-    validateStory = (state) ->
-      state extract story, stories
-      if storyId = story?.id
-        unless story = find story in stories when story.id == storyId
-          log.warn merge {}
-            message: "" Invalid story or storyId
-            story
-            storyId
-
-        state.story = story
-
-      state
-
-    getMyAccountOrNothing = ->
-      Promise.then ->
-        userConfig.accounts?[tracker.name]?.token
-        && tracker.myAccount
-      .catch ->
-
-    getProjectOrNothing = ->
-      Promise.then -> tracker.project
-      .catch ->
-
-    ensureTrackerConfigured = ->
-      getProjectOrNothing()
-      .then (project) -> &ConfigureMenu exitPrompt: :continue prompt: "Please select a project." unless project
-
-    ensureTrackerTokenValid = ->
-      getMyAccountOrNothing()
-      .then (myAccount) -> &ConfigureMenu exitPrompt: :continue prompt: "Please configure your account." unless myAccount
-
-    &fillInMissingState
+  {} &fillInMissingState

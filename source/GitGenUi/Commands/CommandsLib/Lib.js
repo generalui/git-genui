@@ -7,6 +7,7 @@ Caf.defMod(module, () => {
       "log",
       "merge",
       "userConfig",
+      "tracker",
       "present",
       "Array",
       "String",
@@ -18,6 +19,7 @@ Caf.defMod(module, () => {
       log,
       merge,
       userConfig,
+      tracker,
       present,
       Array,
       String,
@@ -25,8 +27,13 @@ Caf.defMod(module, () => {
     ) => {
       let ignoreRejections,
         updateStateWithPrompt,
+        menuApp,
         saveState,
         validateStory,
+        getMyAccountOrNothing,
+        getProjectOrNothing,
+        ensureTrackerConfigured,
+        ensureTrackerTokenValid,
         colorizeValue,
         colorNotPresent,
         presentValue,
@@ -48,6 +55,15 @@ Caf.defMod(module, () => {
                 value === undefined ? state[statePropName] : value
               )
               .then(value => merge(state, { [statePropName]: value }));
+        }),
+        menuApp: (menuApp = function(state, menuF) {
+          return menuF(state).then(({ action }) =>
+            action != null
+              ? Promise.then(() => action(state)).then(newState =>
+                  menuApp(newState != null ? newState : state, menuF)
+                )
+              : undefined
+          );
         }),
         saveState: (saveState = function(state) {
           let message, type, coauthors, story;
@@ -79,6 +95,39 @@ Caf.defMod(module, () => {
             state.story = story;
           }
           return state;
+        }),
+        getMyAccountOrNothing: (getMyAccountOrNothing = function() {
+          return Promise.then(() => {
+            let base, base1;
+            return (
+              Caf.exists((base = userConfig.accounts)) &&
+              Caf.exists((base1 = base[tracker.name])) && base1.token &&
+              tracker.myAccount
+            );
+          }).catch(() => {});
+        }),
+        getProjectOrNothing: (getProjectOrNothing = function() {
+          return Promise.then(() => tracker.project).catch(() => {});
+        }),
+        ensureTrackerConfigured: (ensureTrackerConfigured = function() {
+          return getProjectOrNothing().then(project =>
+            !project
+              ? require("./ConfigureMenu")({
+                  exitPrompt: "continue",
+                  prompt: "Please select a project."
+                })
+              : undefined
+          );
+        }),
+        ensureTrackerTokenValid: (ensureTrackerTokenValid = function() {
+          return getMyAccountOrNothing().then(myAccount =>
+            !myAccount
+              ? require("./ConfigureMenu")({
+                  exitPrompt: "continue",
+                  prompt: "Please configure your account."
+                })
+              : undefined
+          );
         }),
         colorizeValue: (colorizeValue = require("colors").yellow),
         colorNotPresent: (colorNotPresent = require("colors").grey),

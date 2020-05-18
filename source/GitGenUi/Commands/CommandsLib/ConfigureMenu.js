@@ -23,7 +23,6 @@ Caf.defMod(module, () => {
       require("../StandardImport"),
       require("../../UserConfig"),
       require("../../ProjectConfig"),
-      require("./CommandMenuLib"),
       require("./Lib"),
       { colors: require("colors") }
     ],

@@ -1,0 +1,3 @@
+load: ->
+  &UserConfig.initSingleton()
+  .then -> &ProjectConfig.initSingleton()

@@ -1,4 +1,4 @@
-import &StandardImport, &UserConfig, &ProjectConfig, &CommandMenuLib, &Lib, {} &colors
+import &StandardImport, &UserConfig, &ProjectConfig, &Lib, {} &colors
 
 getProjects = ->
   tracker.projects

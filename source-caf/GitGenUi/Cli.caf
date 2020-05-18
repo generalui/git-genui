@@ -2,9 +2,7 @@ import &ArtStandardLib
 
 run: ->
   log :start
-  &UserConfig.initSingleton()
-  .tap -> log :userConfig
-  .then -> &ProjectConfig.initSingleton()
+  &Config.load()
   .then (projectConfig) -> &Tracker.tracker.init projectConfig
   .then ->
     commands = object m from &Commands.modules when m.description is String
