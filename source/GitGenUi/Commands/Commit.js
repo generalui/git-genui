@@ -7,15 +7,15 @@ Caf.defMod(module, () => {
       "present",
       "log",
       "getGitCommitMessage",
+      "EditCommitMessage",
+      "presentValue",
       "EditGitStage",
       "projectConfig",
       "StoryMenu",
-      "presentValue",
       "stripAnsi",
       "tracker",
       "colorNotPresent",
       "SelectCommitType",
-      "EditCommitMessage",
       "SelectCoauthors",
       "CommitNow",
       "ConfigureMenu",
@@ -41,15 +41,15 @@ Caf.defMod(module, () => {
       present,
       log,
       getGitCommitMessage,
+      EditCommitMessage,
+      presentValue,
       EditGitStage,
       projectConfig,
       StoryMenu,
-      presentValue,
       stripAnsi,
       tracker,
       colorNotPresent,
       SelectCommitType,
-      EditCommitMessage,
       SelectCoauthors,
       CommitNow,
       ConfigureMenu,
@@ -140,15 +140,21 @@ Caf.defMod(module, () => {
             prompt: "Select action:",
             items: compactFlatten([
               {
+                action: EditCommitMessage,
+                value: `1. Edit message:           ${Caf.toString(
+                  presentValue(message)
+                )}`
+              },
+              {
                 action: EditGitStage,
-                value: `1. Edit staged files:      ${Caf.toString(
+                value: `2. Edit staged files:      ${Caf.toString(
                   statusSummary
                 )}`
               },
               myAccount && projectConfig.project
                 ? {
                     action: StoryMenu,
-                    value: `2. Select story:           ${Caf.toString(
+                    value: `3. Select story:           ${Caf.toString(
                       presentValue(
                         story
                           ? stripAnsi(tracker.formatStory(story))
@@ -158,20 +164,14 @@ Caf.defMod(module, () => {
                   }
                 : {
                     action: configure,
-                    value: `2. Select story:           ${Caf.toString(
+                    value: `3. Select story:           ${Caf.toString(
                       colorNotPresent("configure tracker")
                     )}`
                   },
               {
                 action: SelectCommitType,
-                value: `3. Select type:            ${Caf.toString(
+                value: `4. Select type:            ${Caf.toString(
                   presentValue(type)
-                )}`
-              },
-              {
-                action: EditCommitMessage,
-                value: `4. Edit message:           ${Caf.toString(
-                  presentValue(message)
                 )}`
               },
               myAccount

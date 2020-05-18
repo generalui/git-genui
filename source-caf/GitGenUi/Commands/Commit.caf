@@ -51,14 +51,14 @@ ActionMenu = (state) ->
   &PromptFor.selectList
     prompt:  "" Select action:
     items: compactFlatten []
-      action: EditGitStage,       value: "" 1. Edit staged files:      #{} statusSummary
+      action: EditCommitMessage,  value: "" 1. Edit message:           #{} presentValue message
+      action: EditGitStage,       value: "" 2. Edit staged files:      #{} statusSummary
       if myAccount && projectConfig.project
-        action: StoryMenu,        value: "" 2. Select story:           #{} presentValue(if story then stripAnsi tracker.formatStory story)
+        action: StoryMenu,        value: "" 3. Select story:           #{} presentValue(if story then stripAnsi tracker.formatStory story)
       else
-        action: configure,        value: "" 2. Select story:           #{} colorNotPresent("configure tracker")
+        action: configure,        value: "" 3. Select story:           #{} colorNotPresent("configure tracker")
 
-      action: SelectCommitType,   value: "" 3. Select type:            #{} presentValue type
-      action: EditCommitMessage,  value: "" 4. Edit message:           #{} presentValue message
+      action: SelectCommitType,   value: "" 4. Select type:            #{} presentValue type
 
       if myAccount
         action: SelectCoauthors,  value: "" 5. Change coauthors:       #{} if otherMembers.length == 0 then colorNotPresent("only you") else presentValue coauthors

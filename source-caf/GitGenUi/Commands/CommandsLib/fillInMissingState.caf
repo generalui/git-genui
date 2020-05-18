@@ -3,6 +3,6 @@ import &StandardImport
 fillInMissingState = (state) ->
   Promise.resolve state
   .then (state) -> if state.status.staged.length == 0 then &EditGitStage       state else state
+  .then (state) -> unless present state.message       then &EditCommitMessage  state else state
   .then (state) -> unless state.story                 then &StoryMenu          state else state
   .then (state) -> unless present state.type          then &SelectCommitType   state else state
-  .then (state) -> unless present state.message       then &EditCommitMessage  state else state

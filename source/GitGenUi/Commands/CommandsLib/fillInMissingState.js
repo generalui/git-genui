@@ -13,14 +13,14 @@ Caf.defMod(module, () => {
               ? require("./EditGitStage")(state)
               : state
           )
-          .then(state => (!state.story ? require("./StoryMenu")(state) : state))
-          .then(state =>
-            !present(state.type) ? require("./SelectCommitType")(state) : state
-          )
           .then(state =>
             !present(state.message)
               ? require("./EditCommitMessage")(state)
               : state
+          )
+          .then(state => (!state.story ? require("./StoryMenu")(state) : state))
+          .then(state =>
+            !present(state.type) ? require("./SelectCommitType")(state) : state
           );
       });
     }
