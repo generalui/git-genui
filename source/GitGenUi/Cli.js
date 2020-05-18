@@ -33,17 +33,7 @@ Caf.defMod(module, () => {
                 help: {
                   description:
                     "git-genui's goal is to streamline developer workflow in these areas:\n\n* updating tracker stories\n* tracking semantic changes\n* tracking coauthors",
-                  commands: Caf.object(commands, m =>
-                    merge(m, {
-                      options: merge(
-                        {
-                          quiet: "no extra output",
-                          verbose: "run with verbose logging"
-                        },
-                        m.options
-                      )
-                    })
-                  )
+                  commands: Caf.object(commands, m => merge(m, m.options))
                 }
               });
             });

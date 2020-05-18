@@ -1,4 +1,4 @@
-import &StandardImport
+import &StandardImport, {} &colors
 
 getResolvedFilePath = (filePath) ->
   &path.join &ProjectConfig.projectConfig.configPath, filePath
@@ -7,28 +7,23 @@ getResolvedFilePath = (filePath) ->
   &Git.rawStatus
   .then ({files}) ->
     files = array file in files when file.index != :renamed
-    strings =
-      array file in files.sort (a, b) -> a.path.localeCompare b.path
-        "" #{pad '(#{file.workingDir || :staged})', 15} #{} file.path
 
-    ask
-      CheckboxQ {}
-        name: :stagedFiles
-        message: "" Select files to staged. Unselect files to unstage.
-        default: array string in strings when /\(staged/.test string
-        strings
-        filter: (stagedFiles) -> array string in stagedFiles with string.split(/^\(\w+\)\s+/)[1]
+    &PromptFor.selectList {}
+      multiselect: true
+      prompt: "" Select files to staged. Unselect files to unstage.
+      items = array file in files.sort (a, b) -> a.path.localeCompare b.path
+        {}
+          file
+          selected: !file.workingDir
+          value:    "" #{pad '(#{file.workingDir || :staged})', 15} #{} file.path
 
-    .then ({stagedFiles}) -> stagedFiles
-
-    .then (selectedFiles) ->
-      each file in files
-        if file.workingDir
-          if (file.path in selectedFiles)
-            &Git.stage getResolvedFilePath file.path
-        else
-          if !(file.path in selectedFiles)
-            &Git.unstage getResolvedFilePath file.path
-
-
-  .then -> &Git.printStatus()
+    .then (selectedItems) ->
+      selectedFilesByFile = object item from selectedItems with-key item.file.path
+      # log {} selectedFilesByFile
+      each {file, selected} in items
+        if !!selected != !!selectedFilesByFile[file.path]
+          &Git[action = if selected then :unstage else :stage]
+            getResolvedFilePath file.path
+          log
+            colors.blue action + ": "
+            + colors.green file.path

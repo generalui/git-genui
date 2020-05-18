@@ -3,12 +3,7 @@ let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["ensureTrackerConfigured", "log", "SelectStoryState"],
-    [
-      global,
-      require("./StandardImport"),
-      require("../InquirerPlus"),
-      require("./CommandsLib")
-    ],
+    [global, require("./StandardImport"), require("./CommandsLib")],
     (ensureTrackerConfigured, log, SelectStoryState) => {
       return {
         description: "list all open stories",

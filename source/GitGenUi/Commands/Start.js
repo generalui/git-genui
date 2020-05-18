@@ -3,12 +3,7 @@ let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["ensureTrackerConfigured", "log", "tracker"],
-    [
-      global,
-      require("./StandardImport"),
-      require("../InquirerPlus"),
-      require("./CommandsLib")
-    ],
+    [global, require("./StandardImport"), require("./CommandsLib")],
     (ensureTrackerConfigured, log, tracker) => {
       return {
         description: "start a story",

@@ -23,7 +23,4 @@ run: ->
             * tracking coauthors
 
         commands: object m in commands
-          merge m, options: merge
-            quiet:   "" no extra output
-            verbose: "" run with verbose logging
-            m.options
+          merge m, m.options

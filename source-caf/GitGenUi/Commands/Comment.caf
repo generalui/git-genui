@@ -1,4 +1,4 @@
-import &StandardImport, &InquirerPlus, &CommandsLib
+import &StandardImport, &CommandsLib
 
 description: "" comment on a story
 run: (options) ->

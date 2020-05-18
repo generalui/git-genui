@@ -2,9 +2,9 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["ask", "CheckboxQ", "pad"],
-    [global, require("./StandardImport")],
-    (ask, CheckboxQ, pad) => {
+    ["pad", "log", "colors"],
+    [global, require("../StandardImport"), { colors: require("colors") }],
+    (pad, log, colors) => {
       let getResolvedFilePath;
       getResolvedFilePath = function(filePath) {
         return require("path").join(
@@ -13,46 +13,46 @@ Caf.defMod(module, () => {
         );
       };
       return function() {
-        return require("../Git")
-          .rawStatus.then(({ files }) => {
-            let strings;
-            files = Caf.array(files, null, file => file.index !== "renamed");
-            strings = Caf.array(
-              files.sort((a, b) => a.path.localeCompare(b.path)),
-              file =>
-                `${Caf.toString(
-                  pad(`(${Caf.toString(file.workingDir || "staged")})`, 15)
-                )} ${Caf.toString(file.path)}`
-            );
-            return ask(
-              CheckboxQ({
-                name: "stagedFiles",
-                message: "Select files to staged. Unselect files to unstage.",
-                default: Caf.array(strings, null, string =>
-                  /\(staged/.test(string)
-                ),
-                strings,
-                filter: stagedFiles =>
-                  Caf.array(
-                    stagedFiles,
-                    string => string.split(/^\(\w+\)\s+/)[1]
-                  )
-              })
-            )
-              .then(({ stagedFiles }) => stagedFiles)
-              .then(selectedFiles =>
-                Caf.each2(files, file =>
-                  file.workingDir
-                    ? Caf.in(file.path, selectedFiles)
-                      ? require("../Git").stage(getResolvedFilePath(file.path))
-                      : undefined
-                    : !Caf.in(file.path, selectedFiles)
-                    ? require("../Git").unstage(getResolvedFilePath(file.path))
-                    : undefined
-                )
+        return require("../Git").rawStatus.then(({ files }) => {
+          let items;
+          files = Caf.array(files, null, file => file.index !== "renamed");
+          return require("../PromptFor")
+            .selectList({
+              multiselect: true,
+              prompt: "Select files to staged. Unselect files to unstage.",
+              items: (items = Caf.array(
+                files.sort((a, b) => a.path.localeCompare(b.path)),
+                file => {
+                  return {
+                    file,
+                    selected: !file.workingDir,
+                    value: `${Caf.toString(
+                      pad(`(${Caf.toString(file.workingDir || "staged")})`, 15)
+                    )} ${Caf.toString(file.path)}`
+                  };
+                }
+              ))
+            })
+            .then(selectedItems => {
+              let selectedFilesByFile;
+              selectedFilesByFile = Caf.object(
+                selectedItems,
+                null,
+                null,
+                null,
+                item => item.file.path
               );
-          })
-          .then(() => require("../Git").printStatus());
+              return Caf.each2(items, ({ file, selected }) => {
+                let action;
+                return !!selected !== !!selectedFilesByFile[file.path]
+                  ? (require("../Git")[
+                      (action = selected ? "unstage" : "stage")
+                    ](getResolvedFilePath(file.path)),
+                    log(colors.blue(action + ": ") + colors.green(file.path)))
+                  : undefined;
+              });
+            });
+        });
       };
     }
   );

@@ -7,7 +7,9 @@ Caf.defMod(module, () => {
     InteractiveAdd => {
       return {
         description: "add (stage) or remove (unstage) files to commit",
-        run: InteractiveAdd
+        run: function() {
+          return InteractiveAdd().then(() => null);
+        }
       };
     }
   );
