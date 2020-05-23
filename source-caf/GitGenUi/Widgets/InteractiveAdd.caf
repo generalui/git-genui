@@ -7,11 +7,16 @@ getResolvedFilePath = (filePath) ->
   &Git.rawStatus
   .then ({files}) ->
     files = array file in files when file.index != :renamed
+    log {} files
 
     &PromptFor.selectList {}
       multiselect: true
       prompt: "" Use <space> and <arrow keys> to stage and unstage files. Type to search. <enter> when done.
-      items = array file in files.sort (a, b) -> a.path.localeCompare b.path
+      items = array file in files.sort (a, b) ->
+          if a.workingDir != b.workingDir
+            (a.workingDir ? '').localeCompare b.workingDir ? ''
+          else
+            a.path.localeCompare b.path
         {}
           file
           selected: !file.workingDir

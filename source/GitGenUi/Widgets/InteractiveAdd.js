@@ -2,9 +2,9 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["pad", "log", "colors"],
+    ["log", "pad", "colors"],
     [global, require("../StandardImport"), { colors: require("colors") }],
-    (pad, log, colors) => {
+    (log, pad, colors) => {
       let getResolvedFilePath;
       getResolvedFilePath = function(filePath) {
         return require("path").join(
@@ -16,13 +16,21 @@ Caf.defMod(module, () => {
         return require("../Git").rawStatus.then(({ files }) => {
           let items;
           files = Caf.array(files, null, file => file.index !== "renamed");
+          log({ files });
           return require("../PromptFor")
             .selectList({
               multiselect: true,
               prompt:
                 "Use <space> and <arrow keys> to stage and unstage files. Type to search. <enter> when done.",
               items: (items = Caf.array(
-                files.sort((a, b) => a.path.localeCompare(b.path)),
+                files.sort((a, b) => {
+                  let temp, temp1;
+                  return a.workingDir !== b.workingDir
+                    ? ((temp = a.workingDir) != null ? temp : "").localeCompare(
+                        (temp1 = b.workingDir) != null ? temp1 : ""
+                      )
+                    : a.path.localeCompare(b.path);
+                }),
                 file => {
                   return {
                     file,
