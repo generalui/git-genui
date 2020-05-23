@@ -4,7 +4,8 @@ class UserConfig extends &ConfigShared
   @singletonClass()
 
   @classGetter
-    configFilePathPromise: -> Promise.then -> &path.join &os.homedir(), :git-genui.user.config.json
+    configBasename: -> :git-genui.user.config.json
+    configFilePathPromise: -> Promise.then -> &path.join &os.homedir(), @configBasename
 
   @getter
     :currentProjectKey

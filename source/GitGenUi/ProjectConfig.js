@@ -10,7 +10,6 @@ Caf.defMod(module, () => {
         class ProjectConfig extends require("./ConfigShared") {},
         function(ProjectConfig, classSuper, instanceSuper) {
           this.singletonClass();
-          this.configBasename = "git-genui.config.json";
           this.sourceRootIndicatorFiles = [".git", this.configBasename];
           this.getter({
             project: function() {
@@ -18,6 +17,9 @@ Caf.defMod(module, () => {
             }
           });
           this.classGetter({
+            configBasename: function() {
+              return "git-genui.config.json";
+            },
             configFilePathPromise: function() {
               return this.repoRootPromise.then(
                 dir => dir && require("path").join(dir, this.configBasename)

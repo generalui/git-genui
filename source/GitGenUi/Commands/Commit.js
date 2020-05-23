@@ -126,7 +126,7 @@ Caf.defMod(module, () => {
           )
         ).join(", ");
         if (present(message)) {
-          log("Commit message:");
+          log("Commit message preview:");
           log(
             "  " +
               require("colors")
@@ -135,6 +135,7 @@ Caf.defMod(module, () => {
           );
           log("");
         }
+        log({ story });
         return require("../PromptFor")
           .selectList({
             prompt: "Select action:",
@@ -156,7 +157,7 @@ Caf.defMod(module, () => {
                     action: StoryMenu,
                     value: `3. Select story:           ${Caf.toString(
                       presentValue(
-                        story
+                        Caf.exists(story) && story.id
                           ? stripAnsi(tracker.formatStory(story))
                           : undefined
                       )
@@ -178,9 +179,9 @@ Caf.defMod(module, () => {
                 ? {
                     action: SelectCoauthors,
                     value: `5. Change coauthors:       ${Caf.toString(
-                      otherMembers.length === 0
-                        ? colorNotPresent("only you")
-                        : presentValue(coauthors)
+                      presentValue(
+                        otherMembers.length === 0 ? coauthors : undefined
+                      )
                     )}`
                   }
                 : {
@@ -192,7 +193,11 @@ Caf.defMod(module, () => {
               present(message)
                 ? { action: CommitNow, value: "6. Commit now" }
                 : undefined,
-              { key: "abort", value: "0. exit" }
+              {
+                key: "abort",
+                value:
+                  "0. exit (current state will be saved, but no other actions will be taken)"
+              }
             ])
           })
           .then(({ action }) =>
@@ -204,7 +209,8 @@ Caf.defMod(module, () => {
           );
       };
       return {
-        description: "main interactive commit interface",
+        description:
+          "Commit is the main command for git-genui. The primary goal is to generate a well-formatted git-commit message. Commit will prompt for configuration of needed, as well as giving an opportunity to stage or unstage files for the commit. Alternatively, you can stage files for your commit before calling git-genui-commit.\n\nAll commandline options are optional. The are provided to streamling the commit process if needed.",
         options: {
           message: [
             "message",

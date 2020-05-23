@@ -1,7 +1,6 @@
 import &ArtStandardLib
 
 run: ->
-  log :start
   &Config.load()
   .then (projectConfig) -> &Tracker.tracker.init projectConfig
   .then ->
@@ -21,6 +20,8 @@ run: ->
             * updating tracker stories
             * tracking semantic changes
             * tracking coauthors
+
+            The primary command is 'git-genui commit'. That command will prompt you through any configuration needed and all options for making a commit. The primary affect is to craft a well-formated git-commit message. Optionally, you can pass one or more of the commit options on the command-line.
 
         commands: object m in commands
           merge m, m.options

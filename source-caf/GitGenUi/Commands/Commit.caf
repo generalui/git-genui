@@ -42,11 +42,13 @@ ActionMenu = (state) ->
     .join ', '
 
   if present message
-    log "" Commit message:
+    log "" Commit message preview:
     log "  " +
       &colors.grey getGitCommitMessage state
       .replace /\n/g, "\n  "
     log ''
+
+  log {} story
 
   &PromptFor.selectList
     prompt:  "" Select action:
@@ -54,14 +56,14 @@ ActionMenu = (state) ->
       action: EditCommitMessage,  value: "" 1. Edit message:           #{} presentValue message
       action: EditGitStage,       value: "" 2. Edit staged files:      #{} statusSummary
       if myAccount && projectConfig.project
-        action: StoryMenu,        value: "" 3. Select story:           #{} presentValue(if story then stripAnsi tracker.formatStory story)
+        action: StoryMenu,        value: "" 3. Select story:           #{} presentValue if story?.id then stripAnsi tracker.formatStory story
       else
         action: configure,        value: "" 3. Select story:           #{} colorNotPresent("configure tracker")
 
       action: SelectCommitType,   value: "" 4. Select type:            #{} presentValue type
 
       if myAccount
-        action: SelectCoauthors,  value: "" 5. Change coauthors:       #{} if otherMembers.length == 0 then colorNotPresent("only you") else presentValue coauthors
+        action: SelectCoauthors,  value: "" 5. Change coauthors:       #{} presentValue if otherMembers.length == 0 then coauthors
       else
         action: configure,        value: "" 5. Change coauthors:       #{} colorNotPresent("configure tracker")
 
@@ -69,7 +71,7 @@ ActionMenu = (state) ->
       # key: :storyStatus value: "" update story status: started -> finished / (no change: finished)
       if present message then action: CommitNow,          value: "" 6. Commit now
       # action: configure,          value: "" 9. Configure
-      key: :abort                 value: "" 0. exit
+      key: :abort                 value: "" 0. exit (current state will be saved, but no other actions will be taken)
 
   .then ({action}) ->
     if action?
@@ -77,7 +79,12 @@ ActionMenu = (state) ->
       .then saveState
       .then ActionMenu
 
-description: "" main interactive commit interface
+description:
+  """
+    Commit is the main command for git-genui. The primary goal is to generate a well-formatted git-commit message. Commit will prompt for configuration of needed, as well as giving an opportunity to stage or unstage files for the commit. Alternatively, you can stage files for your commit before calling git-genui-commit.
+
+    All commandline options are optional. The are provided to streamling the commit process if needed.
+
 options:
   message:    :message      "" entier your git-commit message on the command-line
   coauthors:  :authors      "" one more more coauthor emails (separated by spaces)

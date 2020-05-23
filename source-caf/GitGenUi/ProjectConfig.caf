@@ -3,7 +3,6 @@ import &StandardImport, {} &path
 class ProjectConfig extends &ConfigShared
   @singletonClass()
 
-  @configBasename: :git-genui.config.json
   @sourceRootIndicatorFiles:
     :.git
     @configBasename
@@ -12,6 +11,7 @@ class ProjectConfig extends &ConfigShared
     project: -> @config.project
 
   @classGetter
+    configBasename: -> :git-genui.config.json
     configFilePathPromise: -> @repoRootPromise.then (dir) -> dir && &path.join dir, @configBasename
     repoRootPromise: -> @_repoRoot ?=
       Promise.then ->

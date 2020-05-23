@@ -11,11 +11,14 @@ Caf.defMod(module, () => {
         function(UserConfig, classSuper, instanceSuper) {
           this.singletonClass();
           this.classGetter({
+            configBasename: function() {
+              return "git-genui.user.config.json";
+            },
             configFilePathPromise: function() {
               return Promise.then(() =>
                 require("path").join(
                   require("os").homedir(),
-                  "git-genui.user.config.json"
+                  this.configBasename
                 )
               );
             }
