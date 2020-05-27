@@ -48,8 +48,6 @@ ActionMenu = (state) ->
       .replace /\n/g, "\n  "
     log ''
 
-  log {} story
-
   &PromptFor.selectList
     prompt:  "" Select action:
     items: compactFlatten []
@@ -63,7 +61,7 @@ ActionMenu = (state) ->
       action: SelectCommitType,   value: "" 4. Select type:            #{} presentValue type
 
       if myAccount
-        action: SelectCoauthors,  value: "" 5. Change coauthors:       #{} presentValue if otherMembers.length == 0 then coauthors
+        action: SelectCoauthors,  value: "" 5. Change coauthors:       #{} if otherMembers.length == 0 then colorNotPresent 'only you on project' else presentValue if coauthors?.length > 0 then coauthors
       else
         action: configure,        value: "" 5. Change coauthors:       #{} colorNotPresent("configure tracker")
 

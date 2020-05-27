@@ -135,7 +135,6 @@ Caf.defMod(module, () => {
           );
           log("");
         }
-        log({ story });
         return require("../PromptFor")
           .selectList({
             prompt: "Select action:",
@@ -179,9 +178,13 @@ Caf.defMod(module, () => {
                 ? {
                     action: SelectCoauthors,
                     value: `5. Change coauthors:       ${Caf.toString(
-                      presentValue(
-                        otherMembers.length === 0 ? coauthors : undefined
-                      )
+                      otherMembers.length === 0
+                        ? colorNotPresent("only you on project")
+                        : presentValue(
+                            (Caf.exists(coauthors) && coauthors.length) > 0
+                              ? coauthors
+                              : undefined
+                          )
                     )}`
                   }
                 : {
