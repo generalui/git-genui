@@ -74,7 +74,6 @@ Caf.defMod(module, () => {
           story,
           coauthors,
           configure,
-          otherMembers,
           staged,
           unstaged,
           untracked,
@@ -101,11 +100,6 @@ Caf.defMod(module, () => {
               })
             )
             .then(updates => merge(state, updates));
-        otherMembers = Caf.array(
-          members,
-          null,
-          member => member.id !== myAccount.id
-        );
         ({ staged, unstaged, untracked } = status);
         statusColors = { staged: "green", unstaged: "red", untracked: "red" };
         statusSummary = compactFlatten(
@@ -178,7 +172,7 @@ Caf.defMod(module, () => {
                 ? {
                     action: SelectCoauthors,
                     value: `5. Change coauthors:       ${Caf.toString(
-                      otherMembers.length === 0
+                      members.length === 0
                         ? colorNotPresent("only you on project")
                         : presentValue(
                             (Caf.exists(coauthors) && coauthors.length) > 0

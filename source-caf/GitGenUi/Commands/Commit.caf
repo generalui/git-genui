@@ -29,7 +29,6 @@ ActionMenu = (state) ->
 
     .then (updates) -> merge state, updates
 
-  otherMembers = array member in members when member.id != myAccount.id
   {staged, unstaged, untracked} = status
   statusColors =
     staged: :green
@@ -61,7 +60,7 @@ ActionMenu = (state) ->
       action: SelectCommitType,   value: "" 4. Select type:            #{} presentValue type
 
       if myAccount
-        action: SelectCoauthors,  value: "" 5. Change coauthors:       #{} if otherMembers.length == 0 then colorNotPresent 'only you on project' else presentValue if coauthors?.length > 0 then coauthors
+        action: SelectCoauthors,  value: "" 5. Change coauthors:       #{} if members.length == 0 then colorNotPresent 'only you on project' else presentValue if coauthors?.length > 0 then coauthors
       else
         action: configure,        value: "" 5. Change coauthors:       #{} colorNotPresent("configure tracker")
 

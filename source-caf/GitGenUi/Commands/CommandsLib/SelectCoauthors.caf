@@ -2,15 +2,14 @@ import &StandardImport
 
 &Lib.updateStateWithPrompt :coauthors (state) ->
   myId = state.myAccount?.id
-  otherMembers = array member in state.members when member.id != myId
 
-  if otherMembers.length > 0
+  if state.members.length > 0
     state extract coauthors = []
     &PromptFor.selectList
       multiselect: true
       prompt:  "" Who did you coauthor this commit with?
       items:
-        array {email, name} in otherMembers
+        array {email, name} in state.members
           {}
             email
             selected: email in coauthors
