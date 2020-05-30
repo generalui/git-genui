@@ -54,5 +54,5 @@
     "watch": "watch 'npm run build' ./source-caf",
     "watch-test": "watch 'npm run build-test' ./source-caf"
   },
-  "version": "0.6.2"
+  "version": "0.6.3"
 }
