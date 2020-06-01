@@ -11,12 +11,15 @@ class ProjectConfig extends &ConfigShared
     project: -> @config.project
 
   @classGetter
+    :repoRoot
+    projectFolder: -> &path.basename @repoRoot
     configBasename: -> :git-genui.config.json
     configFilePathPromise: -> @repoRootPromise.then (dir) -> dir && &path.join dir, @configBasename
-    repoRootPromise: -> @_repoRoot ?=
+    repoRootPromise: -> @_repoRootPromise ?=
       Promise.then ->
         new SourceRoots @sourceRootIndicatorFiles
         .findSourceRoot process.cwd()
+      .tap (r) -> @_repoRoot = r
       .catch (error) ->
         log {} error
         log.warn "" No in a project. Expecing to find the ".git" folder a current or parent folder.

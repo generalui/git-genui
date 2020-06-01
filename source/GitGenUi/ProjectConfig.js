@@ -16,7 +16,10 @@ Caf.defMod(module, () => {
               return this.config.project;
             }
           });
-          this.classGetter({
+          this.classGetter("repoRoot", {
+            projectFolder: function() {
+              return require("path").basename(this.repoRoot);
+            },
             configBasename: function() {
               return "git-genui.config.json";
             },
@@ -27,19 +30,21 @@ Caf.defMod(module, () => {
             },
             repoRootPromise: function() {
               let temp;
-              return (temp = this._repoRoot) != null
+              return (temp = this._repoRootPromise) != null
                 ? temp
-                : (this._repoRoot = Promise.then(() =>
+                : (this._repoRootPromise = Promise.then(() =>
                     new SourceRoots(
                       this.sourceRootIndicatorFiles
                     ).findSourceRoot(process.cwd())
-                  ).catch(error => {
-                    log({ error });
-                    log.warn(
-                      'No in a project. Expecing to find the ".git" folder a current or parent folder.'
-                    );
-                    return null;
-                  }));
+                  )
+                    .tap(r => (this._repoRoot = r))
+                    .catch(error => {
+                      log({ error });
+                      log.warn(
+                        'No in a project. Expecing to find the ".git" folder a current or parent folder.'
+                      );
+                      return null;
+                    }));
             }
           });
         }

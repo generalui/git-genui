@@ -54,7 +54,7 @@ class Git extends BaseClass
   decodeStatus = (statusCode) ->
     statusCodes[statusCode]
 
-  @printStatus: ->
+  @printStatus: (options)->
     unstagedColors =
       deleted:    :red
       conflicted: :magenta
@@ -73,8 +73,14 @@ class Git extends BaseClass
       untracked:  :brightGray
       staged:     :brightGreen
 
-    Promise.all [] @status, @origin
-    .tap ([status, origin]) ->
+    Promise.all [] @status, @origin, @remotes
+    .tap ([status, origin, remotes]) ->
+      if options?.verbose
+        log verbose: {}
+          &ProjectConfig.projectFolder
+          &UserConfig.userConfig.projectKey
+          git: {} remotes, status
+
       log "" Origin:        #{colors.green origin}
       log "" Branch:        #{colors.green status.current}
       log "" Tracking:      #{colors.green status.tracking}

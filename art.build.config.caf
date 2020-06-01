@@ -10,9 +10,9 @@ npm: (currentJson) -> merge currentJson,
   scripts: {}
     currentJson.scripts.test
     build: "" caf -p -c source-caf -o source;nn -s
-    build-test: "" npm run build; npm run test
+    build-test: "" npm run build; npm run test --silent; echo
     watch: "" watch 'npm run build' ./source-caf
-    watch-test: "" watch 'npm run build-test' ./source-caf
+    watch-test: "" watch 'npm run build-test' ./source-caf ./test
 
   dependencies: merge &package.dependencies,
     art-rest-client:                :^1.7.0

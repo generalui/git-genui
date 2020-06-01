@@ -9,7 +9,23 @@ Caf.defMod(module, () => {
       return (UserConfig = Caf.defClass(
         class UserConfig extends require("./ConfigShared") {},
         function(UserConfig, classSuper, instanceSuper) {
+          let getProjectKey;
           this.singletonClass();
+          this.getProjectKey = getProjectKey = function({
+            origin,
+            remotes,
+            projectFolder
+          }) {
+            let temp, base, base1;
+            return (temp =
+              origin != null
+                ? origin
+                : Caf.exists(remotes) &&
+                  Caf.exists((base = remotes[0])) &&
+                    Caf.exists((base1 = base.refs)) && base1.fetch) != null
+              ? temp
+              : projectFolder;
+          };
           this.classGetter({
             configBasename: function() {
               return "git-genui.user.config.json";
@@ -23,7 +39,7 @@ Caf.defMod(module, () => {
               );
             }
           });
-          this.getter("currentProjectKey", {
+          this.getter("projectKey", {
             accounts: function() {
               let temp;
               return (temp = this.config.accounts) != null ? temp : {};
@@ -32,9 +48,7 @@ Caf.defMod(module, () => {
               let temp;
               return (temp = this.config.commitOptions) != null ? temp : {};
             },
-            commitOptionsForProject: function(
-              projectKey = this.currentProjectKey
-            ) {
+            commitOptionsForProject: function(projectKey = this.projectKey) {
               return this.commitOptions[projectKey];
             }
           });
@@ -46,13 +60,22 @@ Caf.defMod(module, () => {
           this.prototype.init = function() {
             return instanceSuper.init
               .apply(this, arguments)
-              .then(() => require("./Git").origin)
+              .then(() =>
+                Promise.deepAll({
+                  origin: require("./Git").origin,
+                  remotes: require("./Git").remotes,
+                  projectFolder: require("./ProjectConfig").repoRootPromise.then(
+                    require("path").basename
+                  )
+                })
+              )
               .catch(() => {})
-              .then(origin => (this._currentProjectKey = origin));
+              .then(getProjectKey)
+              .then(k => (this._projectKey = k));
           };
           this.prototype.saveCommitOptionsForProject = function(
             commitOptions,
-            projectKey = this.currentProjectKey
+            projectKey = this.projectKey
           ) {
             let updatedAt, temp, base;
             if (!present(projectKey)) {

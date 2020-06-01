@@ -49,10 +49,10 @@
   },
   "scripts": {
     "build": "caf -p -c source-caf -o source;nn -s",
-    "build-test": "npm run build; npm run test",
+    "build-test": "npm run build; npm run test --silent; echo",
     "test": "nn -s;mocha -u tdd",
     "watch": "watch 'npm run build' ./source-caf",
-    "watch-test": "watch 'npm run build-test' ./source-caf"
+    "watch-test": "watch 'npm run build-test' ./source-caf ./test"
   },
   "version": "0.6.3"
 }

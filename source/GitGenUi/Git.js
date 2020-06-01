@@ -100,7 +100,7 @@ Caf.defMod(module, () => {
         decodeStatus = function(statusCode) {
           return statusCodes[statusCode];
         };
-        this.printStatus = function() {
+        this.printStatus = function(options) {
           let unstagedColors, stagedColors;
           unstagedColors = {
             deleted: "red",
@@ -120,9 +120,18 @@ Caf.defMod(module, () => {
             untracked: "brightGray",
             staged: "brightGreen"
           };
-          return Promise.all([this.status, this.origin])
-            .tap(([status, origin]) => {
+          return Promise.all([this.status, this.origin, this.remotes])
+            .tap(([status, origin, remotes]) => {
               let outputOne, staged, unstaged, untracked;
+              if (Caf.exists(options) && options.verbose) {
+                log({
+                  verbose: {
+                    projectFolder: require("./ProjectConfig").projectFolder,
+                    projectKey: require("./UserConfig").userConfig.projectKey,
+                    git: { remotes, status }
+                  }
+                });
+              }
               log(`Origin:        ${Caf.toString(colors.green(origin))}`);
               log(
                 `Branch:        ${Caf.toString(colors.green(status.current))}`

@@ -1,4 +1,5 @@
 import &StandardImport
+
 {}
   normalizeGitStatus = (status) ->
     return status unless status.files # already normalized

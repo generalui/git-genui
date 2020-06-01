@@ -4,8 +4,11 @@ Caf.defMod(module, () => {
   return (() => {
     return {
       description: "show git status",
-      run: function() {
-        require("../Git").printStatus();
+      options: {
+        verbose: ["verbose", "show detailed git and git-genui status"]
+      },
+      run: function(options) {
+        require("../Git").printStatus(options);
         return null;
       }
     };

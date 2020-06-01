@@ -3,15 +3,18 @@ import &StandardImport
 class UserConfig extends &ConfigShared
   @singletonClass()
 
+  @getProjectKey: getProjectKey = ({origin, remotes, projectFolder}) ->
+    origin ? remotes?[0]?.refs?.fetch ? projectFolder
+
   @classGetter
     configBasename: -> :git-genui.user.config.json
     configFilePathPromise: -> Promise.then -> &path.join &os.homedir(), @configBasename
 
   @getter
-    :currentProjectKey
+    :projectKey
     accounts: -> @config.accounts ? {}
     commitOptions: -> @config.commitOptions ? {}
-    commitOptionsForProject: (projectKey = @currentProjectKey) ->
+    commitOptionsForProject: (projectKey = @projectKey) ->
       @commitOptions[projectKey]
 
   @setter
@@ -19,11 +22,12 @@ class UserConfig extends &ConfigShared
 
   init: ->
     super
-    .then -> &git.origin
+    .then -> Promise.deepAll {} &git.origin, &git.remotes, projectFolder: &ProjectConfig.repoRootPromise.then &path.basename
     .catch ->
-    .then (origin) -> @_currentProjectKey = origin
+    .then getProjectKey
+    .then (k) -> @_projectKey = k
 
-  saveCommitOptionsForProject: (commitOptions, projectKey = @currentProjectKey) ->
+  saveCommitOptionsForProject: (commitOptions, projectKey = @projectKey) ->
     throw new Error "projectKey required to save default options" unless present projectKey
     @setConfigProperty
       :commitOptions
