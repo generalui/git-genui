@@ -1,9 +1,10 @@
 import &StandardImport, &Widgets
 
 description: "" add (stage) or remove (unstage) files to commit
-run: ->
+run: (options) ->
   log
     """
       Tip: You can also stage files with #{&colors.green "git add"}.
 
-  InteractiveAdd().then -> null
+  InteractiveAdd options
+  .then -> null

@@ -7,13 +7,13 @@ Caf.defMod(module, () => {
     (log, InteractiveAdd) => {
       return {
         description: "add (stage) or remove (unstage) files to commit",
-        run: function() {
+        run: function(options) {
           log(
             `Tip: You can also stage files with ${Caf.toString(
               require("colors").green("git add")
             )}.`
           );
-          return InteractiveAdd().then(() => null);
+          return InteractiveAdd(options).then(() => null);
         }
       };
     }

@@ -12,11 +12,13 @@ Caf.defMod(module, () => {
           filePath
         );
       };
-      return function() {
+      return function(options) {
         return require("../Git").rawStatus.then(({ files }) => {
           let items;
           files = Caf.array(files, null, file => file.index !== "renamed");
-          log({ files });
+          if (Caf.exists(options) && options.verbose) {
+            log({ files });
+          }
           return require("../PromptFor")
             .selectList({
               multiselect: true,

@@ -3,11 +3,11 @@ import &StandardImport, {} &colors
 getResolvedFilePath = (filePath) ->
   &path.join &ProjectConfig.projectConfig.configPath, filePath
 
-->
+(options) ->
   &Git.rawStatus
   .then ({files}) ->
     files = array file in files when file.index != :renamed
-    log {} files
+    log {} files if options?.verbose
 
     &PromptFor.selectList {}
       multiselect: true
