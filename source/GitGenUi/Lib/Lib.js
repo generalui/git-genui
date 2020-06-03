@@ -7,7 +7,6 @@ Caf.defMod(module, () => {
     (formatDate, toSeconds) => {
       return [
         require("./Autocomplete"),
-        require("./Git"),
         require("./SearchSort"),
         require("./SourceRoots"),
         {

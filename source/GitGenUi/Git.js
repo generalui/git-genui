@@ -4,13 +4,12 @@ Caf.defMod(module, () => {
   return Caf.importInvoke(
     [
       "BaseClass",
+      "compactFlattenAll",
+      "merge",
       "Promise",
-      "getGitCommitMessage",
       "compactFlatten",
       "Object",
-      "merge",
       "objectWithout",
-      "normalizeGitStatus",
       "log",
       "colors",
       "pluralize",
@@ -19,13 +18,12 @@ Caf.defMod(module, () => {
     [global, require("./StandardImport"), { colors: require("colors") }],
     (
       BaseClass,
+      compactFlattenAll,
+      merge,
       Promise,
-      getGitCommitMessage,
       compactFlatten,
       Object,
-      merge,
       objectWithout,
-      normalizeGitStatus,
       log,
       colors,
       pluralize,
@@ -39,11 +37,67 @@ Caf.defMod(module, () => {
         instanceSuper
       ) {
         let statusCodes, decodeStatus;
-        this.commit = function(options) {
-          return Promise.then(() =>
-            SimpleGit.commit(getGitCommitMessage(options))
-          );
+        this.getGitCommitMessage = function({
+          type,
+          story,
+          message,
+          coauthors,
+          storyStatus
+        }) {
+          return compactFlattenAll(
+            type != null ? type : "(type)",
+            ": ",
+            Caf.exists(story) && story.id
+              ? `[#${Caf.toString(story.id)}]${Caf.toString(
+                  storyStatus && storyStatus !== story.status
+                    ? ` (${Caf.toString(storyStatus)})`
+                    : undefined
+                )} `
+              : undefined,
+            message != null ? message : "(message)",
+            coauthors
+              ? "\n\n\n" +
+                  Caf.array(
+                    coauthors,
+                    coauthor => `Coauthored-by: ${Caf.toString(coauthor)}`
+                  ).join("\n")
+              : undefined
+          ).join("");
         };
+        this.normalizeGitStatus = function(status) {
+          let staged, unstaged, untracked;
+          if (!status.files) {
+            return status;
+          }
+          staged = [];
+          unstaged = [];
+          untracked = [];
+          Caf.each2(status.files, file => {
+            if (file.index && file.index !== "untracked") {
+              staged.push(
+                merge(file, { status: file.workingDir || file.index })
+              );
+            }
+            return file.workingDir
+              ? file.workingDir === "untracked"
+                ? untracked.push(merge(file, { status: file.workingDir }))
+                : unstaged.push(merge(file, { status: file.workingDir }))
+              : undefined;
+          });
+          return {
+            staged,
+            unstaged,
+            untracked,
+            current: status.current,
+            tracking: status.tracking,
+            ahead: status.ahead,
+            behind: status.behind
+          };
+        };
+        this.commit = options =>
+          Promise.then(() =>
+            SimpleGit.commit(this.getGitCommitMessage(options))
+          );
         this.stage = function(...files) {
           return Promise.then(() => SimpleGit.add(compactFlatten(files)));
         };
@@ -84,9 +138,7 @@ Caf.defMod(module, () => {
               })
             );
           },
-          status: function() {
-            return this.rawStatus.then(normalizeGitStatus);
-          }
+          status: () => this.rawStatus.then(this.normalizeGitStatus)
         });
         statusCodes = {
           D: "deleted",

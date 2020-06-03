@@ -3,8 +3,45 @@ SimpleGit = require(:simple-git/promise)()
 
 class Git extends BaseClass
 
-  @commit: (options) ->
-    Promise.then -> SimpleGit.commit getGitCommitMessage options
+
+  @getGitCommitMessage: ({type, story, message, coauthors, storyStatus}) ->
+    compactFlattenAll
+      type ? "(type)"
+      ": "
+      if story?.id
+        "" [##{story.id}]#{if storyStatus && storyStatus != story.status then " (#{storyStatus})"}\_
+
+      message ? "(message)"
+
+      if coauthors
+        "\n\n\n" +
+          array coauthor in coauthors
+            "" Coauthored-by: #{coauthor}
+          .join "\n"
+    .join ''
+
+
+  @normalizeGitStatus: (status) ->
+    return status unless status.files # already normalized
+    staged = []
+    unstaged = []
+    untracked = []
+
+    each file in status.files
+      if file.index && file.index != :untracked
+        staged.push    merge file, status: file.workingDir || file.index
+
+      if file.workingDir
+        if file.workingDir == :untracked then    untracked.push merge file, status: file.workingDir
+        else                                     unstaged.push  merge file, status: file.workingDir
+
+    {}
+      staged, unstaged, untracked
+      status.current, status.tracking
+      status.ahead, status.behind
+
+  @commit: (options) =>
+    Promise.then -> SimpleGit.commit @getGitCommitMessage options
 
   @stage: (files...) ->
     Promise.then -> SimpleGit.add compactFlatten files
@@ -38,9 +75,9 @@ class Git extends BaseClass
               workingDir: decodeStatus file.working_dir
         else status
 
-    @status: ->
+    @status: =>
       @rawStatus
-      .then normalizeGitStatus
+      .then @normalizeGitStatus
 
   statusCodes =
     D:  :deleted

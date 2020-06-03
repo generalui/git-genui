@@ -7,7 +7,8 @@ Caf.defMod(module, () => {
       global,
       require("../StandardImport"),
       require("./CommandsLib"),
-      require("../../UserConfig")
+      require("../../UserConfig"),
+      require("../../Git")
     ],
     (Promise, log, merge, getGitCommitMessage) => {
       return function(state) {

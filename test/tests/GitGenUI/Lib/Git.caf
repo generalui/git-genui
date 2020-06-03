@@ -1,8 +1,10 @@
 import &StandardImport
+import Git
+
 suite:
-  answersToCommit: ->
+  getGitCommitMessage: ->
     ##
-      <type>(<scope>): [(Starts|Finishes) #TRACKER_STORY_ID] <subject>
+      <type>(<scope>): [(Starts|Finishes) #TRACKER_STORY_ID] <message>
       <BLANK LINE>
       <body>
       <BLANK LINE>
@@ -15,81 +17,50 @@ suite:
     exhibitA =
       type:      :feat
       story:           '[171339446] (started) Update "About Page" with collage, move Kayak photo to Careers.'
-      subject:         ""
+      message:         ""
       wantLongMessage: true
-      body:
-        """
-          This is good, right?
 
-          And this?\n
-
-    test "type and subject" ->
+    test "type and message" ->
       assert.eq
-        answersToCommit
+        getGitCommitMessage
           type: :feat
-          subject:    :hi
+          message:    :hi
         "" feat: hi
 
     test "story: id: 123" ->
       assert.eq
-        answersToCommit
+        getGitCommitMessage
           type:       :feat
-          subject:    :hi
+          message:    :hi
           story: id: 123
         "" feat: [#123] hi
 
     test "story: id: 123 status: :unstarted" ->
       assert.eq
-        answersToCommit
+        getGitCommitMessage
           type:       :feat
-          subject:    :hi
+          message:    :hi
           story: id: 123 status: :unstarted
+          storyStatus: :started
         "" feat: [#123] (started) hi
 
     test :storyFinished ->
       assert.eq
-        answersToCommit
+        getGitCommitMessage
           type:       :feat
-          subject:    :hi
-          story: id:  123
-          storyFinished: true
+          message:    :hi
+          story: id:  123, status: :started
+          storyStatus: :finished
         "" feat: [#123] (finished) hi
 
-
-    test "scope" ->
+    test "coauthors" ->
       assert.eq
-        answersToCommit
+        getGitCommitMessage
           type:       :feat
-          subject:    :hi
-          scope:      :neverland
-        "" feat(neverland): hi
-
-    test "coauthor" ->
-      assert.eq
-        answersToCommit
-          type:       :feat
-          subject:    :hi
-          coauthor:   :franky
+          message:    :hi
+          coauthors:  [] :franky
         """
           feat: hi
 
 
           Coauthored-by: franky
-
-    test "body" ->
-      assert.eq
-        answersToCommit
-          type:       :feat
-          subject:    :hi
-          body:
-            """
-              This is nifty, right?
-
-
-              And those new lines should get squashed
-
-        """
-          feat: hi
-
-          This is nifty, right?
-          And those new lines should get squashed

@@ -1,4 +1,4 @@
-import &StandardImport, &UserConfig, &CommandsLib, &ProjectConfig
+import &StandardImport, &UserConfig, &CommandsLib, &ProjectConfig, &Git
 
 ##
   IN: state:

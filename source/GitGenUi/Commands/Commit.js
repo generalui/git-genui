@@ -34,7 +34,8 @@ Caf.defMod(module, () => {
       require("./StandardImport"),
       require("../UserConfig"),
       require("./CommandsLib"),
-      require("../ProjectConfig")
+      require("../ProjectConfig"),
+      require("../Git")
     ],
     (
       compactFlatten,
