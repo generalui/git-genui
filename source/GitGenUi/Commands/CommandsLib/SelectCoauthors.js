@@ -3,9 +3,9 @@ let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return (() => {
     return require("./Lib").updateStateWithPrompt("coauthors", function(state) {
-      let myId, coauthors, base, temp;
+      let myId, coauthors, base, base1, temp;
       myId = Caf.exists((base = state.myAccount)) && base.id;
-      return state.members.length > 0
+      return (Caf.exists((base1 = state.members)) && base1.length) > 0
         ? ((coauthors = undefined !== (temp = state.coauthors) ? temp : []),
           require("../../PromptFor")
             .selectList({

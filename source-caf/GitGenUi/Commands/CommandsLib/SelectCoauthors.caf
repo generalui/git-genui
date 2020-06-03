@@ -3,7 +3,7 @@ import &StandardImport
 &Lib.updateStateWithPrompt :coauthors (state) ->
   myId = state.myAccount?.id
 
-  if state.members.length > 0
+  if state.members?.length > 0
     state extract coauthors = []
     &PromptFor.selectList
       multiselect: true

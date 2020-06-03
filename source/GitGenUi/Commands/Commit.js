@@ -172,7 +172,7 @@ Caf.defMod(module, () => {
                 ? {
                     action: SelectCoauthors,
                     value: `5. Change coauthors:       ${Caf.toString(
-                      members.length === 0
+                      (Caf.exists(members) && members.length) === 0
                         ? colorNotPresent("only you on project")
                         : presentValue(
                             (Caf.exists(coauthors) && coauthors.length) > 0
