@@ -11,7 +11,6 @@ Caf.defMod(module, () => {
           return (answersSoFar, input) => {
             let columns;
             columns = process.stdout.columns;
-            autocompleteFromStrings(input, strings);
             return Promise.resolve(
               Caf.array(approximateSearchSort(input, strings), str =>
                 str.slice(0, columns - 3)
