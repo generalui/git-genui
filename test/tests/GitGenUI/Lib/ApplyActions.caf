@@ -1,9 +1,18 @@
 import &StandardImport
 
 suite: ->
+  actions =
+    addOne: (a) -> a + 1
+    throwError: -> throw new Error :OhNoes!
+    double: (a) -> a * 2
+    timeout: (a) -> timeout 1 -> a
+    div3: (a) -> a / 3
+
   test "undefined actions" ->
     assert.resolved.eq
-      applyActions 1, undefined
+      applyActions
+        1
+        undefined
       1
 
   test "0 actions" ->
@@ -13,30 +22,32 @@ suite: ->
 
   test "1 action" ->
     assert.resolved.eq
-      applyActions 1, [] (a) -> a + 1
+      applyActions 1,
+        [] :addOne
+        actions
       2
 
   test "3 actions" ->
     assert.resolved.eq
-      applyActions 1, []
-        (a) -> a + 1
-        (a) -> a * 2
-        (a) -> a / 3
+      applyActions 1,
+        :addOne :double :div3
+        actions
 
       4/3
 
   test "Promise action" ->
     assert.resolved.eq
-      applyActions 1, [] (a) -> timeout 1 -> a + 1
-      2
+      applyActions 1,
+        [] :timeout
+        actions
+      1
 
   test "error doesn't stop next action" ->
     assert.resolved.eq
       applyActions
         1
-        []
-          (a) -> throw new Error :OhNoes!
-          (a) -> a * 2
+        [] :throwError :double
+        actions
         quiet: true
 
       2

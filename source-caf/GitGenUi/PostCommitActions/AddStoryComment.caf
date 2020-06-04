@@ -1,0 +1,5 @@
+import &StandardImport
+
+(state) ->
+  log AddStoryComment: state
+  state

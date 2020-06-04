@@ -12,7 +12,8 @@ import &StandardImport, &CommandsLib, &UserConfig, &Git
   .then (commitResult) ->
     applyActions
       merge state, commitResult
-      state extract postCommitActions
+      [] :AddStoryComment # state extract postCommitActions
+      &PostCommitActions
 
   .then ({branch, commit, summary}) ->
     {staged} = state.status

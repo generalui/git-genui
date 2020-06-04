@@ -7,24 +7,4 @@ import &ArtStandardLib
 
   standardFormatDate: (date) -> formatDate date ? toSeconds(), "yyyy-mm-dd HH:MM:ss"
 
-  applyActions: (input, actions, options) ->
-    resultPromise = Promise.then -> input
-    each action, index from actions
-      resultPromise =
-        resultPromise
-        .then (previousResult) ->
-          Promise.resolve previousResult
-          .then action
-          .catch (error) ->
-            unless options?.quiet
-              log.error {}
-                message:
-                  """
-                    Error in postCommitAction (index = #{index})
-                    Action: #{} action
-
-                error
-
-            previousResult
-
-    resultPromise
+  {} &applyActions

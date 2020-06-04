@@ -20,13 +20,13 @@ Caf.defMod(module, () => {
             })
           : require("../../Git").commit(state)
         )
-          .then(commitResult => {
-            let postCommitActions;
-            return applyActions(
+          .then(commitResult =>
+            applyActions(
               merge(state, commitResult),
-              (postCommitActions = state.postCommitActions)
-            );
-          })
+              ["AddStoryComment"],
+              require("../../PostCommitActions")
+            )
+          )
           .then(({ branch, commit, summary }) => {
             let staged;
             ({ staged } = state.status);

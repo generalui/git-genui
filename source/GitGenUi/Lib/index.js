@@ -4,6 +4,7 @@
 (module.exports = require('./namespace'))
 .includeInNamespace(require('./Lib'))
 .addModules({
+  ApplyActions:   require('./applyActions'),
   Autocomplete:   require('./Autocomplete'),
   Git:            require('./Git'),
   SearchSort:     require('./SearchSort'),

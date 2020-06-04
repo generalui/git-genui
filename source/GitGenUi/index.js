@@ -16,6 +16,7 @@
 });
 require('./Commands');
 require('./Lib');
+require('./PostCommitActions');
 require('./PromptFor');
 require('./Trackers');
 require('./Widgets');
