@@ -4,7 +4,8 @@
 (module.exports = require('./namespace'))
 
 .addModules({
-  Git:        require('./Git'),
-  SearchSort: require('./SearchSort'),
-  SourceRoot: require('./SourceRoot')
+  ApplyActions: require('./ApplyActions'),
+  Git:          require('./Git'),
+  SearchSort:   require('./SearchSort'),
+  SourceRoot:   require('./SourceRoot')
 });

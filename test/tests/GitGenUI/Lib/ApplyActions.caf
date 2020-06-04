@@ -1,0 +1,42 @@
+import &StandardImport
+
+suite: ->
+  test "undefined actions" ->
+    assert.resolved.eq
+      applyActions 1, undefined
+      1
+
+  test "0 actions" ->
+    assert.resolved.eq
+      applyActions 1, []
+      1
+
+  test "1 action" ->
+    assert.resolved.eq
+      applyActions 1, [] (a) -> a + 1
+      2
+
+  test "3 actions" ->
+    assert.resolved.eq
+      applyActions 1, []
+        (a) -> a + 1
+        (a) -> a * 2
+        (a) -> a / 3
+
+      4/3
+
+  test "Promise action" ->
+    assert.resolved.eq
+      applyActions 1, [] (a) -> timeout 1 -> a + 1
+      2
+
+  test "error doesn't stop next action" ->
+    assert.resolved.eq
+      applyActions
+        1
+        []
+          (a) -> throw new Error :OhNoes!
+          (a) -> a * 2
+        quiet: true
+
+      2

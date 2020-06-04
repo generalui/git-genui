@@ -2,7 +2,7 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "log", "merge", "getGitCommitMessage"],
+    ["Promise", "applyActions", "merge", "log", "getGitCommitMessage"],
     [
       global,
       require("../StandardImport"),
@@ -10,7 +10,7 @@ Caf.defMod(module, () => {
       require("../../UserConfig"),
       require("../../Git")
     ],
-    (Promise, log, merge, getGitCommitMessage) => {
+    (Promise, applyActions, merge, log, getGitCommitMessage) => {
       return function(state) {
         return (state.pretend
           ? Promise.resolve({
@@ -19,22 +19,30 @@ Caf.defMod(module, () => {
               summary: { changes: 123, insertions: 456, deletions: 789 }
             })
           : require("../../Git").commit(state)
-        ).then(({ branch, commit, summary }) => {
-          let staged;
-          ({ staged } = state.status);
-          log({
-            "commit-success": {
-              summary: merge(
-                { files: Caf.array(staged, ({ path }) => path) },
-                Caf.object(summary, v => v | 0)
-              ),
-              message: getGitCommitMessage(state),
-              branch,
-              commit
-            }
+        )
+          .then(commitResult => {
+            let postCommitActions;
+            return applyActions(
+              merge(state, commitResult),
+              (postCommitActions = state.postCommitActions)
+            );
+          })
+          .then(({ branch, commit, summary }) => {
+            let staged;
+            ({ staged } = state.status);
+            log({
+              "commit-success": {
+                summary: merge(
+                  { files: Caf.array(staged, ({ path }) => path) },
+                  Caf.object(summary, v => v | 0)
+                ),
+                message: getGitCommitMessage(state),
+                branch,
+                commit
+              }
+            });
+            return null;
           });
-          return null;
-        });
       };
     }
   );

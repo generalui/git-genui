@@ -9,6 +9,11 @@ import &StandardImport, &CommandsLib, &UserConfig, &Git
   else
     &Git.commit state
 
+  .then (commitResult) ->
+    applyActions
+      merge state, commitResult
+      state extract postCommitActions
+
   .then ({branch, commit, summary}) ->
     {staged} = state.status
 
