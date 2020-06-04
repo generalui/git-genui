@@ -134,7 +134,9 @@ Caf.defMod(module, () => {
         numberValues = list =>
           Caf.array(list, (item, index) =>
             merge(item, {
-              value: `${Caf.toString(index + 1)}. ${Caf.toString(item.value)}`
+              value: /^\w+\.\s/.test(item.value)
+                ? item.value
+                : `${Caf.toString(index + 1)}. ${Caf.toString(item.value)}`
             })
           );
         return require("../PromptFor")
@@ -197,7 +199,7 @@ Caf.defMod(module, () => {
                   )}`
                 },
                 present(message)
-                  ? { action: CommitNow, value: "6. Commit now" }
+                  ? { action: CommitNow, value: "Commit now" }
                   : undefined,
                 {
                   key: "abort",
