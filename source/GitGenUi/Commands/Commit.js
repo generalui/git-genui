@@ -9,7 +9,6 @@ Caf.defMod(module, () => {
       "getGitCommitMessage",
       "EditCommitMessage",
       "presentValue",
-      "EditGitStage",
       "projectConfig",
       "StoryMenu",
       "stripAnsi",
@@ -17,6 +16,7 @@ Caf.defMod(module, () => {
       "colorNotPresent",
       "SelectCommitType",
       "SelectCoauthors",
+      "EditGitStage",
       "CommitNow",
       "ConfigureMenu",
       "Promise",
@@ -44,7 +44,6 @@ Caf.defMod(module, () => {
       getGitCommitMessage,
       EditCommitMessage,
       presentValue,
-      EditGitStage,
       projectConfig,
       StoryMenu,
       stripAnsi,
@@ -52,6 +51,7 @@ Caf.defMod(module, () => {
       colorNotPresent,
       SelectCommitType,
       SelectCoauthors,
+      EditGitStage,
       CommitNow,
       ConfigureMenu,
       Promise,
@@ -79,7 +79,8 @@ Caf.defMod(module, () => {
           unstaged,
           untracked,
           statusColors,
-          statusSummary;
+          statusSummary,
+          numberValues;
         if (!state) {
           return;
         }
@@ -130,73 +131,81 @@ Caf.defMod(module, () => {
           );
           log("");
         }
+        numberValues = list =>
+          Caf.array(list, (item, index) =>
+            merge(item, {
+              value: `${Caf.toString(index + 1)}. ${Caf.toString(item.value)}`
+            })
+          );
         return require("../PromptFor")
           .selectList({
             prompt: "Select action:",
-            items: compactFlatten([
-              {
-                action: EditCommitMessage,
-                value: `1. Edit message:           ${Caf.toString(
-                  presentValue(message)
-                )}`
-              },
-              {
-                action: EditGitStage,
-                value: `2. Edit staged files:      ${Caf.toString(
-                  statusSummary
-                )}`
-              },
-              myAccount && projectConfig.project
-                ? {
-                    action: StoryMenu,
-                    value: `3. Select story:           ${Caf.toString(
-                      presentValue(
-                        Caf.exists(story) && story.id
-                          ? stripAnsi(tracker.formatStory(story))
-                          : undefined
-                      )
-                    )}`
-                  }
-                : {
-                    action: configure,
-                    value: `3. Select story:           ${Caf.toString(
-                      colorNotPresent("configure tracker")
-                    )}`
-                  },
-              {
-                action: SelectCommitType,
-                value: `4. Select type:            ${Caf.toString(
-                  presentValue(type)
-                )}`
-              },
-              myAccount
-                ? {
-                    action: SelectCoauthors,
-                    value: `5. Change coauthors:       ${Caf.toString(
-                      (Caf.exists(members) && members.length) === 0
-                        ? colorNotPresent("only you on project")
-                        : presentValue(
-                            (Caf.exists(coauthors) && coauthors.length) > 0
-                              ? coauthors
-                              : undefined
-                          )
-                    )}`
-                  }
-                : {
-                    action: configure,
-                    value: `5. Change coauthors:       ${Caf.toString(
-                      colorNotPresent("configure tracker")
-                    )}`
-                  },
-              present(message)
-                ? { action: CommitNow, value: "6. Commit now" }
-                : undefined,
-              {
-                key: "abort",
-                value:
-                  "0. exit (current state will be saved, but no other actions will be taken)"
-              }
-            ])
+            items: numberValues(
+              compactFlatten([
+                {
+                  action: EditCommitMessage,
+                  value: `Edit message:           ${Caf.toString(
+                    presentValue(message)
+                  )}`
+                },
+                myAccount && projectConfig.project
+                  ? {
+                      action: StoryMenu,
+                      value: `Select story:           ${Caf.toString(
+                        presentValue(
+                          Caf.exists(story) && story.id
+                            ? stripAnsi(tracker.formatStory(story))
+                            : undefined
+                        )
+                      )}`
+                    }
+                  : {
+                      action: configure,
+                      value: `Select story:           ${Caf.toString(
+                        colorNotPresent("configure tracker")
+                      )}`
+                    },
+                {
+                  action: SelectCommitType,
+                  value: `Select type:            ${Caf.toString(
+                    presentValue(type)
+                  )}`
+                },
+                myAccount
+                  ? {
+                      action: SelectCoauthors,
+                      value: `Change coauthors:       ${Caf.toString(
+                        (Caf.exists(members) && members.length) === 0
+                          ? colorNotPresent("only you on project")
+                          : presentValue(
+                              (Caf.exists(coauthors) && coauthors.length) > 0
+                                ? coauthors
+                                : undefined
+                            )
+                      )}`
+                    }
+                  : {
+                      action: configure,
+                      value: `Change coauthors:       ${Caf.toString(
+                        colorNotPresent("configure tracker")
+                      )}`
+                    },
+                {
+                  action: EditGitStage,
+                  value: `Edit staged files:      ${Caf.toString(
+                    statusSummary
+                  )}`
+                },
+                present(message)
+                  ? { action: CommitNow, value: "6. Commit now" }
+                  : undefined,
+                {
+                  key: "abort",
+                  value:
+                    "0. exit (current state will be saved, but no other actions will be taken)"
+                }
+              ])
+            )
           })
           .then(({ action }) =>
             action != null

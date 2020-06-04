@@ -9,6 +9,7 @@ import &StandardImport
       type: :patch/test        value: "" patch/test:        tests added, improved or fixed          version + 0.0.1
       type: :patch/fix         value: "" patch/fix:         code fixed and passing tests            version + 0.0.1
       type: :patch/improvement value: "" patch/improvement: patch-sized feature improvement         version + 0.0.1
+      type: :patch/cleanup     value: "" patch/cleanup:     removed or simplified code              version + 0.0.1
       type: :patch/refactor    value: "" patch/refactor:    code quality improved                   version + 0.0.1
       type: :patch/perf        value: "" patch/perf:        performance improved                    version + 0.0.1
       type: :patch/constants   value: "" patch/constants:   strings / non-functional constants      version + 0.0.1

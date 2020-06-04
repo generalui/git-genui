@@ -47,22 +47,29 @@ ActionMenu = (state) ->
       .replace /\n/g, "\n  "
     log ''
 
+  numberValues = (list) ->
+    array item, index in list
+      merge item,
+        value: "" #{index + 1}. #{} item.value
+
+
   &PromptFor.selectList
     prompt:  "" Select action:
-    items: compactFlatten []
-      action: EditCommitMessage,  value: "" 1. Edit message:           #{} presentValue message
-      action: EditGitStage,       value: "" 2. Edit staged files:      #{} statusSummary
+    items: numberValues compactFlatten []
+      action: EditCommitMessage,  value: "" Edit message:           #{} presentValue message
       if myAccount && projectConfig.project
-        action: StoryMenu,        value: "" 3. Select story:           #{} presentValue if story?.id then stripAnsi tracker.formatStory story
+        action: StoryMenu,        value: "" Select story:           #{} presentValue if story?.id then stripAnsi tracker.formatStory story
       else
-        action: configure,        value: "" 3. Select story:           #{} colorNotPresent("configure tracker")
+        action: configure,        value: "" Select story:           #{} colorNotPresent("configure tracker")
 
-      action: SelectCommitType,   value: "" 4. Select type:            #{} presentValue type
+      action: SelectCommitType,   value: "" Select type:            #{} presentValue type
 
       if myAccount
-        action: SelectCoauthors,  value: "" 5. Change coauthors:       #{} if members?.length == 0 then colorNotPresent 'only you on project' else presentValue if coauthors?.length > 0 then coauthors
+        action: SelectCoauthors,  value: "" Change coauthors:       #{} if members?.length == 0 then colorNotPresent 'only you on project' else presentValue if coauthors?.length > 0 then coauthors
       else
-        action: configure,        value: "" 5. Change coauthors:       #{} colorNotPresent("configure tracker")
+        action: configure,        value: "" Change coauthors:       #{} colorNotPresent("configure tracker")
+
+      action: EditGitStage,       value: "" Edit staged files:      #{} statusSummary
 
       # key: :autoPush    value: "" auto-push on/off
       # key: :storyStatus value: "" update story status: started -> finished / (no change: finished)

@@ -29,6 +29,11 @@ Caf.defMod(module, () => {
                 "patch/improvement: patch-sized feature improvement         version + 0.0.1"
             },
             {
+              type: "patch/cleanup",
+              value:
+                "patch/cleanup:     removed or simplified code              version + 0.0.1"
+            },
+            {
               type: "patch/refactor",
               value:
                 "patch/refactor:    code quality improved                   version + 0.0.1"
