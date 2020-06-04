@@ -11,7 +11,7 @@ import &StandardImport, &CommandsLib, &UserConfig, &Git
 
   .then ({branch, commit, summary}) ->
     {staged} = state.status
-    log
+
     log commit-success: {}
       summary: merge {files: array {path} from staged with path}, object v in summary with v | 0
       message: getGitCommitMessage state

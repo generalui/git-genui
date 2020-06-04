@@ -22,7 +22,6 @@ Caf.defMod(module, () => {
         ).then(({ branch, commit, summary }) => {
           let staged;
           ({ staged } = state.status);
-          log;
           log({
             "commit-success": {
               summary: merge(
