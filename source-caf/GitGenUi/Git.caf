@@ -20,6 +20,10 @@ class Git extends BaseClass
           .join "\n"
     .join ''
 
+  @getGitConfig: ->
+    Promise.then -> SimpleGit.listConfig()
+    .then ({all}) -> all
+
 
   @normalizeGitStatus: (status) ->
     return status unless status.files # already normalized
@@ -41,7 +45,9 @@ class Git extends BaseClass
       status.ahead, status.behind
 
   @commit: (options) =>
-    Promise.then -> SimpleGit.commit @getGitCommitMessage options
+    generatedCommitMessage = @getGitCommitMessage options
+    Promise.then -> SimpleGit.commit generatedCommitMessage
+    .then (result) -> merge result, {} generatedCommitMessage
 
   @stage: (files...) ->
     Promise.then -> SimpleGit.add compactFlatten files

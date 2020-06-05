@@ -5,8 +5,8 @@ Caf.defMod(module, () => {
     [
       "BaseClass",
       "compactFlattenAll",
-      "merge",
       "Promise",
+      "merge",
       "compactFlatten",
       "Object",
       "objectWithout",
@@ -19,8 +19,8 @@ Caf.defMod(module, () => {
     (
       BaseClass,
       compactFlattenAll,
-      merge,
       Promise,
+      merge,
       compactFlatten,
       Object,
       objectWithout,
@@ -64,6 +64,11 @@ Caf.defMod(module, () => {
               : undefined
           ).join("");
         };
+        this.getGitConfig = function() {
+          return Promise.then(() => SimpleGit.listConfig()).then(
+            ({ all }) => all
+          );
+        };
         this.normalizeGitStatus = function(status) {
           let staged, unstaged, untracked;
           if (!status.files) {
@@ -94,10 +99,13 @@ Caf.defMod(module, () => {
             behind: status.behind
           };
         };
-        this.commit = options =>
-          Promise.then(() =>
-            SimpleGit.commit(this.getGitCommitMessage(options))
-          );
+        this.commit = options => {
+          let generatedCommitMessage;
+          generatedCommitMessage = this.getGitCommitMessage(options);
+          return Promise.then(() =>
+            SimpleGit.commit(generatedCommitMessage)
+          ).then(result => merge(result, { generatedCommitMessage }));
+        };
         this.stage = function(...files) {
           return Promise.then(() => SimpleGit.add(compactFlatten(files)));
         };
