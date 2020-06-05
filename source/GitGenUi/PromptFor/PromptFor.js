@@ -11,7 +11,9 @@ Caf.defMod(module, () => {
       "String",
       "isString",
       "autocompleteFromStrings",
-      "Array"
+      "Array",
+      "compactFlatten",
+      "Function"
     ],
     [
       global,
@@ -28,7 +30,9 @@ Caf.defMod(module, () => {
       String,
       isString,
       autocompleteFromStrings,
-      Array
+      Array,
+      compactFlatten,
+      Function
     ) => {
       let inquire, patchAutocompleteResult, Core;
       require("inquirer").registerPrompt(
@@ -73,7 +77,7 @@ Caf.defMod(module, () => {
         classSuper,
         instanceSuper
       ) {
-        let partialEq, findDefaultItem;
+        let partialEq, findDefaultItem, numberValues;
         partialEq = function(a, b) {
           return !Caf.find(a, null, (v, k) => b[k] !== v);
         };
@@ -168,6 +172,51 @@ Caf.defMod(module, () => {
           this.input(merge(options, { type: "password" }));
         this.password = function(options) {
           return inquire(merge({ type: "password" }, options));
+        };
+        numberValues = function(list) {
+          return Caf.array(list, (item, index) =>
+            merge(item, {
+              value: /^\w+\.\s/.test(item.value)
+                ? item.value
+                : `${Caf.toString(index + 1)}. ${Caf.toString(item.value)}`
+            })
+          );
+        };
+        this.menu = (state, options) => {
+          let preprocessState,
+            postprocessState,
+            exitPrompt,
+            items,
+            temp,
+            temp1,
+            temp2;
+          preprocessState =
+            undefined !== (temp = options.preprocessState) ? temp : a => a;
+          postprocessState =
+            undefined !== (temp1 = options.postprocessState) ? temp1 : a => a;
+          exitPrompt =
+            undefined !== (temp2 = options.exitPrompt) ? temp2 : "exit";
+          items = options.items;
+          return Promise.resolve(state)
+            .then(preprocessState)
+            .then(state =>
+              this.selectList(
+                merge(options, {
+                  items: numberValues(
+                    compactFlatten([
+                      Caf.is(items, Function) ? items(state) : items,
+                      { key: "abort", value: `0. ${Caf.toString(exitPrompt)}` }
+                    ])
+                  )
+                })
+              ).then(({ action }) =>
+                action != null
+                  ? Promise.then(() => action(state))
+                      .then(postprocessState)
+                      .then(state => this.menu(state, options))
+                  : undefined
+              )
+            );
         };
       }));
     }

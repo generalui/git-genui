@@ -3,31 +3,31 @@ let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     [
-      "compactFlatten",
-      "present",
+      "ConfigureMenu",
+      "Promise",
+      "ignoreRejections",
+      "tracker",
+      "merge",
+      "userConfig",
+      "validateStory",
+      "validateType",
+      "fillInMissingState",
+      "saveState",
       "log",
+      "process",
+      "present",
       "getGitCommitMessage",
+      "compactFlatten",
       "EditCommitMessage",
       "presentValue",
       "projectConfig",
       "StoryMenu",
       "stripAnsi",
-      "tracker",
       "colorNotPresent",
       "SelectCommitType",
       "SelectCoauthors",
       "EditGitStage",
-      "CommitNow",
-      "ConfigureMenu",
-      "Promise",
-      "ignoreRejections",
-      "merge",
-      "saveState",
-      "userConfig",
-      "validateStory",
-      "validateType",
-      "fillInMissingState",
-      "process"
+      "CommitNow"
     ],
     [
       global,
@@ -38,185 +38,45 @@ Caf.defMod(module, () => {
       require("../Git")
     ],
     (
-      compactFlatten,
-      present,
+      ConfigureMenu,
+      Promise,
+      ignoreRejections,
+      tracker,
+      merge,
+      userConfig,
+      validateStory,
+      validateType,
+      fillInMissingState,
+      saveState,
       log,
+      process,
+      present,
       getGitCommitMessage,
+      compactFlatten,
       EditCommitMessage,
       presentValue,
       projectConfig,
       StoryMenu,
       stripAnsi,
-      tracker,
       colorNotPresent,
       SelectCommitType,
       SelectCoauthors,
       EditGitStage,
-      CommitNow,
-      ConfigureMenu,
-      Promise,
-      ignoreRejections,
-      merge,
-      saveState,
-      userConfig,
-      validateStory,
-      validateType,
-      fillInMissingState,
-      process
+      CommitNow
     ) => {
-      let ActionMenu;
-      ActionMenu = function(state) {
-        let status,
-          stories,
-          members,
-          myAccount,
-          message,
-          type,
-          story,
-          coauthors,
-          configure,
-          staged,
-          unstaged,
-          untracked,
-          statusColors,
-          statusSummary,
-          numberValues;
-        if (!state) {
-          return;
-        }
-        status = state.status;
-        stories = state.stories;
-        members = state.members;
-        myAccount = state.myAccount;
-        message = state.message;
-        type = state.type;
-        story = state.story;
-        coauthors = state.coauthors;
-        configure = state =>
-          ConfigureMenu({ exitPrompt: "back" })
-            .then(() =>
-              Promise.deepAll({
-                stories: ignoreRejections(() => tracker.stories),
-                members: ignoreRejections(() => tracker.members),
-                myAccount: ignoreRejections(() => tracker.myAccount)
-              })
-            )
-            .then(updates => merge(state, updates));
-        ({ staged, unstaged, untracked } = status);
-        statusColors = { staged: "green", unstaged: "red", untracked: "red" };
-        statusSummary = compactFlatten(
-          Caf.array(
-            ["staged", "unstaged", "untracked"],
-            statusCat =>
-              require("colors")[statusColors[statusCat]](
-                `${Caf.toString(status[statusCat].length)} ${Caf.toString(
-                  statusCat
-                )}`
-              ),
-            statusCat => {
-              let base;
-              return (
-                (Caf.exists((base = status[statusCat])) && base.length) > 0
-              );
-            }
-          )
-        ).join(", ");
-        if (present(message)) {
-          log("Commit message preview:");
-          log(
-            "  " +
-              require("colors")
-                .grey(getGitCommitMessage(state))
-                .replace(/\n/g, "\n  ")
-          );
-          log("");
-        }
-        numberValues = list =>
-          Caf.array(list, (item, index) =>
-            merge(item, {
-              value: /^\w+\.\s/.test(item.value)
-                ? item.value
-                : `${Caf.toString(index + 1)}. ${Caf.toString(item.value)}`
+      let configure, statusColors;
+      configure = function(state) {
+        return ConfigureMenu({ exitPrompt: "back" })
+          .then(() =>
+            Promise.deepAll({
+              stories: ignoreRejections(() => tracker.stories),
+              members: ignoreRejections(() => tracker.members),
+              myAccount: ignoreRejections(() => tracker.myAccount)
             })
-          );
-        return require("../PromptFor")
-          .selectList({
-            prompt: "Select action:",
-            items: numberValues(
-              compactFlatten([
-                {
-                  action: EditCommitMessage,
-                  value: `Edit message:           ${Caf.toString(
-                    presentValue(message)
-                  )}`
-                },
-                myAccount && projectConfig.project
-                  ? {
-                      action: StoryMenu,
-                      value: `Select story:           ${Caf.toString(
-                        presentValue(
-                          Caf.exists(story) && story.id
-                            ? stripAnsi(tracker.formatStory(story))
-                            : undefined
-                        )
-                      )}`
-                    }
-                  : {
-                      action: configure,
-                      value: `Select story:           ${Caf.toString(
-                        colorNotPresent("configure tracker")
-                      )}`
-                    },
-                {
-                  action: SelectCommitType,
-                  value: `Select type:            ${Caf.toString(
-                    presentValue(type)
-                  )}`
-                },
-                myAccount
-                  ? {
-                      action: SelectCoauthors,
-                      value: `Change coauthors:       ${Caf.toString(
-                        (Caf.exists(members) && members.length) === 0
-                          ? colorNotPresent("only you on project")
-                          : presentValue(
-                              (Caf.exists(coauthors) && coauthors.length) > 0
-                                ? coauthors
-                                : undefined
-                            )
-                      )}`
-                    }
-                  : {
-                      action: configure,
-                      value: `Change coauthors:       ${Caf.toString(
-                        colorNotPresent("configure tracker")
-                      )}`
-                    },
-                {
-                  action: EditGitStage,
-                  value: `Edit staged files:      ${Caf.toString(
-                    statusSummary
-                  )}`
-                },
-                present(message)
-                  ? { action: CommitNow, value: "Commit now" }
-                  : undefined,
-                {
-                  key: "abort",
-                  value:
-                    "0. exit (current state will be saved, but no other actions will be taken)"
-                }
-              ])
-            )
-          })
-          .then(({ action }) =>
-            action != null
-              ? Promise.then(() => action(state))
-                  .then(saveState)
-                  .then(ActionMenu)
-              : undefined
-          );
+          )
+          .then(updates => merge(state, updates));
       };
+      statusColors = { staged: "green", unstaged: "red", untracked: "red" };
       return {
         description:
           "Commit is the main command for git-genui. The primary goal is to generate a well-formatted git-commit message. Commit will prompt for configuration of needed, as well as giving an opportunity to stage or unstage files for the commit. Alternatively, you can stage files for your commit before calling git-genui-commit.\n\nAll commandline options are optional. The are provided to streamling the commit process if needed.",
@@ -266,7 +126,111 @@ Caf.defMod(module, () => {
             )
             .then(fillInMissingState)
             .then(saveState)
-            .then(ActionMenu);
+            .then(state =>
+              require("../PromptFor").menu(state, {
+                preprocessState: state => {
+                  if (present(message)) {
+                    log("Commit message preview:");
+                    log(
+                      "  " +
+                        require("colors")
+                          .grey(getGitCommitMessage(state))
+                          .replace(/\n/g, "\n  ")
+                    );
+                    log("");
+                  }
+                  return state;
+                },
+                items: state => {
+                  let myAccount, story, members, statusSummary, status;
+                  myAccount = state.myAccount;
+                  message = state.message;
+                  story = state.story;
+                  members = state.members;
+                  statusSummary = state.statusSummary;
+                  status = state.status;
+                  type = state.type;
+                  return compactFlatten([
+                    {
+                      action: EditCommitMessage,
+                      value: `Edit message:           ${Caf.toString(
+                        presentValue(message)
+                      )}`
+                    },
+                    myAccount && projectConfig.project
+                      ? {
+                          action: StoryMenu,
+                          value: `Select story:           ${Caf.toString(
+                            presentValue(
+                              Caf.exists(story) && story.id
+                                ? stripAnsi(tracker.formatStory(story))
+                                : undefined
+                            )
+                          )}`
+                        }
+                      : {
+                          action: configure,
+                          value: `Select story:           ${Caf.toString(
+                            colorNotPresent("configure tracker")
+                          )}`
+                        },
+                    {
+                      action: SelectCommitType,
+                      value: `Select type:            ${Caf.toString(
+                        presentValue(type)
+                      )}`
+                    },
+                    myAccount
+                      ? {
+                          action: SelectCoauthors,
+                          value: `Change coauthors:       ${Caf.toString(
+                            (Caf.exists(members) && members.length) === 0
+                              ? colorNotPresent("only you on project")
+                              : presentValue(
+                                  (Caf.exists(coauthors) && coauthors.length) >
+                                    0
+                                    ? coauthors
+                                    : undefined
+                                )
+                          )}`
+                        }
+                      : {
+                          action: configure,
+                          value: `Change coauthors:       ${Caf.toString(
+                            colorNotPresent("configure tracker")
+                          )}`
+                        },
+                    {
+                      action: EditGitStage,
+                      value: `Edit staged files:      ${Caf.toString(
+                        compactFlatten(
+                          Caf.array(
+                            ["staged", "unstaged", "untracked"],
+                            statusCat =>
+                              require("colors")[statusColors[statusCat]](
+                                `${Caf.toString(
+                                  status[statusCat].length
+                                )} ${Caf.toString(statusCat)}`
+                              ),
+                            statusCat => {
+                              let base;
+                              return (
+                                (Caf.exists((base = status[statusCat])) &&
+                                  base.length) > 0
+                              );
+                            }
+                          )
+                        ).join(", ")
+                      )}`
+                    },
+                    present(message)
+                      ? { action: CommitNow, value: "Commit now" }
+                      : undefined
+                  ]);
+                },
+                postprocesState: saveState
+              })
+            );
         }
       };
     }

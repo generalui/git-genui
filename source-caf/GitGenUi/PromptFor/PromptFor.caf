@@ -106,3 +106,34 @@ class Core
     inquire merge
       type: :password
       options
+
+  numberValues = (list) ->
+    array item, index in list
+      merge item,
+        value:
+          if /^\w+\.\s/.test item.value
+            item.value
+          else
+            "" #{index + 1}. #{} item.value
+
+  @menu: (state, options) =>
+    options extract
+      preprocessState = (a) -> a
+      postprocessState = (a) -> a
+      exitPrompt = "exit"
+      items
+
+    Promise.resolve state
+    .then preprocessState
+    .then (state) ->
+      @selectList merge options,
+        items: numberValues compactFlatten []
+          if items is Function then items state else items
+          key: :abort                 value: "" 0. #{} exitPrompt
+
+      .then ({action}) ->
+        if action?
+          Promise
+          .then -> action state
+          .then postprocessState
+          .then (state) -> @menu state, options

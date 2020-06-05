@@ -7,85 +7,19 @@ import &StandardImport, &UserConfig, &CommandsLib, &ProjectConfig, &Git
     members:    tracker members
     myAccount:  current user's tracker account
 
-ActionMenu = (state) ->
-  return unless state
-  state extract
-    status
-    stories
-    members
-    myAccount
+configure = (state) ->
+  ConfigureMenu exitPrompt: :back
+  .then -> Promise.deepAll {}
+    stories:    ignoreRejections -> tracker.stories
+    members:    ignoreRejections -> tracker.members
+    myAccount:  ignoreRejections -> tracker.myAccount
 
-    message
-    type
-    story
-    coauthors
+  .then (updates) -> merge state, updates
 
-  configure = (state) ->
-    ConfigureMenu exitPrompt: :back
-    .then -> Promise.deepAll {}
-      stories:    ignoreRejections -> tracker.stories
-      members:    ignoreRejections -> tracker.members
-      myAccount:  ignoreRejections -> tracker.myAccount
-
-    .then (updates) -> merge state, updates
-
-  {staged, unstaged, untracked} = status
-  statusColors =
-    staged: :green
-    unstaged: :red
-    untracked: :red
-
-  statusSummary =
-    compactFlatten array statusCat from :staged :unstaged :untracked when status[statusCat]?.length > 0
-      &colors[statusColors[statusCat]] "" #{status[statusCat].length} #{statusCat}
-    .join ', '
-
-  if present message
-    log "" Commit message preview:
-    log "  " +
-      &colors.grey getGitCommitMessage state
-      .replace /\n/g, "\n  "
-    log ''
-
-  numberValues = (list) ->
-    array item, index in list
-      merge item,
-        value:
-          if /^\w+\.\s/.test item.value
-            item.value
-          else
-            "" #{index + 1}. #{} item.value
-
-
-  &PromptFor.selectList
-    prompt:  "" Select action:
-    items: numberValues compactFlatten []
-      action: EditCommitMessage,  value: "" Edit message:           #{} presentValue message
-      if myAccount && projectConfig.project
-        action: StoryMenu,        value: "" Select story:           #{} presentValue if story?.id then stripAnsi tracker.formatStory story
-      else
-        action: configure,        value: "" Select story:           #{} colorNotPresent("configure tracker")
-
-      action: SelectCommitType,   value: "" Select type:            #{} presentValue type
-
-      if myAccount
-        action: SelectCoauthors,  value: "" Change coauthors:       #{} if members?.length == 0 then colorNotPresent 'only you on project' else presentValue if coauthors?.length > 0 then coauthors
-      else
-        action: configure,        value: "" Change coauthors:       #{} colorNotPresent("configure tracker")
-
-      action: EditGitStage,       value: "" Edit staged files:      #{} statusSummary
-
-      # key: :autoPush    value: "" auto-push on/off
-      # key: :storyState value: "" update story status: started -> finished / (no change: finished)
-      if present message then action: CommitNow,          value: "" Commit now
-      # action: configure,          value: "" 9. Configure
-      key: :abort                 value: "" 0. exit (current state will be saved, but no other actions will be taken)
-
-  .then ({action}) ->
-    if action?
-      Promise.then -> action state
-      .then saveState
-      .then ActionMenu
+statusColors =
+  staged:     :green
+  unstaged:   :red
+  untracked:  :red
 
 description:
   """
@@ -117,6 +51,45 @@ run: (options) ->
     if status.staged.length + status.unstaged.length + status.untracked.length == 0
       log.warn "" No local changes to commit.
       process.exit 1
+
   .then fillInMissingState
   .then saveState
-  .then ActionMenu
+  .then (state) ->
+    &PromptFor.menu
+      state
+
+      preprocessState: (state) ->
+        if present message
+          log "" Commit message preview:
+          log "  " +
+            &colors.grey getGitCommitMessage state
+            .replace /\n/g, "\n  "
+          log ''
+
+        state
+
+      items: (state) ->
+        state extract myAccount, message, story, members, statusSummary, status, type
+
+        compactFlatten []
+          action: EditCommitMessage,  value: "" Edit message:           #{} presentValue message
+          if myAccount && projectConfig.project
+            action: StoryMenu,        value: "" Select story:           #{} presentValue if story?.id then stripAnsi tracker.formatStory story
+          else
+            action: configure,        value: "" Select story:           #{} colorNotPresent("configure tracker")
+
+          action: SelectCommitType,   value: "" Select type:            #{} presentValue type
+
+          if myAccount
+            action: SelectCoauthors,  value: "" Change coauthors:       #{} if members?.length == 0 then colorNotPresent 'only you on project' else presentValue if coauthors?.length > 0 then coauthors
+          else
+            action: configure,        value: "" Change coauthors:       #{} colorNotPresent("configure tracker")
+
+          action: EditGitStage,       value: "" Edit staged files:      #{}
+            compactFlatten array statusCat from :staged :unstaged :untracked when status[statusCat]?.length > 0
+              &colors[statusColors[statusCat]] "" #{status[statusCat].length} #{statusCat}
+            .join ', '
+
+          if present message then action: CommitNow,          value: "" Commit now
+
+      postprocesState: saveState
