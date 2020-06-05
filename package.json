@@ -15,7 +15,7 @@
     "neptune-namespaces": "^4.0.0",
     "open": "^7.0.3",
     "pivotaljs": "^1.0.3",
-    "simple-git": "^1.132.0",
+    "simple-git": "^2.5.0",
     "stable": "^0.1.8"
   },
   "description": "git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning",

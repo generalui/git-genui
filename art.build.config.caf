@@ -24,7 +24,7 @@ npm: (currentJson) -> merge currentJson,
     neptune-namespaces:             :^4.0.0
     open:                           :^7.0.3   # open link in browser
     pivotaljs:                      :^1.0.3   # pivotal API
-    simple-git:                     :^1.132.0 # git API
+    simple-git:                     :^2.5.0 # git API
     stable:                         :^0.1.8   # stableSort
 
   devDependencies: merge &package.devDependencies, currentJson.devDependencies,
