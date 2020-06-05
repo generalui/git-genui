@@ -1,5 +1,10 @@
 import &StandardImport
 
 (state) ->
-  log AddStoryComment: state
+  if state extract story, storyId
+    log AddStoryComment: {} story, storyId
+    &Tracker.tracker.createCommentWithMessage
+      story.id
+      getCommitComment state
+
   state
