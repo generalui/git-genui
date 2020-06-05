@@ -76,7 +76,7 @@ ActionMenu = (state) ->
       action: EditGitStage,       value: "" Edit staged files:      #{} statusSummary
 
       # key: :autoPush    value: "" auto-push on/off
-      # key: :storyStatus value: "" update story status: started -> finished / (no change: finished)
+      # key: :storyState value: "" update story status: started -> finished / (no change: finished)
       if present message then action: CommitNow,          value: "" Commit now
       # action: configure,          value: "" 9. Configure
       key: :abort                 value: "" 0. exit (current state will be saved, but no other actions will be taken)

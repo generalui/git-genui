@@ -6,7 +6,7 @@
 .addModules({
   ApplyActions:   require('./applyActions'),
   Autocomplete:   require('./Autocomplete'),
-  Git:            require('./Git'),
+  CommitStateLib: require('./CommitStateLib'),
   SearchSort:     require('./SearchSort'),
   SourceRoots:    require('./SourceRoots'),
   StandardImport: require('./StandardImport')

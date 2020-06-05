@@ -7,6 +7,9 @@ npm: (currentJson) -> merge currentJson,
   description:  "" git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning
   bin: git-genui: :./git-genui
 
+  jest:
+    testEnvironment: :node
+
   scripts: {}
     currentJson.scripts.test
     build: "" caf -p -c source-caf -o source;nn -s
@@ -21,7 +24,7 @@ npm: (currentJson) -> merge currentJson,
     inquirer-autocomplete-prompt:   :^1.0.2
     inquirer-checkbox-plus-prompt:  :^1.0.1
     inquirer:                       :^7.1.0
-    neptune-namespaces:             :^4.0.0
+    neptune-namespaces-runtime:     :^3.0.0
     open:                           :^7.0.3   # open link in browser
     pivotaljs:                      :^1.0.3   # pivotal API
     simple-git:                     :^2.5.0 # git API
@@ -30,6 +33,7 @@ npm: (currentJson) -> merge currentJson,
   devDependencies: merge &package.devDependencies, currentJson.devDependencies,
     art-build-configurator:   :^1.26.9
     art-testbench:            :^1.17.2
+    neptune-namespaces:             :^4.0.0
     caffeine-script:          :^0.72.1
     chai:                     :^4.2.0
     mocha:                    :^7.1.1

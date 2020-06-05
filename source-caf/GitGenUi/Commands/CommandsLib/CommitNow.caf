@@ -23,6 +23,8 @@ import &StandardImport, &CommandsLib, &UserConfig, &Git
       message: getGitCommitMessage state
       branch
       commit
+      story: state.story && tracker.getStoryUrl state.story?.id
+
     null
 
   # .tap -> saveState objectWithout state, :message

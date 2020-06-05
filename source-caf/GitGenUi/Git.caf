@@ -4,12 +4,12 @@ SimpleGit = require(:simple-git/promise)()
 class Git extends BaseClass
 
 
-  @getGitCommitMessage: ({type, story, message, coauthors, storyStatus}) ->
+  @getGitCommitMessage: ({type, story, message, coauthors, storyState}) ->
     compactFlattenAll
       type ? "(type)"
       ": "
       if story?.id
-        "" [##{story.id}]#{if storyStatus && storyStatus != story.status then " (#{storyStatus})"}\_
+        "" [##{story.id}]#{if storyState && storyState != story.status then " (#{storyState})"}\_
 
       message ? "(message)"
 
@@ -23,7 +23,6 @@ class Git extends BaseClass
   @getGitConfig: ->
     Promise.then -> SimpleGit.listConfig()
     .then ({all}) -> all
-
 
   @normalizeGitStatus: (status) ->
     return status unless status.files # already normalized

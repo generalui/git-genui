@@ -9,6 +9,7 @@ Caf.defMod(module, () => {
         require("./Autocomplete"),
         require("./SearchSort"),
         require("./SourceRoots"),
+        require("./CommitStateLib"),
         {
           standardFormatDate: function(date) {
             return formatDate(

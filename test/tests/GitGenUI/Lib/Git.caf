@@ -41,7 +41,7 @@ suite:
           type:       :feat
           message:    :hi
           story: id: 123 status: :unstarted
-          storyStatus: :started
+          storyState: :started
         "" feat: [#123] (started) hi
 
     test :storyFinished ->
@@ -50,7 +50,7 @@ suite:
           type:       :feat
           message:    :hi
           story: id:  123, status: :started
-          storyStatus: :finished
+          storyState: :finished
         "" feat: [#123] (finished) hi
 
     test "coauthors" ->

@@ -42,15 +42,15 @@ Caf.defMod(module, () => {
           story,
           message,
           coauthors,
-          storyStatus
+          storyState
         }) {
           return compactFlattenAll(
             type != null ? type : "(type)",
             ": ",
             Caf.exists(story) && story.id
               ? `[#${Caf.toString(story.id)}]${Caf.toString(
-                  storyStatus && storyStatus !== story.status
-                    ? ` (${Caf.toString(storyStatus)})`
+                  storyState && storyState !== story.status
+                    ? ` (${Caf.toString(storyState)})`
                     : undefined
                 )} `
               : undefined,
