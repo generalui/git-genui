@@ -72,6 +72,9 @@ class PivotalTracker extends BaseClass
     @requireProjectId projectId
     &open "" https://www.pivotaltracker.com/n/projects/#{projectId}
 
+  @getStoryBrowserUrl: (projectId, storyId) ->
+    "" https://www.pivotaltracker.com/story/show/#{storyId}
+
   @getStoryUrl: (projectId, storyId) ->
     @getProjectUrl projectId
     + "" /stories/#{storyId}

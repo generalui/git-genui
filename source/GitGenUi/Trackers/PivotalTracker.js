@@ -152,6 +152,11 @@ Caf.defMod(module, () => {
               )}`
             );
           };
+          this.getStoryBrowserUrl = function(projectId, storyId) {
+            return `https://www.pivotaltracker.com/story/show/${Caf.toString(
+              storyId
+            )}`;
+          };
           this.getStoryUrl = function(projectId, storyId) {
             return (
               this.getProjectUrl(projectId) +

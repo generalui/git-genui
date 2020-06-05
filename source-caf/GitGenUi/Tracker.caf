@@ -23,6 +23,7 @@ class Tracker extends BaseClass
     project:              -> @tracker?.getProject @projectId
 
   getStoryUrl:        (storyId) -> @tracker?.getStoryUrl @projectId, storyId
+  getStoryBrowserUrl: (storyId) -> @tracker?.getStoryBrowserUrl @projectId, storyId
   getProjectUrl:      -> @tracker?.getProjectUrl @projectId
   openInBrowser:      -> @tracker?.openInBrowser @projectId
 

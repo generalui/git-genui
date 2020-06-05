@@ -92,4 +92,4 @@ run: (options) ->
 
           if present message then action: CommitNow,          value: "" Commit now
 
-      postprocesState: saveState
+      postprocessState: saveState

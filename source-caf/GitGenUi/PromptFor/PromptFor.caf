@@ -129,11 +129,12 @@ class Core
       @selectList merge options,
         items: numberValues compactFlatten []
           if items is Function then items state else items
-          key: :abort                 value: "" 0. #{} exitPrompt
+          key: :exit                 value: "" 0. #{} exitPrompt
 
-      .then ({action}) ->
-        if action?
-          Promise
-          .then -> action state
+      .then ({action, key}) -> unless key == :exit
+        Promise
+        .then -> action state
+        .then (state) -> if state
+          Promise.resolve state
           .then postprocessState
           .then (state) -> @menu state, options

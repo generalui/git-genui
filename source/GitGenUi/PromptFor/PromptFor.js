@@ -205,15 +205,19 @@ Caf.defMod(module, () => {
                   items: numberValues(
                     compactFlatten([
                       Caf.is(items, Function) ? items(state) : items,
-                      { key: "abort", value: `0. ${Caf.toString(exitPrompt)}` }
+                      { key: "exit", value: `0. ${Caf.toString(exitPrompt)}` }
                     ])
                   )
                 })
-              ).then(({ action }) =>
-                action != null
-                  ? Promise.then(() => action(state))
-                      .then(postprocessState)
-                      .then(state => this.menu(state, options))
+              ).then(({ action, key }) =>
+                !(key === "exit")
+                  ? Promise.then(() => action(state)).then(state =>
+                      state
+                        ? Promise.resolve(state)
+                            .then(postprocessState)
+                            .then(state => this.menu(state, options))
+                        : undefined
+                    )
                   : undefined
               )
             );

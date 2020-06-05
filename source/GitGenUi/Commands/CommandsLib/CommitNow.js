@@ -2,14 +2,7 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    [
-      "Promise",
-      "applyActions",
-      "merge",
-      "log",
-      "getGitCommitMessage",
-      "tracker"
-    ],
+    ["Promise", "applyActions", "merge", "log", "getGitCommitMessage"],
     [
       global,
       require("../StandardImport"),
@@ -17,7 +10,7 @@ Caf.defMod(module, () => {
       require("../../UserConfig"),
       require("../../Git")
     ],
-    (Promise, applyActions, merge, log, getGitCommitMessage, tracker) => {
+    (Promise, applyActions, merge, log, getGitCommitMessage) => {
       return function(state) {
         return (state.pretend
           ? Promise.resolve({
@@ -45,14 +38,18 @@ Caf.defMod(module, () => {
                 ),
                 message: getGitCommitMessage(state),
                 branch,
-                commit,
-                story:
-                  state.story &&
-                  tracker.getStoryUrl(
-                    Caf.exists((base = state.story)) && base.id
-                  )
+                commit
               }
             });
+            if (Caf.exists((base = state.story)) && base.id) {
+              log(
+                `story: ${Caf.toString(
+                  require("colors").green(
+                    "tracker.getStoryBrowserUrl state.story?.id"
+                  )
+                )}`
+              );
+            }
             return null;
           });
       };

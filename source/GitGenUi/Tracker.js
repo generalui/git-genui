@@ -112,6 +112,13 @@ Caf.defMod(module, () => {
               base.getStoryUrl(this.projectId, storyId)
             );
           };
+          this.prototype.getStoryBrowserUrl = function(storyId) {
+            let base;
+            return (
+              Caf.exists((base = this.tracker)) &&
+              base.getStoryBrowserUrl(this.projectId, storyId)
+            );
+          };
           this.prototype.getProjectUrl = function() {
             let base;
             return (

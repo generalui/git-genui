@@ -228,7 +228,7 @@ Caf.defMod(module, () => {
                       : undefined
                   ]);
                 },
-                postprocesState: saveState
+                postprocessState: saveState
               })
             );
         }
