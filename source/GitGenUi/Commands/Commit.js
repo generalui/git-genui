@@ -134,7 +134,7 @@ Caf.defMod(module, () => {
                     log(
                       "  " +
                         require("colors")
-                          .grey(getGitCommitMessage(state))
+                          .brightWhite(getGitCommitMessage(state))
                           .replace(/\n/g, "\n  ")
                     );
                     log("");

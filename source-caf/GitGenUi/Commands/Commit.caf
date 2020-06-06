@@ -62,7 +62,7 @@ run: (options) ->
         if present message
           log "" Commit message preview:
           log "  " +
-            &colors.grey getGitCommitMessage state
+            &colors.brightWhite getGitCommitMessage state
             .replace /\n/g, "\n  "
           log ''
 
