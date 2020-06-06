@@ -99,20 +99,14 @@ Caf.defMod(module, () => {
           ]
         },
         run: function(options) {
-          let message, coauthors, type, storyId;
           return Promise.deepAll(
-            merge(
-              userConfig.commitOptionsForProject,
-              (({ message, coauthors, type, storyId } = options),
-              { message, coauthors, type, storyId }),
-              {
-                status: require("../Git").printStatus(),
-                stories: ignoreRejections(() => tracker.stories),
-                members: ignoreRejections(() => tracker.members),
-                myAccount: ignoreRejections(() => tracker.myAccount),
-                options
-              }
-            )
+            merge(userConfig.commitOptionsForProject, {
+              status: require("../Git").printStatus(),
+              stories: ignoreRejections(() => tracker.stories),
+              members: ignoreRejections(() => tracker.members),
+              myAccount: ignoreRejections(() => tracker.myAccount),
+              options
+            })
           )
             .then(validateStory)
             .then(validateType)
@@ -129,12 +123,16 @@ Caf.defMod(module, () => {
             .then(state =>
               require("../PromptFor").menu(state, {
                 preprocessState: state => {
-                  if (present(message)) {
+                  if (present(state.message)) {
                     log("Commit message preview:");
                     log(
                       "  " +
                         require("colors")
-                          .brightWhite(getGitCommitMessage(state))
+                          .bold(
+                            require("colors").brightGreen(
+                              getGitCommitMessage(state)
+                            )
+                          )
                           .replace(/\n/g, "\n  ")
                     );
                     log("");
@@ -142,7 +140,14 @@ Caf.defMod(module, () => {
                   return state;
                 },
                 items: state => {
-                  let myAccount, story, members, statusSummary, status;
+                  let myAccount,
+                    message,
+                    story,
+                    members,
+                    statusSummary,
+                    status,
+                    type,
+                    coauthors;
                   myAccount = state.myAccount;
                   message = state.message;
                   story = state.story;
@@ -150,6 +155,7 @@ Caf.defMod(module, () => {
                   statusSummary = state.statusSummary;
                   status = state.status;
                   type = state.type;
+                  coauthors = state.coauthors;
                   return compactFlatten([
                     {
                       action: EditCommitMessage,

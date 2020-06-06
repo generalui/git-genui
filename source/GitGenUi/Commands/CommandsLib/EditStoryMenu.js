@@ -9,8 +9,7 @@ Caf.defMod(module, () => {
         return require("../../PromptFor").menu(
           story,
           merge(options, {
-            preprocessState: story =>
-              log.withOptions({ unquoted: true, color: true }, story),
+            preprocessState: story => log.unquoted(story),
             items: story => [
               {
                 action: story =>

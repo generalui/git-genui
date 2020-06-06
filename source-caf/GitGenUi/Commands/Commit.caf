@@ -36,7 +36,6 @@ options:
 run: (options) ->
   Promise.deepAll merge
     userConfig.commitOptionsForProject
-    {message, coauthors, type, storyId} = options
     {}
       status:     &Git.printStatus()
       stories:    ignoreRejections -> tracker.stories
@@ -59,17 +58,17 @@ run: (options) ->
       state
 
       preprocessState: (state) ->
-        if present message
+        if present state.message
           log "" Commit message preview:
           log "  " +
-            &colors.brightWhite getGitCommitMessage state
+            &colors.bold &colors.brightGreen getGitCommitMessage state
             .replace /\n/g, "\n  "
           log ''
 
         state
 
       items: (state) ->
-        state extract myAccount, message, story, members, statusSummary, status, type
+        state extract myAccount, message, story, members, statusSummary, status, type, coauthors
 
         compactFlatten []
           action: EditCommitMessage,  value: "" Edit message:           #{} presentValue message
