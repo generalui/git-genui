@@ -32,15 +32,20 @@ Caf.defMod(module, () => {
               ])
             )
             .then(([account, git]) => {
-              log({
-                [account.tracker]: Caf.object(
-                  objectWithout(account, "tracker", "kind"),
-                  (v, k) =>
-                    /^(created|updated)At$/.test(k) ? standardFormatDate(v) : v,
-                  (v, k) => !Caf.is(v, Array) && !Caf.is(v, Object)
-                ),
-                git
-              });
+              log.withOptions(
+                { unquoted: true, color: true },
+                {
+                  [account.tracker]: Caf.object(
+                    objectWithout(account, "tracker", "kind"),
+                    (v, k) =>
+                      /^(created|updated)At$/.test(k)
+                        ? standardFormatDate(v)
+                        : v,
+                    (v, k) => !Caf.is(v, Array) && !Caf.is(v, Object)
+                  ),
+                  git
+                }
+              );
               return null;
             });
         }

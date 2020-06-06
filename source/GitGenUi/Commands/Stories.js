@@ -2,49 +2,28 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["ensureTrackerConfigured", "log", "SelectStoryState"],
+    ["ensureTrackerConfigured", "EditStoryMenu"],
     [global, require("./StandardImport"), require("./CommandsLib")],
-    (ensureTrackerConfigured, log, SelectStoryState) => {
+    (ensureTrackerConfigured, EditStoryMenu) => {
       return {
         description: "list all open stories",
         run: function(options) {
           return ensureTrackerConfigured()
             .then(() => require("../Tracker").tracker.stories)
-            .then(stories =>
-              require("../GitGenUiPromptFor")
-                .story(stories, "Select a story to update:")
-                .then(story => {
-                  let id, url, name, estiamte, state;
-                  return story.id
-                    ? (log({
-                        story:
-                          (({ id, url, name, estiamte, state } = story),
-                          { id, url, name, estiamte, state })
-                      }),
-                      SelectStoryState({ story }).then(({ storyState }) => {
-                        let temp;
-                        return storyState !== story.state
-                          ? (log(
-                              require("colors").green(
-                                `Updating story state ${Caf.toString(
-                                  story.state
-                                )} => ${Caf.toString(storyState)}...`
-                              )
-                            ),
-                            require("../Tracker")
-                              .tracker.updateStory(story.id, {
-                                state: storyState,
-                                estimate:
-                                  (temp = story.estimate) != null ? temp : 1
-                              })
-                              .then(() =>
-                                log(require("colors").green("Success."))
-                              ))
-                          : log("No changes.");
-                      }))
-                    : undefined;
-                })
-            )
+            .then(stories => {
+              let prompt;
+              prompt = () =>
+                require("../GitGenUiPromptFor")
+                  .story(stories, "Select a story to update:")
+                  .then(story =>
+                    story.id
+                      ? EditStoryMenu(story, {
+                          exitPrompt: "back to stories"
+                        }).then(prompt)
+                      : undefined
+                  );
+              return prompt();
+            })
             .then(() => null);
         }
       };

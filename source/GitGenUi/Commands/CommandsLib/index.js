@@ -9,6 +9,7 @@
   ConfigureMenu:      require('./ConfigureMenu'),
   EditCommitMessage:  require('./EditCommitMessage'),
   EditGitStage:       require('./EditGitStage'),
+  EditStoryMenu:      require('./EditStoryMenu'),
   FillInMissingState: require('./fillInMissingState'),
   Lib:                require('./Lib'),
   SelectCoauthors:    require('./SelectCoauthors'),

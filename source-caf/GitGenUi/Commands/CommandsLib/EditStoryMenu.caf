@@ -1,0 +1,26 @@
+import &StandardImport
+
+(story, options) ->
+  &PromptFor.menu
+    story
+    merge
+      options
+      preprocessState: (story) -> log.withOptions
+        unquoted: true
+        color:    true
+        story
+
+      items: (story) -> []
+        action: (story) ->
+          &SelectStoryState {} story
+          .tap ({storyState}) ->
+            if storyState != story.state
+              log &colors.green "" Updating story state #{story.state} => #{storyState}...
+              &Tracker.tracker.updateStory story.id, state: storyState, estimate: story.estimate ? 1
+              .then ->
+                log &colors.green "" Success.
+            else
+              log "" No changes.
+          .then ({storyState}) -> merge story, state: storyState
+
+        value: "" state: #{} story.state

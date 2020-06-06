@@ -5,19 +5,13 @@ run: (options) ->
   ensureTrackerConfigured()
   .then -> &Tracker.tracker.stories
   .then (stories) ->
-    &GitGenUiPromptFor.story stories, "" Select a story to update:
-    .then (story) ->
-      if story.id
-        log story: {id, url, name, estiamte, state} = story
-        SelectStoryState {} story
-        .then ({storyState}) ->
-          if storyState != story.state
-            log &colors.green "" Updating story state #{story.state} => #{storyState}...
-            &Tracker.tracker.updateStory story.id, state: storyState, estimate: story.estimate ? 1
-            .then ->
-              log &colors.green "" Success.
-          else
-            log "" No changes.
+    prompt = ->
+      &GitGenUiPromptFor.story stories, "" Select a story to update:
+      .then (story) ->
+        if story.id
+          EditStoryMenu story, exitPrompt: "back to stories"
+          .then prompt
+    prompt()
 
   .then -> null
 

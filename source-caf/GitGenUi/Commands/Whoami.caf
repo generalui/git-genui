@@ -9,10 +9,13 @@ run: (options) ->
     &Git.getGitConfig()
 
   .then ([account, git]) ->
-    log {}
-      [account.tracker]: object v, k from objectWithout account, :tracker, :kind when !(v is Array) && !(v is Object)
-        if /^(created|updated)At$/.test k
-          standardFormatDate v
-        else v
-      git
+    log.withOptions
+      unquoted: true
+      color: true
+      {}
+        [account.tracker]: object v, k from objectWithout account, :tracker, :kind when !(v is Array) && !(v is Object)
+          if /^(created|updated)At$/.test k
+            standardFormatDate v
+          else v
+        git
     null
