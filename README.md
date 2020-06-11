@@ -24,7 +24,6 @@ npx git-genui help
 ```
 
 
-
 > Note: npx effectively installs git-genui every time in a temporary location. It's easy to use, but a little slow. You can speed things up by installing git-genui yourself. See below.
 
 
