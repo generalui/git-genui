@@ -5,7 +5,7 @@
 
 git-genui's goal is to streamline developer workflow for:
 
-* updating tracker stories
+* tracking and updating issue-tracker (currently only PivotalTracker)
 * tracking semantic changes
 * tracking coauthors
 
