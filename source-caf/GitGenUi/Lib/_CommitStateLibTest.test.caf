@@ -1,0 +1,18 @@
+import &CommitStateLib
+
+test 'getCommitComment' ->
+  expect getCommitComment {}
+  .toMatch
+    /// git-genui .* v \d+\. \d+\. \d+
+
+test 'getCommitComment' ->
+  expect getCommitComment {}
+    generatedCommitMessage = "my-commit-message"
+    storyState =             "finished"
+    branch =                 "feature/fun"
+    commit =                 "abc123"
+    coauthors =              "William"
+
+  .toMatch
+    /// #{storyState} (.|\n)* #{commit} (.|\n)* #{generatedCommitMessage} (.|\n)* git-genui (.|\n)* v \d+\. \d+\. \d+
+
