@@ -224,7 +224,11 @@ Caf.defMod(module, () => {
                       ).join(", ")
                     },
                     present(message)
-                      ? { action: CommitNow, value: "Commit now" }
+                      ? {
+                          action: CommitNow,
+                          value: "Commit and exit",
+                          exit: true
+                        }
                       : undefined
                   ]);
                 },

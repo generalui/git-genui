@@ -90,7 +90,10 @@ run: (options) ->
               &colors[statusColors[statusCat]] "" #{status[statusCat].length} #{statusCat}
             .join ', '
 
-          if present message then action: CommitNow,          value: "" Commit now
+          if present message
+            action: CommitNow
+            value:  "" Commit and exit
+            exit:   true
 
       postprocessState: saveState
 
