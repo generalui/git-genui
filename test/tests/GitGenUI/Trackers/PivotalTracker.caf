@@ -17,12 +17,9 @@ suite: ->
       .then (results) ->
         assert.isArray results
         assert.gt results.length, 0
-        assert.eq
-          Object.keys results[0]
-          .sort()
-          []
+        keys = Object.keys results[0]
+        each key in expectedKeys = []
             :createdAt
-            :estimate
             :id
             :name
             :ownerIds
@@ -30,6 +27,14 @@ suite: ->
             :state
             :updatedAt
             :url
+
+          unless key in keys
+            assert.fail """
+              expected to find key #{key} in every story:
+
+              expected at least these keys: #{} expectedKeys.join ', '
+              actual story:
+              #{} formattedInspect results[0]
 
     :getMembers (project) ->
       PivotalTracker.getMembers project.id

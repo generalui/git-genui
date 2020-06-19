@@ -7,9 +7,17 @@ import &StandardImport, &UserConfig
       log.warn message
       undefined
 
-  updateStateWithPrompt = (statePropName, promptF) ->
+  ##
+    IN: statePropName, options, promptFunctionunction
+    IN: statePropName, promptFunctionunction
+  updateStateWithPrompt = (statePropName, a, b) ->
+    promptFunction = if b?
+      options = a
+      b
+    else a
+
     (state) ->
-      Promise.then -> promptF state
+      Promise.then -> promptFunction state, options
       .then (value) ->
         if value == undefined then state[statePropName]
         else value

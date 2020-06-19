@@ -1,0 +1,23 @@
+import &StandardImport
+
+&Tracker.tracker extract formatStory
+
+selectStory = (state) =>
+  state extract stories, prompt, story
+  Promise.then ->
+    &PromptFor.selectList
+      prompt: prompt ? "" Select a story...
+      default: if story then {} story
+      items: compactFlatten []
+        value: "(new)" story: :new
+        array story from stories
+          {} story, value: formatStory story
+        value: "(none)" story: {}
+
+    .then ({story}) ->
+      if story == :new
+        log "create story"
+        selectStory state
+
+      else
+        story

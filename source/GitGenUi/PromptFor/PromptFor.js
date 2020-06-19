@@ -12,6 +12,10 @@ Caf.defMod(module, () => {
       "isString",
       "autocompleteFromStrings",
       "Array",
+      "max",
+      "blue",
+      "pad",
+      "green",
       "compactFlatten",
       "Function"
     ],
@@ -19,7 +23,8 @@ Caf.defMod(module, () => {
       global,
       require("art-standard-lib"),
       require("art-class-system"),
-      require("../Lib")
+      require("../Lib"),
+      require("colors")
     ],
     (
       present,
@@ -31,6 +36,10 @@ Caf.defMod(module, () => {
       isString,
       autocompleteFromStrings,
       Array,
+      max,
+      blue,
+      pad,
+      green,
       compactFlatten,
       Function
     ) => {
@@ -174,13 +183,27 @@ Caf.defMod(module, () => {
           return inquire(merge({ type: "password" }, options));
         };
         numberValues = function(list) {
-          return Caf.array(list, (item, index) =>
-            merge(item, {
-              value: /^\w+\.\s/.test(item.value)
-                ? item.value
-                : `${Caf.toString(index + 1)}. ${Caf.toString(item.value)}`
-            })
+          let maxLabel;
+          maxLabel = Caf.reduce(
+            list,
+            (m, { label = "" }) => (m = max(m, label.length)),
+            null,
+            0
           );
+          return Caf.array(list, (item, index) => {
+            let shortcut, value, label;
+            shortcut = item.shortcut;
+            value = item.value;
+            label = item.label;
+            if (present(label)) {
+              value = blue(pad(label + ":", maxLabel + 2)) + green(value);
+            }
+            return merge(item, {
+              value: `${Caf.toString(
+                shortcut != null ? shortcut : index + 1
+              )}. ${Caf.toString(value)}`
+            });
+          });
         };
         this.menu = (state, options) => {
           let preprocessState,
@@ -205,7 +228,11 @@ Caf.defMod(module, () => {
                   items: numberValues(
                     compactFlatten([
                       Caf.is(items, Function) ? items(state) : items,
-                      { key: "exit", value: `0. ${Caf.toString(exitPrompt)}` }
+                      {
+                        key: "exit",
+                        value: `${Caf.toString(exitPrompt)}`,
+                        shortcut: "0"
+                      }
                     ])
                   )
                 })

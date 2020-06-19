@@ -1,0 +1,21 @@
+import &StandardImport
+
+(state, {prompt, selectedMemberIds = []}) ->
+  myId = state.myAccount?.id
+
+  if state.members?.length > 0
+    &PromptFor.selectList
+      multiselect: true
+      prompt:  prompt ? "" Select members:
+      items:
+        array {email, name, id} in state.members
+          {}
+            id
+            selected: id in selectedMemberIds
+            value:    "" #{name} <#{email}> #{} if id == myId then " (me)"
+
+    .then (items) ->
+      array {id} in items with id
+
+  else
+    selectedMemberIds

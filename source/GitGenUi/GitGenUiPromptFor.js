@@ -16,6 +16,7 @@ Caf.defMod(module, () => {
                     prompt: prompt != null ? prompt : "Select a story...",
                     default: defaultStory ? { story: defaultStory } : undefined,
                     items: compactFlatten([
+                      { value: "(new)", story: {} },
                       Caf.array(stories, story => {
                         return { story, value: formatStory(story) };
                       }),

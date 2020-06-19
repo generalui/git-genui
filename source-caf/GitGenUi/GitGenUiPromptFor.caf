@@ -8,6 +8,7 @@ story: (stories, prompt, defaultStory) =>
       prompt: prompt ? "" Select a story...
       default: if defaultStory then story: defaultStory
       items: compactFlatten []
+        value: "(new)" story: {}
         array story from stories
           {} story, value: formatStory story
         value: "(none)" story: {}

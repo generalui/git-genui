@@ -3,13 +3,16 @@ import &StandardImport, &CommandsLib
 description: "" list all open stories
 run: (options) ->
   ensureTrackerConfigured()
-  .then -> &Tracker.tracker.stories
-  .then (stories) ->
+  .then -> Promise.all []
+    &Tracker.tracker.stories
+    &Tracker.tracker.project
+    &Tracker.tracker.members
+  .then ([stories, project, members]) ->
     prompt = ->
-      &GitGenUiPromptFor.story stories, "" Select a story to update:
+      SelectStory {} stories, project, members, prompt: "" Select a story to update:
       .then (story) ->
         if story.id
-          EditStoryMenu story, exitPrompt: "back to stories"
+          EditStoryMenu {story, project, members}, exitPrompt: "back to stories"
           .then prompt
     prompt()
 

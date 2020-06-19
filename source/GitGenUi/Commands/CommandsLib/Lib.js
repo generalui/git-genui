@@ -47,10 +47,13 @@ Caf.defMod(module, () => {
         }),
         updateStateWithPrompt: (updateStateWithPrompt = function(
           statePropName,
-          promptF
+          a,
+          b
         ) {
+          let promptFunction, options;
+          promptFunction = b != null ? ((options = a), b) : a;
           return state =>
-            Promise.then(() => promptF(state))
+            Promise.then(() => promptFunction(state, options))
               .then(value =>
                 value === undefined ? state[statePropName] : value
               )

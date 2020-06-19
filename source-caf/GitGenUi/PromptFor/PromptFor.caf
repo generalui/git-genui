@@ -1,4 +1,4 @@
-import &ArtStandardLib, &ArtClassSystem, &Lib
+import &ArtStandardLib, &ArtClassSystem, &Lib, &colors
 
 &inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
 &inquirer.registerPrompt :checkbox-plus &inquirer-checkbox-plus-prompt
@@ -108,13 +108,17 @@ class Core
       options
 
   numberValues = (list) ->
+    maxLabel = reduce m, {label = ''} from list inject 0 with m = max m, label.length
     array item, index in list
+      item extract shortcut, value, label
+      if present label
+        value =
+          blue pad label + ":", maxLabel + 2
+          + green value
+
       merge item,
         value:
-          if /^\w+\.\s/.test item.value
-            item.value
-          else
-            "" #{index + 1}. #{} item.value
+          "" #{shortcut ? index + 1}. #{} value
 
   @menu: (state, options) =>
     options extract
@@ -129,7 +133,9 @@ class Core
       @selectList merge options,
         items: numberValues compactFlatten []
           if items is Function then items state else items
-          key: :exit                 value: "" 0. #{} exitPrompt
+          key: :exit
+          value: "" #{} exitPrompt
+          shortcut: :0
 
       .then ({action, key}) -> unless key == :exit
         Promise

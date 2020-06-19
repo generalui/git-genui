@@ -105,6 +105,7 @@ Caf.defMod(module, () => {
               stories: ignoreRejections(() => tracker.stories),
               members: ignoreRejections(() => tracker.members),
               myAccount: ignoreRejections(() => tracker.myAccount),
+              project: ignoreRejections(() => tracker.project),
               options
             })
           )

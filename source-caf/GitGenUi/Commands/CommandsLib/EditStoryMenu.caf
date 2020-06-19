@@ -1,23 +1,61 @@
 import &StandardImport
 
-(story, options) ->
+(state, options) ->
+  state extract story, project, members
   &PromptFor.menu
     story
     merge
       options
-      preprocessState: (story) -> log.unquoted story
+      preprocessState: (story) ->
+        log.unquoted object v, k in story when k.match /At$/
+          formatDate v
+        story
 
       items: (story) -> []
-        action: (story) ->
-          &SelectStoryState {} story
-          .tap ({storyState}) ->
-            if storyState != story.state
-              log &colors.green "" Updating story state #{story.state} => #{storyState}...
-              &Tracker.tracker.updateStory story.id, state: storyState, estimate: story.estimate ? 1
-              .then ->
-                log &colors.green "" Success.
-            else
-              log "" No changes.
-          .then ({storyState}) -> merge story, state: storyState
+        {}
+          action: (story) -> story
+          label: :name
+          value: story.name
 
-        value: "" state: #{} story.state
+        {}
+          action: (story) ->
+            &SelectStoryState {} story
+            .then ({storyState}) ->
+              if storyState != story.state
+                log &colors.green "" Updating story state #{story.state} => #{storyState}...
+                &Tracker.tracker.updateStory story.id, state: storyState, estimate: story.estimate ? 1
+                .tap -> log &colors.green "" Success.
+
+              else
+                log "" No changes.
+                story
+
+          label: :state
+          value: story.state
+
+        {}
+          action: (story) -> story
+          label: :estimate
+          value: story.estimate
+
+        {}
+          action: (story) ->
+            &SelectMembers
+              state
+              selectedMemberIds: story.ownerIds
+              prompt: "" Select owners:
+            .then (ownerIds) ->
+              if neq ownerIds.sort(), story.ownerIds.sort()
+                &Tracker.tracker.updateStory story.id, owner_ids: ownerIds
+
+              else story
+
+          label: :owners
+          value:
+            if story.ownerIds.length > 0
+              array id in story.ownerIds
+                find member in members when member.id == id
+                ?.name
+
+              .join ', '
+            else "" (none)

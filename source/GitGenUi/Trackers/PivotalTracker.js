@@ -11,7 +11,9 @@ Caf.defMod(module, () => {
       "merge",
       "putJson",
       "postJson",
-      "lowerCamelCase"
+      "lowerCamelCase",
+      "snakeCase",
+      "Date"
     ],
     [
       global,
@@ -29,7 +31,9 @@ Caf.defMod(module, () => {
       merge,
       putJson,
       postJson,
-      lowerCamelCase
+      lowerCamelCase,
+      snakeCase,
+      Date
     ) => {
       let PivotalTracker;
       return (PivotalTracker = Caf.defClass(
@@ -133,7 +137,9 @@ Caf.defMod(module, () => {
               );
           };
           this.getProject = projectId =>
-            getJson(this.getProjectUrl(projectId), this.commonRestOptions);
+            getJson(this.getProjectUrl(projectId), this.commonRestOptions).then(
+              this._normalizeResponse
+            );
           this.getMembers = projectId =>
             getJson(
               `${Caf.toString(this.getProjectUrl(projectId))}/memberships`,
@@ -200,13 +206,18 @@ Caf.defMod(module, () => {
                 throw new Error(`invalid state: ${Caf.toString(state)}`);
               }
             }
+            if (updates.state) {
+              updates = Caf.object(updates, null, null, null, (v, k) =>
+                k === "state" ? "current_state" : k
+              );
+            }
             return putJson(
               `${Caf.toString(
                 this.getProjectUrl(projectId)
               )}/stories/${Caf.toString(storyId)}`,
-              merge({ estimate, current_state: state }),
+              this._snakeCaseKeys(updates),
               this.commonRestOptions
-            );
+            ).then(this._normalizeStory);
           };
           this.createComment = function(projectId, storyId, text) {
             return postJson(
@@ -217,45 +228,34 @@ Caf.defMod(module, () => {
               this.commonRestOptions
             );
           };
-          this._normalizeStory = function(story) {
-            let id,
-              requested_by_id,
-              current_state,
-              story_type,
-              name,
-              updated_at,
-              created_at,
-              url,
-              owner_ids,
-              estimate;
-            id = story.id;
-            requested_by_id = story.requested_by_id;
-            current_state = story.current_state;
-            story_type = story.story_type;
-            name = story.name;
-            updated_at = story.updated_at;
-            created_at = story.created_at;
-            url = story.url;
-            owner_ids = story.owner_ids;
-            estimate = story.estimate;
-            return {
-              id,
-              url,
-              name,
-              estimate,
-              requestedById: requested_by_id,
-              ownerIds: owner_ids,
-              state: current_state,
-              updatedAt: updated_at,
-              createdAt: created_at
-            };
-          };
+          this._normalizeStory = story =>
+            this._normalizeResponse(
+              Caf.object(story, null, null, null, (v, k) =>
+                k === "current_state" ? "state" : k
+              )
+            );
           this._normalizeAccount = function(account) {
             return merge(
               Caf.object(account, null, null, null, (v, k) =>
                 k === "api_token" ? "token" : lowerCamelCase(k)
               ),
               { tracker: "PivotalTracker" }
+            );
+          };
+          this._snakeCaseKeys = function(data) {
+            return Caf.object(data, null, null, null, (v, k) => snakeCase(k));
+          };
+          this._normalizeResponse = function(data) {
+            return Caf.object(
+              data,
+              (v, k) =>
+                Caf.isF(v.match) &&
+                v.match(/^\d\d\d\d-\d\d-\d\d[A-Z]\d\d:\d\d:\d\d[A-Z]/)
+                  ? Date.parse(v)
+                  : v,
+              null,
+              null,
+              (v, k) => lowerCamelCase(k)
             );
           };
         }

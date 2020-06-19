@@ -60,7 +60,9 @@ class PivotalTracker extends BaseClass
         if aStatus != bStatus then aStatus - bStatus
         else b.updatedAt - a.updatedAt
 
-  @getProject: (projectId) => getJson (@getProjectUrl projectId), @commonRestOptions
+  @getProject: (projectId) =>
+    getJson (@getProjectUrl projectId), @commonRestOptions
+    .then @_normalizeResponse
 
   @getMembers: (projectId) =>
     getJson "#{@getProjectUrl projectId}/memberships" @commonRestOptions
@@ -100,14 +102,17 @@ class PivotalTracker extends BaseClass
     if state
       throw new Error "invalid state: #{state}" unless state == "finished" or state == "started"
 
+    if updates.state
+      updates = object v, k in updates with-key if k == :state then :current_state else k
+
     putJson
       "" #{@getProjectUrl projectId}/stories/#{storyId}
 
-      merge {}
-        estimate
-        current_state: state
+      @_snakeCaseKeys updates
 
       @commonRestOptions
+
+    .then @_normalizeStory
 
   @createComment: (projectId, storyId, text) ->
     postJson
@@ -118,20 +123,8 @@ class PivotalTracker extends BaseClass
   #####################################
     PRIVATE
   #####################################
-  @_normalizeStory: (story) ->
-    story extract
-      id, requested_by_id, current_state, story_type, name, updated_at, created_at, url, owner_ids
-      estimate
-    {}
-      id
-      url
-      name
-      estimate
-      requestedById: requested_by_id
-      ownerIds: owner_ids
-      state: current_state
-      updatedAt: updated_at
-      createdAt: created_at
+  @_normalizeStory: (story) =>
+    @_normalizeResponse object v, k in story with-key if k == :current_state then :state else k
 
   @_normalizeAccount: (account) ->
     merge
@@ -140,3 +133,12 @@ class PivotalTracker extends BaseClass
           :token
         else lowerCamelCase k
       tracker: :PivotalTracker
+
+  @_snakeCaseKeys: (data) ->
+    object v, k in data with-key snakeCase k
+
+  @_normalizeResponse: (data) ->
+    object v, k in data with-key lowerCamelCase k
+      if v.match? /^\d\d\d\d-\d\d-\d\d[A-Z]\d\d:\d\d:\d\d[A-Z]/
+        Date.parse v # e.g. 2020-03-02T08:00:00Z
+      else v

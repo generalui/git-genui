@@ -2,26 +2,36 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["ensureTrackerConfigured", "EditStoryMenu"],
+    ["ensureTrackerConfigured", "Promise", "SelectStory", "EditStoryMenu"],
     [global, require("./StandardImport"), require("./CommandsLib")],
-    (ensureTrackerConfigured, EditStoryMenu) => {
+    (ensureTrackerConfigured, Promise, SelectStory, EditStoryMenu) => {
       return {
         description: "list all open stories",
         run: function(options) {
           return ensureTrackerConfigured()
-            .then(() => require("../Tracker").tracker.stories)
-            .then(stories => {
+            .then(() =>
+              Promise.all([
+                require("../Tracker").tracker.stories,
+                require("../Tracker").tracker.project,
+                require("../Tracker").tracker.members
+              ])
+            )
+            .then(([stories, project, members]) => {
               let prompt;
               prompt = () =>
-                require("../GitGenUiPromptFor")
-                  .story(stories, "Select a story to update:")
-                  .then(story =>
-                    story.id
-                      ? EditStoryMenu(story, {
-                          exitPrompt: "back to stories"
-                        }).then(prompt)
-                      : undefined
-                  );
+                SelectStory({
+                  stories,
+                  project,
+                  members,
+                  prompt: "Select a story to update:"
+                }).then(story =>
+                  story.id
+                    ? EditStoryMenu(
+                        { story, project, members },
+                        { exitPrompt: "back to stories" }
+                      ).then(prompt)
+                    : undefined
+                );
               return prompt();
             })
             .then(() => null);
