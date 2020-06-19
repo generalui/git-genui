@@ -1,27 +1,27 @@
 import &StandardImport, &colors
 
 applyActions = (input, actionList, actions, options) ->
-    resultPromise = Promise.then -> input
-    each actionName, index from actionList
-      resultPromise =
-        resultPromise
-        .then (previousResult) ->
-          Promise.then ->
-            unless action = actions[actionName]
-              throw new Error "No action named #{actionName}"
+  resultPromise = Promise.then -> input
+  each actionName, index from actionList
+    resultPromise =
+      resultPromise
+      .then (previousResult) ->
+        Promise.then ->
+          unless action = actions[actionName]
+            throw new Error "No action named #{actionName}"
 
-            log "apply action: #{actionName}" unless options?.quiet
-            action previousResult
+          log grey "apply action: #{actionName}" unless options?.quiet
+          action previousResult
 
-          .catch (error) ->
-            unless options?.quiet
-              log.error {}
-                message:
-                  """
-                    Error in action #{actionName} (order = #{index} / #{actionList.length})
+        .catch (error) ->
+          unless options?.quiet
+            log.error {}
+              message:
+                """
+                  Error in action #{actionName} (order = #{index} / #{actionList.length})
 
-                error
+              error
 
-            previousResult
+          previousResult
 
-    resultPromise
+  resultPromise

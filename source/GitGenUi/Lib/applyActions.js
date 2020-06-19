@@ -2,9 +2,9 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "Error", "log"],
+    ["Promise", "Error", "log", "grey"],
     [global, require("./StandardImport"), require("colors")],
-    (Promise, Error, log) => {
+    (Promise, Error, log, grey) => {
       let applyActions;
       return (applyActions = function(input, actionList, actions, options) {
         let resultPromise;
@@ -21,7 +21,7 @@ Caf.defMod(module, () => {
                   );
                 }
                 if (!(Caf.exists(options) && options.quiet)) {
-                  log(`apply action: ${Caf.toString(actionName)}`);
+                  log(grey(`apply action: ${Caf.toString(actionName)}`));
                 }
                 return action(previousResult);
               }).catch(error => {

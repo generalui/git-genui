@@ -5,7 +5,9 @@ import &StandardImport, &colors
     &Tracker.tracker.createCommentWithMessage
       story.id
       getCommitComment state
+
   else
     log grey "" skip: AddStoryComment (no story)
+    Promise.resolve()
 
-  state
+  .then -> state
