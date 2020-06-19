@@ -12,6 +12,7 @@ npm: (currentJson) -> merge currentJson,
 
   scripts: {}
     currentJson.scripts.test
+    test: "" nn -s;mocha -u tdd;jest
     build: "" caf -p -c source-caf -o source;nn -s
     build-test: "" npm run build; npm run test --silent; echo
     watch: "" watch 'npm run build' ./source-caf

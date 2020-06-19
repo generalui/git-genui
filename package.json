@@ -14,7 +14,7 @@
     "inquirer": "^7.1.0",
     "inquirer-autocomplete-prompt": "^1.0.2",
     "inquirer-checkbox-plus-prompt": "^1.0.1",
-    "neptune-namespaces-runtime": "^3.2.0",
+    "neptune-namespaces-runtime": "^3.0.0",
     "open": "^7.0.3",
     "pivotaljs": "^1.0.3",
     "simple-git": "^2.5.0",
@@ -22,8 +22,8 @@
   },
   "description": "git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning",
   "devDependencies": {
-    "art-build-configurator": "^1.26.11",
-    "art-testbench": "^1.17.4",
+    "art-build-configurator": "^1.26.9",
+    "art-testbench": "^1.17.2",
     "caffeine-script": "^0.72.1",
     "case-sensitive-paths-webpack-plugin": "^2.2.0",
     "chai": "^4.2.0",
@@ -33,7 +33,7 @@
     "json-loader": "^0.5.7",
     "mocha": "^7.1.1",
     "mock-fs": "^4.11.0",
-    "neptune-namespaces": "^4.2.0",
+    "neptune-namespaces": "^4.0.0",
     "script-loader": "^0.7.2",
     "style-loader": "^1.0.0",
     "watch": "^1.0.2",
@@ -57,7 +57,7 @@
   "scripts": {
     "build": "caf -p -c source-caf -o source;nn -s",
     "build-test": "npm run build; npm run test --silent; echo",
-    "test": "nn -s;mocha -u tdd",
+    "test": "nn -s;mocha -u tdd;jest",
     "watch": "watch 'npm run build' ./source-caf",
     "watch-test": "watch 'npm run build-test' ./source-caf ./test"
   },

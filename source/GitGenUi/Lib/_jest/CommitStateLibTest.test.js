@@ -3,7 +3,7 @@ let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["test", "expect", "getCommitComment"],
-    [global, require("./CommitStateLib")],
+    [global, require("../CommitStateLib")],
     (test, expect, getCommitComment) => {
       test("getCommitComment", function() {
         return expect(getCommitComment({})).toMatch(

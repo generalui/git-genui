@@ -1,6 +1,6 @@
 import &StandardImport, &Widgets
 
-description: "" add (stage) or remove (unstage) files to commit
+description: "" stage or unstage files to commit
 run: (options) ->
   log
     """

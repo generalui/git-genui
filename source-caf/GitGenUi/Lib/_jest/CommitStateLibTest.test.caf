@@ -14,5 +14,12 @@ test 'getCommitComment' ->
     coauthors =              "William"
 
   .toMatch
-    /// #{storyState} (.|\n)* #{commit} (.|\n)* #{generatedCommitMessage} (.|\n)* git-genui (.|\n)* v \d+\. \d+\. \d+
+    ///
+      #{storyState}
+      (.|\n)*
+      #{commit}
+      (.|\n)* #{generatedCommitMessage}
+      (.|\n)*
+      git-genui
+      (.|\n)* v \d+\. \d+\. \d+
 

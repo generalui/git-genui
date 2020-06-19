@@ -6,7 +6,7 @@ Caf.defMod(module, () => {
     [global, require("./StandardImport"), require("../Widgets")],
     (log, InteractiveAdd) => {
       return {
-        description: "add (stage) or remove (unstage) files to commit",
+        description: "stage or unstage files to commit",
         run: function(options) {
           log(
             `Tip: You can also stage files with ${Caf.toString(

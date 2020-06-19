@@ -42,7 +42,7 @@ Caf.defMod(module, () => {
                   "patch/whitespace:  code formatting / non-functional change"
               },
               { value: "minor/feature:     new feature added or extended" },
-              { value: "minor/depricate:   feature depricated" },
+              { value: "minor/deprecate:   feature deprecated" },
               { value: "major/change:      breaking feature change" },
               { value: "major/removal:     breaking feature removal" }
             ],
