@@ -1,7 +1,18 @@
 import &StandardImport
 
+conditionalUpdate = (story, updates) ->
+  if !story.newStory && find v, k in updates when neq story[k], v
+    &Tracker.tracker.updateStory story.id, updates
+
+  else Promise.resolve merge story, updates
+
 (state, options) ->
   state extract story, project, members
+  if story extract ownerIds extract? length > 0
+    story = merge story, ownerIds: ownerIds.sort()
+
+  log EditStoryMenu: story
+
   &PromptFor.menu
     story
     merge
@@ -15,11 +26,7 @@ import &StandardImport
         {}
           action: (story) ->
             &EditStoryName merge state, {} story
-            .then (name) ->
-              if name != story.name
-                &Tracker.tracker.updateStory story.id, {} name
-
-              else story
+            .then (name) -> conditionalUpdate story, {} name
 
           label: :name
           value: story.name
@@ -27,11 +34,7 @@ import &StandardImport
         {}
           action: (story) ->
             &SelectStoryState merge state, {} story
-            .then (storyState) ->
-              if storyState != story.state
-                &Tracker.tracker.updateStory story.id, state: storyState, estimate: story.estimate ? 1
-
-              else story
+            .then (storyState) -> conditionalUpdate story, state: storyState, estimate: story.estimate ? 1
 
           label: :state
           value: story.state
@@ -39,11 +42,7 @@ import &StandardImport
         {}
           action: (story) ->
             &SelectStoryEstimate merge state, {} story
-            .then (estimate) ->
-              if estimate != story.estimate
-                &Tracker.tracker.updateStory story.id, {} estimate
-
-              else story
+            .then (estimate) -> conditionalUpdate story, {} estimate
 
           label: :estimate
           value: story.estimate ? :-
@@ -52,20 +51,26 @@ import &StandardImport
           action: (story) ->
             &SelectMembers
               merge state, {} story
-              selectedMemberIds: story.ownerIds
+              selectedMemberIds: story.ownerIds ? []
               prompt: "" Select owners:
-            .then (ownerIds) ->
-              if neq ownerIds.sort(), story.ownerIds.sort()
-                &Tracker.tracker.updateStory story.id, {} ownerIds
 
-              else story
+            .then (ownerIds) -> ownerIds.sort()
+            .then (ownerIds) -> conditionalUpdate story, {} ownerIds
 
           label: :owners
           value:
-            if story.ownerIds.length > 0
+            if story.ownerIds?.length > 0
               array id in story.ownerIds
                 find member in members when member.id == id
                 ?.name
 
               .join ', '
             else "" (none)
+
+        if story.newStory && present story.name
+          action: (story) ->
+            &Tracker.tracker.createStory objectWithout story, :newStory
+            .then (story) -> merge story, newStory: true # signals not to immeidately edit it after we created it
+          value: "" save and exit
+          shortcut: :9
+          exit: true

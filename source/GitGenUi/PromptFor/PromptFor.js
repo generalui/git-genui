@@ -230,23 +230,24 @@ Caf.defMod(module, () => {
                     compactFlatten([
                       Caf.is(items, Function) ? items(state) : items,
                       {
-                        key: "exit",
+                        exit: true,
                         value: `${Caf.toString(exitPrompt)}`,
                         shortcut: "0"
                       }
                     ])
                   )
                 })
-              ).then(({ action, key }) =>
-                !(key === "exit")
-                  ? Promise.then(() => action(state)).then(newState =>
-                      newState
-                        ? Promise.resolve(newState)
-                            .then(postprocessState)
-                            .then(newState => this.menu(newState, options))
-                        : state
-                    )
-                  : state
+              ).then(({ action, exit }) =>
+                Promise.then(() => {
+                  let temp3;
+                  return (temp3 = Caf.isF(action) && action(state)) != null
+                    ? temp3
+                    : state;
+                })
+                  .then(postprocessState)
+                  .then(newState =>
+                    exit ? newState : this.menu(newState, options)
+                  )
               )
             );
         };

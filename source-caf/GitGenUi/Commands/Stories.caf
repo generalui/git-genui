@@ -9,13 +9,15 @@ run: (options) ->
     &Tracker.tracker.members
   .then ([stories, project, members]) ->
     prompt = ->
-      SelectStory {} stories, project, members, prompt: "" Select a story to update:
+      SelectStory {} stories, project, members, prompt: "" Select a story to edit:
       .then (story) ->
         if story.id
-          EditStoryMenu {story, project, members}, exitPrompt: "back to stories"
-          .tap (story) ->
-            stories = array s in stories
-              if s.id == story.id then story else s
+          unless story.newStory
+            EditStoryMenu {story, project, members}, exitPrompt: "back to stories"
+
+          .tap ->
+            &Tracker.tracker.stories
+            .then (s) -> stories = s
 
           .then prompt
     prompt()

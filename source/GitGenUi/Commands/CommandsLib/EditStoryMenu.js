@@ -2,14 +2,36 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["merge", "log", "formatDate", "neq"],
+    [
+      "Promise",
+      "merge",
+      "neq",
+      "log",
+      "formatDate",
+      "present",
+      "objectWithout"
+    ],
     [global, require("../StandardImport")],
-    (merge, log, formatDate, neq) => {
+    (Promise, merge, neq, log, formatDate, present, objectWithout) => {
+      let conditionalUpdate;
+      conditionalUpdate = function(story, updates) {
+        return !story.newStory &&
+          Caf.find(updates, null, (v, k) => neq(story[k], v))
+          ? require("../../Tracker").tracker.updateStory(story.id, updates)
+          : Promise.resolve(merge(story, updates));
+      };
       return function(state, options) {
-        let story, project, members;
+        let story, project, members, ownerIds, length;
         story = state.story;
         project = state.project;
         members = state.members;
+        if (
+          ((ownerIds = story.ownerIds),
+          Caf.exists(ownerIds) ? (length = ownerIds.length) : undefined) > 0
+        ) {
+          story = merge(story, { ownerIds: ownerIds.sort() });
+        }
+        log({ EditStoryMenu: story });
         return require("../../PromptFor").menu(
           story,
           merge(options, {
@@ -24,20 +46,13 @@ Caf.defMod(module, () => {
               return story;
             },
             items: story => {
-              let temp;
+              let temp, base;
               return [
                 {
                   action: story =>
                     require("./EditStoryName")(
                       merge(state, { story })
-                    ).then(name =>
-                      name !== story.name
-                        ? require("../../Tracker").tracker.updateStory(
-                            story.id,
-                            { name }
-                          )
-                        : story
-                    ),
+                    ).then(name => conditionalUpdate(story, { name })),
                   label: "name",
                   value: story.name
                 },
@@ -46,16 +61,10 @@ Caf.defMod(module, () => {
                     require("./SelectStoryState")(merge(state, { story })).then(
                       storyState => {
                         let temp1;
-                        return storyState !== story.state
-                          ? require("../../Tracker").tracker.updateStory(
-                              story.id,
-                              {
-                                state: storyState,
-                                estimate:
-                                  (temp1 = story.estimate) != null ? temp1 : 1
-                              }
-                            )
-                          : story;
+                        return conditionalUpdate(story, {
+                          state: storyState,
+                          estimate: (temp1 = story.estimate) != null ? temp1 : 1
+                        });
                       }
                     ),
                   label: "state",
@@ -65,47 +74,49 @@ Caf.defMod(module, () => {
                   action: story =>
                     require("./SelectStoryEstimate")(
                       merge(state, { story })
-                    ).then(estimate =>
-                      estimate !== story.estimate
-                        ? require("../../Tracker").tracker.updateStory(
-                            story.id,
-                            { estimate }
-                          )
-                        : story
-                    ),
+                    ).then(estimate => conditionalUpdate(story, { estimate })),
                   label: "estimate",
                   value: (temp = story.estimate) != null ? temp : "-"
                 },
                 {
-                  action: story =>
-                    require("./SelectMembers")(merge(state, { story }), {
-                      selectedMemberIds: story.ownerIds,
+                  action: story => {
+                    let temp1;
+                    return require("./SelectMembers")(merge(state, { story }), {
+                      selectedMemberIds:
+                        (temp1 = story.ownerIds) != null ? temp1 : [],
                       prompt: "Select owners:"
-                    }).then(ownerIds =>
-                      neq(ownerIds.sort(), story.ownerIds.sort())
-                        ? require("../../Tracker").tracker.updateStory(
-                            story.id,
-                            { ownerIds }
-                          )
-                        : story
-                    ),
+                    })
+                      .then(ownerIds => ownerIds.sort())
+                      .then(ownerIds => conditionalUpdate(story, { ownerIds }));
+                  },
                   label: "owners",
                   value:
-                    story.ownerIds.length > 0
+                    (Caf.exists((base = story.ownerIds)) && base.length) > 0
                       ? Caf.array(story.ownerIds, id => {
-                          let base;
+                          let base1;
                           return (
                             Caf.exists(
-                              (base = Caf.find(
+                              (base1 = Caf.find(
                                 members,
                                 null,
                                 member => member.id === id
                               ))
-                            ) && base.name
+                            ) && base1.name
                           );
                         }).join(", ")
                       : "(none)"
-                }
+                },
+                story.newStory && present(story.name)
+                  ? {
+                      action: story =>
+                        require("../../Tracker")
+                          .tracker.createStory(objectWithout(story, "newStory"))
+                          .then(story => merge(story, { newStory: true })),
+                      value: "save and exit",
+                      shortcut: "9",
+                      exit: true
+                    }
+                  : undefined
               ];
             }
           })

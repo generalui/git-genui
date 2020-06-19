@@ -94,29 +94,34 @@ class PivotalTracker extends BaseClass
   @storyIsStartable:  (story) -> story.state in :unstarted :rejected :unscheduled
   @storyIsFinishable: (story) -> story.state in [] :unstarted :rejected :unscheduled :started
 
+
+  #####################################
+    CREATE STORIES
+  #####################################
+  @createStory: (projectId, story) =>
+    postJson
+      @getStoryUrl projectId
+      @_denormalizeStory story
+      @commonRestOptions
+
+    .then @_normalizeStory
+    .tapCatch (error) -> log createStory: {} error
+    # .tap (story) -> log created: {} story
+
   #####################################
     UPDATE STORIES
   #####################################
-  @updateStory: (projectId, storyId, updates) ->
-    {state, estimate} = updates
-    if state
-      throw new Error "invalid state: #{state}" unless state == "finished" or state == "started"
-
-    if updates.state
-      updates = object v, k in updates with-key if k == :state then :current_state else k
-
+  @updateStory: (projectId, storyId, updates) =>
     putJson
-      "" #{@getProjectUrl projectId}/stories/#{storyId}
-
-      @_snakeCaseKeys updates
-
+      @getStoryUrl projectId, storyId
+      @_denormalizeStory updates
       @commonRestOptions
 
     .then @_normalizeStory
 
   @createComment: (projectId, storyId, text) ->
     postJson
-      "" #{@getProjectUrl projectId}/stories/#{storyId}/comments
+      "" #{@getStoryId projectId, storyId}/comments
       {} text
       @commonRestOptions
 
@@ -125,6 +130,10 @@ class PivotalTracker extends BaseClass
   #####################################
   @_normalizeStory: (story) =>
     @_normalizeResponse object v, k in story with-key if k == :current_state then :state else k
+
+  @_denormalizeStory: (story) =>
+    @_snakeCaseKeys object v, k in story with-key if k == :state then :current_state else k
+
 
   @_normalizeAccount: (account) ->
     merge

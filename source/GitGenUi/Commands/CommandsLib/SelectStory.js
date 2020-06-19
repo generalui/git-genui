@@ -2,9 +2,9 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "compactFlatten", "log"],
+    ["Promise", "compactFlatten", "merge"],
     [global, require("../StandardImport")],
-    (Promise, compactFlatten, log) => {
+    (Promise, compactFlatten, merge) => {
       let formatStory, selectStory;
       formatStory = require("../../Tracker").tracker.formatStory;
       return (selectStory = state => {
@@ -18,7 +18,10 @@ Caf.defMod(module, () => {
               prompt: prompt != null ? prompt : "Select a story...",
               default: story ? { story } : undefined,
               items: compactFlatten([
-                { value: "(new)", story: "new" },
+                {
+                  value: "(new)",
+                  story: { newStory: true, state: "unstarted", estimate: 1 }
+                },
                 Caf.array(stories, story => {
                   return { story, value: formatStory(story) };
                 }),
@@ -26,8 +29,8 @@ Caf.defMod(module, () => {
               ])
             })
             .then(({ story }) =>
-              story === "new"
-                ? (log("create story"), selectStory(state))
+              Caf.exists(story) && story.newStory
+                ? require("./EditStoryMenu")(merge(state, { story }))
                 : story
             )
         );

@@ -9,15 +9,14 @@ selectStory = (state) =>
       prompt: prompt ? "" Select a story...
       default: if story then {} story
       items: compactFlatten []
-        value: "(new)" story: :new
+        value: "(new)" story: newStory: true state: :unstarted estimate: 1
         array story from stories
           {} story, value: formatStory story
         value: "(none)" story: {}
 
     .then ({story}) ->
-      if story == :new
-        log "create story"
-        selectStory state
+      if story?.newStory
+        &EditStoryMenu merge state, {} story
 
       else
         story

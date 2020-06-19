@@ -105,6 +105,13 @@ Caf.defMod(module, () => {
               );
             }
           });
+          this.prototype.createStory = function(story) {
+            let base;
+            return (
+              Caf.exists((base = this.tracker)) &&
+              base.createStory(this.projectId, story)
+            );
+          };
           this.prototype.getStoryUrl = function(storyId) {
             let base;
             return (

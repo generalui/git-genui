@@ -9,8 +9,9 @@ Caf.defMod(module, () => {
       "Error",
       "getJson",
       "merge",
-      "putJson",
       "postJson",
+      "log",
+      "putJson",
       "lowerCamelCase",
       "snakeCase",
       "Date"
@@ -29,8 +30,9 @@ Caf.defMod(module, () => {
       Error,
       getJson,
       merge,
-      putJson,
       postJson,
+      log,
+      putJson,
       lowerCamelCase,
       snakeCase,
       Date
@@ -198,32 +200,23 @@ Caf.defMod(module, () => {
               "started"
             ]);
           };
-          this.updateStory = function(projectId, storyId, updates) {
-            let state, estimate;
-            ({ state, estimate } = updates);
-            if (state) {
-              if (!(state === "finished" || state === "started")) {
-                throw new Error(`invalid state: ${Caf.toString(state)}`);
-              }
-            }
-            if (updates.state) {
-              updates = Caf.object(updates, null, null, null, (v, k) =>
-                k === "state" ? "current_state" : k
-              );
-            }
-            return putJson(
-              `${Caf.toString(
-                this.getProjectUrl(projectId)
-              )}/stories/${Caf.toString(storyId)}`,
-              this._snakeCaseKeys(updates),
+          this.createStory = (projectId, story) =>
+            postJson(
+              this.getStoryUrl(projectId),
+              this._denormalizeStory(story),
+              this.commonRestOptions
+            )
+              .then(this._normalizeStory)
+              .tapCatch(error => log({ createStory: { error } }));
+          this.updateStory = (projectId, storyId, updates) =>
+            putJson(
+              this.getStoryUrl(projectId, storyId),
+              this._denormalizeStory(updates),
               this.commonRestOptions
             ).then(this._normalizeStory);
-          };
           this.createComment = function(projectId, storyId, text) {
             return postJson(
-              `${Caf.toString(
-                this.getProjectUrl(projectId)
-              )}/stories/${Caf.toString(storyId)}/comments`,
+              `${Caf.toString(this.getStoryId(projectId, storyId))}/comments`,
               { text },
               this.commonRestOptions
             );
@@ -232,6 +225,12 @@ Caf.defMod(module, () => {
             this._normalizeResponse(
               Caf.object(story, null, null, null, (v, k) =>
                 k === "current_state" ? "state" : k
+              )
+            );
+          this._denormalizeStory = story =>
+            this._snakeCaseKeys(
+              Caf.object(story, null, null, null, (v, k) =>
+                k === "state" ? "current_state" : k
               )
             );
           this._normalizeAccount = function(account) {

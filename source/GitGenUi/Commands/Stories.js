@@ -23,18 +23,20 @@ Caf.defMod(module, () => {
                   stories,
                   project,
                   members,
-                  prompt: "Select a story to update:"
+                  prompt: "Select a story to edit:"
                 }).then(story =>
                   story.id
-                    ? EditStoryMenu(
-                        { story, project, members },
-                        { exitPrompt: "back to stories" }
+                    ? (!story.newStory
+                        ? EditStoryMenu(
+                            { story, project, members },
+                            { exitPrompt: "back to stories" }
+                          )
+                        : undefined
                       )
-                        .tap(
-                          story =>
-                            (stories = Caf.array(stories, s =>
-                              s.id === story.id ? story : s
-                            ))
+                        .tap(() =>
+                          require("../Tracker").tracker.stories.then(
+                            s => (stories = s)
+                          )
                         )
                         .then(prompt)
                     : undefined
