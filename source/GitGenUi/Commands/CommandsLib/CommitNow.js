@@ -34,27 +34,31 @@ Caf.defMod(module, () => {
               require("../../PostCommitActions")
             )
           )
-          .then(({ branch, commit, summary, actionsApplied }) => {
-            let staged, base, base1;
+          .then(({ actionsApplied, result: { branch, commit, summary } }) => {
+            let staged, base, base1, base2;
             ({ staged } = state.status);
-            log({
-              "commit-success": {
-                summary: merge(
-                  { files: Caf.array(staged, ({ path }) => path) },
-                  Caf.object(summary, v => v | 0)
-                ),
-                message: getGitCommitMessage(state),
-                actionsApplied,
-                branch,
-                commit
-              }
-            });
-            if (Caf.exists((base = state.story)) && base.id) {
+            if (Caf.exists((base = state.options)) && base.verbose) {
+              log({
+                "commit-success": {
+                  summary: merge(
+                    { files: Caf.array(staged, ({ path }) => path) },
+                    Caf.object(summary, v => v | 0)
+                  ),
+                  message: getGitCommitMessage(state),
+                  actionsApplied,
+                  branch,
+                  commit
+                }
+              });
+            } else {
+              log({ commit });
+            }
+            if (Caf.exists((base1 = state.story)) && base1.id) {
               log(
                 `story: ${Caf.toString(
                   require("colors").green(
                     tracker.getStoryBrowserUrl(
-                      Caf.exists((base1 = state.story)) && base1.id
+                      Caf.exists((base2 = state.story)) && base2.id
                     )
                   )
                 )}`
