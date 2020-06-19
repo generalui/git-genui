@@ -64,24 +64,6 @@ import &StandardImport, &UserConfig
     getMyAccountOrNothing()
     .then (myAccount) -> &ConfigureMenu exitPrompt: :continue prompt: "Please configure your account." unless myAccount
 
-  colorizeValue = &colors.yellow
-  colorNotPresent = &colors.grey
-
-  presentValue = (value, noneValue = :none) ->
-    if present value
-      if (value is Array) and value[0] is String
-        array v in value
-          colorizeValue v
-        .join ', '
-
-      else if value is String
-        colorizeValue value
-
-      else
-        formattedInspect value, color: true
-    else
-      colorNotPresent noneValue
-
   validateType = (state) ->
     unless !present(state.type) || /^(patch|major|minor)\/\w+$/.test state.type
       log.warn "" Commit type should be of the form: [major, minor or patch]/short-word (you provided: #{state.type})

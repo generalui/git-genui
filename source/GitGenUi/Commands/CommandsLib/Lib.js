@@ -2,29 +2,9 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    [
-      "Promise",
-      "log",
-      "merge",
-      "userConfig",
-      "tracker",
-      "present",
-      "Array",
-      "String",
-      "formattedInspect"
-    ],
+    ["Promise", "log", "merge", "userConfig", "tracker", "present"],
     [global, require("../StandardImport"), require("../../UserConfig")],
-    (
-      Promise,
-      log,
-      merge,
-      userConfig,
-      tracker,
-      present,
-      Array,
-      String,
-      formattedInspect
-    ) => {
+    (Promise, log, merge, userConfig, tracker, present) => {
       let ignoreRejections,
         updateStateWithPrompt,
         menuApp,
@@ -34,9 +14,6 @@ Caf.defMod(module, () => {
         getProjectOrNothing,
         ensureTrackerConfigured,
         ensureTrackerTokenValid,
-        colorizeValue,
-        colorNotPresent,
-        presentValue,
         validateType;
       return {
         ignoreRejections: (ignoreRejections = function(a) {
@@ -131,17 +108,6 @@ Caf.defMod(module, () => {
                 })
               : undefined
           );
-        }),
-        colorizeValue: (colorizeValue = require("colors").yellow),
-        colorNotPresent: (colorNotPresent = require("colors").grey),
-        presentValue: (presentValue = function(value, noneValue = "none") {
-          return present(value)
-            ? Caf.is(value, Array) && Caf.is(value[0], String)
-              ? Caf.array(value, v => colorizeValue(v)).join(", ")
-              : Caf.is(value, String)
-              ? colorizeValue(value)
-              : formattedInspect(value, { color: true })
-            : colorNotPresent(noneValue);
         }),
         validateType: (validateType = function(state) {
           return !(

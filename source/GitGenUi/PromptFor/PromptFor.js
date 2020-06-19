@@ -15,7 +15,7 @@ Caf.defMod(module, () => {
       "max",
       "blue",
       "pad",
-      "green",
+      "presentValue",
       "compactFlatten",
       "Function"
     ],
@@ -39,7 +39,7 @@ Caf.defMod(module, () => {
       max,
       blue,
       pad,
-      green,
+      presentValue,
       compactFlatten,
       Function
     ) => {
@@ -196,7 +196,8 @@ Caf.defMod(module, () => {
             value = item.value;
             label = item.label;
             if (present(label)) {
-              value = blue(pad(label + ":", maxLabel + 2)) + green(value);
+              value =
+                blue(pad(label + ":", maxLabel + 2)) + presentValue(value);
             }
             return merge(item, {
               value: `${Caf.toString(

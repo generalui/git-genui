@@ -19,13 +19,13 @@ Caf.defMod(module, () => {
       "getGitCommitMessage",
       "compactFlatten",
       "EditCommitMessage",
-      "presentValue",
       "projectConfig",
       "StoryMenu",
       "stripAnsi",
       "colorNotPresent",
       "SelectCommitType",
       "SelectCoauthors",
+      "presentValue",
       "EditGitStage",
       "CommitNow"
     ],
@@ -54,13 +54,13 @@ Caf.defMod(module, () => {
       getGitCommitMessage,
       compactFlatten,
       EditCommitMessage,
-      presentValue,
       projectConfig,
       StoryMenu,
       stripAnsi,
       colorNotPresent,
       SelectCommitType,
       SelectCoauthors,
+      presentValue,
       EditGitStage,
       CommitNow
     ) => {
@@ -160,37 +160,33 @@ Caf.defMod(module, () => {
                   return compactFlatten([
                     {
                       action: EditCommitMessage,
-                      value: `Edit message:           ${Caf.toString(
-                        presentValue(message)
-                      )}`
+                      label: "Edit message",
+                      value: message
                     },
                     myAccount && projectConfig.project
                       ? {
                           action: StoryMenu,
-                          value: `Select story:           ${Caf.toString(
-                            presentValue(
-                              Caf.exists(story) && story.id
-                                ? stripAnsi(tracker.formatStory(story))
-                                : undefined
-                            )
-                          )}`
+                          label: "Select story",
+                          value:
+                            Caf.exists(story) && story.id
+                              ? stripAnsi(tracker.formatStory(story))
+                              : undefined
                         }
                       : {
                           action: configure,
-                          value: `Select story:           ${Caf.toString(
-                            colorNotPresent("configure tracker")
-                          )}`
+                          label: "Select story",
+                          value: colorNotPresent("configure tracker")
                         },
                     {
                       action: SelectCommitType,
-                      value: `Select type:            ${Caf.toString(
-                        presentValue(type)
-                      )}`
+                      label: "Select type",
+                      value: type
                     },
                     myAccount
                       ? {
                           action: SelectCoauthors,
-                          value: `Change coauthors:       ${Caf.toString(
+                          label: "Change coauthors",
+                          value:
                             (Caf.exists(members) && members.length) === 0
                               ? colorNotPresent("only you on project")
                               : presentValue(
@@ -199,36 +195,33 @@ Caf.defMod(module, () => {
                                     ? coauthors
                                     : undefined
                                 )
-                          )}`
                         }
                       : {
                           action: configure,
-                          value: `Change coauthors:       ${Caf.toString(
-                            colorNotPresent("configure tracker")
-                          )}`
+                          label: "Change coauthors",
+                          value: colorNotPresent("configure tracker")
                         },
                     {
                       action: EditGitStage,
-                      value: `Edit staged files:      ${Caf.toString(
-                        compactFlatten(
-                          Caf.array(
-                            ["staged", "unstaged", "untracked"],
-                            statusCat =>
-                              require("colors")[statusColors[statusCat]](
-                                `${Caf.toString(
-                                  status[statusCat].length
-                                )} ${Caf.toString(statusCat)}`
-                              ),
-                            statusCat => {
-                              let base;
-                              return (
-                                (Caf.exists((base = status[statusCat])) &&
-                                  base.length) > 0
-                              );
-                            }
-                          )
-                        ).join(", ")
-                      )}`
+                      label: "Edit staged files",
+                      value: compactFlatten(
+                        Caf.array(
+                          ["staged", "unstaged", "untracked"],
+                          statusCat =>
+                            require("colors")[statusColors[statusCat]](
+                              `${Caf.toString(
+                                status[statusCat].length
+                              )} ${Caf.toString(statusCat)}`
+                            ),
+                          statusCat => {
+                            let base;
+                            return (
+                              (Caf.exists((base = status[statusCat])) &&
+                                base.length) > 0
+                            );
+                          }
+                        )
+                      ).join(", ")
                     },
                     present(message)
                       ? { action: CommitNow, value: "Commit now" }
@@ -237,7 +230,8 @@ Caf.defMod(module, () => {
                 },
                 postprocessState: saveState
               })
-            );
+            )
+            .then(() => null);
         }
       };
     }

@@ -72,20 +72,20 @@ run: (options) ->
         state extract myAccount, message, story, members, statusSummary, status, type, coauthors
 
         compactFlatten []
-          action: EditCommitMessage,  value: "" Edit message:           #{} presentValue message
+          action: EditCommitMessage,  label: "Edit message"             value: message
           if myAccount && projectConfig.project
-            action: StoryMenu,        value: "" Select story:           #{} presentValue if story?.id then stripAnsi tracker.formatStory story
+            action: StoryMenu,        label: "Select story"           value: if story?.id then stripAnsi tracker.formatStory story
           else
-            action: configure,        value: "" Select story:           #{} colorNotPresent("configure tracker")
+            action: configure,        label: "Select story"           value: colorNotPresent("configure tracker")
 
-          action: SelectCommitType,   value: "" Select type:            #{} presentValue type
+          action: SelectCommitType,   label: "Select type"            value: type
 
           if myAccount
-            action: SelectCoauthors,  value: "" Change coauthors:       #{} if members?.length == 0 then colorNotPresent 'only you on project' else presentValue if coauthors?.length > 0 then coauthors
+            action: SelectCoauthors,  label: "Change coauthors"       value: if members?.length == 0 then colorNotPresent 'only you on project' else presentValue if coauthors?.length > 0 then coauthors
           else
-            action: configure,        value: "" Change coauthors:       #{} colorNotPresent("configure tracker")
+            action: configure,        label: "Change coauthors"       value: colorNotPresent("configure tracker")
 
-          action: EditGitStage,       value: "" Edit staged files:      #{}
+          action: EditGitStage,       label: "Edit staged files" value:
             compactFlatten array statusCat from :staged :unstaged :untracked when status[statusCat]?.length > 0
               &colors[statusColors[statusCat]] "" #{status[statusCat].length} #{statusCat}
             .join ', '
@@ -93,3 +93,5 @@ run: (options) ->
           if present message then action: CommitNow,          value: "" Commit now
 
       postprocessState: saveState
+
+  .then -> null

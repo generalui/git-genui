@@ -2,9 +2,17 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["formatDate", "toSeconds"],
+    [
+      "formatDate",
+      "toSeconds",
+      "present",
+      "Array",
+      "String",
+      "formattedInspect"
+    ],
     [global, require("art-standard-lib")],
-    (formatDate, toSeconds) => {
+    (formatDate, toSeconds, present, Array, String, formattedInspect) => {
+      let colorizeValue, colorNotPresent, presentValue;
       return [
         require("./Autocomplete"),
         require("./SearchSort"),
@@ -18,7 +26,20 @@ Caf.defMod(module, () => {
             );
           }
         },
-        { applyActions: require("./applyActions") }
+        {
+          applyActions: require("./applyActions"),
+          colorizeValue: (colorizeValue = require("colors").yellow),
+          colorNotPresent: (colorNotPresent = require("colors").grey),
+          presentValue: (presentValue = function(value, noneValue = "none") {
+            return present(value)
+              ? Caf.is(value, Array) && Caf.is(value[0], String)
+                ? Caf.array(value, v => colorizeValue(v)).join(", ")
+                : Caf.is(value, String)
+                ? colorizeValue(value)
+                : formattedInspect(value, { color: true })
+              : colorNotPresent(noneValue);
+          })
+        }
       ];
     }
   );

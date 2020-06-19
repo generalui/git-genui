@@ -114,7 +114,7 @@ class Core
       if present label
         value =
           blue pad label + ":", maxLabel + 2
-          + green value
+          + presentValue value
 
       merge item,
         value:
