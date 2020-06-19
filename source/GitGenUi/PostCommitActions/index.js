@@ -4,5 +4,6 @@
 (module.exports = require('./namespace'))
 
 .addModules({
-  AddStoryComment: require('./AddStoryComment')
+  AddStoryComment: require('./AddStoryComment'),
+  AutoStartStory:  require('./AutoStartStory')
 });

@@ -39,12 +39,16 @@ Caf.defMod(module, () => {
           : require("../../Git").commit(state)
         )
           .then(commitResult => {
-            let base;
+            let base, base1;
             return applyActions(
               merge(state, commitResult),
               compactFlatten([
                 present(Caf.exists((base = state.story)) && base.id)
                   ? "AddStoryComment"
+                  : undefined,
+                (Caf.exists((base1 = state.story)) && base1.state) ===
+                "unstarted"
+                  ? "AutoStartStory"
                   : undefined
               ]),
               require("../../PostCommitActions")
