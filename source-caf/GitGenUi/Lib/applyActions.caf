@@ -2,6 +2,9 @@ import &StandardImport, &colors
 
 applyActions = (input, actionList, actions, options) ->
   resultPromise = Promise.then -> input
+  actionsApplied =
+    succeeded: []
+    failed: []
   each actionName, index from actionList
     resultPromise =
       resultPromise
@@ -13,13 +16,8 @@ applyActions = (input, actionList, actions, options) ->
           log grey "apply action: #{actionName}" unless options?.quiet
           action previousResult
 
-        .then (result) ->
-          info =
-            succeeded:  compactFlattenAll result.actionsApplied?.succeeded, actionName
-            failed:     compactFlattenAll result.actionsApplied?.failed,    actionName
-          merge
-            result
-            actionsApplied: object v in info when v.length > 0
+        .tap      -> actionsApplied.succeeded.push actionName
+        .tapCatch -> actionsApplied.failed.push actionName
 
         .catch (error) ->
           unless options?.quiet
@@ -32,4 +30,7 @@ applyActions = (input, actionList, actions, options) ->
 
           previousResult
 
-  resultPromise
+  resultPromise.then (result) ->
+    {}
+      result
+      actionsApplied: object v from actionsApplied when v.length > 0

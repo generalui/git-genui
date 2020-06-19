@@ -2,13 +2,14 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "Error", "log", "grey", "compactFlattenAll", "merge"],
+    ["Promise", "Error", "log", "grey"],
     [global, require("./StandardImport"), require("colors")],
-    (Promise, Error, log, grey, compactFlattenAll, merge) => {
+    (Promise, Error, log, grey) => {
       let applyActions;
       return (applyActions = function(input, actionList, actions, options) {
-        let resultPromise;
+        let resultPromise, actionsApplied;
         resultPromise = Promise.then(() => input);
+        actionsApplied = { succeeded: [], failed: [] };
         Caf.each2(
           actionList,
           (actionName, index) =>
@@ -25,24 +26,8 @@ Caf.defMod(module, () => {
                 }
                 return action(previousResult);
               })
-                .then(result => {
-                  let info, base, base1;
-                  info = {
-                    succeeded: compactFlattenAll(
-                      Caf.exists((base = result.actionsApplied)) &&
-                        base.succeeded,
-                      actionName
-                    ),
-                    failed: compactFlattenAll(
-                      Caf.exists((base1 = result.actionsApplied)) &&
-                        base1.failed,
-                      actionName
-                    )
-                  };
-                  return merge(result, {
-                    actionsApplied: Caf.object(info, null, v => v.length > 0)
-                  });
-                })
+                .tap(() => actionsApplied.succeeded.push(actionName))
+                .tapCatch(() => actionsApplied.failed.push(actionName))
                 .catch(error => {
                   if (!(Caf.exists(options) && options.quiet)) {
                     log.error({
@@ -58,7 +43,12 @@ Caf.defMod(module, () => {
                 })
             ))
         );
-        return resultPromise;
+        return resultPromise.then(result => {
+          return {
+            result,
+            actionsApplied: Caf.object(actionsApplied, null, v => v.length > 0)
+          };
+        });
       });
     }
   );

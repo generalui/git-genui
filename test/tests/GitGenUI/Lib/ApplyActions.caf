@@ -13,34 +13,38 @@ suite: ->
       applyActions
         1
         undefined
-      1
+      result: 1
+      actionsApplied: {}
 
   test "0 actions" ->
     assert.resolved.eq
       applyActions 1, []
-      1
+      result: 1
+      actionsApplied: {}
 
   test "1 action" ->
     assert.resolved.eq
       applyActions 1,
         [] :addOne
         actions
-      2
+      result: 2
+      actionsApplied: succeeded: [] :addOne
 
   test "3 actions" ->
     assert.resolved.eq
       applyActions 1,
         :addOne :double :div3
         actions
-
-      4/3
+      result: 4/3
+      actionsApplied:  succeeded: :addOne :double :div3
 
   test "Promise action" ->
     assert.resolved.eq
       applyActions 1,
         [] :timeout
         actions
-      1
+      result: 1
+      actionsApplied: succeeded: [] :timeout
 
   test "error doesn't stop next action" ->
     assert.resolved.eq
@@ -49,5 +53,8 @@ suite: ->
         [] :throwError :double
         actions
         quiet: true
+      result: 2
+      actionsApplied:
+        succeeded: [] :double
+        failed:    [] :throwError
 
-      2
