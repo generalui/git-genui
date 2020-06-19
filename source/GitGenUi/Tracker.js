@@ -174,28 +174,42 @@ Caf.defMod(module, () => {
                 )} ${Caf.toString(story.name)}`
               : "(none)";
           };
-          this.prototype.createCommentWithMessage = function(storyId, text) {
+          this.prototype.createCommentWithMessage = function(
+            storyId,
+            text,
+            verbose
+          ) {
             return this.createComment(storyId, text).tap(() => {
               let dashes;
-              return this.logStoryUpdateMessage(
-                storyId,
-                `comment added:\n${Caf.toString(
-                  (dashes = "-".repeat(process.stdout.columns - 1))
-                )}\n  ${Caf.toString(
-                  text.replace(/\n/g, "\n  ")
-                )}\n${Caf.toString(dashes)}`
-              );
+              return verbose
+                ? this.logStoryUpdateMessage(
+                    storyId,
+                    `comment added:\n${Caf.toString(
+                      (dashes = "-".repeat(process.stdout.columns - 1))
+                    )}\n  ${Caf.toString(
+                      text.replace(/\n/g, "\n  ")
+                    )}\n${Caf.toString(dashes)}`
+                  )
+                : undefined;
             });
           };
-          this.prototype.updateStoryWithMessage = function(storyId, updates) {
+          this.prototype.updateStoryWithMessage = function(
+            storyId,
+            updates,
+            verbose
+          ) {
             return this.updateStory(storyId, updates).tap(() =>
-              this.logStoryUpdateMessage(
-                storyId,
-                (present(updates.state)
-                  ? `'${Caf.toString(updates.state)}'`
-                  : "updated") +
-                  ` at ${Caf.toString(formatDate("h:MMtt (Z mmmm d, yyyy)"))}`
-              )
+              verbose
+                ? this.logStoryUpdateMessage(
+                    storyId,
+                    (present(updates.state)
+                      ? `'${Caf.toString(updates.state)}'`
+                      : "updated") +
+                      ` at ${Caf.toString(
+                        formatDate("h:MMtt (Z mmmm d, yyyy)")
+                      )}`
+                  )
+                : undefined
             );
           };
           this.prototype.logStoryUpdateMessage = function(storyId, message) {

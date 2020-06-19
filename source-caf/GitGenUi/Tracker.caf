@@ -42,9 +42,9 @@ class Tracker extends BaseClass
     else
       "(none)"
 
-  createCommentWithMessage:     (storyId, text) ->
+  createCommentWithMessage: (storyId, text, verbose) ->
     @createComment storyId, text
-    .tap ->
+    .tap -> if verbose
       @logStoryUpdateMessage storyId,
         """
           comment added:
@@ -52,9 +52,9 @@ class Tracker extends BaseClass
             #{text.replace /\n/g, "\n  "}
           #{dashes}
 
-  updateStoryWithMessage: (storyId, updates) ->
+  updateStoryWithMessage: (storyId, updates, verbose) ->
     @updateStory storyId, updates
-    .tap ->
+    .tap -> if verbose
       @logStoryUpdateMessage storyId,
         if present updates.state
           "'#{updates.state}'"

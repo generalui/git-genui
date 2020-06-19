@@ -27,7 +27,7 @@ import &StandardImport, &CommandsLib, &UserConfig, &Git
         commit
 
     else
-      log {} commit
+      log commit-success: commit
 
     if state.story?.id
       log "" story: #{} &colors.green tracker.getStoryBrowserUrl state.story?.id

@@ -51,7 +51,7 @@ Caf.defMod(module, () => {
                 }
               });
             } else {
-              log({ commit });
+              log({ "commit-success": commit });
             }
             if (Caf.exists((base1 = state.story)) && base1.id) {
               log(
