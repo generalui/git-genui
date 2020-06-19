@@ -1,6 +1,6 @@
-import &StandardImport
+import &StandardImport, &colors
 
-(input, actionList, actions, options) ->
+applyActions = (input, actionList, actions, options) ->
     resultPromise = Promise.then -> input
     each actionName, index from actionList
       resultPromise =
@@ -10,6 +10,7 @@ import &StandardImport
             unless action = actions[actionName]
               throw new Error "No action named #{actionName}"
 
+            log grey "action: #{actionName}"
             action previousResult
 
           .catch (error) ->

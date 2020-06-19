@@ -2,10 +2,11 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "Error", "log"],
-    [global, require("./StandardImport")],
-    (Promise, Error, log) => {
-      return function(input, actionList, actions, options) {
+    ["Promise", "Error", "log", "grey"],
+    [global, require("./StandardImport"), require("colors")],
+    (Promise, Error, log, grey) => {
+      let applyActions;
+      return (applyActions = function(input, actionList, actions, options) {
         let resultPromise;
         resultPromise = Promise.then(() => input);
         Caf.each2(
@@ -19,6 +20,7 @@ Caf.defMod(module, () => {
                     `No action named ${Caf.toString(actionName)}`
                   );
                 }
+                log(grey(`action: ${Caf.toString(actionName)}`));
                 return action(previousResult);
               }).catch(error => {
                 if (!(Caf.exists(options) && options.quiet)) {
@@ -36,7 +38,7 @@ Caf.defMod(module, () => {
             ))
         );
         return resultPromise;
-      };
+      });
     }
   );
 });
