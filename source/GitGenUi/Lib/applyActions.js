@@ -24,21 +24,19 @@ Caf.defMod(module, () => {
                   log(`apply action: ${Caf.toString(actionName)}`);
                 }
                 return action(previousResult);
+              }).catch(error => {
+                if (!(Caf.exists(options) && options.quiet)) {
+                  log.error({
+                    message: `Error in action ${Caf.toString(
+                      actionName
+                    )} (order = ${Caf.toString(index)} / ${Caf.toString(
+                      actionList.length
+                    )})`,
+                    error
+                  });
+                }
+                return previousResult;
               })
-                .tap(result => log({ apply: { actionName, result } }))
-                .catch(error => {
-                  if (!(Caf.exists(options) && options.quiet)) {
-                    log.error({
-                      message: `Error in action ${Caf.toString(
-                        actionName
-                      )} (order = ${Caf.toString(index)} / ${Caf.toString(
-                        actionList.length
-                      )})`,
-                      error
-                    });
-                  }
-                  return previousResult;
-                })
             ))
         );
         return resultPromise;

@@ -2,19 +2,18 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["log", "getCommitComment"],
-    [global, require("../StandardImport")],
-    (log, getCommitComment) => {
+    ["getCommitComment", "log", "grey"],
+    [global, require("../StandardImport"), require("colors")],
+    (getCommitComment, log, grey) => {
       return function(state) {
-        let story, storyId;
-        if (((story = state.story), (storyId = state.storyId))) {
-          log({ AddStoryComment: { story, storyId } });
+        let story;
+        if ((story = state.story)) {
           require("../Tracker").tracker.createCommentWithMessage(
             story.id,
             getCommitComment(state)
           );
         } else {
-          log({ skip: { AddStoryComment: { story, storyId } } });
+          log(grey("skip: AddStoryComment (no story)"));
         }
         return state;
       };

@@ -12,8 +12,6 @@ applyActions = (input, actionList, actions, options) ->
 
             log "apply action: #{actionName}" unless options?.quiet
             action previousResult
-          .tap (result) ->
-            log apply: {} actionName, result
 
           .catch (error) ->
             unless options?.quiet

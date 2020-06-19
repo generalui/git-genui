@@ -1,12 +1,11 @@
-import &StandardImport
+import &StandardImport, &colors
 
 (state) ->
-  if state extract story, storyId
-    log AddStoryComment: {} story, storyId
+  if state extract story
     &Tracker.tracker.createCommentWithMessage
       story.id
       getCommitComment state
   else
-    log skip: AddStoryComment: {} story, storyId
+    log grey "" skip: AddStoryComment (no story)
 
   state
