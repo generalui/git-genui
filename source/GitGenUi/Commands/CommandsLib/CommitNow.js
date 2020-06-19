@@ -34,7 +34,7 @@ Caf.defMod(module, () => {
               require("../../PostCommitActions")
             )
           )
-          .then(({ branch, commit, summary }) => {
+          .then(({ branch, commit, summary, actionsApplied }) => {
             let staged, base, base1;
             ({ staged } = state.status);
             log({
@@ -44,6 +44,7 @@ Caf.defMod(module, () => {
                   Caf.object(summary, v => v | 0)
                 ),
                 message: getGitCommitMessage(state),
+                actionsApplied,
                 branch,
                 commit
               }

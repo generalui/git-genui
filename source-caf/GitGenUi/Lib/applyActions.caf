@@ -13,6 +13,14 @@ applyActions = (input, actionList, actions, options) ->
           log grey "apply action: #{actionName}" unless options?.quiet
           action previousResult
 
+        .then (result) ->
+          info =
+            succeeded:  compactFlattenAll result.actionsApplied?.succeeded, actionName
+            failed:     compactFlattenAll result.actionsApplied?.failed,    actionName
+          merge
+            result
+            actionsApplied: object v in info when v.length > 0
+
         .catch (error) ->
           unless options?.quiet
             log.error {}

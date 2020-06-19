@@ -15,12 +15,13 @@ import &StandardImport, &CommandsLib, &UserConfig, &Git
       [] :AddStoryComment # state extract postCommitActions
       &PostCommitActions
 
-  .then ({branch, commit, summary}) ->
+  .then ({branch, commit, summary, actionsApplied}) ->
     {staged} = state.status
 
     log commit-success: {}
       summary: merge {files: array {path} from staged with path}, object v in summary with v | 0
       message: getGitCommitMessage state
+      actionsApplied
       branch
       commit
 
