@@ -4,8 +4,6 @@ getCommitComment: (state) ->
   state extract generatedCommitMessage, storyState, branch, commit
 
   """
-    #{storyState || :progressed}
-    commit: #{commit}
-    branch: #{branch}
-    message: #{generatedCommitMessage}
+    story #{storyState || :progressed} with commit: `#{commit}`, branch: `#{branch}`, message:
+    > #{generatedCommitMessage}
     (auto-comment by git-genui v#{&package.version})

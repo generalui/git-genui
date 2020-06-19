@@ -9,11 +9,11 @@ Caf.defMod(module, () => {
         storyState = state.storyState;
         branch = state.branch;
         commit = state.commit;
-        return `${Caf.toString(
+        return `story ${Caf.toString(
           storyState || "progressed"
-        )}\ncommit: ${Caf.toString(commit)}\nbranch: ${Caf.toString(
+        )} with commit: \`${Caf.toString(commit)}\`, branch: \`${Caf.toString(
           branch
-        )}\nmessage: ${Caf.toString(
+        )}\`, message:\n> ${Caf.toString(
           generatedCommitMessage
         )}\n(auto-comment by git-genui v${Caf.toString(
           require("../../../package").version
