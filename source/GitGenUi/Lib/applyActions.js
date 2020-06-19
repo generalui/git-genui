@@ -2,9 +2,9 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "Error", "log", "grey"],
+    ["Promise", "Error", "log"],
     [global, require("./StandardImport"), require("colors")],
-    (Promise, Error, log, grey) => {
+    (Promise, Error, log) => {
       let applyActions;
       return (applyActions = function(input, actionList, actions, options) {
         let resultPromise;
@@ -20,21 +20,25 @@ Caf.defMod(module, () => {
                     `No action named ${Caf.toString(actionName)}`
                   );
                 }
-                log(grey(`action: ${Caf.toString(actionName)}`));
-                return action(previousResult);
-              }).catch(error => {
                 if (!(Caf.exists(options) && options.quiet)) {
-                  log.error({
-                    message: `Error in action ${Caf.toString(
-                      actionName
-                    )} (order = ${Caf.toString(index)} / ${Caf.toString(
-                      actionList.length
-                    )})`,
-                    error
-                  });
+                  log(`apply action: ${Caf.toString(actionName)}`);
                 }
-                return previousResult;
+                return action(previousResult);
               })
+                .tap(result => log({ apply: { actionName, result } }))
+                .catch(error => {
+                  if (!(Caf.exists(options) && options.quiet)) {
+                    log.error({
+                      message: `Error in action ${Caf.toString(
+                        actionName
+                      )} (order = ${Caf.toString(index)} / ${Caf.toString(
+                        actionList.length
+                      )})`,
+                      error
+                    });
+                  }
+                  return previousResult;
+                })
             ))
         );
         return resultPromise;

@@ -10,8 +10,10 @@ applyActions = (input, actionList, actions, options) ->
             unless action = actions[actionName]
               throw new Error "No action named #{actionName}"
 
-            log grey "action: #{actionName}"
+            log "apply action: #{actionName}" unless options?.quiet
             action previousResult
+          .tap (result) ->
+            log apply: {} actionName, result
 
           .catch (error) ->
             unless options?.quiet

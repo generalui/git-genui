@@ -13,6 +13,8 @@ Caf.defMod(module, () => {
             story.id,
             getCommitComment(state)
           );
+        } else {
+          log({ skip: { AddStoryComment: { story, storyId } } });
         }
         return state;
       };
