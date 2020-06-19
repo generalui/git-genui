@@ -36,5 +36,3 @@ import &StandardImport, &CommandsLib, &UserConfig, &Git
       log "" story: #{} &colors.green tracker.getStoryBrowserUrl state.story?.id
 
     null
-
-  # .tap -> saveState objectWithout state, :message
