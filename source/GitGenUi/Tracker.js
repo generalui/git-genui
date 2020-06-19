@@ -166,11 +166,16 @@ Caf.defMod(module, () => {
             );
           };
           this.prototype.formatStory = function(story, addLinks) {
+            let temp;
             return story.id
               ? `${Caf.toString(
                   blue(`[#${Caf.toString(story.id)}]`)
                 )} ${Caf.toString(
-                  grey(`(${Caf.toString(story.state)})`)
+                  grey(
+                    `(${Caf.toString(story.state)}:${Caf.toString(
+                      (temp = story.estimate) != null ? temp : "-"
+                    )})`
+                  )
                 )} ${Caf.toString(story.name)}`
               : "(none)";
           };

@@ -13,40 +13,50 @@ import &StandardImport
 
       items: (story) -> []
         {}
-          action: (story) -> story
+          action: (story) ->
+            &EditStoryName merge state, {} story
+            .then (name) ->
+              if name != story.name
+                &Tracker.tracker.updateStory story.id, {} name
+
+              else story
+
           label: :name
           value: story.name
 
         {}
           action: (story) ->
-            &SelectStoryState {} story
-            .then ({storyState}) ->
+            &SelectStoryState merge state, {} story
+            .then (storyState) ->
               if storyState != story.state
-                log &colors.green "" Updating story state #{story.state} => #{storyState}...
                 &Tracker.tracker.updateStory story.id, state: storyState, estimate: story.estimate ? 1
-                .tap -> log &colors.green "" Success.
 
-              else
-                log "" No changes.
-                story
+              else story
 
           label: :state
           value: story.state
 
         {}
-          action: (story) -> story
+          action: (story) ->
+            &SelectStoryEstimate merge state, {} story
+            .then (estimate) ->
+              if estimate != story.estimate
+                &Tracker.tracker.updateStory story.id, {} estimate
+
+              else story
+
           label: :estimate
-          value: story.estimate
+          value: story.estimate ? :-
 
         {}
           action: (story) ->
             &SelectMembers
-              state
+              merge state, {} story
               selectedMemberIds: story.ownerIds
               prompt: "" Select owners:
             .then (ownerIds) ->
               if neq ownerIds.sort(), story.ownerIds.sort()
-                &Tracker.tracker.updateStory story.id, owner_ids: ownerIds
+                &Tracker.tracker.updateStory story.id, {} ownerIds
 
               else story
 

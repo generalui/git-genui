@@ -37,7 +37,7 @@ class Tracker extends BaseClass
 
   formatStory: (story, addLinks) ->
     if story.id
-      "" #{blue "[##{story.id}]"} #{grey "(#{story.state})"} #{story.name}
+      "" #{blue "[##{story.id}]"} #{grey "(#{story.state}:#{story.estimate ? :-})"} #{story.name}
       # "" [##{story.id}] (#{story.state}) #{story.name}
     else
       "(none)"

@@ -238,14 +238,14 @@ Caf.defMod(module, () => {
                 })
               ).then(({ action, key }) =>
                 !(key === "exit")
-                  ? Promise.then(() => action(state)).then(state =>
-                      state
-                        ? Promise.resolve(state)
+                  ? Promise.then(() => action(state)).then(newState =>
+                      newState
+                        ? Promise.resolve(newState)
                             .then(postprocessState)
-                            .then(state => this.menu(state, options))
-                        : undefined
+                            .then(newState => this.menu(newState, options))
+                        : state
                     )
-                  : undefined
+                  : state
               )
             );
         };

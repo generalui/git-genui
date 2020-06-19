@@ -137,10 +137,14 @@ class Core
           value: "" #{} exitPrompt
           shortcut: :0
 
-      .then ({action, key}) -> unless key == :exit
-        Promise
-        .then -> action state
-        .then (state) -> if state
-          Promise.resolve state
-          .then postprocessState
-          .then (state) -> @menu state, options
+      .then ({action, key}) ->
+        unless key == :exit
+          Promise
+          .then -> action state
+          .then (newState) ->
+            if newState
+              Promise.resolve newState
+              .then postprocessState
+              .then (newState) -> @menu newState, options
+            else state
+        else state

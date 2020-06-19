@@ -1,0 +1,9 @@
+import &StandardImport
+
+# IN: standard "state", OUT: new estimate
+({project, story}) ->
+  &PromptFor.selectList
+    prompt:  "" Select story estimate:
+    default: "" #{} story.estimate ? :-
+    items: project.pointScale.split ","
+  .then (v) -> v | 0

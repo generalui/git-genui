@@ -29,7 +29,14 @@ Caf.defMod(module, () => {
                     ? EditStoryMenu(
                         { story, project, members },
                         { exitPrompt: "back to stories" }
-                      ).then(prompt)
+                      )
+                        .tap(
+                          story =>
+                            (stories = Caf.array(stories, s =>
+                              s.id === story.id ? story : s
+                            ))
+                        )
+                        .then(prompt)
                     : undefined
                 );
               return prompt();

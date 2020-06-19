@@ -4,4 +4,3 @@ import &StandardImport
   &PromptFor.input
     message: "" Enter your git-commit message:
     default: message
-  .then (m) -> if present m then m else message

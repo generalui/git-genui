@@ -4,18 +4,21 @@
 (module.exports = require('./namespace'))
 .includeInNamespace(require('./CommandsLib'))
 .addModules({
-  Auth:               require('./Auth'),
-  CommitNow:          require('./CommitNow'),
-  ConfigureMenu:      require('./ConfigureMenu'),
-  EditCommitMessage:  require('./EditCommitMessage'),
-  EditGitStage:       require('./EditGitStage'),
-  EditStoryMenu:      require('./EditStoryMenu'),
-  FillInMissingState: require('./fillInMissingState'),
-  Lib:                require('./Lib'),
-  SelectCoauthors:    require('./SelectCoauthors'),
-  SelectCommitType:   require('./SelectCommitType'),
-  SelectMembers:      require('./SelectMembers'),
-  SelectStory:        require('./SelectStory'),
-  SelectStoryState:   require('./SelectStoryState'),
-  StoryMenu:          require('./StoryMenu')
+  Auth:                require('./Auth'),
+  CommitNow:           require('./CommitNow'),
+  ConfigureMenu:       require('./ConfigureMenu'),
+  EditCommitMessage:   require('./EditCommitMessage'),
+  EditGitStage:        require('./EditGitStage'),
+  EditStoryMenu:       require('./EditStoryMenu'),
+  EditStoryName:       require('./EditStoryName'),
+  FillInMissingState:  require('./fillInMissingState'),
+  Lib:                 require('./Lib'),
+  SelectCoauthors:     require('./SelectCoauthors'),
+  SelectCommitType:    require('./SelectCommitType'),
+  SelectMembers:       require('./SelectMembers'),
+  SelectStory:         require('./SelectStory'),
+  SelectStoryEstimate: require('./SelectStoryEstimate'),
+  SelectStoryName:     require('./SelectStoryName'),
+  SelectStoryState:    require('./SelectStoryState'),
+  StoryMenu:           require('./StoryMenu')
 });

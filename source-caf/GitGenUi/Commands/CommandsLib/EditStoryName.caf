@@ -1,0 +1,7 @@
+import &StandardImport
+
+# IN: standard "state", OUT: new estimate
+({project, story}) ->
+  &PromptFor.input
+    message: "" Edit story's name:
+    default: story.name
