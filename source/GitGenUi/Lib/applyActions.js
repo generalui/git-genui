@@ -33,7 +33,7 @@ Caf.defMod(module, () => {
                     log.error({
                       message: `Error in action ${Caf.toString(
                         actionName
-                      )} (order = ${Caf.toString(index)} / ${Caf.toString(
+                      )} (order = ${Caf.toString(index + 1)} / ${Caf.toString(
                         actionList.length
                       )})`,
                       error

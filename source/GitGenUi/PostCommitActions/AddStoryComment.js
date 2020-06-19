@@ -6,10 +6,11 @@ Caf.defMod(module, () => {
     [global, require("../StandardImport"), require("colors")],
     (getCommitComment, log, grey, Promise) => {
       return function(state) {
-        let story, base, base1;
-        return ((story = state.story)
+        let story, id, base, base1;
+        return (((story = state.story),
+        Caf.exists(story) ? (id = story.id) : undefined)
           ? require("../Tracker").tracker.createCommentWithMessage(
-              story.id,
+              id,
               getCommitComment(state),
               Caf.exists((base = state.options)) && base.verbose
             )

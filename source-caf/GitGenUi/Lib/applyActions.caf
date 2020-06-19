@@ -24,7 +24,7 @@ applyActions = (input, actionList, actions, options) ->
             log.error {}
               message:
                 """
-                  Error in action #{actionName} (order = #{index} / #{actionList.length})
+                  Error in action #{actionName} (order = #{index + 1} / #{actionList.length})
 
               error
 
