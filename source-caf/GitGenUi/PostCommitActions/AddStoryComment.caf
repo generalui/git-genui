@@ -6,5 +6,7 @@ import &StandardImport
     &Tracker.tracker.createCommentWithMessage
       story.id
       getCommitComment state
+  else
+    log skip: AddStoryComment: {} story, storyId
 
   state
