@@ -1,9 +1,9 @@
 import &StandardImport, &colors
 
 (state) ->
-  if state extract story
+  if state extract story?.id
     &Tracker.tracker.createCommentWithMessage
-      story.id
+      id
       getCommitComment state
       state.options?.verbose
 
