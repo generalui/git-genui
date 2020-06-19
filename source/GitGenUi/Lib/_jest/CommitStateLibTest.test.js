@@ -25,7 +25,7 @@ Caf.defMod(module, () => {
           RegExp(
             `${Caf.toString(storyState)}(.|\\n)*${Caf.toString(
               commit
-            )}(.|\\n)*${Caf.toString(
+            )}(.|\\n)*${Caf.toString(branch)}(.|\\n)*${Caf.toString(
               generatedCommitMessage
             )}(.|\\n)*git-genui(.|\\n)*v\\d+\\.\\d+\\.\\d+`
           )

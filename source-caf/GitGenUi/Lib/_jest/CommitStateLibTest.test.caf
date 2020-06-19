@@ -16,10 +16,8 @@ test 'getCommitComment' ->
   .toMatch
     ///
       #{storyState}
-      (.|\n)*
-      #{commit}
+      (.|\n)*#{commit}
+      (.|\n)*#{branch}
       (.|\n)* #{generatedCommitMessage}
-      (.|\n)*
-      git-genui
+      (.|\n)*git-genui
       (.|\n)* v \d+\. \d+\. \d+
-

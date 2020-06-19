@@ -4,23 +4,20 @@ Caf.defMod(module, () => {
   return (() => {
     return {
       getCommitComment: function(state) {
-        let generatedCommitMessage,
-          storyState,
-          branch,
-          commit,
-          coauthors,
-          story;
+        let generatedCommitMessage, storyState, branch, commit;
         generatedCommitMessage = state.generatedCommitMessage;
         storyState = state.storyState;
         branch = state.branch;
         commit = state.commit;
-        coauthors = state.coauthors;
-        story = state.story;
         return `${Caf.toString(
           storyState || "progressed"
-        )} with commit: ${Caf.toString(commit)}\n\n${Caf.toString(
+        )}\ncommit: ${Caf.toString(commit)}\nbranch: ${Caf.toString(
+          branch
+        )}\nmessage: ${Caf.toString(
           generatedCommitMessage
-        )}\nby git-genui v${Caf.toString(require("../../../package").version)}`;
+        )}\n(auto-comment by git-genui v${Caf.toString(
+          require("../../../package").version
+        )})`;
       }
     };
   })();

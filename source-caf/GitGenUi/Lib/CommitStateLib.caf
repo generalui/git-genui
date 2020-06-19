@@ -1,8 +1,11 @@
 import &StandardImport
 
 getCommitComment: (state) ->
-  state extract generatedCommitMessage, storyState, branch, commit, coauthors, story
+  state extract generatedCommitMessage, storyState, branch, commit
 
   """
-    #{storyState || :progressed} with commit: #{commit}\n\n#{generatedCommitMessage}
-    by git-genui v#{&package.version}
+    #{storyState || :progressed}
+    commit: #{commit}
+    branch: #{branch}
+    message: #{generatedCommitMessage}
+    (auto-comment by git-genui v#{&package.version})
