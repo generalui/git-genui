@@ -54,8 +54,11 @@ Caf.defMod(module, () => {
               require("../../PostCommitActions")
             );
           })
-          .then(({ actionsApplied, result: { branch, commit, summary } }) => {
-            let staged, base, base1, base2;
+          .then(({ actionsApplied, result }) => {
+            let branch, commit, summary, staged, base, base1, base2;
+            branch = result.branch;
+            commit = result.commit;
+            summary = result.summary;
             ({ staged } = state.status);
             if (Caf.exists((base = state.options)) && base.verbose) {
               log({
@@ -71,7 +74,7 @@ Caf.defMod(module, () => {
                 }
               });
             } else {
-              log({ "commit-success": commit });
+              log({ "commit-success": commit != null ? commit : { result } });
             }
             if (Caf.exists((base1 = state.story)) && base1.id) {
               log(

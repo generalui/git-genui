@@ -17,7 +17,8 @@ import &StandardImport, &CommandsLib, &UserConfig, &Git
         :AutoStartStory if state.story?.state == :unstarted
       &PostCommitActions
 
-  .then ({actionsApplied, result:{branch, commit, summary}}) ->
+  .then ({actionsApplied, result}) ->
+    result extract branch, commit, summary
     {staged} = state.status
 
     if state.options?.verbose
@@ -29,7 +30,7 @@ import &StandardImport, &CommandsLib, &UserConfig, &Git
         commit
 
     else
-      log commit-success: commit
+      log commit-success: commit ? {} result
 
     if state.story?.id
       log "" story: #{} &colors.green tracker.getStoryBrowserUrl state.story?.id
