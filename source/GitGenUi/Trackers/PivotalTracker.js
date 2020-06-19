@@ -216,7 +216,7 @@ Caf.defMod(module, () => {
             ).then(this._normalizeStory);
           this.createComment = function(projectId, storyId, text) {
             return postJson(
-              `${Caf.toString(this.getStoryId(projectId, storyId))}/comments`,
+              `${Caf.toString(this.getStoryUrl(projectId, storyId))}/comments`,
               { text },
               this.commonRestOptions
             );

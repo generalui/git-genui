@@ -121,7 +121,7 @@ class PivotalTracker extends BaseClass
 
   @createComment: (projectId, storyId, text) ->
     postJson
-      "" #{@getStoryId projectId, storyId}/comments
+      "" #{@getStoryUrl projectId, storyId}/comments
       {} text
       @commonRestOptions
 
