@@ -6,14 +6,7 @@ Caf.defMod(module, () => {
       return require("../../PromptFor").selectList({
         prompt: "Select story state:",
         default: storyState != null ? storyState : story.state,
-        items:
-          story.state === "unstarted"
-            ? require("../../Tracker").tracker.settableStoryStates
-            : Caf.array(
-                require("../../Tracker").tracker.settableStoryStates,
-                null,
-                s => s !== "unstarted"
-              )
+        items: require("../../Tracker").tracker.settableStoryStates
       });
     };
   })();

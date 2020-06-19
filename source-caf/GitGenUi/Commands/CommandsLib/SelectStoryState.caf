@@ -4,8 +4,4 @@ import &StandardImport
   &PromptFor.selectList
     prompt:  "" Select story state:
     default: storyState ? story.state
-    items:
-      if story.state == :unstarted
-        &Tracker.tracker.settableStoryStates
-      else
-        array s in &Tracker.tracker.settableStoryStates when s != :unstarted
+    items: &Tracker.tracker.settableStoryStates

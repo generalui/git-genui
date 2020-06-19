@@ -78,7 +78,12 @@ Caf.defMod(module, () => {
             "finished",
             "delivered"
           ];
-          this.settableStoryStates = ["unstarted", "started", "finished"];
+          this.settableStoryStates = [
+            "unstarted",
+            "started",
+            "finished",
+            "delivered"
+          ];
           this.requireProjectId = function(projectId) {
             return !present(projectId)
               ? (() => {
