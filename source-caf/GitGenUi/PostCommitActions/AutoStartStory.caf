@@ -1,17 +1,13 @@
 import &StandardImport, &colors
 
 (state) ->
-  log :autoStartStory1
-  if (present state extract story extract? state, id) && state == :unstarted
-    log :autoStartStory2
+  if (present state extract story extract? state as storyState, id) && storyState == :unstarted
     &Tracker.tracker.updateStory story.id, state: :started estimate: story.estimate ? 1
 
   else
-    log :autoStartStory3
     if state.options?.verbose
       log grey "" skip: AutoStartStory (no story)
     Promise.resolve()
 
   .then ->
-    log autoStartStory4: state
     state
