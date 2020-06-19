@@ -12,7 +12,8 @@ import &StandardImport, &CommandsLib, &UserConfig, &Git
   .then (commitResult) ->
     applyActions
       merge state, commitResult
-      [] :AddStoryComment # state extract postCommitActions
+      compactFlatten []
+        :AddStoryComment if present state.story?.id # state extract postCommitActions
       &PostCommitActions
 
   .then ({actionsApplied, result:{branch, commit, summary}}) ->

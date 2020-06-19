@@ -6,6 +6,8 @@ Caf.defMod(module, () => {
       "Promise",
       "applyActions",
       "merge",
+      "compactFlatten",
+      "present",
       "log",
       "getGitCommitMessage",
       "tracker"
@@ -17,7 +19,16 @@ Caf.defMod(module, () => {
       require("../../UserConfig"),
       require("../../Git")
     ],
-    (Promise, applyActions, merge, log, getGitCommitMessage, tracker) => {
+    (
+      Promise,
+      applyActions,
+      merge,
+      compactFlatten,
+      present,
+      log,
+      getGitCommitMessage,
+      tracker
+    ) => {
       return function(state) {
         return (state.pretend
           ? Promise.resolve({
@@ -27,13 +38,18 @@ Caf.defMod(module, () => {
             })
           : require("../../Git").commit(state)
         )
-          .then(commitResult =>
-            applyActions(
+          .then(commitResult => {
+            let base;
+            return applyActions(
               merge(state, commitResult),
-              ["AddStoryComment"],
+              compactFlatten([
+                present(Caf.exists((base = state.story)) && base.id)
+                  ? "AddStoryComment"
+                  : undefined
+              ]),
               require("../../PostCommitActions")
-            )
-          )
+            );
+          })
           .then(({ actionsApplied, result: { branch, commit, summary } }) => {
             let staged, base, base1, base2;
             ({ staged } = state.status);

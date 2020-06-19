@@ -2,13 +2,15 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["getCommitComment", "log", "grey", "Promise"],
+    ["present", "getCommitComment", "log", "grey", "Promise"],
     [global, require("../StandardImport"), require("colors")],
-    (getCommitComment, log, grey, Promise) => {
+    (present, getCommitComment, log, grey, Promise) => {
       return function(state) {
         let story, id, base, base1;
-        return (((story = state.story),
-        Caf.exists(story) ? (id = story.id) : undefined)
+        return (present(
+          ((story = state.story),
+          Caf.exists(story) ? (id = story.id) : undefined)
+        )
           ? require("../Tracker").tracker.createCommentWithMessage(
               id,
               getCommitComment(state),
