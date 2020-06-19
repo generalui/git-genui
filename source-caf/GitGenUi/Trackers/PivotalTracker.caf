@@ -94,7 +94,6 @@ class PivotalTracker extends BaseClass
   @storyIsStartable:  (story) -> story.state in :unstarted :rejected :unscheduled
   @storyIsFinishable: (story) -> story.state in [] :unstarted :rejected :unscheduled :started
 
-
   #####################################
     CREATE STORIES
   #####################################

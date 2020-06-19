@@ -6,6 +6,9 @@ conditionalUpdate = (story, updates) ->
 
   else Promise.resolve merge story, updates
 
+##
+  IN: {} story, project, members
+  OUT: story
 (state, options) ->
   state extract story, project, members
   if story extract ownerIds extract? length > 0
