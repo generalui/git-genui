@@ -9,7 +9,20 @@ git-genui's goal is to streamline developer workflow for:
 * tracking semantic changes
 * tracking coauthors
 
-### Demo GIF
+### `git genui commit` Demo
+
+Git-genui's commit path helps every step of the way:
+
+![animation showing 'git genui commit' in action](doc-assets/git-genui.gif)
+
+This demo shows:
+
+- git staging UI
+- edit git commit message
+- select tracker story
+- select commit semantics
+- post-commit: comment automatically added to story for the commit
+
 
 ### Strategy
 
