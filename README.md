@@ -1,13 +1,13 @@
 # git-genui - streamlined GenUI developer workflow
 
 > ### The git-genui mission: maximize programmer productivity and happiness
-> ### The git-genui strategy: minimize flow-state-interruptions, time and effort spent on our daily non-programing tasks.
+> ### The git-genui strategy: minimize [flow-state-interruptions](https://stackoverflow.blog/2018/09/10/developer-flow-state-and-its-impact-on-productivity/), time and effort spent on our daily non-programing tasks.
 
 # Demo: `git genui commit`
 
 Git-genui's commit command helps every step of the way:
 
-![animation showing 'git genui commit' in action](doc-assets/git-genui.gif)
+![animation showing 'git genui commit' in action](https://github.com/generalui/git-genui/raw/master/doc-assets/git-genui.gif)
 
 In the demo:
 
@@ -16,7 +16,7 @@ In the demo:
 3. select tracker story
 4. select commit semantics
 5. after the commit: comment automatically added to story for the commit:
-  ![comment automatically added with commit details](doc-assets/auto-comment.png)
+  ![comment automatically added with commit details](https://github.com/generalui/git-genui/raw/master/doc-assets/auto-comment.png)
 
 Subsequent runs are even faster. Git-genui remembers all your options and uses them as defaults for the next time. That way you only need to update what's changed, if anything, for your next commit.
 
