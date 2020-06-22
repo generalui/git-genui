@@ -9,6 +9,8 @@ git-genui's goal is to streamline developer workflow for:
 * tracking semantic changes
 * tracking coauthors
 
+### Demo
+
 ### Strategy
 
 The primary strategy for git-genui is to be used instead of `git commmit`. Primarily, `git-genui commit` simply helps generate a well-formatted commit message.
