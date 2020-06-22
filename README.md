@@ -1,41 +1,41 @@
-# git-genui
+# git-genui - a command-line tool for streamlining developer workflow for GIT and PivotalTracker
 
+* Generate well-formatted git commit message:
+  * tracker story ID
+  * semantic changes
+  * coauthors
+* Update tracker stories:
+  * create new stories during commits
+  * automatically start unstarted stories with first commit
+  * automatically add a comment to the story for each related commit
+* Command line tools for managing tracker stories
+* Easy, interactive git staging
 
-### Purpose
+### Demo: `git genui commit`
 
-git-genui's goal is to streamline developer workflow for:
-
-* tracking and updating issue-tracker (currently only PivotalTracker)
-* tracking semantic changes
-* tracking coauthors
-
-### `git genui commit` Demo
-
-Git-genui's commit path helps every step of the way:
+Git-genui's commit command helps every step of the way:
 
 ![animation showing 'git genui commit' in action](doc-assets/git-genui.gif)
 
-This demo shows:
+In the demo:
 
-- git staging UI
-- edit git commit message
-- select tracker story
-- select commit semantics
-- post-commit: comment automatically added to story for the commit
+1. git staging
+2. edit git commit message
+3. select tracker story
+4. select commit semantics
+5. after the commit: comment automatically added to story for the commit:
+  ![comment automatically added with commit details](doc-assets/auto-comment.png)
 
+# Run anywhere with `npx git-genui`
 
-### Strategy
+You can run git-genui on any machine with [NodeJS](https://nodejs.org/en/download/). Super cool!
 
-The primary strategy for git-genui is to be used instead of `git commmit`. Primarily, `git-genui commit` simply helps generate a well-formatted commit message.
-
-> Future: There will also be a set of optional, post-commit actions that can be configured. See below.
-
-# Run the CLI
-
-Install [NodeJS](https://nodejs.org/en/download/). Then you can run `git-genui` directly without even needing to install it. Super cool!
-
-```
+```bash
+# get a list of all available commands
 npx git-genui help
+
+# dive in and start using it:
+npx git-genui commit
 ```
 
 > Note: npx effectively installs git-genui every time in a temporary location. It's easy to use, but a little slow. You can speed things up by installing git-genui yourself. See below.
@@ -43,38 +43,50 @@ npx git-genui help
 
 # CLI Documentation
 
-CLI Documentation is maintained in the CLI itself. Run `git-genui help` to get the most current and detailed doc on how to use the CLI.
+CLI Documentation is maintained in the CLI itself. Run `git-genui help` to get the most current and detailed documentation.
 
 # Install the CLI
 
 If you are using this regularly, you'll want to install it. NPX is great, but it isn't very fast.
 
-> NOTE: By default, npm installs global packages with root privledges. This just isn't a good idea! With a small change you can reconfigure your npm to install 'global' packages in your user folder instead. That way it doesn't require root. See below.
+By default, `npm install` installs global packages with root privileges. This just isn't a good idea! With a small change you can reconfigure your npm to install 'global' packages in your user folder instead. That way it doesn't require root.
 
+
+
+### Set NPM's Global Package Folder
+
+It's easy to configure Node/Npm to install global packages in your home directory instead of globally. We *highly* recommend making this change. It is more secure, easier, and totally the way to go on your local dev machine.
+
+> Note: This will shadow any previously global-installed packages. You will need to re-install everything you previously installed globally.
+
+Copy-paste this one-line script into your terminal (linux/osx):
+
+```bash
+echo 'prefix=${HOME}/.npm-packages' > ~/.npmrc
 ```
-# Recommended: Set npm's global folder to your home dir so you don't need sudo. See below.
+
+OR, you can edit your ~/.npmrc manually and add this line:
+
+```bash
+prefix=${HOME}/.npm-packages
+```
+
+### Now, Install git-genui Globally
+
+```bash
+# Install git-genui globally for easy access.
 npm install -g git-genui
 ```
 
 Once you install git-genui locally, you can run it with a nifty trick provided by the standard `git` cli:
 
-```
-# Once installed, you can run git-genui in either of these ways:
+```bash
+# Once installed, you can run git-genui in many ways:
 git-genui help
 git genui help    # git automatically runs git-genui - free of charge!
+gg help           # shortcut alias
 ```
 
-### Reconfigure NPM's Global Package Folder
-
-> Note: This will shadow any previously global-installed packages. You will need to re-install everything you previously installed globally.
-
-It's surprisingly easy to reconfigure Node/Npm to install global packages in your home directory instead of globally. This is more secure, easier, and totally the way to go on your local dev machine.
-
-Create `~/.npmrc` and add this line:
-
-```
-prefix=${HOME}/.npm-packages
-```
 
 # Trackers: PivotalTracker
 
@@ -94,26 +106,6 @@ tracker story updates:
 * ask if a story is finished and 'finish' it after commit
 * automatically add a comment to the story with the git-commit hash.
 * automatically add all commit authors to the story's owners
-
-# What it Does
-
-- git commit prompts:
-  - semantic-versioning: major/minor/patch
-  - kind:
-    - feat: A new feature
-    - fix: A bug fix
-    - docs: Documentation only changes
-    - style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-    - refactor: A code change that neither fixes a bug nor adds a feature
-    - perf: A code change that improves performance
-    - test: Adding missing or correcting existing tests
-    - chore: Changes to the build process or auxiliary tools and libraries such as documentation generation
-  - pair: whom are you pairing with?
-  - story: what tracker-story are you working on?
-  - update-story:
-    - defaults: unstarted -> started else "no change"
-    - options: finish, deliver
-
 
 # Notes
 
