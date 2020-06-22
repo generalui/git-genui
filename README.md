@@ -1,17 +1,9 @@
-# git-genui - a command-line tool for streamlining developer workflow for GIT and PivotalTracker
+# git-genui - streamlined GenUI developer workflow
 
-* Generate well-formatted git commit message:
-  * tracker story ID
-  * semantic changes
-  * coauthors
-* Update tracker stories:
-  * create new stories during commits
-  * automatically start unstarted stories with first commit
-  * automatically add a comment to the story for each related commit
-* Command line tools for managing tracker stories
-* Easy, interactive git staging
+> ### The git-genui mission: maximize programmer productivity and happiness
+> ### The git-genui strategy: minimize flow-state-interruptions, time and effort spent on our daily non-programing tasks.
 
-### Demo: `git genui commit`
+# Demo: `git genui commit`
 
 Git-genui's commit command helps every step of the way:
 
@@ -25,6 +17,8 @@ In the demo:
 4. select commit semantics
 5. after the commit: comment automatically added to story for the commit:
   ![comment automatically added with commit details](doc-assets/auto-comment.png)
+
+Subsequent runs are even faster. Git-genui remembers all your options and uses them as defaults for the next time. That way you only need to update what's changed, if anything, for your next commit.
 
 # Run anywhere with `npx git-genui`
 
@@ -40,6 +34,20 @@ npx git-genui commit
 
 > Note: npx effectively installs git-genui every time in a temporary location. It's easy to use, but a little slow. You can speed things up by installing git-genui yourself. See below.
 
+# CLI Features
+
+The git-genui command-line tool's current features:
+
+* Generate well-formatted git commit message:
+  * tracker story ID
+  * semantic changes
+  * coauthors
+* Update tracker stories:
+  * create new stories during commits
+  * automatically start unstarted stories with first commit
+  * automatically add a comment to the story for each related commit
+* Command line tools for managing tracker stories
+* Easy, interactive git staging
 
 # CLI Documentation
 
