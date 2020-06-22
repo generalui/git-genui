@@ -2,10 +2,12 @@ import &ArtStandardLib
 
 target: node: true
 
-npm: (currentJson) -> merge currentJson,
+npm: (currentJson) -> merge &package, currentJson,
   author:       "" GenUI LLC
   description:  "" git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning
-  bin: git-genui: :./git-genui
+  bin:
+    git-genui: :./git-genui
+    gg: :./git-genui
 
   jest:
     testEnvironment: :node
