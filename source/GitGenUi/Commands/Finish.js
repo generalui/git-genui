@@ -18,15 +18,11 @@ Caf.defMod(module, () => {
                   ),
                   "Select a story to finish:"
                 )
-                .then(story => {
-                  let temp;
-                  return story.id
-                    ? tracker.updateStory(story.id, {
-                        state: "finished",
-                        estimate: (temp = story.estimate) != null ? temp : 1
-                      })
-                    : undefined;
-                })
+                .then(story =>
+                  story.id
+                    ? tracker.updateStory(story, { state: "finished" })
+                    : undefined
+                )
             );
         }
       };

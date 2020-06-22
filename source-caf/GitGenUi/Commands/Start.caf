@@ -17,4 +17,4 @@ run: (options) ->
       "" Select a story to start:
     .then (story) ->
       if story.id
-        &Tracker.tracker.updateStory story.id, state: :started estimate: story.estimate ? 1
+        &Tracker.tracker.updateStory story, state: :started

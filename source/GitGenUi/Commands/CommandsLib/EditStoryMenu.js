@@ -17,7 +17,7 @@ Caf.defMod(module, () => {
       conditionalUpdate = function(story, updates) {
         return !story.newStory &&
           Caf.find(updates, null, (v, k) => neq(story[k], v))
-          ? require("../../Tracker").tracker.updateStory(story.id, updates)
+          ? require("../../Tracker").tracker.updateStory(story, updates)
           : Promise.resolve(merge(story, updates));
       };
       return function(state, options) {
@@ -58,14 +58,10 @@ Caf.defMod(module, () => {
                 },
                 {
                   action: story =>
-                    require("./SelectStoryState")(merge(state, { story })).then(
-                      storyState => {
-                        let temp1;
-                        return conditionalUpdate(story, {
-                          state: storyState,
-                          estimate: (temp1 = story.estimate) != null ? temp1 : 1
-                        });
-                      }
+                    require("./SelectStoryState")(
+                      merge(state, { story })
+                    ).then(storyState =>
+                      conditionalUpdate(story, { state: storyState })
                     ),
                   label: "state",
                   value: story.state

@@ -140,11 +140,11 @@ Caf.defMod(module, () => {
               base.openInBrowser(this.projectId)
             );
           };
-          this.prototype.updateStory = function(storyId, updates) {
+          this.prototype.updateStory = function(storyOrId, updates) {
             let base;
             return (
               Caf.exists((base = this.tracker)) &&
-              base.updateStory(this.projectId, storyId, updates)
+              base.updateStory(this.projectId, storyOrId, updates)
             );
           };
           this.prototype.createComment = function(storyId, text) {

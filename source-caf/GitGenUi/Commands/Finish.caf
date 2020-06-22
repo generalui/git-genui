@@ -10,4 +10,4 @@ run: (options) ->
       "" Select a story to finish:
     .then (story) ->
       if story.id
-        tracker.updateStory story.id, state: :finished estimate: story.estimate ? 1
+        tracker.updateStory story, state: :finished

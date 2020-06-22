@@ -2,7 +2,7 @@ import &StandardImport
 
 conditionalUpdate = (story, updates) ->
   if !story.newStory && find v, k in updates when neq story[k], v
-    &Tracker.tracker.updateStory story.id, updates
+    &Tracker.tracker.updateStory story, updates
 
   else Promise.resolve merge story, updates
 
@@ -37,7 +37,7 @@ conditionalUpdate = (story, updates) ->
         {}
           action: (story) ->
             &SelectStoryState merge state, {} story
-            .then (storyState) -> conditionalUpdate story, state: storyState, estimate: story.estimate ? 1
+            .then (storyState) -> conditionalUpdate story, state: storyState
 
           label: :state
           value: story.state

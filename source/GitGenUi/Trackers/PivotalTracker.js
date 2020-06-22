@@ -11,6 +11,7 @@ Caf.defMod(module, () => {
       "merge",
       "postJson",
       "log",
+      "Promise",
       "putJson",
       "lowerCamelCase",
       "snakeCase",
@@ -32,6 +33,7 @@ Caf.defMod(module, () => {
       merge,
       postJson,
       log,
+      Promise,
       putJson,
       lowerCamelCase,
       snakeCase,
@@ -205,6 +207,10 @@ Caf.defMod(module, () => {
               "started"
             ]);
           };
+          this.getStory = (projectId, storyId) =>
+            getJson(this.getStoryUrl(projectId, storyId)).then(
+              this._normalizeStory
+            );
           this.createStory = (projectId, story) =>
             postJson(
               this.getStoryUrl(projectId),
@@ -213,12 +219,28 @@ Caf.defMod(module, () => {
             )
               .then(this._normalizeStory)
               .tapCatch(error => log({ createStory: { error } }));
-          this.updateStory = (projectId, storyId, updates) =>
-            putJson(
-              this.getStoryUrl(projectId, storyId),
-              this._denormalizeStory(updates),
-              this.commonRestOptions
-            ).then(this._normalizeStory);
+          this.updateStory = (projectId, storyOrId, updates) =>
+            Promise.then(() =>
+              present(Caf.exists(storyOrId) && storyOrId.id)
+                ? storyOrId
+                : this.getStory(projectId, storyOrId)
+            )
+              .then(({ id, storyType, estimate }) => {
+                if (
+                  storyOrId !== "chore" &&
+                  !(estimate != null) &&
+                  !(updates.estimate != null)
+                ) {
+                  updates = merge(updates, { estimate: 1 });
+                }
+                return putJson(
+                  this.getStoryUrl(projectId, id),
+                  this._denormalizeStory(updates),
+                  this.commonRestOptions
+                );
+              })
+              .then(this._normalizeStory)
+              .tapCatch(error => log({ updateStory: { error } }));
           this.createComment = function(projectId, storyId, text) {
             return postJson(
               `${Caf.toString(this.getStoryUrl(projectId, storyId))}/comments`,

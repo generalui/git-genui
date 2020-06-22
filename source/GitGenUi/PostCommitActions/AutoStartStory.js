@@ -6,16 +6,15 @@ Caf.defMod(module, () => {
     [global, require("../StandardImport"), require("colors")],
     (present, log, grey, Promise) => {
       return function(state) {
-        let story, storyState, id, temp, base;
+        let story, storyState, id, base;
         return (present(
           ((story = state.story),
           Caf.exists(story)
             ? ((storyState = story.state), (id = story.id))
             : undefined)
         ) && storyState === "unstarted"
-          ? require("../Tracker").tracker.updateStory(story.id, {
-              state: "started",
-              estimate: (temp = story.estimate) != null ? temp : 1
+          ? require("../Tracker").tracker.updateStory(story, {
+              state: "started"
             })
           : (Caf.exists((base = state.options)) && base.verbose
               ? log(grey("skip: AutoStartStory (no story)"))

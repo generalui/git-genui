@@ -95,8 +95,12 @@ class PivotalTracker extends BaseClass
   @storyIsFinishable: (story) -> story.state in [] :unstarted :rejected :unscheduled :started
 
   #####################################
-    CREATE STORIES
+    STORIES
   #####################################
+  @getStory: (projectId, storyId) =>
+    getJson @getStoryUrl projectId, storyId
+    .then @_normalizeStory
+
   @createStory: (projectId, story) =>
     postJson
       @getStoryUrl projectId
@@ -105,18 +109,23 @@ class PivotalTracker extends BaseClass
 
     .then @_normalizeStory
     .tapCatch (error) -> log createStory: {} error
-    # .tap (story) -> log created: {} story
 
-  #####################################
-    UPDATE STORIES
-  #####################################
-  @updateStory: (projectId, storyId, updates) =>
-    putJson
-      @getStoryUrl projectId, storyId
-      @_denormalizeStory updates
-      @commonRestOptions
+  @updateStory: (projectId, storyOrId, updates) =>
+    Promise.then ->
+      if present storyOrId?.id then storyOrId
+      else @getStory projectId, storyOrId
+
+    .then ({id, storyType, estimate}) ->
+      if storyOrId != :chore && !estimate? && !updates.estimate?
+        updates = merge updates, estimate: 1
+
+      putJson
+        @getStoryUrl projectId, id
+        @_denormalizeStory updates
+        @commonRestOptions
 
     .then @_normalizeStory
+    .tapCatch (error) -> log updateStory: {} error
 
   @createComment: (projectId, storyId, text) ->
     postJson

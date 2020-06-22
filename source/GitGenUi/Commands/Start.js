@@ -31,15 +31,13 @@ Caf.defMod(module, () => {
                   ),
                   "Select a story to start:"
                 )
-                .then(story => {
-                  let temp;
-                  return story.id
-                    ? require("../Tracker").tracker.updateStory(story.id, {
-                        state: "started",
-                        estimate: (temp = story.estimate) != null ? temp : 1
+                .then(story =>
+                  story.id
+                    ? require("../Tracker").tracker.updateStory(story, {
+                        state: "started"
                       })
-                    : undefined;
-                });
+                    : undefined
+                );
             });
         }
       };

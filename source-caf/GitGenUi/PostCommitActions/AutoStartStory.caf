@@ -2,7 +2,7 @@ import &StandardImport, &colors
 
 (state) ->
   if (present state extract story extract? state as storyState, id) && storyState == :unstarted
-    &Tracker.tracker.updateStory story.id, state: :started estimate: story.estimate ? 1
+    &Tracker.tracker.updateStory story, state: :started
 
   else
     if state.options?.verbose
