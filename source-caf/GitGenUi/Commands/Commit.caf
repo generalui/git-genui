@@ -34,15 +34,20 @@ options:
   story-id:   :id           "" Input the tracker story id directly on the command-line. It will be validated against existing stories.
 
 run: (options) ->
-  Promise.deepAll merge
-    userConfig.commitOptionsForProject
-    {}
-      status:     &Git.printStatus()
-      stories:    ignoreRejections -> tracker.stories
-      members:    ignoreRejections -> tracker.members
-      myAccount:  ignoreRejections -> tracker.myAccount
-      project:    ignoreRejections -> tracker.project
-      options
+  Promise.then -> &git.remotes
+  .catch ({message})->
+    log.warn "" Must be run inside a git repository:\n  #{message}
+    process.exit 1
+  .then ->
+    Promise.deepAll merge
+      userConfig.commitOptionsForProject
+      {}
+        status:     &Git.printStatus()
+        stories:    ignoreRejections -> tracker.stories
+        members:    ignoreRejections -> tracker.members
+        myAccount:  ignoreRejections -> tracker.myAccount
+        project:    ignoreRejections -> tracker.project
+        options
 
   .then validateStory
   .then validateType

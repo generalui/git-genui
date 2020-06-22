@@ -69,7 +69,9 @@ Caf.defMod(module, () => {
                   )
                 })
               )
-              .catch(() => {})
+              .catch(() => {
+                return {};
+              })
               .then(getProjectKey)
               .then(k => (this._projectKey = k));
           };

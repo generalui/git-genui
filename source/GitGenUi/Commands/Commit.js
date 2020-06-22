@@ -8,13 +8,13 @@ Caf.defMod(module, () => {
       "ignoreRejections",
       "tracker",
       "merge",
-      "userConfig",
       "validateStory",
       "validateType",
       "fillInMissingState",
       "saveState",
       "log",
       "process",
+      "userConfig",
       "present",
       "getGitCommitMessage",
       "compactFlatten",
@@ -43,13 +43,13 @@ Caf.defMod(module, () => {
       ignoreRejections,
       tracker,
       merge,
-      userConfig,
       validateStory,
       validateType,
       fillInMissingState,
       saveState,
       log,
       process,
+      userConfig,
       present,
       getGitCommitMessage,
       compactFlatten,
@@ -99,16 +99,27 @@ Caf.defMod(module, () => {
           ]
         },
         run: function(options) {
-          return Promise.deepAll(
-            merge(userConfig.commitOptionsForProject, {
-              status: require("../Git").printStatus(),
-              stories: ignoreRejections(() => tracker.stories),
-              members: ignoreRejections(() => tracker.members),
-              myAccount: ignoreRejections(() => tracker.myAccount),
-              project: ignoreRejections(() => tracker.project),
-              options
+          return Promise.then(() => require("../Git").remotes)
+            .catch(({ message }) => {
+              log.warn(
+                `Must be run inside a git repository:\n  ${Caf.toString(
+                  message
+                )}`
+              );
+              return process.exit(1);
             })
-          )
+            .then(() =>
+              Promise.deepAll(
+                merge(userConfig.commitOptionsForProject, {
+                  status: require("../Git").printStatus(),
+                  stories: ignoreRejections(() => tracker.stories),
+                  members: ignoreRejections(() => tracker.members),
+                  myAccount: ignoreRejections(() => tracker.myAccount),
+                  project: ignoreRejections(() => tracker.project),
+                  options
+                })
+              )
+            )
             .then(validateStory)
             .then(validateType)
             .tap(({ status }) =>

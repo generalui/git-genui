@@ -23,7 +23,7 @@ class UserConfig extends &ConfigShared
   init: ->
     super
     .then -> Promise.deepAll {} &git.origin, &git.remotes, projectFolder: &ProjectConfig.repoRootPromise.then &path.basename
-    .catch ->
+    .catch -> {}
     .then getProjectKey
     .then (k) -> @_projectKey = k
 
