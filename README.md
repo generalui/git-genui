@@ -9,7 +9,7 @@ git-genui's goal is to streamline developer workflow for:
 * tracking semantic changes
 * tracking coauthors
 
-### Demo
+### Demo GIF
 
 ### Strategy
 
