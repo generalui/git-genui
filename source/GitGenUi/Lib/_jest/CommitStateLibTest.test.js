@@ -5,6 +5,7 @@ Caf.defMod(module, () => {
     ["test", "expect", "getCommitComment"],
     [global, require("../CommitStateLib")],
     (test, expect, getCommitComment) => {
+      require("../../../../source");
       test("getCommitComment", function() {
         return expect(getCommitComment({})).toMatch(
           /git-genui.*v\d+\.\d+\.\d+/
