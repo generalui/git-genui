@@ -1,8 +1,5 @@
 import &StandardImport
 
-&Lib.updateStateWithPrompt :story ({stories, story}) ->
+&Lib.updateStateWithPrompt :story (state) ->
   log "" Tip: Select #{&colors.green "(none)"} for no story. It's at the bottom of the story list.
-  &GitGenUiPromptFor.story
-    stories
-    "" What story does this commit advance most?
-    story
+  &SelectStory merge state, prompt: "" What story does this commit advance most?
