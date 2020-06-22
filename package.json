@@ -20,7 +20,7 @@
     "simple-git": "^2.8.0",
     "stable": "^0.1.8"
   },
-  "description": "git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning",
+  "description": "streamlined 'git commits' (issue tagging, pair attribution, semantic-versioning) and command-line tracker updates (start, finish and update stories)",
   "devDependencies": {
     "art-build-configurator": "^1.26.9",
     "art-testbench": "^1.17.2",
