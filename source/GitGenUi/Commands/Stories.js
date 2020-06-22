@@ -31,7 +31,7 @@ Caf.defMod(module, () => {
                             { story, project, members },
                             { exitPrompt: "back to stories" }
                           )
-                        : undefined
+                        : Promise.resolve()
                       )
                         .tap(() =>
                           require("../Tracker").tracker.stories.then(

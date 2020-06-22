@@ -14,12 +14,14 @@ run: (options) ->
         if story.id
           unless story.newStory
             EditStoryMenu {story, project, members}, exitPrompt: "back to stories"
+          else Promise.resolve()
 
           .tap ->
             &Tracker.tracker.stories
             .then (s) -> stories = s
 
           .then prompt
+
     prompt()
 
   .then -> null
