@@ -227,7 +227,7 @@ Caf.defMod(module, () => {
             )
               .then(({ id, storyType, estimate }) => {
                 if (
-                  storyOrId !== "chore" &&
+                  storyType !== "chore" &&
                   !(estimate != null) &&
                   !(updates.estimate != null)
                 ) {
