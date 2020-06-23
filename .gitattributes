@@ -1,0 +1,4 @@
+source/* linguist-vendored
+source-caf/* linguist-vendored
+converage/ linguist-vendored=false
+*.caf linguist-language=CaffeineScript
