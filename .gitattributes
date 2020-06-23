@@ -1,4 +1,3 @@
-source/* linguist-vendored
 source-caf/* linguist-vendored
-converage/* -linguist-vendored
+coverage/* -linguist-vendored
 *.caf linguist-language=CaffeineScript
