@@ -1,2 +1,2 @@
 **/*.html linguist-vendored
-*.caf linguist-langauge=Java
+**/*.caf linguist-langauge=Java
