@@ -1,2 +1,2 @@
 **/*.html linguist-vendored=false
-source/** linguist-vendored=false
+source/** linguist-vendored
