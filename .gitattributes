@@ -1,1 +1,1 @@
-**/*.html linguist-vendored
+coverage/** linguist-vendored
