@@ -1,3 +1,4 @@
-source-caf/* linguist-vendored
-coverage/* -linguist-vendored
+source-caf/** linguist-vendored
+coverage/** -linguist-vendored
+source/** -linguist-vendored
 *.caf linguist-language=CaffeineScript
