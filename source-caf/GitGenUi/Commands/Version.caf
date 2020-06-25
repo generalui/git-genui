@@ -1,2 +1,6 @@
 description: "" show version
-run: -> &package.version
+run: ({verbose}) ->
+  if verbose
+    Neptune
+  else
+    &package.version
