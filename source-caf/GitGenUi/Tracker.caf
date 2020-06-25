@@ -21,6 +21,7 @@ class Tracker extends BaseClass
     myAccount:            -> @tracker?.getMyAccount @projectId
     projects:             -> @tracker?.projects
     project:              -> @tracker?.getProject @projectId
+    configured:           -> @tracker.configured && present @projectId
 
   createStory:        (story) -> @tracker?.createStory @projectId, story
   getStoryUrl:        (storyId) -> @tracker?.getStoryUrl @projectId, storyId

@@ -7,6 +7,7 @@ class PivotalTracker extends BaseClass
 
   @classGetter
     token: -> @accountConfig?.token
+    configured: -> present @token
     commonRestOptions: ->
       normalizedHeaders: X-TrackerToken: @token
 

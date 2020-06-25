@@ -112,10 +112,18 @@ Caf.defMod(module, () => {
               Promise.deepAll(
                 merge(userConfig.commitOptionsForProject, {
                   status: require("../Git").printStatus(),
-                  stories: ignoreRejections(() => tracker.stories),
-                  members: ignoreRejections(() => tracker.members),
-                  myAccount: ignoreRejections(() => tracker.myAccount),
-                  project: ignoreRejections(() => tracker.project),
+                  stories:
+                    tracker.configured &&
+                    ignoreRejections(() => tracker.stories),
+                  members:
+                    tracker.configured &&
+                    ignoreRejections(() => tracker.members),
+                  myAccount:
+                    tracker.configured &&
+                    ignoreRejections(() => tracker.myAccount),
+                  project:
+                    tracker.configured &&
+                    ignoreRejections(() => tracker.project),
                   options
                 })
               )

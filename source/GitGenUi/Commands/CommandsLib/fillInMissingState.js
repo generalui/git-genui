@@ -2,9 +2,9 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "present"],
-    [global, require("../StandardImport")],
-    (Promise, present) => {
+    ["Promise", "present", "tracker"],
+    [global, require("../StandardImport"), require("../../Tracker")],
+    (Promise, present, tracker) => {
       let fillInMissingState;
       return (fillInMissingState = function(state) {
         return Promise.resolve(state)
@@ -18,7 +18,11 @@ Caf.defMod(module, () => {
               ? require("./EditCommitMessage")(state)
               : state
           )
-          .then(state => (!state.story ? require("./StoryMenu")(state) : state))
+          .then(state =>
+            tracker.configured && !state.story
+              ? require("./StoryMenu")(state)
+              : state
+          )
           .then(state =>
             !present(state.type) ? require("./SelectCommitType")(state) : state
           );

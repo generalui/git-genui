@@ -57,6 +57,9 @@ Caf.defMod(module, () => {
               let base;
               return Caf.exists((base = this.accountConfig)) && base.token;
             },
+            configured: function() {
+              return present(this.token);
+            },
             commonRestOptions: function() {
               return { normalizedHeaders: { "X-TrackerToken": this.token } };
             }

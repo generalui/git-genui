@@ -4,10 +4,10 @@ Caf.defMod(module, () => {
   return Caf.importInvoke(
     [
       "BaseClass",
+      "present",
       "blue",
       "grey",
       "process",
-      "present",
       "formatDate",
       "log",
       "green",
@@ -22,10 +22,10 @@ Caf.defMod(module, () => {
     ],
     (
       BaseClass,
+      present,
       blue,
       grey,
       process,
-      present,
       formatDate,
       log,
       green,
@@ -103,6 +103,9 @@ Caf.defMod(module, () => {
                 Caf.exists((base = this.tracker)) &&
                 base.getProject(this.projectId)
               );
+            },
+            configured: function() {
+              return this.tracker.configured && present(this.projectId);
             }
           });
           this.prototype.createStory = function(story) {
