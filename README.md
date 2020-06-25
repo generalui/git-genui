@@ -1,8 +1,8 @@
 # git-genui - streamlined GenUI developer workflow
 
-> ### git-genui's mission: maximize programmer productivity and happiness by minimizing [flow-state-interruptions](https://stackoverflow.blog/2018/09/10/developer-flow-state-and-its-impact-on-productivity/), time and effort spent on our daily non-programing tasks.
+> ### git-genui's mission: maximize programmer productivity and happiness by minimizing [flow-state-interruptions](https://stackoverflow.blog/2018/09/10/developer-flow-state-and-its-impact-on-productivity/) and reducing time spent on daily non-programing tasks
 
-> ### git-genui's strategy: augment the everyday `git commit` action to make it easier to keep up with all the other bookeeping tasks without losing flow.
+> ### git-genui's strategy: augment everyday `git commits` to seamlessly integrate task-tracking, semantic versioning, co-author pairing and other bookkeeping tasks
 
 # Demo: `git genui commit`
 
