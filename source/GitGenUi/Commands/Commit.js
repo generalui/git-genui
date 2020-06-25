@@ -124,6 +124,7 @@ Caf.defMod(module, () => {
                   project:
                     tracker.configured &&
                     ignoreRejections(() => tracker.project),
+                  remote: require("../Git").aRemote,
                   options
                 })
               )

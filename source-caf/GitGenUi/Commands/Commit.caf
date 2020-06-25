@@ -47,6 +47,7 @@ run: (options) ->
         members:    tracker.configured && ignoreRejections -> tracker.members
         myAccount:  tracker.configured && ignoreRejections -> tracker.myAccount
         project:    tracker.configured && ignoreRejections -> tracker.project
+        remote:     &Git.aRemote
         options
 
   .then validateStory

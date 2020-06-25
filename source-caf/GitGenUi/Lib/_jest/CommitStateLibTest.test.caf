@@ -12,6 +12,12 @@ test 'getCommitComment' ->
     storyState =             "finished"
     branch =                 "feature/fun"
     commit =                 "abc123"
+    remote =
+      name: :origin
+      refs:
+        fetch: :git@github.com:generalui/git-genui.git
+        push:  :git@github.com:generalui/git-genui.git
+
     coauthors =              "William"
 
   .toMatch
@@ -19,6 +25,7 @@ test 'getCommitComment' ->
       #{storyState}
       (.|\n)*#{commit}
       (.|\n)*#{branch}
+      (.|\n)*#{remote.refs.fetch}
       (.|\n)* #{generatedCommitMessage}
       (.|\n)*git-genui
       (.|\n)* v \d+\. \d+\. \d+

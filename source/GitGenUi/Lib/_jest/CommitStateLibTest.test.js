@@ -12,7 +12,12 @@ Caf.defMod(module, () => {
         );
       });
       return test("getCommitComment", function() {
-        let generatedCommitMessage, storyState, branch, commit, coauthors;
+        let generatedCommitMessage,
+          storyState,
+          branch,
+          commit,
+          remote,
+          coauthors;
         return expect(
           getCommitComment({
             generatedCommitMessage: (generatedCommitMessage =
@@ -20,6 +25,13 @@ Caf.defMod(module, () => {
             storyState: (storyState = "finished"),
             branch: (branch = "feature/fun"),
             commit: (commit = "abc123"),
+            remote: (remote = {
+              name: "origin",
+              refs: {
+                fetch: "git@github.com:generalui/git-genui.git",
+                push: "git@github.com:generalui/git-genui.git"
+              }
+            }),
             coauthors: (coauthors = "William")
           })
         ).toMatch(
@@ -27,6 +39,8 @@ Caf.defMod(module, () => {
             `${Caf.toString(storyState)}(.|\\n)*${Caf.toString(
               commit
             )}(.|\\n)*${Caf.toString(branch)}(.|\\n)*${Caf.toString(
+              remote.refs.fetch
+            )}(.|\\n)*${Caf.toString(
               generatedCommitMessage
             )}(.|\\n)*git-genui(.|\\n)*v\\d+\\.\\d+\\.\\d+`
           )
