@@ -1,0 +1,17 @@
+"""
+  wip:               work-in-progress, possibly non-working, no version change
+  patch:             other patch-level change or chore
+  patch/doc:         README/documentation/comments updated
+  patch/deps:        updated external dependencies
+  patch/whitespace:  code formatting / non-functional change
+  patch/test:        tests added, improved or fixed
+  patch/assets:      changed non-code assets (e.g. icons, videos, images, fonts)
+  patch/constants:   changed strings or other non-functional constants
+  patch/refactor:    clean up and/or improve code quality
+  patch/perf:        performance improved
+  patch/fix:         code fixed and passing tests
+  patch/improvement: feature improvement (doesn't change external API)
+  minor/feature:     new feature added or extended
+  minor/deprecate:   feature deprecated
+  major/change:      breaking feature changed
+  major/removal:     breaking feature removed

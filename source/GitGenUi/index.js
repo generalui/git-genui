@@ -5,6 +5,7 @@
 .includeInNamespace(require('./GitGenUi'))
 .addModules({
   Cli:                   require('./Cli'),
+  CommitTypes:           require('./CommitTypes'),
   Config:                require('./Config'),
   ConfigShared:          require('./ConfigShared'),
   GetInitialCommitState: require('./getInitialCommitState'),
