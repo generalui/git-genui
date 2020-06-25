@@ -1,11 +1,10 @@
 # git-genui - streamlined GenUI developer workflow
 
-> ### The git-genui mission: maximize programmer productivity and happiness
-> ### The git-genui strategy: minimize [flow-state-interruptions](https://stackoverflow.blog/2018/09/10/developer-flow-state-and-its-impact-on-productivity/), time and effort spent on our daily non-programing tasks.
+> ### git-genui's mission: maximize programmer productivity and happiness by minimizing [flow-state-interruptions](https://stackoverflow.blog/2018/09/10/developer-flow-state-and-its-impact-on-productivity/), time and effort spent on our daily non-programing tasks.
+
+> ### git-genui's strategy: augment the everyday `git commit` action to make it easier to keep up with all the other bookeeping tasks without losing flow.
 
 # Demo: `git genui commit`
-
-Git-genui's commit command helps every step of the way:
 
 ![animation showing 'git genui commit' in action](https://github.com/generalui/git-genui/raw/master/doc-assets/git-genui.gif)
 
