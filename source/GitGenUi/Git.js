@@ -116,7 +116,9 @@ Caf.defMod(module, () => {
         };
         this.classGetter({
           email: function() {
-            return SimpleGit.raw(["config", "user.email"]);
+            return SimpleGit.raw(["config", "user.email"]).then(email =>
+              email.trim()
+            );
           },
           remotes: function() {
             return Promise.then(() => SimpleGit.getRemotes(true));
@@ -180,8 +182,13 @@ Caf.defMod(module, () => {
             untracked: "brightGray",
             staged: "brightGreen"
           };
-          return Promise.all([this.status, this.origin, this.remotes])
-            .tap(([status, origin, remotes]) => {
+          return Promise.all([
+            this.status,
+            this.origin,
+            this.remotes,
+            this.email
+          ])
+            .tap(([status, origin, remotes, email]) => {
               let outputOne, staged, unstaged, untracked;
               if (Caf.exists(options) && options.verbose) {
                 log({
@@ -192,13 +199,25 @@ Caf.defMod(module, () => {
                   }
                 });
               }
-              log(`Origin:        ${Caf.toString(colors.green(origin))}`);
+              if (origin != null) {
+                log(`Origin:        ${Caf.toString(colors.green(origin))}`);
+              } else {
+                log("Remotes:");
+                Caf.each2(remotes, ({ refs, name }) =>
+                  log(
+                    `  ${Caf.toString(pad(name + ":", 12))} ${Caf.toString(
+                      colors.green(refs.fetch)
+                    )}`
+                  )
+                );
+              }
               log(
                 `Branch:        ${Caf.toString(colors.green(status.current))}`
               );
               log(
                 `Tracking:      ${Caf.toString(colors.green(status.tracking))}`
               );
+              log(`Author:        ${Caf.toString(colors.green(email))}`);
               outputOne = ({ path, status }) =>
                 `  ${Caf.toString(pad(status + ":", 12))} ${Caf.toString(
                   path

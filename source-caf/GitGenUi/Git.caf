@@ -3,7 +3,6 @@ SimpleGit = require(:simple-git/promise)()
 
 class Git extends BaseClass
 
-
   @getGitCommitMessage: ({type, story, message, coauthors, storyState}) ->
     compactFlattenAll
       type ? "(type)"
@@ -59,6 +58,7 @@ class Git extends BaseClass
       SimpleGit.raw []
         :config
         :user.email
+      .then (email)-> email.trim()
 
     @remotes: ->
       Promise.then -> SimpleGit.getRemotes true
@@ -115,17 +115,24 @@ class Git extends BaseClass
       untracked:  :brightGray
       staged:     :brightGreen
 
-    Promise.all [] @status, @origin, @remotes
-    .tap ([status, origin, remotes]) ->
+    Promise.all [] @status, @origin, @remotes, @email
+    .tap ([status, origin, remotes, email]) ->
       if options?.verbose
         log verbose: {}
           &ProjectConfig.projectFolder
           &UserConfig.userConfig.projectKey
           git: {} remotes, status
 
-      log "" Origin:        #{colors.green origin}
+      if origin?
+        log "" Origin:        #{colors.green origin}
+      else
+        log :Remotes:
+        each {refs, name} in remotes
+          log "" \_ #{pad name + ":", 12} #{colors.green refs.fetch}
+
       log "" Branch:        #{colors.green status.current}
       log "" Tracking:      #{colors.green status.tracking}
+      log "" Author:        #{colors.green email}
 
       outputOne = ({path, status}) -> "  #{pad status + ':', 12} #{path}"
 
