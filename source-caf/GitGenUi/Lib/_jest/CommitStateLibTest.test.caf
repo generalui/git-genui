@@ -1,5 +1,8 @@
-import &CommitStateLib
+import &ArtStandardLib, &CommitStateLib, &Git
 &source
+
+global.beforeAll ->
+  &Config.load()
 
 test 'getCommitComment' ->
   expect getCommitComment {}
@@ -7,25 +10,21 @@ test 'getCommitComment' ->
     /// git-genui .* v \d+\. \d+\. \d+
 
 test 'getCommitComment' ->
-  expect getCommitComment {}
-    generatedCommitMessage = "my-commit-message"
-    storyState =             "finished"
-    branch =                 "feature/fun"
-    commit =                 "abc123"
-    remote =
-      name: :origin
-      refs:
-        fetch: :git@github.com:generalui/git-genui.git
-        push:  :git@github.com:generalui/git-genui.git
+  &getInitialCommitState quiet: true
+  .then (initialState) ->
+    initialState.message = "my-commit-message"
+    state = merge initialState,
+      generatedCommitMessage: getGitCommitMessage initialState
+      commit:                 "abc123"
 
-    coauthors =              "William"
+    expect getCommitComment state
 
-  .toMatch
-    ///
-      #{storyState}
-      (.|\n)*#{commit}
-      (.|\n)*#{branch}
-      (.|\n)*#{remote.refs.fetch}
-      (.|\n)* #{generatedCommitMessage}
-      (.|\n)*git-genui
-      (.|\n)* v \d+\. \d+\. \d+
+    .toMatch
+      ///
+        #{escapeRegExp state.storyState}
+        (.|\n)*#{escapeRegExp state.commit}
+        (.|\n)*#{escapeRegExp state.status.current}
+        (.|\n)*#{escapeRegExp state.remote.refs.fetch}
+        (.|\n)* #{escapeRegExp state.generatedCommitMessage}
+        (.|\n)*git-genui
+        (.|\n)* v \d+\. \d+\. \d+

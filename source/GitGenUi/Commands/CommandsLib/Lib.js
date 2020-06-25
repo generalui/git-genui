@@ -2,11 +2,10 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "log", "merge", "userConfig", "tracker", "present"],
+    ["Promise", "merge", "userConfig", "log", "tracker", "present"],
     [global, require("../StandardImport"), require("../../UserConfig")],
-    (Promise, log, merge, userConfig, tracker, present) => {
-      let ignoreRejections,
-        updateStateWithPrompt,
+    (Promise, merge, userConfig, log, tracker, present) => {
+      let updateStateWithPrompt,
         menuApp,
         saveState,
         validateStory,
@@ -16,12 +15,6 @@ Caf.defMod(module, () => {
         ensureTrackerTokenValid,
         validateType;
       return {
-        ignoreRejections: (ignoreRejections = function(a) {
-          return Promise.then(a).catch(({ message }) => {
-            log.warn(message);
-            return undefined;
-          });
-        }),
         updateStateWithPrompt: (updateStateWithPrompt = function(
           statePropName,
           a,

@@ -38,21 +38,9 @@ run: (options) ->
   .catch ({message})->
     log.warn "" Must be run inside a git repository:\n  #{message}
     process.exit 1
-  .then ->
-    Promise.deepAll merge
-      userConfig.commitOptionsForProject
-      {}
-        status:     &Git.printStatus()
-        stories:    tracker.configured && ignoreRejections -> tracker.stories
-        members:    tracker.configured && ignoreRejections -> tracker.members
-        myAccount:  tracker.configured && ignoreRejections -> tracker.myAccount
-        project:    tracker.configured && ignoreRejections -> tracker.project
-        remote:     &Git.aRemote
-        options
-
+  .then -> &getInitialCommitState options
   .then validateStory
   .then validateType
-
   .tap ({status}) ->
     if status.staged.length + status.unstaged.length + status.untracked.length == 0
       log.warn "" No local changes to commit.

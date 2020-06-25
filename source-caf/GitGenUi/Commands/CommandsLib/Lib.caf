@@ -1,11 +1,6 @@
 import &StandardImport, &UserConfig
 
 {}
-  ignoreRejections = (a) ->
-    Promise.then a
-    .catch ({message}) ->
-      log.warn message
-      undefined
 
   ##
     IN: statePropName, options, promptFunctionunction

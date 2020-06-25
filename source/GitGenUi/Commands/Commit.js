@@ -14,7 +14,6 @@ Caf.defMod(module, () => {
       "saveState",
       "log",
       "process",
-      "userConfig",
       "present",
       "getGitCommitMessage",
       "compactFlatten",
@@ -49,7 +48,6 @@ Caf.defMod(module, () => {
       saveState,
       log,
       process,
-      userConfig,
       present,
       getGitCommitMessage,
       compactFlatten,
@@ -108,27 +106,7 @@ Caf.defMod(module, () => {
               );
               return process.exit(1);
             })
-            .then(() =>
-              Promise.deepAll(
-                merge(userConfig.commitOptionsForProject, {
-                  status: require("../Git").printStatus(),
-                  stories:
-                    tracker.configured &&
-                    ignoreRejections(() => tracker.stories),
-                  members:
-                    tracker.configured &&
-                    ignoreRejections(() => tracker.members),
-                  myAccount:
-                    tracker.configured &&
-                    ignoreRejections(() => tracker.myAccount),
-                  project:
-                    tracker.configured &&
-                    ignoreRejections(() => tracker.project),
-                  remote: require("../Git").aRemote,
-                  options
-                })
-              )
-            )
+            .then(() => require("../getInitialCommitState")(options))
             .then(validateStory)
             .then(validateType)
             .tap(({ status }) =>

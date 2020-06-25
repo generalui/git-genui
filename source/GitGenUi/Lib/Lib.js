@@ -8,11 +8,22 @@ Caf.defMod(module, () => {
       "present",
       "Array",
       "String",
-      "formattedInspect"
+      "formattedInspect",
+      "Promise",
+      "log"
     ],
     [global, require("art-standard-lib")],
-    (formatDate, toSeconds, present, Array, String, formattedInspect) => {
-      let colorizeValue, colorNotPresent, presentValue;
+    (
+      formatDate,
+      toSeconds,
+      present,
+      Array,
+      String,
+      formattedInspect,
+      Promise,
+      log
+    ) => {
+      let colorizeValue, colorNotPresent, presentValue, ignoreRejections;
       return [
         require("./Autocomplete"),
         require("./SearchSort"),
@@ -38,6 +49,12 @@ Caf.defMod(module, () => {
                 ? colorizeValue(value)
                 : formattedInspect(value, { color: true })
               : colorNotPresent(noneValue);
+          }),
+          ignoreRejections: (ignoreRejections = function(a) {
+            return Promise.then(a).catch(({ message }) => {
+              log.warn(message);
+              return undefined;
+            });
           })
         }
       ];

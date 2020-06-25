@@ -4,15 +4,16 @@
 (module.exports = require('./namespace'))
 .includeInNamespace(require('./GitGenUi'))
 .addModules({
-  Cli:               require('./Cli'),
-  Config:            require('./Config'),
-  ConfigShared:      require('./ConfigShared'),
-  Git:               require('./Git'),
-  GitGenUiPromptFor: require('./GitGenUiPromptFor'),
-  ProjectConfig:     require('./ProjectConfig'),
-  StandardImport:    require('./StandardImport'),
-  Tracker:           require('./Tracker'),
-  UserConfig:        require('./UserConfig')
+  Cli:                   require('./Cli'),
+  Config:                require('./Config'),
+  ConfigShared:          require('./ConfigShared'),
+  GetInitialCommitState: require('./getInitialCommitState'),
+  Git:                   require('./Git'),
+  GitGenUiPromptFor:     require('./GitGenUiPromptFor'),
+  ProjectConfig:         require('./ProjectConfig'),
+  StandardImport:        require('./StandardImport'),
+  Tracker:               require('./Tracker'),
+  UserConfig:            require('./UserConfig')
 });
 require('./Commands');
 require('./Lib');

@@ -134,19 +134,14 @@ Caf.defMod(module, () => {
           },
           aRemote: function() {
             return this.remotes.then(remotes => {
-              let first, base, temp;
+              let first, temp;
               first = undefined;
-              return (
-                Caf.exists(
-                  (base =
-                    (temp = Caf.find(remotes, null, remote => {
-                      first != null ? first : (first = remote);
-                      return remote.name === "origin";
-                    })) != null
-                      ? temp
-                      : first)
-                ) && base.refs.fetch
-              );
+              return (temp = Caf.find(remotes, null, remote => {
+                first != null ? first : (first = remote);
+                return remote.name === "origin";
+              })) != null
+                ? temp
+                : first;
             });
           },
           rawStatus: function() {

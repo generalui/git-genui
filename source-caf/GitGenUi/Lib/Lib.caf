@@ -28,3 +28,9 @@ import &ArtStandardLib
           formattedInspect value, color: true
       else
         colorNotPresent noneValue
+
+    ignoreRejections = (a) ->
+      Promise.then a
+      .catch ({message}) ->
+        log.warn message
+        undefined

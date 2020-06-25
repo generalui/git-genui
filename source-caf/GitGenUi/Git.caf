@@ -73,7 +73,6 @@ class Git extends BaseClass
         first = undefined
         find remote in remotes when first ?= remote; remote.name == :origin
         ? first
-        ?.refs.fetch
 
     @rawStatus: ->
       Promise.then -> SimpleGit.status()
