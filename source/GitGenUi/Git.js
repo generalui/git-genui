@@ -132,6 +132,23 @@ Caf.defMod(module, () => {
               )
             );
           },
+          aRemote: function() {
+            return this.remotes.then(remotes => {
+              let first, base, temp;
+              first = undefined;
+              return (
+                Caf.exists(
+                  (base =
+                    (temp = Caf.find(remotes, null, remote => {
+                      first != null ? first : (first = remote);
+                      return remote.name === "origin";
+                    })) != null
+                      ? temp
+                      : first)
+                ) && base.refs.fetch
+              );
+            });
+          },
           rawStatus: function() {
             return Promise.then(() => SimpleGit.status()).then(o =>
               Caf.object(Object.keys(o), k => {
