@@ -10,3 +10,4 @@ import &ArtStandardLib
   {}
     &applyActions
     &ignoreRejections
+    &openInExternalEditor

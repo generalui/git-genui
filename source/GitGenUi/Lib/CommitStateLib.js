@@ -31,7 +31,8 @@ Caf.defMod(module, () => {
           message,
           coauthors,
           storyState,
-          breakingChange
+          breakingChange,
+          body
         }) {
           return compactFlattenAll(
             type != null ? type : "(type)",
@@ -44,6 +45,9 @@ Caf.defMod(module, () => {
                 )} `
               : undefined,
             message != null ? message : "(message)",
+            body
+              ? `\n\n${Caf.toString(body.replace(/\n\n\n+/g, "\n\n"))}`
+              : undefined,
             breakingChange
               ? `\n\nBREAKING CHANGE: ${Caf.toString(breakingChange)}`
               : undefined,

@@ -9,7 +9,8 @@ Caf.defMod(module, () => {
       require("./Presenters"),
       {
         applyActions: require("./applyActions"),
-        ignoreRejections: require("./ignoreRejections")
+        ignoreRejections: require("./ignoreRejections"),
+        openInExternalEditor: require("./openInExternalEditor")
       }
     ];
   })();

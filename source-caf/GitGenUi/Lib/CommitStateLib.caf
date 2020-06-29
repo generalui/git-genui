@@ -1,7 +1,7 @@
 import &StandardImport, {} &ignoreRejections
 
 {}
-  getCommitMessage: ({type, story, message, coauthors, storyState, breakingChange}) ->
+  getCommitMessage: ({type, story, message, coauthors, storyState, breakingChange, body}) ->
     compactFlattenAll
       type ? "(type)"
       ": "
@@ -9,6 +9,9 @@ import &StandardImport, {} &ignoreRejections
         "" [##{story.id}]#{if storyState && storyState != story.status then " (#{storyState})"}\_
 
       message ? "(message)"
+
+      if body
+        "" \n\n#{body.replace /\n\n\n+/g, "\n\n"}
 
       if breakingChange
         "" \n\nBREAKING CHANGE: #{} breakingChange

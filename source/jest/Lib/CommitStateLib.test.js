@@ -51,6 +51,24 @@ Caf.defMod(module, () => {
                 getCommitMessage({ type: "feat", message: "hi" }),
                 "feat: hi"
               ));
+            test("body", () =>
+              assert.eq(
+                getCommitMessage({
+                  type: "feat",
+                  message: "hi",
+                  body: "OneLine\nTwoLine"
+                }),
+                "feat: hi\n\nOneLine\nTwoLine"
+              ));
+            test("body safety ensures no more than two newlines in a row", () =>
+              assert.eq(
+                getCommitMessage({
+                  type: "feat",
+                  message: "hi",
+                  body: "OneLine\n\n\n\nTwoLine"
+                }),
+                "feat: hi\n\nOneLine\n\nTwoLine"
+              ));
             test("story: id: 123", () =>
               assert.eq(
                 getCommitMessage({

@@ -28,7 +28,7 @@ Caf.defMod(module, () => {
       "presentValue",
       "EditGitStage",
       "CommitNow",
-      "objectWithout"
+      "openInExternalEditor"
     ],
     [
       global,
@@ -62,7 +62,7 @@ Caf.defMod(module, () => {
       presentValue,
       EditGitStage,
       CommitNow,
-      objectWithout
+      openInExternalEditor
     ) => {
       let configure, statusColors;
       configure = function(state) {
@@ -149,7 +149,8 @@ Caf.defMod(module, () => {
                     status,
                     type,
                     coauthors,
-                    breakingChange;
+                    breakingChange,
+                    body;
                   myAccount = state.myAccount;
                   message = state.message;
                   story = state.story;
@@ -159,6 +160,7 @@ Caf.defMod(module, () => {
                   type = state.type;
                   coauthors = state.coauthors;
                   breakingChange = state.breakingChange;
+                  body = state.body;
                   return compactFlatten([
                     {
                       action: EditCommitMessage,
@@ -225,27 +227,24 @@ Caf.defMod(module, () => {
                         )
                       ).join(", ")
                     },
+                    {
+                      label: "Edit body",
+                      value: body,
+                      action: state =>
+                        openInExternalEditor(body).then(breakingChange =>
+                          merge(state, { body })
+                        )
+                    },
                     projectConfig.conventionalCommit
                       ? {
                           label: "Breaking changes",
                           value: breakingChange,
                           action: state =>
-                            Promise.withCallback(callback => {
-                              log("1");
-                              require("external-editor").editAsync(
-                                state.breakingChange,
-                                callback
-                              );
-                              return log("2");
-                            })
-                              .tap(a => log({ resolved: a }))
-                              .tapCatch(b => log({ rejected: b }))
-                              .then(breakingChange => {
-                                breakingChange = breakingChange.trim();
-                                return present(breakingChange)
-                                  ? merge(state, { breakingChange })
-                                  : objectWithout(state, "breakingChange");
-                              })
+                            openInExternalEditor(
+                              breakingChange
+                            ).then(breakingChange =>
+                              merge(state, { breakingChange })
+                            )
                         }
                       : undefined,
                     present(message)

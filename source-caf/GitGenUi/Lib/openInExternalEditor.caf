@@ -1,0 +1,10 @@
+
+(value) ->
+  Promise.withCallback (callback) ->
+    &externalEditor.editAsync value, callback
+    .then (newValue) -> newValue.trim()
+    .then (newValue) ->
+      if present newValue
+        newValue
+
+      else null
