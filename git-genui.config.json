@@ -1,6 +1,6 @@
 {
   "commit": {
-    "format": "standard"
+    "format": "conventionalCommit"
   },
   "tracker": {
     "name": "PivotalTracker",
