@@ -44,7 +44,7 @@ Caf.defMod(module, () => {
               return this.commitOptions[projectKey];
             }
           });
-          this.configFields({ accounts: {} }, "commitOptions");
+          this.configFields({ accounts: {}, commitOptions: {} });
           this.prototype.init = function() {
             return instanceSuper.init
               .apply(this, arguments)
