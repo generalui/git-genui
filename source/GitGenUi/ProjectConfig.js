@@ -2,20 +2,28 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "SourceRoots", "process", "log"],
+    ["merge", "objectWithout", "Promise", "SourceRoots", "process", "log"],
     [global, require("./StandardImport"), { path: require("path") }],
-    (Promise, SourceRoots, process, log) => {
+    (merge, objectWithout, Promise, SourceRoots, process, log) => {
       let ProjectConfig;
       return (ProjectConfig = Caf.defClass(
         class ProjectConfig extends require("./ConfigShared") {},
         function(ProjectConfig, classSuper, instanceSuper) {
           this.singletonClass();
           this.sourceRootIndicatorFiles = [".git", this.configBasename];
-          this.getter({
-            project: function() {
-              return this.config.project;
-            }
-          });
+          this.configFields("tracker", { commit: { format: "standard" } });
+          this.prototype._load = function() {
+            return instanceSuper._load
+              .apply(this, arguments)
+              .then(config =>
+                this.setConfig(this._normalizeDepricatedConfig(config))
+              );
+          };
+          this.prototype._normalizeDepricatedConfig = function(config) {
+            return Caf.exists(config) && config.project
+              ? merge(objectWithout(config, "project"), config.project)
+              : config;
+          };
           this.classGetter("repoRoot", {
             projectFolder: function() {
               return require("path").basename(this.repoRoot);

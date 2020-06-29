@@ -161,7 +161,7 @@ Caf.defMod(module, () => {
                       label: "Edit message",
                       value: message
                     },
-                    myAccount && projectConfig.project
+                    myAccount && projectConfig.tracker
                       ? {
                           action: StoryMenu,
                           label: "Select story",

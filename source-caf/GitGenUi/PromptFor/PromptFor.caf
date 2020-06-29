@@ -79,6 +79,8 @@ class Core
       else
         resolveValue value
 
+  @item: @selectList
+
   @yesNo: (options) ->
     inquire merge
       type:     :expand
@@ -110,11 +112,16 @@ class Core
   numberValues = (list) ->
     maxLabel = reduce m, {label = ''} from list inject 0 with m = max m, label.length
     array item, index in list
-      item extract shortcut, value, label
+      item extract shortcut, value, label, disabled
       if present label
-        value =
-          blue pad label + ":", maxLabel + 2
+        label = pad label + ":", maxLabel + 2
+        value = if disabled
+          grey label + value
+        else
+          blue label
           + presentValue value
+      else if disabled
+        value = grey value
 
       merge item,
         value:
@@ -137,9 +144,9 @@ class Core
           value: "" #{} exitPrompt
           shortcut: :0
 
-      .then ({action, exit}) ->
+      .then ({action, exit, disabled}) ->
         Promise.then ->
-          action? state
+          !disabled && action? state
           ? state
 
         .then postprocessState

@@ -12,23 +12,33 @@ selectProject = updateStateWithPrompt :projectId, ({projectId, projects}) ->
       default: id == projectId
       value: "" #{presentValue name} #{colors.grey "(id: #{id}, account-id: #{account_id})"}
   .then ({projectId}) -> projectId
-  .tap (projectId) -> projectConfig.deepMergeInto project: tracker: {} projectId, &Tracker.tracker.name
+  .tap (projectId) -> projectConfig.mergeTrackerWith = {} projectId, &Tracker.tracker.name
 
 editGitEmail = updateStateWithPrompt :email ({email, trackerEmail}) ->
   &PromptFor.input
     message: "" Enter your git email:
     default: email ? trackerEmail
   .tap (email) ->
-    userConfig.deepMergeInto accounts: git: {} email
+    userConfig.mergeAccountsWith git: {} email
 
+selectCommitFormat = ->
+  &PromptFor.item
+    message: "" Select your commit format
+    items:
+      format: :standard            value: "" standard:           Commit types are grouped into patch, minor and major changes
+      format: :conventionalCommit  value: "" conventionalCommit: Commit using the www.ConventionalCommits.org standard
+
+    default: {} projectConfig.commit.format
+  .then ({format}) ->
+    projectConfig.mergeCommitWith {} format
 
 editTrackerToken = (state) ->
   state extract trackerName
   eTT = ->
     &PromptFor.password
       message: "" Enter your #{trackerName} token:
-    .tap (token) -> userConfig.deepMergeInto accounts: [trackerName]: {} token
-    .tap -> .tap (projectId) -> projectConfig.deepMergeInto project: tracker: name: trackerName
+    .tap (token) -> userConfig.mergeAccountsWith [trackerName]: {} token
+    .tap -> .tap (projectId) -> projectConfig.mergeTrackerWith = name: trackerName
     .then (token) ->
       tracker.myAccount
       .then
@@ -53,7 +63,7 @@ getTrackerToken = (state) ->
     email: trackerEmail ? email ? getEnv().USER
     trackerName
 
-  .tap ({token, email}) -> userConfig.deepMergeInto accounts: [trackerName]: {} token, email
+  .tap ({token, email}) -> userConfig.mergeAccountsWith [trackerName]: {} token, email
   .then ({token, email}) ->
     getProjects()
     .then (projects) ->
@@ -75,14 +85,14 @@ getTrackerToken = (state) ->
         projects
         &Tracker.tracker.projectId
         trackerName = &Tracker.tracker.name
-        trackerAccount = userConfig.accounts?[trackerName]
+        trackerAccount = userConfig.accounts[trackerName]
         trackerAccount?.token
         trackerEmail: trackerAccount?.email
 
-        userConfig.accounts?.git?.email
+        userConfig.accounts.git?.email
 
-      ({projects, email, token, projectId}) ->
-
+      (state) ->
+        state extract projectId, token
         &Tracker.tracker.myAccount
         .then
           (me) ->
@@ -92,19 +102,17 @@ getTrackerToken = (state) ->
             log.warn "" Please configure your #{trackerName} token.
             null
 
-        .then (me) -> &PromptFor.selectList
+        .then (me) -> &PromptFor.menu
+          state
           prompt:  "" Select action:
-          items: compactFlatten []
-            action: getTrackerToken,  value: "" 1. get PivotalTracker token via auth  #{} presentValue me?.name
-            action: editTrackerToken, value: "" 2. set PivotalTracker token manually  #{} presentValue repeat 'x', token?.length ? 0
-            # action: editGitEmail,     value: "" 3. set your git email                 #{} presentValue email
-            if projectConfig.configFilePath
-              if me?
-                action: selectProject,    value: "" 3. select tracker project             #{} presentValue projects[projectId]?.name
-              else
-                action: (state) -> state
-                value: colors.grey "" 3. select tracker project             configure token first
-
-            value: "" 0. #{} exitPrompt ? :exit
-
-
+          items: ->
+            compactFlatten []
+              action: getTrackerToken,  label: "set PivotalTracker token via auth"  value: me?.name
+              action: editTrackerToken, label: "set PivotalTracker token manually"  value: repeat 'x', token?.length ? 0
+              # action: editGitEmail,     value: "" 3. set your git email                 #{} presentValue email
+              if projectConfig.configFilePath
+                action:   selectProject
+                disabled: !me?
+                label:    "select tracker project"
+                value:    if me? then projects[projectId]?.name else "configure token first"
+              action: selectCommitFormat, label: "select commit format" value: projectConfig.commit.format

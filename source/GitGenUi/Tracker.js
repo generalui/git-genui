@@ -4,14 +4,14 @@ Caf.defMod(module, () => {
   return Caf.importInvoke(
     [
       "BaseClass",
+      "projectConfig",
       "present",
       "blue",
       "grey",
       "process",
       "formatDate",
       "log",
-      "green",
-      "projectConfig"
+      "green"
     ],
     [
       global,
@@ -22,14 +22,14 @@ Caf.defMod(module, () => {
     ],
     (
       BaseClass,
+      projectConfig,
       present,
       blue,
       grey,
       process,
       formatDate,
       log,
-      green,
-      projectConfig
+      green
     ) => {
       let Tracker;
       return (Tracker = Caf.defClass(
@@ -50,19 +50,11 @@ Caf.defMod(module, () => {
               return require("./Trackers")[this.name];
             },
             projectId: function() {
-              let base, base1, base2;
-              return (
-                Caf.exists((base = this.projectConfig)) &&
-                Caf.exists((base1 = base.project)) &&
-                  Caf.exists((base2 = base1.tracker)) && base2.projectId
-              );
+              return projectConfig.tracker.projectId;
             },
             name: function() {
-              let temp, base, base1, base2;
-              return (temp =
-                Caf.exists((base = this.projectConfig)) &&
-                Caf.exists((base1 = base.project)) &&
-                  Caf.exists((base2 = base1.tracker)) && base2.name) != null
+              let temp;
+              return (temp = projectConfig.tracker.name) != null
                 ? temp
                 : "PivotalTracker";
             },

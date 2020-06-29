@@ -7,8 +7,20 @@ class ProjectConfig extends &ConfigShared
     :.git
     @configBasename
 
-  @getter
-    project: -> @config.project
+  @configFields
+    :tracker
+    commit: format: :standard # or :conventionalCommit
+
+  _load: ->
+    super
+    .then (config) -> @setConfig @_normalizeDepricatedConfig config
+
+  _normalizeDepricatedConfig: (config) ->
+    if config?.project
+      merge
+        objectWithout config, :project
+        config.project
+    else config
 
   @classGetter
     :repoRoot

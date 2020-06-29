@@ -21,6 +21,25 @@ class ConfigShared extends BaseClass
     readyPromise: -> @_readyPromise
     inspectedObjects: -> toInspectedObjects @config
 
+  @configFields: (fields...) ->
+    each field in compactFlatten fields
+      switch
+      when field is String
+        @_addConfigField field
+
+      when field is Object
+        each _default, key in field
+          @_addConfigField key, _default
+
+      else
+        throw new Error "unsupported configFields param type: #{formattedInspect {} field} (expeting String or Object)"
+
+  @_addConfigField: (field, _default) ->
+    @setter [field]: (v) ~> @setConfigProperty field, v
+    @getter [field]: ~> @config[field] ? _default
+    @prototype[lowerCamelCase "merge #{field} with"] = (args...) ~> @setConfigProperty field, merge @[field], args...
+    @prototype[lowerCamelCase "deep merge #{field} with"] = (args...) ~> @setConfigProperty field, deepMerge @[field], args...
+
   @setter
     configFilePath: (cfp) ->
       @_configFilePath = cfp

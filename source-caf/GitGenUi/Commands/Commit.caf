@@ -67,7 +67,7 @@ run: (options) ->
 
         compactFlatten []
           action: EditCommitMessage,  label: "Edit message"             value: message
-          if myAccount && projectConfig.project
+          if myAccount && projectConfig.tracker
             action: StoryMenu,        label: "Select story"           value: if story?.id then stripAnsi tracker.formatStory story
           else
             action: configure,        label: "Select story"           value: colorNotPresent("configure tracker")

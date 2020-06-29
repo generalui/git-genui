@@ -1,0 +1,12 @@
+# https://www.conventionalcommits.org/en/v1.0.0-beta.2/
+# https://www.npmjs.com/package/commitlint
+"""
+  build:              build system or external dependencies
+  ci:                 CI configuration files and scripts
+  docs:               Documentation only changes
+  feat:               new feature added or extended (minor version change)
+  fix:                code fixed and passing tests (patch version change)
+  perf:               performance improved
+  refactor:           code change that neither fixes a bug nor adds a feature
+  style:              non-functional change (white-space, formatting, semi-colons)
+  test:               tests added, improved or fixed

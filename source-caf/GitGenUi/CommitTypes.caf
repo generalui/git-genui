@@ -1,26 +1,6 @@
-"""
-  wip:                work-in-progress, possibly non-working, no version change
-  patch:              other patch-level change or chore
-  patch/doc:          README/documentation/comments updated
-  patch/deps:         updated external dependencies
-  patch/style:        non-functional change (white-space, formatting, semi-colons)
-  patch/test:         tests added, improved or fixed
-  patch/assets:       changed non-code assets (e.g. icons, videos, images, fonts)
-  patch/constants:    changed strings or other non-functional constants
-  patch/refactor:     clean up and/or improve code quality
-  patch/perf:         performance improved
-  patch/fix:          code fixed and passing tests
-  patch/improvement:  feature improvement (doesn't change external API)
-  minor/feature:      new feature added or extended
-  minor/deprecate:    feature deprecated
-  major/change:       breaking feature changed
-  major/removal:      breaking feature removed
-  build:              (angular) build system or external dependencies
-  ci:                 (angular) CI configuration files and scripts
-  docs:               (angular) Documentation only changes
-  feat:               (angular) new feature added or extended (minor version change)
-  fix:                (angular) code fixed and passing tests (patch version change)
-  perf:               (angular) performance improved
-  refactor:           (angular) code change that neither fixes a bug nor adds a feature
-  style:              (angular) non-functional change (white-space, formatting, semi-colons)
-  test:               (angular) tests added, improved or fixed
+import &ProjectConfig
+
+->
+  switch projectConfig.commit.format
+  when :conventionalCommit then &ConventionalCommitTypes
+  else &StandardCommitTypes

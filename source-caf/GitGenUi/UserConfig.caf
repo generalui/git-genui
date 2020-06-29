@@ -12,13 +12,12 @@ class UserConfig extends &ConfigShared
 
   @getter
     :projectKey
-    accounts: -> @config.accounts ? {}
-    commitOptions: -> @config.commitOptions ? {}
     commitOptionsForProject: (projectKey = @projectKey) ->
       @commitOptions[projectKey]
 
-  @setter
-    accounts: (a) -> @setConfigProperty :accounts, a
+  @configFields
+    accounts: {}
+    :commitOptions
 
   init: ->
     super

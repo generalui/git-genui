@@ -6,6 +6,12 @@ Caf.defMod(module, () => {
       "BaseClass",
       "Promise",
       "toInspectedObjects",
+      "compactFlatten",
+      "String",
+      "Object",
+      "Error",
+      "formattedInspect",
+      "lowerCamelCase",
       "merge",
       "deepMerge",
       "consistentJsonStringify",
@@ -16,6 +22,12 @@ Caf.defMod(module, () => {
       BaseClass,
       Promise,
       toInspectedObjects,
+      compactFlatten,
+      String,
+      Object,
+      Error,
+      formattedInspect,
+      lowerCamelCase,
       merge,
       deepMerge,
       consistentJsonStringify,
@@ -56,6 +68,54 @@ Caf.defMod(module, () => {
               return toInspectedObjects(this.config);
             }
           });
+          this.configFields = function(...fields) {
+            return Caf.each2(compactFlatten(fields), field =>
+              (() => {
+                switch (false) {
+                  case !Caf.is(field, String):
+                    return this._addConfigField(field);
+                  case !Caf.is(field, Object):
+                    return Caf.each2(field, (_default, key) =>
+                      this._addConfigField(key, _default)
+                    );
+                  default:
+                    return (() => {
+                      throw new Error(
+                        `unsupported configFields param type: ${Caf.toString(
+                          formattedInspect({ field })
+                        )} (expeting String or Object)`
+                      );
+                    })();
+                }
+              })()
+            );
+          };
+          this._addConfigField = function(field, _default) {
+            this.setter({
+              [field]: function(v) {
+                return this.setConfigProperty(field, v);
+              }
+            });
+            this.getter({
+              [field]: function() {
+                let temp;
+                return (temp = this.config[field]) != null ? temp : _default;
+              }
+            });
+            this.prototype[
+              lowerCamelCase(`merge ${Caf.toString(field)} with`)
+            ] = function(...args) {
+              return this.setConfigProperty(field, merge(this[field], ...args));
+            };
+            return (this.prototype[
+              lowerCamelCase(`deep merge ${Caf.toString(field)} with`)
+            ] = function(...args) {
+              return this.setConfigProperty(
+                field,
+                deepMerge(this[field], ...args)
+              );
+            });
+          };
           this.setter({
             configFilePath: function(cfp) {
               this._configFilePath = cfp;

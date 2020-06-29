@@ -10,7 +10,7 @@ import &StandardImport
   &PromptFor.selectList
     prompt:  "" Select commit type:
     default: {} type
-    items: array value in &CommitTypes.split /\n/g
+    items: array value in &CommitTypes().split /\n/g
       {} value, type: value.split(":")[0]
 
   .then ({type}) -> type

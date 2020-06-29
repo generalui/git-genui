@@ -40,23 +40,11 @@ Caf.defMod(module, () => {
             }
           });
           this.getter("projectKey", {
-            accounts: function() {
-              let temp;
-              return (temp = this.config.accounts) != null ? temp : {};
-            },
-            commitOptions: function() {
-              let temp;
-              return (temp = this.config.commitOptions) != null ? temp : {};
-            },
             commitOptionsForProject: function(projectKey = this.projectKey) {
               return this.commitOptions[projectKey];
             }
           });
-          this.setter({
-            accounts: function(a) {
-              return this.setConfigProperty("accounts", a);
-            }
-          });
+          this.configFields({ accounts: {} }, "commitOptions");
           this.prototype.init = function() {
             return instanceSuper.init
               .apply(this, arguments)

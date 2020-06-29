@@ -13,8 +13,9 @@ Caf.defMod(module, () => {
       "autocompleteFromStrings",
       "Array",
       "max",
-      "blue",
       "pad",
+      "grey",
+      "blue",
       "presentValue",
       "compactFlatten",
       "Function"
@@ -37,8 +38,9 @@ Caf.defMod(module, () => {
       autocompleteFromStrings,
       Array,
       max,
-      blue,
       pad,
+      grey,
+      blue,
       presentValue,
       compactFlatten,
       Function
@@ -150,6 +152,7 @@ Caf.defMod(module, () => {
               : resolveValue(value);
           });
         };
+        this.item = this.selectList;
         this.yesNo = function(options) {
           return inquire(
             merge(
@@ -191,13 +194,20 @@ Caf.defMod(module, () => {
             0
           );
           return Caf.array(list, (item, index) => {
-            let shortcut, value, label;
+            let shortcut, value, label, disabled;
             shortcut = item.shortcut;
             value = item.value;
             label = item.label;
+            disabled = item.disabled;
             if (present(label)) {
-              value =
-                blue(pad(label + ":", maxLabel + 2)) + presentValue(value);
+              label = pad(label + ":", maxLabel + 2);
+              value = disabled
+                ? grey(label + value)
+                : blue(label) + presentValue(value);
+            } else {
+              if (disabled) {
+                value = grey(value);
+              }
             }
             return merge(item, {
               value: `${Caf.toString(
@@ -237,10 +247,11 @@ Caf.defMod(module, () => {
                     ])
                   )
                 })
-              ).then(({ action, exit }) =>
+              ).then(({ action, exit, disabled }) =>
                 Promise.then(() => {
                   let temp3;
-                  return (temp3 = Caf.isF(action) && action(state)) != null
+                  return (temp3 =
+                    !disabled && Caf.isF(action) && action(state)) != null
                     ? temp3
                     : state;
                 })

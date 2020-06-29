@@ -14,7 +14,7 @@ Caf.defMod(module, () => {
             prompt: "Select commit type:",
             default: { type },
             items: Caf.array(
-              require("../../CommitTypes").split(/\n/g),
+              require("../../CommitTypes")().split(/\n/g),
               value => {
                 return { value, type: value.split(":")[0] };
               }

@@ -45,6 +45,7 @@ Caf.defMod(module, () => {
       let getProjects,
         selectProject,
         editGitEmail,
+        selectCommitFormat,
         editTrackerToken,
         getTrackerToken;
       getProjects = function() {
@@ -74,15 +75,12 @@ Caf.defMod(module, () => {
             })
           })
           .then(({ projectId }) => projectId)
-          .tap(projectId =>
-            projectConfig.deepMergeInto({
-              project: {
-                tracker: {
-                  projectId,
-                  name: require("../../Tracker").tracker.name
-                }
-              }
-            })
+          .tap(
+            projectId =>
+              (projectConfig.mergeTrackerWith = {
+                projectId,
+                name: require("../../Tracker").tracker.name
+              })
           );
       });
       editGitEmail = updateStateWithPrompt("email", function({
@@ -94,10 +92,28 @@ Caf.defMod(module, () => {
             message: "Enter your git email:",
             default: email != null ? email : trackerEmail
           })
-          .tap(email =>
-            userConfig.deepMergeInto({ accounts: { git: { email } } })
-          );
+          .tap(email => userConfig.mergeAccountsWith({ git: { email } }));
       });
+      selectCommitFormat = function() {
+        return require("../../PromptFor")
+          .item({
+            message: "Select your commit format",
+            items: [
+              {
+                format: "standard",
+                value:
+                  "standard:           Commit types are grouped into patch, minor and major changes"
+              },
+              {
+                format: "conventionalCommit",
+                value:
+                  "conventionalCommit: Commit using the www.ConventionalCommits.org standard"
+              }
+            ],
+            default: { format: projectConfig.commit.format }
+          })
+          .then(({ format }) => projectConfig.mergeCommitWith({ format }));
+      };
       editTrackerToken = function(state) {
         let trackerName, eTT;
         trackerName = state.trackerName;
@@ -107,15 +123,12 @@ Caf.defMod(module, () => {
               message: `Enter your ${Caf.toString(trackerName)} token:`
             })
             .tap(token =>
-              userConfig.deepMergeInto({
-                accounts: { [trackerName]: { token } }
-              })
+              userConfig.mergeAccountsWith({ [trackerName]: { token } })
             )
             .tap(() => {})
-            .tap(projectId =>
-              projectConfig.deepMergeInto({
-                project: { tracker: { name: trackerName } }
-              })
+            .tap(
+              projectId =>
+                (projectConfig.mergeTrackerWith = { name: trackerName })
             )
             .then(token =>
               tracker.myAccount.then(
@@ -155,9 +168,7 @@ Caf.defMod(module, () => {
           trackerName
         })
           .tap(({ token, email }) =>
-            userConfig.deepMergeInto({
-              accounts: { [trackerName]: { token, email } }
-            })
+            userConfig.mergeAccountsWith({ [trackerName]: { token, email } })
           )
           .then(({ token, email }) =>
             getProjects().then(projects =>
@@ -178,7 +189,7 @@ Caf.defMod(module, () => {
         return getProjects()
           .catch(() => log.warn("Tracker token is invalid."))
           .then(projects => {
-            let trackerName, trackerAccount, base, base1, base2;
+            let trackerName, trackerAccount, base;
             return menuApp(
               {
                 projects,
@@ -186,17 +197,18 @@ Caf.defMod(module, () => {
                 trackerName: (trackerName = require("../../Tracker").tracker
                   .name),
                 trackerAccount: (trackerAccount =
-                  Caf.exists((base = userConfig.accounts)) &&
-                  base[trackerName]),
+                  userConfig.accounts[trackerName]),
                 token: Caf.exists(trackerAccount) && trackerAccount.token,
                 trackerEmail:
                   Caf.exists(trackerAccount) && trackerAccount.email,
                 email:
-                  Caf.exists((base1 = userConfig.accounts)) &&
-                  Caf.exists((base2 = base1.git)) && base2.email
+                  Caf.exists((base = userConfig.accounts.git)) && base.email
               },
-              ({ projects, email, token, projectId }) =>
-                require("../../Tracker")
+              state => {
+                let projectId, token;
+                projectId = state.projectId;
+                token = state.token;
+                return require("../../Tracker")
                   .tracker.myAccount.then(
                     me => {
                       if (present(prompt)) {
@@ -213,57 +225,50 @@ Caf.defMod(module, () => {
                       return null;
                     }
                   )
-                  .then(me => {
-                    let temp, base3;
-                    return require("../../PromptFor").selectList({
+                  .then(me =>
+                    require("../../PromptFor").menu(state, {
                       prompt: "Select action:",
-                      items: compactFlatten([
-                        {
-                          action: getTrackerToken,
-                          value: `1. get PivotalTracker token via auth  ${Caf.toString(
-                            presentValue(Caf.exists(me) && me.name)
-                          )}`
-                        },
-                        {
-                          action: editTrackerToken,
-                          value: `2. set PivotalTracker token manually  ${Caf.toString(
-                            presentValue(
-                              repeat(
-                                "x",
-                                (temp = Caf.exists(token) && token.length) !=
-                                  null
-                                  ? temp
-                                  : 0
-                              )
+                      items: () => {
+                        let temp, base1;
+                        return compactFlatten([
+                          {
+                            action: getTrackerToken,
+                            label: "set PivotalTracker token via auth",
+                            value: Caf.exists(me) && me.name
+                          },
+                          {
+                            action: editTrackerToken,
+                            label: "set PivotalTracker token manually",
+                            value: repeat(
+                              "x",
+                              (temp = Caf.exists(token) && token.length) != null
+                                ? temp
+                                : 0
                             )
-                          )}`
-                        },
-                        projectConfig.configFilePath
-                          ? me != null
+                          },
+                          projectConfig.configFilePath
                             ? {
                                 action: selectProject,
-                                value: `3. select tracker project             ${Caf.toString(
-                                  presentValue(
-                                    Caf.exists((base3 = projects[projectId])) &&
-                                      base3.name
-                                  )
-                                )}`
+                                disabled: !(me != null),
+                                label: "select tracker project",
+                                value:
+                                  me != null
+                                    ? Caf.exists(
+                                        (base1 = projects[projectId])
+                                      ) && base1.name
+                                    : "configure token first"
                               }
-                            : {
-                                action: state => state,
-                                value: colors.grey(
-                                  "3. select tracker project             configure token first"
-                                )
-                              }
-                          : undefined,
-                        {
-                          value: `0. ${Caf.toString(
-                            exitPrompt != null ? exitPrompt : "exit"
-                          )}`
-                        }
-                      ])
-                    });
-                  })
+                            : undefined,
+                          {
+                            action: selectCommitFormat,
+                            label: "select commit format",
+                            value: projectConfig.commit.format
+                          }
+                        ]);
+                      }
+                    })
+                  );
+              }
             );
           });
       };
