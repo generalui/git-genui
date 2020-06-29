@@ -5,31 +5,8 @@ import &ArtStandardLib
   &SearchSort
   &CommitStateLib
 
-  standardFormatDate: (date) -> formatDate date ? toSeconds(), "yyyy-mm-dd HH:MM:ss"
+  &Presenters
 
   {}
     &applyActions
-
-    colorizeValue = &colors.yellow
-    colorNotPresent = &colors.grey
-
-    presentValue = (value, noneValue = :none) ->
-      if present value
-        if (value is Array) and value[0] is String
-          array v in value
-            colorizeValue v
-          .join ', '
-
-        else if value is String
-          colorizeValue value
-
-        else
-          formattedInspect value, color: true
-      else
-        colorNotPresent noneValue
-
-    ignoreRejections = (a) ->
-      Promise.then a
-      .catch ({message}) ->
-        log.warn message
-        undefined
+    &ignoreRejections

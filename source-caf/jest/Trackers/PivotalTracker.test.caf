@@ -1,0 +1,46 @@
+import &StandardImport
+GitGenUi.Trackers extract PivotalTracker
+
+chainedTest :getProjects ->
+  &source/GitGenUi.Config.load()
+  .then -> PivotalTracker.getProjects()
+  .then (results) ->
+    assert.isArray results
+    assert.gt results.length, 0
+    assert.eq results[0].kind, :project
+    results[0]
+
+.tapTest
+  :getStories (project) ->
+    PivotalTracker.getStories project.id
+    .then (results) ->
+      assert.isArray results
+      assert.gt results.length, 0
+      keys = Object.keys results[0]
+      each key in expectedKeys = []
+          :createdAt
+          :id
+          :name
+          :ownerIds
+          :requestedById
+          :state
+          :updatedAt
+          :url
+
+        unless key in keys
+          assert.fail """
+            expected to find key #{key} in every story:
+
+            expected at least these keys: #{} expectedKeys.join ', '
+            actual story:
+            #{} formattedInspect results[0]
+
+  :getMembers (project) ->
+    PivotalTracker.getMembers project.id
+    .then (results) ->
+      assert.isArray results
+      assert.gt results.length, 0
+      assert.eq
+        Object.keys results[0]
+        .sort()
+        :email, :id, :name

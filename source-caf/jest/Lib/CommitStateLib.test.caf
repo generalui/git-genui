@@ -1,29 +1,112 @@
-import &ArtStandardLib, &source, &source.Git
+import &StandardImport
+import Git
 
 global.beforeAll ->
   Config.load()
 
-test 'getCommitComment' ->
-  expect getCommitComment {}
-  .toMatch
-    /// git-genui .* v \d+\. \d+\. \d+
+describe :getCommitMessage ->
 
-test 'getCommitComment' ->
-  getInitialCommitState quiet: true
-  .then (initialState) ->
-    initialState.message = "my-commit-message"
-    state = merge initialState,
-      generatedCommitMessage: getGitCommitMessage initialState
-      commit:                 "abc123"
+  ##
+    <type>(<scope>): [(Starts|Finishes) #TRACKER_STORY_ID] <message>
+    <BLANK LINE>
+    <body>
+    <BLANK LINE>
+    <footer>
+    <BLANK LINE>
+    <BLANK LINE>
+    Co-authored-by: name <name@example.com>
+    Co-authored-by: another-name <another-name@example.com>
 
-    expect getCommitComment state
+  exhibitA =
+    type:      :feat
+    story:           '[171339446] (started) Update "About Page" with collage, move Kayak photo to Careers.'
+    message:         ""
+    wantLongMessage: true
 
+  test "type and message" ->
+    assert.eq
+      getCommitMessage
+        type: :feat
+        message:    :hi
+      "" feat: hi
+
+  test "story: id: 123" ->
+    assert.eq
+      getCommitMessage
+        type:       :feat
+        message:    :hi
+        story: id: 123
+      "" feat: [#123] hi
+
+  test "story: id: 123 status: :unstarted" ->
+    assert.eq
+      getCommitMessage
+        type:       :feat
+        message:    :hi
+        story: id: 123 status: :unstarted
+        storyState: :started
+      "" feat: [#123] (started) hi
+
+  test :storyFinished ->
+    assert.eq
+      getCommitMessage
+        type:       :feat
+        message:    :hi
+        story: id:  123, status: :started
+        storyState: :finished
+      "" feat: [#123] (finished) hi
+
+  test "coauthors" ->
+    assert.eq
+      getCommitMessage
+        type:       :feat
+        message:    :hi
+        coauthors:  [] :franky
+      """
+        feat: hi
+
+
+        Coauthored-by: franky
+
+  test :breakingChange ->
+    assert.eq
+      getCommitMessage
+        type: :feat
+        message: "" allow provided config object to extend other configs
+        breakingChange: "" `extends` key in config file is now used for extending other config files
+
+      """
+        feat: allow provided config object to extend other configs
+
+        BREAKING CHANGE: `extends` key in config file is now used for extending other config files
+
+
+test 'extractSavableState' ->
+  assert.eq
+    merge extractSavableState message: :foo, bar: :baz
+    message: :foo
+
+describe :getCommitComment ->
+  test 'has git-genui tag' ->
+    expect getCommitComment {}
     .toMatch
-      ///
-        #{escapeRegExp state.storyState}
-        (.|\n)*#{escapeRegExp state.commit}
-        (.|\n)*#{escapeRegExp state.status.current}
-        (.|\n)*#{escapeRegExp state.remote.refs.fetch}
-        (.|\n)* #{escapeRegExp state.generatedCommitMessage}
-        (.|\n)*git-genui
-        (.|\n)* v \d+\. \d+\. \d+
+      /// git-genui .* v \d+\. \d+\. \d+
+
+  test "test everything" ->
+    getInitialCommitState quiet: true
+    .then (initialState) ->
+      initialState.message = "my-commit-message"
+
+      &ArtTestbench.assert.match
+        getCommitComment state = merge initialState,
+          generatedCommitMessage: getCommitMessage initialState
+          commit:                 "abc123"
+
+        ///
+          #{escapeRegExp state.storyState}
+          (.|\n)*#{escapeRegExp state.commit}
+          (.|\n)*#{escapeRegExp state.status.current}
+          (.|\n)*#{escapeRegExp state.remote.refs.fetch}
+          (.|\n)* #{escapeRegExp state.generatedCommitMessage}
+          (.|\n)*git-genui
+          (.|\n)* v \d+\. \d+\. \d+

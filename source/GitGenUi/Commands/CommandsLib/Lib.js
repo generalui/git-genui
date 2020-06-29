@@ -2,12 +2,11 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "merge", "userConfig", "log", "tracker", "present"],
+    ["Promise", "merge", "log", "userConfig", "tracker", "present"],
     [global, require("../StandardImport")],
-    (Promise, merge, userConfig, log, tracker, present) => {
+    (Promise, merge, log, userConfig, tracker, present) => {
       let updateStateWithPrompt,
         menuApp,
-        saveState,
         validateStory,
         getMyAccountOrNothing,
         getProjectOrNothing,
@@ -37,16 +36,6 @@ Caf.defMod(module, () => {
                 )
               : undefined
           );
-        }),
-        saveState: (saveState = function(state) {
-          let message, type, coauthors, story;
-          if (state) {
-            userConfig.saveCommitOptionsForProject(
-              (({ message, type, coauthors, story } = state),
-              { message, type, coauthors, story })
-            );
-          }
-          return state;
         }),
         validateStory: (validateStory = function(state) {
           let story, storyId, stories;

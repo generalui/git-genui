@@ -1,0 +1,13 @@
+
+&ArtStandardLib.mergeWithSelf 
+  &ArtTestbench
+  &source
+  {}
+    &source/GitGenUi
+    describe = (a, b) ->
+      if a is Object
+        each v, k in a
+          describe k, v
+
+      else
+        global.describe a, -> b(); undefined

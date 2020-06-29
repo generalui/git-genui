@@ -1,0 +1,7 @@
+import &StandardImport
+
+ignoreRejections = (a) ->
+  Promise.then a
+  .catch ({message}) ->
+    log.warn message
+    undefined

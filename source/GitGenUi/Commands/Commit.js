@@ -14,8 +14,9 @@ Caf.defMod(module, () => {
       "saveState",
       "log",
       "process",
+      "getInitialCommitState",
       "present",
-      "getGitCommitMessage",
+      "getCommitMessage",
       "compactFlatten",
       "EditCommitMessage",
       "projectConfig",
@@ -26,7 +27,8 @@ Caf.defMod(module, () => {
       "SelectCoauthors",
       "presentValue",
       "EditGitStage",
-      "CommitNow"
+      "CommitNow",
+      "objectWithout"
     ],
     [
       global,
@@ -46,8 +48,9 @@ Caf.defMod(module, () => {
       saveState,
       log,
       process,
+      getInitialCommitState,
       present,
-      getGitCommitMessage,
+      getCommitMessage,
       compactFlatten,
       EditCommitMessage,
       projectConfig,
@@ -58,7 +61,8 @@ Caf.defMod(module, () => {
       SelectCoauthors,
       presentValue,
       EditGitStage,
-      CommitNow
+      CommitNow,
+      objectWithout
     ) => {
       let configure, statusColors;
       configure = function(state) {
@@ -104,7 +108,7 @@ Caf.defMod(module, () => {
               );
               return process.exit(1);
             })
-            .then(() => require("../getInitialCommitState")(options))
+            .then(() => getInitialCommitState(options))
             .then(validateStory)
             .then(validateType)
             .tap(({ status }) =>
@@ -127,7 +131,7 @@ Caf.defMod(module, () => {
                         require("colors")
                           .bold(
                             require("colors").brightGreen(
-                              getGitCommitMessage(state)
+                              getCommitMessage(state)
                             )
                           )
                           .replace(/\n/g, "\n  ")
@@ -145,7 +149,7 @@ Caf.defMod(module, () => {
                     status,
                     type,
                     coauthors,
-                    breakingChanges;
+                    breakingChange;
                   myAccount = state.myAccount;
                   message = state.message;
                   story = state.story;
@@ -154,7 +158,7 @@ Caf.defMod(module, () => {
                   status = state.status;
                   type = state.type;
                   coauthors = state.coauthors;
-                  breakingChanges = state.breakingChanges;
+                  breakingChange = state.breakingChange;
                   return compactFlatten([
                     {
                       action: EditCommitMessage,
@@ -222,7 +226,27 @@ Caf.defMod(module, () => {
                       ).join(", ")
                     },
                     projectConfig.conventionalCommit
-                      ? { label: "Breacking changes", value: breakingChanges }
+                      ? {
+                          label: "Breaking changes",
+                          value: breakingChange,
+                          action: state =>
+                            Promise.withCallback(callback => {
+                              log("1");
+                              require("external-editor").editAsync(
+                                state.breakingChange,
+                                callback
+                              );
+                              return log("2");
+                            })
+                              .tap(a => log({ resolved: a }))
+                              .tapCatch(b => log({ rejected: b }))
+                              .then(breakingChange => {
+                                breakingChange = breakingChange.trim();
+                                return present(breakingChange)
+                                  ? merge(state, { breakingChange })
+                                  : objectWithout(state, "breakingChange");
+                              })
+                        }
                       : undefined,
                     present(message)
                       ? {

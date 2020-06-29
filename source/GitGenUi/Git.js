@@ -4,9 +4,9 @@ Caf.defMod(module, () => {
   return Caf.importInvoke(
     [
       "BaseClass",
-      "compactFlattenAll",
       "Promise",
       "merge",
+      "getCommitMessage",
       "compactFlatten",
       "Object",
       "objectWithout",
@@ -20,9 +20,9 @@ Caf.defMod(module, () => {
     [global, require("./StandardImport"), { colors: require("colors") }],
     (
       BaseClass,
-      compactFlattenAll,
       Promise,
       merge,
+      getCommitMessage,
       compactFlatten,
       Object,
       objectWithout,
@@ -41,33 +41,6 @@ Caf.defMod(module, () => {
         instanceSuper
       ) {
         let statusCodes, decodeStatus;
-        this.getGitCommitMessage = function({
-          type,
-          story,
-          message,
-          coauthors,
-          storyState
-        }) {
-          return compactFlattenAll(
-            type != null ? type : "(type)",
-            ": ",
-            Caf.exists(story) && story.id
-              ? `[#${Caf.toString(story.id)}]${Caf.toString(
-                  storyState && storyState !== story.status
-                    ? ` (${Caf.toString(storyState)})`
-                    : undefined
-                )} `
-              : undefined,
-            message != null ? message : "(message)",
-            coauthors
-              ? "\n\n\n" +
-                  Caf.array(
-                    coauthors,
-                    coauthor => `Coauthored-by: ${Caf.toString(coauthor)}`
-                  ).join("\n")
-              : undefined
-          ).join("");
-        };
         this.getGitConfig = function() {
           return Promise.then(() => SimpleGit.listConfig()).then(
             ({ all }) => all
@@ -105,7 +78,7 @@ Caf.defMod(module, () => {
         };
         this.commit = options => {
           let generatedCommitMessage;
-          generatedCommitMessage = this.getGitCommitMessage(options);
+          generatedCommitMessage = getCommitMessage(options);
           return Promise.then(() =>
             SimpleGit.commit(generatedCommitMessage)
           ).then(result => merge(result, { generatedCommitMessage }));

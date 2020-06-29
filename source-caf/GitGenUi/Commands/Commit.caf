@@ -38,7 +38,7 @@ run: (options) ->
   .catch ({message})->
     log.warn "" Must be run inside a git repository:\n  #{message}
     process.exit 1
-  .then -> &getInitialCommitState options
+  .then -> getInitialCommitState options
   .then validateStory
   .then validateType
   .tap ({status}) ->
@@ -56,14 +56,14 @@ run: (options) ->
         if present state.message
           log "" Commit message preview:
           log "  " +
-            &colors.bold &colors.brightGreen getGitCommitMessage state
+            &colors.bold &colors.brightGreen getCommitMessage state
             .replace /\n/g, "\n  "
           log ''
 
         state
 
       items: (state) ->
-        state extract myAccount, message, story, members, statusSummary, status, type, coauthors, breakingChanges
+        state extract myAccount, message, story, members, statusSummary, status, type, coauthors, breakingChange
 
         compactFlatten []
           action: EditCommitMessage,  label: "Edit message"             value: message
@@ -86,11 +86,20 @@ run: (options) ->
 
           if projectConfig.conventionalCommit
             label: "Breaking changes"
-            value: breakingChanges
+            value: breakingChange
             action: (state) ->
               Promise.withCallback (callback) ->
-                &externalEditor.editAsync state.breakingChanges, callback
-              .then (breakingChanges) -> merge state, {} breakingChanges
+                log :1
+                &externalEditor.editAsync state.breakingChange, callback
+                log :2
+              .tap (a) -> log resolved: a
+              .tapCatch (b) -> log rejected: b
+              .then (breakingChange) ->
+                breakingChange = breakingChange.trim()
+                if present breakingChange
+                  merge state, {} breakingChange
+                else
+                  objectWithout state, :breakingChange
 
           if present message
             action: CommitNow

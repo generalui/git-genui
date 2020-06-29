@@ -9,7 +9,7 @@ Caf.defMod(module, () => {
       "compactFlatten",
       "present",
       "log",
-      "getGitCommitMessage",
+      "getCommitMessage",
       "tracker"
     ],
     [
@@ -25,7 +25,7 @@ Caf.defMod(module, () => {
       compactFlatten,
       present,
       log,
-      getGitCommitMessage,
+      getCommitMessage,
       tracker
     ) => {
       return function(state) {
@@ -66,7 +66,7 @@ Caf.defMod(module, () => {
                     { files: Caf.array(staged, ({ path }) => path) },
                     Caf.object(summary, v => v | 0)
                   ),
-                  message: getGitCommitMessage(state),
+                  message: getCommitMessage(state),
                   actionsApplied,
                   branch,
                   commit

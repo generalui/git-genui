@@ -3,22 +3,6 @@ SimpleGit = require(:simple-git/promise)()
 
 class Git extends BaseClass
 
-  @getGitCommitMessage: ({type, story, message, coauthors, storyState}) ->
-    compactFlattenAll
-      type ? "(type)"
-      ": "
-      if story?.id
-        "" [##{story.id}]#{if storyState && storyState != story.status then " (#{storyState})"}\_
-
-      message ? "(message)"
-
-      if coauthors
-        "\n\n\n" +
-          array coauthor in coauthors
-            "" Coauthored-by: #{coauthor}
-          .join "\n"
-    .join ''
-
   @getGitConfig: ->
     Promise.then -> SimpleGit.listConfig()
     .then ({all}) -> all
@@ -43,7 +27,7 @@ class Git extends BaseClass
       status.ahead, status.behind
 
   @commit: (options) =>
-    generatedCommitMessage = @getGitCommitMessage options
+    generatedCommitMessage = getCommitMessage options
     Promise.then -> SimpleGit.commit generatedCommitMessage
     .then (result) -> merge result, {} generatedCommitMessage
 

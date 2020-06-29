@@ -4,9 +4,11 @@
 (module.exports = require('./namespace'))
 .includeInNamespace(require('./Lib'))
 .addModules({
-  ApplyActions:   require('./applyActions'),
-  Autocomplete:   require('./Autocomplete'),
-  CommitStateLib: require('./CommitStateLib'),
-  SearchSort:     require('./SearchSort'),
-  StandardImport: require('./StandardImport')
+  ApplyActions:     require('./applyActions'),
+  Autocomplete:     require('./Autocomplete'),
+  CommitStateLib:   require('./CommitStateLib'),
+  IgnoreRejections: require('./ignoreRejections'),
+  Presenters:       require('./Presenters'),
+  SearchSort:       require('./SearchSort'),
+  StandardImport:   require('./StandardImport')
 });

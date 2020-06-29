@@ -24,7 +24,7 @@ import &StandardImport, &CommandsLib, &Git
     if state.options?.verbose
       log commit-success: {}
         summary: merge {files: array {path} from staged with path}, object v in summary with v | 0
-        message: getGitCommitMessage state
+        message: getCommitMessage state
         actionsApplied
         branch
         commit

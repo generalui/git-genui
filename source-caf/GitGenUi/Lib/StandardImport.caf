@@ -1,2 +1,4 @@
 &ArtStandardLib.mergeWithSelf
   &ArtClassSystem
+  &Config
+  {} &Tracker.tracker

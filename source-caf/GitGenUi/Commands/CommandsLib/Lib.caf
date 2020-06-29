@@ -24,10 +24,6 @@ import &StandardImport
       Promise.then -> action state
       .then (newState) -> menuApp newState ? state, menuF
 
-  saveState = (state) ->
-    userConfig.saveCommitOptionsForProject {message, type, coauthors, story} = state if state
-    state
-
   validateStory = (state) ->
     state extract story, storyId, stories
     if storyId ?= story?.id
