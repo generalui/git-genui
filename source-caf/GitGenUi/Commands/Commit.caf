@@ -74,16 +74,6 @@ run: (options) ->
 
           action: SelectCommitType,   label: "Select type"            value: type
 
-          if myAccount
-            action: SelectCoauthors,  label: "Change coauthors"       value: if members?.length == 0 then colorNotPresent 'only you on project' else presentValue if coauthors?.length > 0 then coauthors
-          else
-            action: configure,        label: "Change coauthors"       value: colorNotPresent("configure tracker")
-
-          action: EditGitStage,       label: "Edit staged files" value:
-            compactFlatten array statusCat from :staged :unstaged :untracked when status[statusCat]?.length > 0
-              &colors[statusColors[statusCat]] "" #{status[statusCat].length} #{statusCat}
-            .join ', '
-
           label: "Edit body" value: body, action: (state) ->
             openInExternalEditor body
             .then (body) -> merge state, {} body
@@ -94,6 +84,16 @@ run: (options) ->
             action: (state) ->
               openInExternalEditor breakingChange
               .then (breakingChange) -> merge state, {} breakingChange
+
+          if myAccount
+            action: SelectCoauthors,  label: "Change coauthors"       value: if members?.length == 0 then colorNotPresent 'only you on project' else presentValue if coauthors?.length > 0 then coauthors
+          else
+            action: configure,        label: "Change coauthors"       value: colorNotPresent("configure tracker")
+
+          action: EditGitStage,       label: "Edit staged files" value:
+            compactFlatten array statusCat from :staged :unstaged :untracked when status[statusCat]?.length > 0
+              &colors[statusColors[statusCat]] "" #{status[statusCat].length} #{statusCat}
+            .join ', '
 
           if present message
             action: CommitNow

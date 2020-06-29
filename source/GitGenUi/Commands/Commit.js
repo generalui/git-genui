@@ -186,6 +186,26 @@ Caf.defMod(module, () => {
                       label: "Select type",
                       value: type
                     },
+                    {
+                      label: "Edit body",
+                      value: body,
+                      action: state =>
+                        openInExternalEditor(body).then(body =>
+                          merge(state, { body })
+                        )
+                    },
+                    projectConfig.conventionalCommit
+                      ? {
+                          label: "Breaking changes",
+                          value: breakingChange,
+                          action: state =>
+                            openInExternalEditor(
+                              breakingChange
+                            ).then(breakingChange =>
+                              merge(state, { breakingChange })
+                            )
+                        }
+                      : undefined,
                     myAccount
                       ? {
                           action: SelectCoauthors,
@@ -227,26 +247,6 @@ Caf.defMod(module, () => {
                         )
                       ).join(", ")
                     },
-                    {
-                      label: "Edit body",
-                      value: body,
-                      action: state =>
-                        openInExternalEditor(body).then(body =>
-                          merge(state, { body })
-                        )
-                    },
-                    projectConfig.conventionalCommit
-                      ? {
-                          label: "Breaking changes",
-                          value: breakingChange,
-                          action: state =>
-                            openInExternalEditor(
-                              breakingChange
-                            ).then(breakingChange =>
-                              merge(state, { breakingChange })
-                            )
-                        }
-                      : undefined,
                     present(message)
                       ? {
                           action: CommitNow,
