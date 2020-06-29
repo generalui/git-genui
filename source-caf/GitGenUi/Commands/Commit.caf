@@ -84,6 +84,14 @@ run: (options) ->
               &colors[statusColors[statusCat]] "" #{status[statusCat].length} #{statusCat}
             .join ', '
 
+          if projectConfig.conventionalCommit
+            label: "Breaking changes"
+            value: breakingChanges
+            action: (state) ->
+              Promise.withCallback (callback) ->
+                &externalEditor.editAsync state.breakingChanges, callback
+              .then (breakingChanges) -> merge state, {} breakingChanges
+
           if present message
             action: CommitNow
             value:  "" Commit and exit
