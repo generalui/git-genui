@@ -99,7 +99,10 @@ class Core
       options
     .then (str) ->
       unless options.canBeBlank
-        if present str then str else options.default
+        switch
+        when present str then str
+        when str?.length > 0 then ''
+        else options.default
 
   @password: (options) =>
     @input merge options, type: :password

@@ -174,9 +174,16 @@ Caf.defMod(module, () => {
         this.input = function(options) {
           return inquire(merge({ type: "input" }, options)).then(str =>
             !options.canBeBlank
-              ? present(str)
-                ? str
-                : options.default
+              ? (() => {
+                  switch (false) {
+                    case !present(str):
+                      return str;
+                    case !((Caf.exists(str) && str.length) > 0):
+                      return "";
+                    default:
+                      return options.default;
+                  }
+                })()
               : undefined
           );
         };
