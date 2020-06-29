@@ -50,3 +50,7 @@ import &StandardImport, {} &ignoreRejections
         project:    tracker.configured && ignoreRejections -> tracker.project
         remote:     &Git.aRemote
         options
+    .then (state) ->
+      unless projectConfig.conventionalCommit
+        objectWithout state, :breakingChange
+      else state

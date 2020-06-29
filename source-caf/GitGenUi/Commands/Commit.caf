@@ -86,7 +86,7 @@ run: (options) ->
 
           label: "Edit body" value: body, action: (state) ->
             openInExternalEditor body
-            .then (breakingChange) -> merge state, {} body
+            .then (body) -> merge state, {} body
 
           if projectConfig.conventionalCommit
             label: "Breaking changes"

@@ -231,7 +231,7 @@ Caf.defMod(module, () => {
                       label: "Edit body",
                       value: body,
                       action: state =>
-                        openInExternalEditor(body).then(breakingChange =>
+                        openInExternalEditor(body).then(body =>
                           merge(state, { body })
                         )
                     },

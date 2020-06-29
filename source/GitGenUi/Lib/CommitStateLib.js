@@ -8,7 +8,9 @@ Caf.defMod(module, () => {
       "Promise",
       "merge",
       "tracker",
-      "ignoreRejections"
+      "ignoreRejections",
+      "projectConfig",
+      "objectWithout"
     ],
     [
       global,
@@ -21,7 +23,9 @@ Caf.defMod(module, () => {
       Promise,
       merge,
       tracker,
-      ignoreRejections
+      ignoreRejections,
+      projectConfig,
+      objectWithout
     ) => {
       let extractSavableState;
       return {
@@ -127,6 +131,10 @@ Caf.defMod(module, () => {
               remote: require("../Git").aRemote,
               options
             })
+          ).then(state =>
+            !projectConfig.conventionalCommit
+              ? objectWithout(state, "breakingChange")
+              : state
           );
         }
       };
