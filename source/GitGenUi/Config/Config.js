@@ -6,6 +6,8 @@ Caf.defMod(module, () => {
       return require("./UserConfig")
         .initSingleton()
         .then(() => require("./ProjectConfig").initSingleton());
-    }
+    },
+    userConfig: require("./UserConfig").userConfig,
+    projectConfig: require("./ProjectConfig").projectConfig
   };
 });

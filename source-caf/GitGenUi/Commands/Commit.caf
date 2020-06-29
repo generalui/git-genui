@@ -1,4 +1,4 @@
-import &StandardImport, &UserConfig, &CommandsLib, &ProjectConfig, &Git
+import &StandardImport, &CommandsLib, &Git
 
 ##
   IN: state:
@@ -63,7 +63,7 @@ run: (options) ->
         state
 
       items: (state) ->
-        state extract myAccount, message, story, members, statusSummary, status, type, coauthors
+        state extract myAccount, message, story, members, statusSummary, status, type, coauthors, breakingChanges
 
         compactFlatten []
           action: EditCommitMessage,  label: "Edit message"             value: message

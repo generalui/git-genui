@@ -3,7 +3,7 @@ let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["Promise", "merge", "userConfig", "log", "tracker", "present"],
-    [global, require("../StandardImport"), require("../../UserConfig")],
+    [global, require("../StandardImport")],
     (Promise, merge, userConfig, log, tracker, present) => {
       let updateStateWithPrompt,
         menuApp,

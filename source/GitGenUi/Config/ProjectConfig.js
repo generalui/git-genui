@@ -2,16 +2,24 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["merge", "objectWithout", "Promise", "SourceRoots", "process", "log"],
+    ["merge", "objectWithout", "Promise", "process", "log"],
     [global, require("./StandardImport"), { path: require("path") }],
-    (merge, objectWithout, Promise, SourceRoots, process, log) => {
+    (merge, objectWithout, Promise, process, log) => {
       let ProjectConfig;
       return (ProjectConfig = Caf.defClass(
         class ProjectConfig extends require("./ConfigShared") {},
         function(ProjectConfig, classSuper, instanceSuper) {
           this.singletonClass();
           this.sourceRootIndicatorFiles = [".git", this.configBasename];
-          this.configFields("tracker", { commit: { format: "standard" } });
+          this.configFields({ tracker: {}, commit: { format: "standard" } });
+          this.getter({
+            conventionalCommit: function() {
+              return this.commit.format === "conventionalCommit";
+            },
+            standardCommit: function() {
+              return this.commit.format === "standard";
+            }
+          });
           this.prototype._load = function() {
             return instanceSuper._load
               .apply(this, arguments)
@@ -24,6 +32,14 @@ Caf.defMod(module, () => {
               ? merge(objectWithout(config, "project"), config.project)
               : config;
           };
+          this.getter({
+            projectFolder: function() {
+              return ProjectConfig.projectFolder;
+            },
+            configBasename: function() {
+              return ProjectConfig.configBasename;
+            }
+          });
           this.classGetter("repoRoot", {
             projectFolder: function() {
               return require("path").basename(this.repoRoot);
@@ -41,7 +57,7 @@ Caf.defMod(module, () => {
               return (temp = this._repoRootPromise) != null
                 ? temp
                 : (this._repoRootPromise = Promise.then(() =>
-                    new SourceRoots(
+                    new (require("./SourceRoots"))(
                       this.sourceRootIndicatorFiles
                     ).findSourceRoot(process.cwd())
                   )

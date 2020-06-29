@@ -16,7 +16,6 @@ Caf.defMod(module, () => {
       global,
       require("../StandardImport"),
       require("./CommandsLib"),
-      require("../../UserConfig"),
       require("../../Git")
     ],
     (

@@ -21,8 +21,6 @@ Caf.defMod(module, () => {
     [
       global,
       require("../StandardImport"),
-      require("../../UserConfig"),
-      require("../../ProjectConfig"),
       require("./Lib"),
       { colors: require("colors") }
     ],

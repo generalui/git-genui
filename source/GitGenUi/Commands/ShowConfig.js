@@ -3,13 +3,7 @@ let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["log", "colors", "userConfig", "projectConfig"],
-    [
-      global,
-      require("./StandardImport"),
-      require("../UserConfig"),
-      require("../ProjectConfig"),
-      { colors: require("colors") }
-    ],
+    [global, require("./StandardImport"), { colors: require("colors") }],
     (log, colors, userConfig, projectConfig) => {
       return {
         description: "Show the merged configurarion for git-genui.",

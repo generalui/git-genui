@@ -18,7 +18,6 @@
   SelectMembers:       require('./SelectMembers'),
   SelectStory:         require('./SelectStory'),
   SelectStoryEstimate: require('./SelectStoryEstimate'),
-  SelectStoryName:     require('./SelectStoryName'),
   SelectStoryState:    require('./SelectStoryState'),
   StoryMenu:           require('./StoryMenu')
 });

@@ -1,5 +1,4 @@
-import &ArtStandardLib, &ArtClassSystem, &ArtRestClient, &UserConfig
-
+import &ArtStandardLib, &ArtClassSystem, &ArtRestClient, &Config
 
 class PivotalTracker extends BaseClass
   @classGetter

@@ -3,7 +3,6 @@ import &ArtStandardLib
 []
   &Autocomplete
   &SearchSort
-  &SourceRoots
   &CommitStateLib
 
   standardFormatDate: (date) -> formatDate date ? toSeconds(), "yyyy-mm-dd HH:MM:ss"

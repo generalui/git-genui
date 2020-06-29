@@ -11,6 +11,8 @@ Caf.defMod(module, () => {
       "Object",
       "objectWithout",
       "log",
+      "projectConfig",
+      "userConfig",
       "colors",
       "pluralize",
       "pad"
@@ -25,6 +27,8 @@ Caf.defMod(module, () => {
       Object,
       objectWithout,
       log,
+      projectConfig,
+      userConfig,
       colors,
       pluralize,
       pad
@@ -205,8 +209,8 @@ Caf.defMod(module, () => {
               if (Caf.exists(options) && options.verbose) {
                 log({
                   verbose: {
-                    projectFolder: require("./ProjectConfig").projectFolder,
-                    projectKey: require("./UserConfig").userConfig.projectKey,
+                    projectFolder: projectConfig.projectFolder,
+                    projectKey: userConfig.projectKey,
                     git: { remotes, status }
                   }
                 });

@@ -1,4 +1,5 @@
 &ArtStandardLib.mergeWithSelf
   &ArtClassSystem
-  &Lib
   &ArtCommunicationStatus
+  &Config
+  &Lib

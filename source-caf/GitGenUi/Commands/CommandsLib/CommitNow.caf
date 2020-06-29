@@ -1,4 +1,4 @@
-import &StandardImport, &CommandsLib, &UserConfig, &Git
+import &StandardImport, &CommandsLib, &Git
 
 (state) ->
   if state.pretend

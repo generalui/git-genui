@@ -3,17 +3,12 @@ let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["projectConfig"],
-    [global, require("./ProjectConfig")],
+    [global, require("./Config")],
     projectConfig => {
       return function() {
-        return (() => {
-          switch (projectConfig.commit.format) {
-            case "conventionalCommit":
-              return require("./ConventionalCommitTypes");
-            default:
-              return require("./StandardCommitTypes");
-          }
-        })();
+        return projectConfig.conventionalCommit
+          ? require("./ConventionalCommitTypes")
+          : require("./StandardCommitTypes");
       };
     }
   );

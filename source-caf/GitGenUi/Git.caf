@@ -125,8 +125,8 @@ class Git extends BaseClass
     .tap ([status, origin, remotes, email]) ->
       if options?.verbose
         log verbose: {}
-          &ProjectConfig.projectFolder
-          &UserConfig.userConfig.projectKey
+          projectConfig.projectFolder
+          userConfig.projectKey
           git: {} remotes, status
 
       if origin?

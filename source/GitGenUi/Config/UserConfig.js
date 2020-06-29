@@ -50,8 +50,8 @@ Caf.defMod(module, () => {
               .apply(this, arguments)
               .then(() =>
                 Promise.deepAll({
-                  origin: require("./Git").origin,
-                  remotes: require("./Git").remotes,
+                  origin: require("../Git").origin,
+                  remotes: require("../Git").remotes,
                   projectFolder: require("./ProjectConfig").repoRootPromise.then(
                     require("path").basename
                   )

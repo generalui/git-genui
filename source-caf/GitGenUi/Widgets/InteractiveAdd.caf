@@ -1,7 +1,7 @@
-import &StandardImport, {} &colors
+import &StandardImport, &Config, {} &colors
 
 getResolvedFilePath = (filePath) ->
-  &path.join &ProjectConfig.projectConfig.configPath, filePath
+  &path.join projectConfig.configPath, filePath
 
 (options) ->
   &Git.rawStatus

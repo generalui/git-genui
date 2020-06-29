@@ -7,8 +7,7 @@ Caf.defMod(module, () => {
       global,
       require("./StandardImport"),
       require("./Tracker"),
-      require("./Lib"),
-      require("./UserConfig")
+      require("./Lib")
     ],
     (Promise, merge, userConfig, tracker, ignoreRejections) => {
       return function(options = {}) {

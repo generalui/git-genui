@@ -22,7 +22,7 @@ Caf.defMod(module, () => {
       require("art-standard-lib"),
       require("art-class-system"),
       require("art-rest-client"),
-      require("../UserConfig")
+      require("../Config")
     ],
     (
       BaseClass,

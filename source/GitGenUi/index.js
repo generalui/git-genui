@@ -6,19 +6,16 @@
 .addModules({
   Cli:                     require('./Cli'),
   CommitTypes:             require('./CommitTypes'),
-  Config:                  require('./Config'),
-  ConfigShared:            require('./ConfigShared'),
   ConventionalCommitTypes: require('./ConventionalCommitTypes'),
   GetInitialCommitState:   require('./getInitialCommitState'),
   Git:                     require('./Git'),
   GitGenUiPromptFor:       require('./GitGenUiPromptFor'),
-  ProjectConfig:           require('./ProjectConfig'),
   StandardCommitTypes:     require('./StandardCommitTypes'),
   StandardImport:          require('./StandardImport'),
-  Tracker:                 require('./Tracker'),
-  UserConfig:              require('./UserConfig')
+  Tracker:                 require('./Tracker')
 });
 require('./Commands');
+require('./Config');
 require('./Lib');
 require('./PostCommitActions');
 require('./PromptFor');

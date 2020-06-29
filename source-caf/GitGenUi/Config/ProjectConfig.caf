@@ -8,8 +8,12 @@ class ProjectConfig extends &ConfigShared
     @configBasename
 
   @configFields
-    :tracker
-    commit: format: :standard # or :conventionalCommit
+    tracker:  {}
+    commit:   format: :standard # or :conventionalCommit
+
+  @getter
+    conventionalCommit: -> @commit.format == :conventionalCommit
+    standardCommit:     -> @commit.format == :standard
 
   _load: ->
     super
@@ -22,6 +26,10 @@ class ProjectConfig extends &ConfigShared
         config.project
     else config
 
+  @getter
+    projectFolder: -> ProjectConfig.projectFolder
+    configBasename: -> ProjectConfig.configBasename
+
   @classGetter
     :repoRoot
     projectFolder: -> &path.basename @repoRoot
@@ -29,7 +37,7 @@ class ProjectConfig extends &ConfigShared
     configFilePathPromise: -> @repoRootPromise.then (dir) -> dir && &path.join dir, @configBasename
     repoRootPromise: -> @_repoRootPromise ?=
       Promise.then ->
-        new SourceRoots @sourceRootIndicatorFiles
+        new &SourceRoots @sourceRootIndicatorFiles
         .findSourceRoot process.cwd()
       .tap (r) -> @_repoRoot = r
       .catch (error) ->

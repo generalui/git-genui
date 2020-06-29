@@ -2,15 +2,17 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["log", "pad", "colors"],
-    [global, require("../StandardImport"), { colors: require("colors") }],
-    (log, pad, colors) => {
+    ["projectConfig", "log", "pad", "colors"],
+    [
+      global,
+      require("../StandardImport"),
+      require("../Config"),
+      { colors: require("colors") }
+    ],
+    (projectConfig, log, pad, colors) => {
       let getResolvedFilePath;
       getResolvedFilePath = function(filePath) {
-        return require("path").join(
-          require("../ProjectConfig").projectConfig.configPath,
-          filePath
-        );
+        return require("path").join(projectConfig.configPath, filePath);
       };
       return function(options) {
         return require("../Git").rawStatus.then(({ files }) => {

@@ -1,4 +1,4 @@
-import &StandardImport, &Tracker, &Lib, &UserConfig
+import &StandardImport, &Tracker, &Lib
 (options = {}) ->
   Promise.deepAll merge
     userConfig.commitOptionsForProject

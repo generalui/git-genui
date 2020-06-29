@@ -8,6 +8,5 @@
   Autocomplete:   require('./Autocomplete'),
   CommitStateLib: require('./CommitStateLib'),
   SearchSort:     require('./SearchSort'),
-  SourceRoots:    require('./SourceRoots'),
   StandardImport: require('./StandardImport')
 });

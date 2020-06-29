@@ -1,3 +1,4 @@
+&source
 &ArtTestbench/testing
 .init
   synchronous: true

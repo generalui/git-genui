@@ -1,6 +1,6 @@
-import &ProjectConfig
+import &Config
 
 ->
-  switch projectConfig.commit.format
-  when :conventionalCommit then &ConventionalCommitTypes
+  if projectConfig.conventionalCommit
+    &ConventionalCommitTypes
   else &StandardCommitTypes

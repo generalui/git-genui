@@ -16,6 +16,7 @@
     "inquirer-autocomplete-prompt": "^1.0.2",
     "inquirer-checkbox-plus-prompt": "^1.0.1",
     "neptune-namespaces-runtime": "^3.0.0",
+    "npm-watch": "^0.6.0",
     "open": "^7.0.3",
     "pivotaljs": "^1.0.3",
     "simple-git": "^2.5.0",
@@ -55,8 +56,18 @@
     "type": "git",
     "url": "https://github.com/generalui/git-genui.git"
   },
+  "watch": {
+    "build": {
+      "patterns": [
+        "source-caf"
+      ],
+      "extensions": "caf",
+      "quiet": false
+    }
+  },
   "scripts": {
-    "build": "caf -p -c source-caf -o source;nn -s",
+    "build": "caf -p -c source-caf -o source; nn -sq",
+    "build-clean": "rm -rf source/*; npm run build",
     "build-test": "npm run build; npm run test --silent; echo",
     "test": "nn -s;mocha -u tdd;jest",
     "watch": "watch 'npm run build' ./source-caf",

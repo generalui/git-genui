@@ -1,4 +1,4 @@
-import &StandardImport, &UserConfig, &ProjectConfig, &Lib, {} &colors
+import &StandardImport, &Lib, {} &colors
 
 getProjects = ->
   tracker.projects
@@ -29,6 +29,7 @@ selectCommitFormat = ->
       format: :conventionalCommit  value: "" conventionalCommit: Commit using the www.ConventionalCommits.org standard
 
     default: {} projectConfig.commit.format
+
   .then ({format}) ->
     projectConfig.mergeCommitWith {} format
 

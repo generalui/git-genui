@@ -1,8 +1,7 @@
-import &ArtStandardLib, &CommitStateLib, &Git
-&source
+import &ArtStandardLib, &source, &source.Git
 
 global.beforeAll ->
-  &Config.load()
+  Config.load()
 
 test 'getCommitComment' ->
   expect getCommitComment {}
@@ -10,7 +9,7 @@ test 'getCommitComment' ->
     /// git-genui .* v \d+\. \d+\. \d+
 
 test 'getCommitComment' ->
-  &getInitialCommitState quiet: true
+  getInitialCommitState quiet: true
   .then (initialState) ->
     initialState.message = "my-commit-message"
     state = merge initialState,

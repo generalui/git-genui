@@ -31,9 +31,7 @@ Caf.defMod(module, () => {
     [
       global,
       require("./StandardImport"),
-      require("../UserConfig"),
       require("./CommandsLib"),
-      require("../ProjectConfig"),
       require("../Git")
     ],
     (
@@ -146,7 +144,8 @@ Caf.defMod(module, () => {
                     statusSummary,
                     status,
                     type,
-                    coauthors;
+                    coauthors,
+                    breakingChanges;
                   myAccount = state.myAccount;
                   message = state.message;
                   story = state.story;
@@ -155,6 +154,7 @@ Caf.defMod(module, () => {
                   status = state.status;
                   type = state.type;
                   coauthors = state.coauthors;
+                  breakingChanges = state.breakingChanges;
                   return compactFlatten([
                     {
                       action: EditCommitMessage,
@@ -221,6 +221,9 @@ Caf.defMod(module, () => {
                         )
                       ).join(", ")
                     },
+                    projectConfig.conventionalCommit
+                      ? { label: "Breacking changes", value: breakingChanges }
+                      : undefined,
                     present(message)
                       ? {
                           action: CommitNow,

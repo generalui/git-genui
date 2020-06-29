@@ -23,7 +23,7 @@ suite: findSourceRoot: ->
           .my.config.json: "blah"
           source: index.js: "{}"
 
-    new SourceRoots
+    new Config.SourceRoots
       :.git
       "my.config.*"
       ".my.config.*"
