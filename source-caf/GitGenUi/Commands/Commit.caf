@@ -1,4 +1,4 @@
-import &StandardImport, &CommandsLib, &Git
+import &StandardImport, &CommandsLib, &Git, &Style
 
 ##
   IN: state:
@@ -54,11 +54,17 @@ run: (options) ->
 
       preprocessState: (state) ->
         if present state.message
+          process.stdout extract columns
           log "" Commit message preview:
-          log "  " +
-            &colors.bold &colors.brightGreen getCommitMessage state
-            .replace /\n/g, "\n  "
-          log ''
+          log brightGreen.bold
+            compactFlatten []
+              repeat :-, columns - 2
+              brightGreen.bold getCommitMessage state
+              .replace /\n/g, "\n  "
+              repeat :-, columns - 2
+            .join "\n"
+
+          log " "
 
         state
 
@@ -92,11 +98,12 @@ run: (options) ->
 
           action: EditGitStage,       label: "Edit staged files" value:
             compactFlatten array statusCat from :staged :unstaged :untracked when status[statusCat]?.length > 0
-              &colors[statusColors[statusCat]] "" #{status[statusCat].length} #{statusCat}
+              &Style[statusColors[statusCat]] "" #{status[statusCat].length} #{statusCat}
             .join ', '
 
           if present message
             action: CommitNow
+            shortcut: :C
             value:  "" Commit and exit
             exit:   true
 

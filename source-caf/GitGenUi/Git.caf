@@ -1,4 +1,4 @@
-import &StandardImport, {} &colors
+import &StandardImport, {} &Style
 SimpleGit = require(:simple-git/promise)()
 
 class Git extends BaseClass
@@ -114,41 +114,41 @@ class Git extends BaseClass
           git: {} remotes, status
 
       if origin?
-        log "" Origin:        #{colors.green origin}
+        log "" Origin:        #{Style.green origin}
       else
         log :Remotes:
         each {refs, name} in remotes
-          log "" \_ #{pad name + ":", 12} #{colors.green refs.fetch}
+          log "" \_ #{pad name + ":", 12} #{Style.green refs.fetch}
 
-      log "" Branch:        #{colors.green status.current}
-      log "" Tracking:      #{colors.green status.tracking}
-      log "" Author:        #{colors.green email}
+      log "" Branch:        #{Style.green status.current}
+      log "" Tracking:      #{Style.green status.tracking}
+      log "" Author:        #{Style.green email}
 
       outputOne = ({path, status}) -> "  #{pad status + ':', 12} #{path}"
 
       {staged, unstaged, untracked} = status
 
       if staged.length > 0
-        log "" \nChanges to be committed:       #{colors.grey "(#{pluralize :file, staged.length})"}
+        log "" \nChanges to be committed:       #{Style.grey "(#{pluralize :file, staged.length})"}
         log
           array file in staged with
             if file.status == :modified && file.index != :modified
-              colors.yellow outputOne file
+              Style.yellow outputOne file
             else
-              colors.green outputOne file
+              Style.green outputOne file
           .sort()
           .join :\n
 
       if unstaged.length > 0
-        log "" \nChanges not staged to commit:  #{colors.grey "(#{pluralize :file, unstaged.length})"}
-        log colors.red
+        log "" \nChanges not staged to commit:  #{Style.grey "(#{pluralize :file, unstaged.length})"}
+        log Style.red
           array file in unstaged with outputOne file
           .sort()
           .join :\n
 
       if untracked.length > 0
-        log "" \nUntracked files:               #{colors.grey "(#{pluralize :file, untracked.length})"}
-        log colors.red
+        log "" \nUntracked files:               #{Style.grey "(#{pluralize :file, untracked.length})"}
+        log Style.red
           array file in untracked with outputOne file
           .sort()
           .join :\n

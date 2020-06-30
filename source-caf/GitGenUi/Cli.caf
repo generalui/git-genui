@@ -1,4 +1,4 @@
-import &ArtStandardLib
+import &ArtStandardLib, &Style
 
 run: ->
   &Config.load()
@@ -9,7 +9,7 @@ run: ->
     .start
       commands: object {run}, command in commands
         (params) ->
-          !params.quiet && log &colors.bold &colors.brightWhite "" git genui #{dashCase command}
+          !params.quiet && log brightWhite.bold "" git genui #{dashCase command}
           run params
 
       help:

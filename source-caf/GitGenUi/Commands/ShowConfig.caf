@@ -1,4 +1,4 @@
-import &StandardImport, {} &colors
+import &StandardImport, {} &Style
 
 description:
   """
@@ -7,11 +7,11 @@ description:
 run: ({quiet}) ->
   !quiet && log
     """
-      To change the config, run #{colors.green "git-genui config"}.
+      To change the config, run #{Style.green "git-genui config"}.
       There are two config files:
 
-      - #{colors.brightWhite userConfig.configBasename} resides in your home folder and stores your account information and git-genui history.
-      - #{colors.brightWhite projectConfig.configBasename} resides in the project's folder and should be added to git.
+      - #{Style.brightWhite userConfig.configBasename} resides in your home folder and stores your account information and git-genui history.
+      - #{Style.brightWhite projectConfig.configBasename} resides in the project's folder and should be added to git.
       \_
 
   [userConfig.homeDirRelativeConfigFilePath]:    userConfig

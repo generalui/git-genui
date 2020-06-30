@@ -1,4 +1,4 @@
-import &StandardImport, &CommandsLib, {} &colors
+import &StandardImport, &CommandsLib, {} &Style
 
 description: "" configure git-genui
 run: ConfigureMenu

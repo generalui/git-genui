@@ -11,6 +11,7 @@
     "art-standard-lib": "^1.69.4",
     "btoa": "^1.2.1",
     "caffeine-script-runtime": "1.13.3",
+    "chalk": "^4.1.0",
     "external-editor": "^3.1.0",
     "fs-extra": "^9.0.0",
     "inquirer": "^7.1.0",
@@ -21,6 +22,7 @@
     "open": "^7.0.3",
     "pivotaljs": "^1.0.3",
     "simple-git": "^2.11.0",
+    "slice-ansi": "^4.0.0",
     "stable": "^0.1.8"
   },
   "description": "git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning",

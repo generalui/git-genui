@@ -3,7 +3,7 @@ let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["Promise", "Error", "log", "grey"],
-    [global, require("./StandardImport"), require("colors")],
+    [global, require("./StandardImport"), require("../Style")],
     (Promise, Error, log, grey) => {
       let applyActions;
       return (applyActions = function(input, actionList, actions, options) {

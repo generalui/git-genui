@@ -1,4 +1,4 @@
-import &ArtStandardLib, &ArtClassSystem, &Lib, &colors
+import &ArtStandardLib, &ArtClassSystem, &Lib, &Style
 
 &inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
 &inquirer.registerPrompt :checkbox-plus &inquirer-checkbox-plus-prompt

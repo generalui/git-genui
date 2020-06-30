@@ -7,7 +7,7 @@ Caf.defMod(module, () => {
       global,
       require("./StandardImport"),
       require("./CommandsLib"),
-      { colors: require("colors") }
+      { Style: require("../Style") }
     ],
     ConfigureMenu => {
       return { description: "configure git-genui", run: ConfigureMenu };

@@ -2,14 +2,14 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["projectConfig", "log", "pad", "colors"],
+    ["projectConfig", "log", "pad", "Style"],
     [
       global,
       require("../StandardImport"),
       require("../Config"),
-      { colors: require("colors") }
+      { Style: require("../Style") }
     ],
-    (projectConfig, log, pad, colors) => {
+    (projectConfig, log, pad, Style) => {
       let getResolvedFilePath;
       getResolvedFilePath = function(filePath) {
         return require("path").join(projectConfig.configPath, filePath);
@@ -61,7 +61,7 @@ Caf.defMod(module, () => {
                   ? (require("../Git")[
                       (action = selected ? "unstage" : "stage")
                     ](getResolvedFilePath(file.path)),
-                    log(colors.blue(action + ": ") + colors.green(file.path)))
+                    log(Style.blue(action + ": ") + Style.green(file.path)))
                   : undefined;
               });
             });

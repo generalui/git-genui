@@ -78,7 +78,7 @@ Caf.defMod(module, () => {
             if (Caf.exists((base1 = state.story)) && base1.id) {
               log(
                 `story: ${Caf.toString(
-                  require("colors").green(
+                  require("../../Style").green(
                     tracker.getStoryBrowserUrl(
                       Caf.exists((base2 = state.story)) && base2.id
                     )

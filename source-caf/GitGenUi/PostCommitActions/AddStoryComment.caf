@@ -1,4 +1,4 @@
-import &StandardImport, &colors
+import &StandardImport, &Style
 
 (state) ->
   if present state extract story extract? id

@@ -1,5 +1,5 @@
 import &StandardImport
 
 &Lib.updateStateWithPrompt :story (state) ->
-  log "" Tip: Select #{&colors.green "(none)"} for no story. It's at the bottom of the story list.
+  log "" Tip: Select #{&Style.green "(none)"} for no story. It's at the bottom of the story list.
   &SelectStory merge state, prompt: "" What story does this commit advance most?

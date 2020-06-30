@@ -2,9 +2,14 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["process", "Promise", "approximateSearchSort"],
-    [global, require("./StandardImport"), require("./SearchSort")],
-    (process, Promise, approximateSearchSort) => {
+    ["process", "Promise", "approximateSearchSort", "sliceAnsi"],
+    [
+      global,
+      require("./StandardImport"),
+      require("./SearchSort"),
+      { sliceAnsi: require("slice-ansi") }
+    ],
+    (process, Promise, approximateSearchSort, sliceAnsi) => {
       let autocompleteFromStrings;
       return {
         autocompleteFromStrings: (autocompleteFromStrings = function(strings) {
@@ -13,7 +18,7 @@ Caf.defMod(module, () => {
             columns = process.stdout.columns;
             return Promise.resolve(
               Caf.array(approximateSearchSort(input, strings), str =>
-                str.slice(0, columns - 3)
+                sliceAnsi(str, 0, columns - 3)
               )
             );
           };

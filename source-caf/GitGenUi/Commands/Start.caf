@@ -7,7 +7,7 @@ run: (options) ->
   .then (stories) ->
     started = array story in stories when story.state == :started
     if started.length > 0
-      log &colors.cyan "" Stories already started:
+      log &Style.blue "" Stories already started:
       each story in started
         log "  " + tracker.formatStory story
       log ''

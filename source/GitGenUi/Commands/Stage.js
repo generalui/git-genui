@@ -10,7 +10,7 @@ Caf.defMod(module, () => {
         run: function(options) {
           log(
             `Tip: You can also stage files with ${Caf.toString(
-              require("colors").green("git add")
+              require("../Style").green("git add")
             )}.`
           );
           return InteractiveAdd(options).then(() => null);

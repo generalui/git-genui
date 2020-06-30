@@ -3,7 +3,7 @@ let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["present", "getCommitComment", "log", "grey", "Promise"],
-    [global, require("../StandardImport"), require("colors")],
+    [global, require("../StandardImport"), require("../Style")],
     (present, getCommitComment, log, grey, Promise) => {
       return function(state) {
         let story, id, base, base1;

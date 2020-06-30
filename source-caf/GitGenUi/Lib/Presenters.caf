@@ -3,8 +3,8 @@ import &ArtStandardLib
 {}
   standardFormatDate: (date) -> formatDate date ? toSeconds(), "yyyy-mm-dd HH:MM:ss"
 
-  colorizeValue = &colors.yellow
-  colorNotPresent = &colors.grey
+  colorizeValue = &Style.yellow
+  colorNotPresent = &Style.grey
 
   presentValue = (value, noneValue = :none) ->
     if present value

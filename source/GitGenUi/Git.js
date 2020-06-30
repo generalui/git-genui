@@ -13,11 +13,11 @@ Caf.defMod(module, () => {
       "log",
       "projectConfig",
       "userConfig",
-      "colors",
+      "Style",
       "pluralize",
       "pad"
     ],
-    [global, require("./StandardImport"), { colors: require("colors") }],
+    [global, require("./StandardImport"), { Style: require("./Style") }],
     (
       BaseClass,
       Promise,
@@ -29,7 +29,7 @@ Caf.defMod(module, () => {
       log,
       projectConfig,
       userConfig,
-      colors,
+      Style,
       pluralize,
       pad
     ) => {
@@ -189,24 +189,24 @@ Caf.defMod(module, () => {
                 });
               }
               if (origin != null) {
-                log(`Origin:        ${Caf.toString(colors.green(origin))}`);
+                log(`Origin:        ${Caf.toString(Style.green(origin))}`);
               } else {
                 log("Remotes:");
                 Caf.each2(remotes, ({ refs, name }) =>
                   log(
                     `  ${Caf.toString(pad(name + ":", 12))} ${Caf.toString(
-                      colors.green(refs.fetch)
+                      Style.green(refs.fetch)
                     )}`
                   )
                 );
               }
               log(
-                `Branch:        ${Caf.toString(colors.green(status.current))}`
+                `Branch:        ${Caf.toString(Style.green(status.current))}`
               );
               log(
-                `Tracking:      ${Caf.toString(colors.green(status.tracking))}`
+                `Tracking:      ${Caf.toString(Style.green(status.tracking))}`
               );
-              log(`Author:        ${Caf.toString(colors.green(email))}`);
+              log(`Author:        ${Caf.toString(Style.green(email))}`);
               outputOne = ({ path, status }) =>
                 `  ${Caf.toString(pad(status + ":", 12))} ${Caf.toString(
                   path
@@ -215,7 +215,7 @@ Caf.defMod(module, () => {
               if (staged.length > 0) {
                 log(
                   `\nChanges to be committed:       ${Caf.toString(
-                    colors.grey(
+                    Style.grey(
                       `(${Caf.toString(pluralize("file", staged.length))})`
                     )
                   )}`
@@ -223,8 +223,8 @@ Caf.defMod(module, () => {
                 log(
                   Caf.array(staged, file =>
                     file.status === "modified" && file.index !== "modified"
-                      ? colors.yellow(outputOne(file))
-                      : colors.green(outputOne(file))
+                      ? Style.yellow(outputOne(file))
+                      : Style.green(outputOne(file))
                   )
                     .sort()
                     .join("\n")
@@ -233,13 +233,13 @@ Caf.defMod(module, () => {
               if (unstaged.length > 0) {
                 log(
                   `\nChanges not staged to commit:  ${Caf.toString(
-                    colors.grey(
+                    Style.grey(
                       `(${Caf.toString(pluralize("file", unstaged.length))})`
                     )
                   )}`
                 );
                 log(
-                  colors.red(
+                  Style.red(
                     Caf.array(unstaged, file => outputOne(file))
                       .sort()
                       .join("\n")
@@ -249,13 +249,13 @@ Caf.defMod(module, () => {
               if (untracked.length > 0) {
                 log(
                   `\nUntracked files:               ${Caf.toString(
-                    colors.grey(
+                    Style.grey(
                       `(${Caf.toString(pluralize("file", untracked.length))})`
                     )
                   )}`
                 );
                 log(
-                  colors.red(
+                  Style.red(
                     Caf.array(untracked, file => outputOne(file))
                       .sort()
                       .join("\n")

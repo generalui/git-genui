@@ -16,8 +16,10 @@ Caf.defMod(module, () => {
       "process",
       "getInitialCommitState",
       "present",
-      "getCommitMessage",
+      "brightGreen",
       "compactFlatten",
+      "repeat",
+      "getCommitMessage",
       "EditCommitMessage",
       "projectConfig",
       "StoryMenu",
@@ -34,7 +36,8 @@ Caf.defMod(module, () => {
       global,
       require("./StandardImport"),
       require("./CommandsLib"),
-      require("../Git")
+      require("../Git"),
+      require("../Style")
     ],
     (
       ConfigureMenu,
@@ -50,8 +53,10 @@ Caf.defMod(module, () => {
       process,
       getInitialCommitState,
       present,
-      getCommitMessage,
+      brightGreen,
       compactFlatten,
+      repeat,
+      getCommitMessage,
       EditCommitMessage,
       projectConfig,
       StoryMenu,
@@ -124,19 +129,22 @@ Caf.defMod(module, () => {
             .then(state =>
               require("../PromptFor").menu(state, {
                 preprocessState: state => {
+                  let columns;
                   if (present(state.message)) {
+                    columns = process.stdout.columns;
                     log("Commit message preview:");
                     log(
-                      "  " +
-                        require("colors")
-                          .bold(
-                            require("colors").brightGreen(
-                              getCommitMessage(state)
-                            )
-                          )
-                          .replace(/\n/g, "\n  ")
+                      brightGreen.bold(
+                        compactFlatten([
+                          repeat("-", columns - 2),
+                          brightGreen
+                            .bold(getCommitMessage(state))
+                            .replace(/\n/g, "\n  "),
+                          repeat("-", columns - 2)
+                        ]).join("\n")
+                      )
                     );
-                    log("");
+                    log(" ");
                   }
                   return state;
                 },
@@ -232,7 +240,7 @@ Caf.defMod(module, () => {
                         Caf.array(
                           ["staged", "unstaged", "untracked"],
                           statusCat =>
-                            require("colors")[statusColors[statusCat]](
+                            require("../Style")[statusColors[statusCat]](
                               `${Caf.toString(
                                 status[statusCat].length
                               )} ${Caf.toString(statusCat)}`
@@ -250,6 +258,7 @@ Caf.defMod(module, () => {
                     present(message)
                       ? {
                           action: CommitNow,
+                          shortcut: "C",
                           value: "Commit and exit",
                           exit: true
                         }

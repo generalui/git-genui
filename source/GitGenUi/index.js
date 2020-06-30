@@ -13,6 +13,7 @@
   GitGenUiPromptFor:       require('./GitGenUiPromptFor'),
   StandardCommitTypes:     require('./StandardCommitTypes'),
   StandardImport:          require('./StandardImport'),
+  Style:                   require('./Style'),
   Tracker:                 require('./Tracker')
 });
 require('./Commands');

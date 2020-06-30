@@ -18,7 +18,7 @@ Caf.defMod(module, () => {
                 story => story.state === "started"
               );
               if (started.length > 0) {
-                log(require("colors").cyan("Stories already started:"));
+                log(require("../Style").blue("Stories already started:"));
                 Caf.each2(started, story =>
                   log("  " + tracker.formatStory(story))
                 );

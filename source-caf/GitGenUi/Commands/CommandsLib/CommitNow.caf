@@ -33,6 +33,6 @@ import &StandardImport, &CommandsLib, &Git
       log commit-success: commit ? {} result
 
     if state.story?.id
-      log "" story: #{} &colors.green tracker.getStoryBrowserUrl state.story?.id
+      log "" story: #{} &Style.green tracker.getStoryBrowserUrl state.story?.id
 
     null

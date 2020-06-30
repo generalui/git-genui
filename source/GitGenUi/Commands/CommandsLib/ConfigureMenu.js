@@ -6,7 +6,7 @@ Caf.defMod(module, () => {
       "updateStateWithPrompt",
       "tracker",
       "presentValue",
-      "colors",
+      "Style",
       "projectConfig",
       "userConfig",
       "log",
@@ -22,13 +22,13 @@ Caf.defMod(module, () => {
       global,
       require("../StandardImport"),
       require("./Lib"),
-      { colors: require("colors") }
+      { Style: require("../../Style") }
     ],
     (
       updateStateWithPrompt,
       tracker,
       presentValue,
-      colors,
+      Style,
       projectConfig,
       userConfig,
       log,
@@ -63,7 +63,7 @@ Caf.defMod(module, () => {
                 projectId: id,
                 default: id === projectId,
                 value: `${Caf.toString(presentValue(name))} ${Caf.toString(
-                  colors.grey(
+                  Style.grey(
                     `(id: ${Caf.toString(id)}, account-id: ${Caf.toString(
                       account_id
                     )})`
@@ -131,7 +131,7 @@ Caf.defMod(module, () => {
             .then(token =>
               tracker.myAccount.then(
                 () => {
-                  log(colors.green("Valid token."));
+                  log(Style.green("Valid token."));
                   return token;
                 },
                 error => {
@@ -210,7 +210,7 @@ Caf.defMod(module, () => {
                   .tracker.myAccount.then(
                     me => {
                       if (present(prompt)) {
-                        log(colors.green(prompt));
+                        log(Style.green(prompt));
                       }
                       return me;
                     },

@@ -98,7 +98,7 @@ Caf.defMod(module, () => {
             assert.eq(
               approximateSearchSort("unstarted)", [
                 "[170589418] (unstarted) On an iPhone, the home hero services menu has line wrapping in bad places. Needs some cleanup.",
-                "[170466089] (unscheduled) The navigation needs to appear in opposite colors (light bg, dark links) when it is displayed on a page that has a light background top slat.",
+                "[170466089] (unscheduled) The navigation needs to appear in opposite Style (light bg, dark links) when it is displayed on a page that has a light background top slat.",
                 "[170465836] (unstarted) Footer needs cleanup",
                 "[170652027] (unstarted) Services pages need case studies",
                 "[170589433] (unstarted) Research SEO appropriate way to redirect genui.co to genui.com."
@@ -108,7 +108,7 @@ Caf.defMod(module, () => {
                 "[170465836] (unstarted) Footer needs cleanup",
                 "[170652027] (unstarted) Services pages need case studies",
                 "[170589433] (unstarted) Research SEO appropriate way to redirect genui.co to genui.com.",
-                "[170466089] (unscheduled) The navigation needs to appear in opposite colors (light bg, dark links) when it is displayed on a page that has a light background top slat."
+                "[170466089] (unscheduled) The navigation needs to appear in opposite Style (light bg, dark links) when it is displayed on a page that has a light background top slat."
               ]
             ));
           test("regression2", () => {

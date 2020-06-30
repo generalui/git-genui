@@ -17,7 +17,7 @@ Caf.defMod(module, () => {
       global,
       require("art-standard-lib"),
       require("art-class-system"),
-      require("colors"),
+      require("./Style"),
       require("./Config")
     ],
     (

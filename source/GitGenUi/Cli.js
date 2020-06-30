@@ -2,9 +2,9 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["String", "log", "dashCase", "merge"],
-    [global, require("art-standard-lib")],
-    (String, log, dashCase, merge) => {
+    ["String", "log", "brightWhite", "dashCase", "merge"],
+    [global, require("art-standard-lib"), require("./Style")],
+    (String, log, brightWhite, dashCase, merge) => {
       return {
         run: function() {
           return require("./Config")
@@ -21,10 +21,8 @@ Caf.defMod(module, () => {
                 commands: Caf.object(commands, ({ run }, command) => params => {
                   !params.quiet &&
                     log(
-                      require("colors").bold(
-                        require("colors").brightWhite(
-                          `git genui ${Caf.toString(dashCase(command))}`
-                        )
+                      brightWhite.bold(
+                        `git genui ${Caf.toString(dashCase(command))}`
                       )
                     );
                   return run(params);

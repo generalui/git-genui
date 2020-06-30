@@ -1,4 +1,4 @@
-import &StandardImport, &Config, {} &colors
+import &StandardImport, &Config, {} &Style
 
 getResolvedFilePath = (filePath) ->
   &path.join projectConfig.configPath, filePath
@@ -30,5 +30,5 @@ getResolvedFilePath = (filePath) ->
           &Git[action = if selected then :unstage else :stage]
             getResolvedFilePath file.path
           log
-            colors.blue action + ": "
-            + colors.green file.path
+            Style.blue action + ": "
+            + Style.green file.path

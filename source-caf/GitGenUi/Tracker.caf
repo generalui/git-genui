@@ -1,4 +1,4 @@
-import &ArtStandardLib, &ArtClassSystem, &colors, &Config
+import &ArtStandardLib, &ArtClassSystem, &Style, &Config
 
 class Tracker extends BaseClass
   @singletonClass()

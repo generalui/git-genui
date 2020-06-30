@@ -1,4 +1,4 @@
-import &StandardImport, &SearchSort
+import &StandardImport, &SearchSort, {} &sliceAnsi
 {}
   autocompleteFromStrings = (strings) ->
     (answersSoFar, input) ->
@@ -6,4 +6,4 @@ import &StandardImport, &SearchSort
 
       Promise.resolve
         array str in approximateSearchSort input, strings
-          str.slice 0, columns - 3
+          sliceAnsi str, 0, columns - 3

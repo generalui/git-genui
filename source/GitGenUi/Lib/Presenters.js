@@ -20,8 +20,8 @@ Caf.defMod(module, () => {
             "yyyy-mm-dd HH:MM:ss"
           );
         },
-        colorizeValue: (colorizeValue = require("colors").yellow),
-        colorNotPresent: (colorNotPresent = require("colors").grey),
+        colorizeValue: (colorizeValue = require("../Style").yellow),
+        colorNotPresent: (colorNotPresent = require("../Style").grey),
         presentValue: (presentValue = function(value, noneValue = "none") {
           return present(value)
             ? Caf.is(value, Array) && Caf.is(value[0], String)

@@ -1,4 +1,4 @@
-import &StandardImport, &colors
+import &StandardImport, &Style
 
 applyActions = (input, actionList, actions, options) ->
   resultPromise = Promise.then -> input

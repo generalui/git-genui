@@ -8,7 +8,7 @@ Caf.defMod(module, () => {
       return require("./Lib").updateStateWithPrompt("story", function(state) {
         log(
           `Tip: Select ${Caf.toString(
-            require("colors").green("(none)")
+            require("../../Style").green("(none)")
           )} for no story. It's at the bottom of the story list.`
         );
         return require("./SelectStory")(

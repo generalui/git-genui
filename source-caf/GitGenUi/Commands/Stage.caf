@@ -4,7 +4,7 @@ description: "" stage or unstage files to commit
 run: (options) ->
   log
     """
-      Tip: You can also stage files with #{&colors.green "git add"}.
+      Tip: You can also stage files with #{&Style.green "git add"}.
 
   InteractiveAdd options
   .then -> null
