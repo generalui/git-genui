@@ -1,0 +1,132 @@
+import &ArtStandardLib
+
+readlineUtils = require :inquirer/lib/utils/readline
+Base = require :inquirer/lib/prompts/base
+Paginator = require :inquirer/lib/utils/paginator
+
+colors =
+  tip:      &chalk.tip
+  selected: &chalk.selected
+  warning:  &chalk.yellow
+  error:    &chalk.red
+
+applyColors = (customColors) ->
+  object c, k in colors
+    c = customColors?[k] ? c
+
+    if c is String
+      throw new Error "invalid color #{k}: '#{c}'" unless color = &chalk[c]
+      color
+    else if c is Function
+      c
+    else throw new Error "invalid color for #{k} - expecting string or function"
+
+class AutocompletePrompt extends Base
+
+  constructor: (questions, rl, answers) ->
+    @throwParamError :source unless @opt.source is Function
+    @currentChoices = []
+    @renderCount = 0
+    @selected = 0
+    @opt.default = null
+    @colors = applyColors @opt.colors
+
+    @paginator = new Paginator();
+
+  _run: (@done) ->
+    if isArray @rl.history
+      @rl.history = []
+
+    @bindEvents()
+    @search()
+    @
+
+  bindEvents: ->
+    @rl.on :keypress (e) ->
+      switch e.key?.name
+      when :down
+        @setSelected @selected + 1
+        @render()
+        readlineUtils.up @rl, 2
+
+      when :up
+        @setSelected @selected - 1
+        @render()
+
+      else
+        @search @rl.line
+
+    @rl.on :line (line) ->
+      if @currentChoices.length <= @selected
+        @rl.write line
+        @search line
+
+      else
+        choice = @currentChoices[@selected]
+        @answer       = choice.value
+        @answerName   = choice.name
+        @shortAnswer  = choice.short
+
+        @status = :answered
+
+        @render()
+        @screen.done()
+        @done choice.value
+
+  listRender: (choices, pointer) ->
+    array choice, i in choices
+      if isSelected = i == pointer
+            @colors.selected "" #{&figures.pointer} #{choice.name}
+      else  "  #{choice.name}"
+
+    .join "\n"
+
+  render: ->
+    content = @getQuestion()
+    bottomContent = ''
+
+    if @renderCount == 0
+      content += @colors.tip "" (Use arrow keys or type to search)
+
+    @renderCount++
+
+    if @status == :answered
+      content += @colors.selected @shortAnswer || @answerName || @answer
+
+    else
+      content += @rl.line
+
+      bottomContent = if @searching
+         '  ' + @colors.tip 'Searching...'
+
+      else if @currentChoices.length > 0
+        @paginator.paginate
+          @listRender @currentChoices, @selected
+          @selected
+          @opt.pageSize
+
+      else
+        '  ' + @colors.warning 'No results...'
+
+    @screen.render content, bottomContent
+
+  search: (searchTerm)-> if @lastSearchTerm != searchTerm
+    @selected = 0
+
+    if @renderCount > 0
+      @searching = true
+      @currentChoices = []
+      @render()
+
+    @lastPromise = thisPromise = @opt.source
+      @answers
+      @lastSearchTerm = searchTerm
+
+    .then (choices) -> if thisPromise == @lastPromise
+      find choice, i in @currentChoices = choices when choice.selected
+        @selected = i
+
+      @searching = false
+      @render()
+
+  setSelected: (selected) -> @selected = selected %% max 1, @currentChoices.length

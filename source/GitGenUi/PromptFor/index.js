@@ -4,5 +4,5 @@
 (module.exports = require('./namespace'))
 .includeInNamespace(require('./PromptFor'))
 .addModules({
-  Autocomplete: require('./autocomplete')
+  AutocompletePrompt: require('./AutocompletePrompt')
 });
