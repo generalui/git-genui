@@ -2,9 +2,9 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "log", "getEnv", "present"],
+    ["Promise", "present", "getEnv", "log"],
     [global, require("./StandardImport")],
-    (Promise, log, getEnv, present) => {
+    (Promise, present, getEnv, log) => {
       let externalEditor;
       externalEditor = function(value) {
         return Promise.withCallback(callback =>
@@ -15,7 +15,7 @@ Caf.defMod(module, () => {
         let moreInfo;
         moreInfo =
           "More info: https://wiki.archlinux.org/index.php/Environment_variables";
-        return (!false
+        return (!present(getEnv().EDITOR)
           ? (log.warn(
               `No external editor set. For a full-screen editing experience, set the EDITOR environment variable to your editor of choice.\n  ${Caf.toString(
                 moreInfo
