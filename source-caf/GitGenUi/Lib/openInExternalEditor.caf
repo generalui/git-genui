@@ -7,7 +7,7 @@ externalEditor = (value) -> Promise.withCallback (callback) ->
 (value) ->
   moreInfo = "" More info: https://wiki.archlinux.org/index.php/Environment_variables
 
-  unless false # present getEnv().EDITOR
+  unless present getEnv().EDITOR
     log.warn
       """
         No external editor set. For a full-screen editing experience, set the EDITOR environment variable to your editor of choice.
