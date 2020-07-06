@@ -140,6 +140,7 @@ class AutocompletePrompt extends Base
         else ' '
         + if @multiselect
           if @selectedById[item.id] then @colors.selected &figures.radioOn else &figures.radioOff
+        else ''
         + ' '
         + item.value
 

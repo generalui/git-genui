@@ -239,7 +239,7 @@ Caf.defMod(module, () => {
                     ? this.selectedById[item.id]
                       ? this.colors.selected(require("figures").radioOn)
                       : require("figures").radioOff
-                    : undefined) +
+                    : "") +
                   " " +
                   item.value,
                 0,
