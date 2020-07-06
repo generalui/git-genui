@@ -25,10 +25,15 @@ getResolvedFilePath = (filePath) ->
     .then (selectedItems) ->
       selectedFilesByFile = object item from selectedItems with-key item.file.path
       # log {} selectedFilesByFile
+      serializer = new Promise.Serializer
       each {file, selected} in items
         if !!selected != !!selectedFilesByFile[file.path]
-          &Git[action = if selected then :unstage else :stage]
-            getResolvedFilePath file.path
-          log
-            Style.blue action + ": "
-            + Style.green file.path
+          serializer.then ->
+            &Git[action = if selected then :unstage else :stage]
+              getResolvedFilePath file.path
+            .then ->
+              log
+                Style.blue action + ": "
+                + Style.green file.path
+
+      serializer

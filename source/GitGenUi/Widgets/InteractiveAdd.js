@@ -2,14 +2,14 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["projectConfig", "log", "pad", "Style"],
+    ["projectConfig", "log", "pad", "Promise", "Style"],
     [
       global,
       require("../StandardImport"),
       require("../Config"),
       { Style: require("../Style") }
     ],
-    (projectConfig, log, pad, Style) => {
+    (projectConfig, log, pad, Promise, Style) => {
       let getResolvedFilePath;
       getResolvedFilePath = function(filePath) {
         return require("path").join(projectConfig.configPath, filePath);
@@ -47,7 +47,7 @@ Caf.defMod(module, () => {
               ))
             })
             .then(selectedItems => {
-              let selectedFilesByFile;
+              let selectedFilesByFile, serializer;
               selectedFilesByFile = Caf.object(
                 selectedItems,
                 null,
@@ -55,15 +55,24 @@ Caf.defMod(module, () => {
                 null,
                 item => item.file.path
               );
-              return Caf.each2(items, ({ file, selected }) => {
-                let action;
-                return !!selected !== !!selectedFilesByFile[file.path]
-                  ? (require("../Git")[
-                      (action = selected ? "unstage" : "stage")
-                    ](getResolvedFilePath(file.path)),
-                    log(Style.blue(action + ": ") + Style.green(file.path)))
-                  : undefined;
-              });
+              serializer = new Promise.Serializer();
+              Caf.each2(items, ({ file, selected }) =>
+                !!selected !== !!selectedFilesByFile[file.path]
+                  ? serializer.then(() => {
+                      let action;
+                      return require("../Git")
+                        [(action = selected ? "unstage" : "stage")](
+                          getResolvedFilePath(file.path)
+                        )
+                        .then(() =>
+                          log(
+                            Style.blue(action + ": ") + Style.green(file.path)
+                          )
+                        );
+                    })
+                  : undefined
+              );
+              return serializer;
             });
         });
       };
