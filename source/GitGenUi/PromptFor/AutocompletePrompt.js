@@ -11,6 +11,7 @@ Caf.defMod(module, () => {
       "merge",
       "process",
       "sliceAnsi",
+      "objectKeyCount",
       "present",
       "findDefaultItemIndex",
       "max"
@@ -30,6 +31,7 @@ Caf.defMod(module, () => {
       merge,
       process,
       sliceAnsi,
+      objectKeyCount,
       present,
       findDefaultItemIndex,
       max
@@ -262,9 +264,13 @@ Caf.defMod(module, () => {
             }
             this.renderCount++;
             if (this.answer) {
-              content += this.colors.currentLine(
-                (temp = this.answer.label) != null ? temp : this.answer.value
-              );
+              content += this.multiselect
+                ? `${Caf.toString(objectKeyCount(this.selectedById))} selected`
+                : this.colors.currentLine(
+                    (temp = this.answer.label) != null
+                      ? temp
+                      : this.answer.value
+                  );
             } else {
               content += this.rl.line;
               bottomContent = this.searching

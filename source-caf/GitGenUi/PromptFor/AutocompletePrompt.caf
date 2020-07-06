@@ -164,7 +164,9 @@ class AutocompletePrompt extends Base
     @renderCount++
 
     if @answer
-      content += @colors.currentLine @answer.label ? @answer.value
+      content += if @multiselect
+        "" #{objectKeyCount @selectedById} selected
+      else @colors.currentLine @answer.label ? @answer.value
 
     else
       content += @rl.line
