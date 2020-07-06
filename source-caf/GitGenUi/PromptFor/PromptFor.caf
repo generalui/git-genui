@@ -1,6 +1,6 @@
-import &ArtStandardLib, &ArtClassSystem, &Lib, &Style
+import &ArtStandardLib, &ArtClassSystem, &Lib, &Style, &PromptForLib
 
-&inquirer.registerPrompt :autocomplete &inquirer-autocomplete-prompt
+&inquirer.registerPrompt :autocomplete &AutocompletePrompt # inquirer-autocomplete-prompt
 &inquirer.registerPrompt :checkbox-plus &inquirer-checkbox-plus-prompt
 
 inquire = (options) ->
@@ -8,25 +8,8 @@ inquire = (options) ->
   Promise.then -> &inquirer.prompt merge options, name: :value, message: options.prompt ? options.message
   .then ({value}) -> value
 
-# if the terminal window is not wide enough, autocomplete truncates the strings
-# FINE FINE - but, it returns the truncated string, not the full string.
-# This re-selects the full string
-patchAutocompleteResult = (value, strings) ->
-  return value if value in strings
-  find v in strings when value.length < v.length && value == v.slice 0, value.length
-  ? value # just in case
-
 class Core
 
-  # all props in a match b
-  partialEq = (a, b)->
-    !find v, k in a when b[k] != v
-
-  findDefaultItem = (items, _default) ->
-    switch
-    when _default is Object then  find item from items when partialEq _default, item
-    when _default is String then  find item from items when item.value == _default
-    else                          find item from items when item.default
   ##
     IN:
       items:
@@ -51,33 +34,25 @@ class Core
     if multiselect
       _default = array item in items when item.selected with item.value
 
-    else if defaultItem = findDefaultItem items, _default
-      items = array item from items into [defaultItem] when item != defaultItem
-
-    strings = array {value} from items with value
+    values = array {value} from items with value
+    itemsByValue = object item in items with-key item.value
 
     inquire {}
       prompt
       default:    _default
       type:       if multiselect then :checkbox-plus else :autocomplete
       pageSize:   20
-      source:     autocompleteFromStrings strings
-      highlight:  true
-      searchable: true
+      source:     (answersSoFar, input) ->
+        Promise.resolve
+          array value in approximateSearchSort input, values
+            itemsByValue[value]
 
-    .then (value) ->
-      resolveValue = (value) ->
-        value = patchAutocompleteResult value, strings
+    .then (item) ->
+      if itemsWereStrings then item.value
+      else item
 
-        item = items[strings.indexOf value]
-        if itemsWereStrings
-          item.value
-        else item
-
-      if value is Array
-        value.map resolveValue
-      else
-        resolveValue value
+      # highlight:  true
+      # searchable: true
 
   @item: @selectList
 
@@ -127,8 +102,7 @@ class Core
         value = grey value
 
       merge item,
-        value:
-          "" #{shortcut ? index + 1}. #{} value
+        value: "" #{shortcut ? index + 1}. #{} value
 
   @menu: (state, options) =>
     options extract
@@ -147,10 +121,11 @@ class Core
           value: "" #{} exitPrompt
           shortcut: :0
 
-      .then ({action, exit, disabled}) ->
+      .then (item) ->
+        item extract action, exit, disabled
         Promise.then ->
           !disabled && action? state
           ? state
 
         .then postprocessState
-        .then (newState) -> if exit then newState else @menu newState, options
+        .then (newState) -> if exit then newState else @menu newState, merge options, default: if item then {} item.label

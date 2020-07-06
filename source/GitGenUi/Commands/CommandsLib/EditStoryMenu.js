@@ -31,7 +31,6 @@ Caf.defMod(module, () => {
         ) {
           story = merge(story, { ownerIds: ownerIds.sort() });
         }
-        log({ EditStoryMenu: story });
         return require("../../PromptFor").menu(
           story,
           merge(options, {

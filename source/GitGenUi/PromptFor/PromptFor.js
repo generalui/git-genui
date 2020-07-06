@@ -7,11 +7,8 @@ Caf.defMod(module, () => {
       "Error",
       "Promise",
       "merge",
-      "Object",
-      "String",
       "isString",
-      "autocompleteFromStrings",
-      "Array",
+      "approximateSearchSort",
       "max",
       "pad",
       "grey",
@@ -25,18 +22,16 @@ Caf.defMod(module, () => {
       require("art-standard-lib"),
       require("art-class-system"),
       require("../Lib"),
-      require("../Style")
+      require("../Style"),
+      require("./PromptForLib")
     ],
     (
       present,
       Error,
       Promise,
       merge,
-      Object,
-      String,
       isString,
-      autocompleteFromStrings,
-      Array,
+      approximateSearchSort,
       max,
       pad,
       grey,
@@ -45,10 +40,10 @@ Caf.defMod(module, () => {
       compactFlatten,
       Function
     ) => {
-      let inquire, patchAutocompleteResult, Core;
+      let inquire, Core;
       require("inquirer").registerPrompt(
         "autocomplete",
-        require("inquirer-autocomplete-prompt")
+        require("./AutocompletePrompt")
       );
       require("inquirer").registerPrompt(
         "checkbox-plus",
@@ -70,47 +65,19 @@ Caf.defMod(module, () => {
           );
         }).then(({ value }) => value);
       };
-      patchAutocompleteResult = function(value, strings) {
-        let temp;
-        if (Caf.in(value, strings)) {
-          return value;
-        }
-        return (temp = Caf.find(
-          strings,
-          null,
-          v => value.length < v.length && value === v.slice(0, value.length)
-        )) != null
-          ? temp
-          : value;
-      };
       return (Core = Caf.defClass(class Core extends Object {}, function(
         Core,
         classSuper,
         instanceSuper
       ) {
-        let partialEq, findDefaultItem, numberValues;
-        partialEq = function(a, b) {
-          return !Caf.find(a, null, (v, k) => b[k] !== v);
-        };
-        findDefaultItem = function(items, _default) {
-          return (() => {
-            switch (false) {
-              case !Caf.is(_default, Object):
-                return Caf.find(items, null, item => partialEq(_default, item));
-              case !Caf.is(_default, String):
-                return Caf.find(items, null, item => item.value === _default);
-              default:
-                return Caf.find(items, null, item => item.default);
-            }
-          })();
-        };
+        let numberValues;
         this.selectList = function({
           items,
           multiselect,
           prompt,
           default: _default
         }) {
-          let itemsWereStrings, defaultItem, strings;
+          let itemsWereStrings, values, itemsByValue;
           if (isString(items[0])) {
             itemsWereStrings = true;
             items = Caf.array(items, string => {
@@ -123,34 +90,28 @@ Caf.defMod(module, () => {
               item => item.value,
               item => item.selected
             );
-          } else {
-            if ((defaultItem = findDefaultItem(items, _default))) {
-              items = Caf.array(items, null, item => item !== defaultItem, [
-                defaultItem
-              ]);
-            }
           }
-          strings = Caf.array(items, ({ value }) => value);
+          values = Caf.array(items, ({ value }) => value);
+          itemsByValue = Caf.object(
+            items,
+            null,
+            null,
+            null,
+            item => item.value
+          );
           return inquire({
             prompt,
             default: _default,
             type: multiselect ? "checkbox-plus" : "autocomplete",
             pageSize: 20,
-            source: autocompleteFromStrings(strings),
-            highlight: true,
-            searchable: true
-          }).then(value => {
-            let resolveValue;
-            resolveValue = value => {
-              let item;
-              value = patchAutocompleteResult(value, strings);
-              item = items[strings.indexOf(value)];
-              return itemsWereStrings ? item.value : item;
-            };
-            return Caf.is(value, Array)
-              ? value.map(resolveValue)
-              : resolveValue(value);
-          });
+            source: (answersSoFar, input) =>
+              Promise.resolve(
+                Caf.array(
+                  approximateSearchSort(input, values),
+                  value => itemsByValue[value]
+                )
+              )
+          }).then(item => (itemsWereStrings ? item.value : item));
         };
         this.item = this.selectList;
         this.yesNo = function(options) {
@@ -254,8 +215,12 @@ Caf.defMod(module, () => {
                     ])
                   )
                 })
-              ).then(({ action, exit, disabled }) =>
-                Promise.then(() => {
+              ).then(item => {
+                let action, exit, disabled;
+                action = item.action;
+                exit = item.exit;
+                disabled = item.disabled;
+                return Promise.then(() => {
                   let temp3;
                   return (temp3 =
                     !disabled && Caf.isF(action) && action(state)) != null
@@ -264,9 +229,16 @@ Caf.defMod(module, () => {
                 })
                   .then(postprocessState)
                   .then(newState =>
-                    exit ? newState : this.menu(newState, options)
-                  )
-              )
+                    exit
+                      ? newState
+                      : this.menu(
+                          newState,
+                          merge(options, {
+                            default: item ? { label: item.label } : undefined
+                          })
+                        )
+                  );
+              })
             );
         };
       }));

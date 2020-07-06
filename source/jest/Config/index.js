@@ -4,6 +4,5 @@
 (module.exports = require('./namespace'))
 
 .addModules({
-  UserConfig:     require('./UserConfig'),
   UserConfigTest: require('./UserConfig.test')
 });

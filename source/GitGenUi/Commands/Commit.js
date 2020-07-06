@@ -9,7 +9,6 @@ Caf.defMod(module, () => {
       "tracker",
       "merge",
       "validateStory",
-      "validateType",
       "fillInMissingState",
       "saveState",
       "log",
@@ -46,7 +45,6 @@ Caf.defMod(module, () => {
       tracker,
       merge,
       validateStory,
-      validateType,
       fillInMissingState,
       saveState,
       log,
@@ -115,7 +113,6 @@ Caf.defMod(module, () => {
             })
             .then(() => getInitialCommitState(options))
             .then(validateStory)
-            .then(validateType)
             .tap(({ status }) =>
               status.staged.length +
                 status.unstaged.length +
@@ -197,10 +194,12 @@ Caf.defMod(module, () => {
                     {
                       label: "Edit body",
                       value: body,
-                      action: state =>
-                        openInExternalEditor(body).then(body =>
+                      action: state => {
+                        log("foo");
+                        return openInExternalEditor(body).then(body =>
                           merge(state, { body })
-                        )
+                        );
+                      }
                     },
                     projectConfig.conventionalCommit
                       ? {

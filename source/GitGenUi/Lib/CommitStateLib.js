@@ -55,14 +55,16 @@ Caf.defMod(module, () => {
             breakingChange
               ? `\n\nBREAKING CHANGE: ${Caf.toString(breakingChange)}`
               : undefined,
-            coauthors
+            (Caf.exists(coauthors) && coauthors.length) > 0
               ? "\n\n\n" +
                   Caf.array(
                     coauthors,
                     coauthor => `Coauthored-by: ${Caf.toString(coauthor)}`
                   ).join("\n")
               : undefined
-          ).join("");
+          )
+            .join("")
+            .trim();
         },
         getCommitComment: function(state) {
           let generatedCommitMessage,

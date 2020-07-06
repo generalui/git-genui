@@ -4,6 +4,5 @@
 (module.exports = require('./namespace'))
 
 .addModules({
-  PivotalTracker:     require('./PivotalTracker'),
   PivotalTrackerTest: require('./PivotalTracker.test')
 });

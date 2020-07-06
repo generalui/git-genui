@@ -6,8 +6,6 @@
 .addModules({
   ApplyActionsTest:   require('./ApplyActions.test'),
   CommitStateLibTest: require('./CommitStateLib.test'),
-  SearchSort:         require('./SearchSort'),
   SearchSortTest:     require('./SearchSort.test'),
-  SourceRoot:         require('./SourceRoot'),
   SourceRootTest:     require('./SourceRoot.test')
 });

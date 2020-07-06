@@ -2,17 +2,16 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "merge", "log", "userConfig", "tracker", "present"],
+    ["Promise", "merge", "log", "userConfig", "tracker"],
     [global, require("../StandardImport")],
-    (Promise, merge, log, userConfig, tracker, present) => {
+    (Promise, merge, log, userConfig, tracker) => {
       let updateStateWithPrompt,
         menuApp,
         validateStory,
         getMyAccountOrNothing,
         getProjectOrNothing,
         ensureTrackerConfigured,
-        ensureTrackerTokenValid,
-        validateType;
+        ensureTrackerTokenValid;
       return {
         updateStateWithPrompt: (updateStateWithPrompt = function(
           statePropName,
@@ -90,19 +89,6 @@ Caf.defMod(module, () => {
                 })
               : undefined
           );
-        }),
-        validateType: (validateType = function(state) {
-          return !(
-            !present(state.type) ||
-            /^(patch|major|minor)\/\w+$/.test(state.type)
-          )
-            ? (log.warn(
-                `Commit type should be of the form: [major, minor or patch]/short-word (you provided: ${Caf.toString(
-                  state.type
-                )})`
-              ),
-              merge(state, { type: null }))
-            : state;
         })
       };
     }

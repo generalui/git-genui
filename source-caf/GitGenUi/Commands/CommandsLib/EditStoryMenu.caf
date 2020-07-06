@@ -14,8 +14,6 @@ conditionalUpdate = (story, updates) ->
   if story extract ownerIds extract? length > 0
     story = merge story, ownerIds: ownerIds.sort()
 
-  log EditStoryMenu: story
-
   &PromptFor.menu
     story
     merge

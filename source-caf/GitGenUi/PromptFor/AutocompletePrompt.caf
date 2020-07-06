@@ -1,12 +1,14 @@
-import &ArtStandardLib
+import &ArtStandardLib, &PromptForLib, {} &sliceAnsi
 
 readlineUtils = require :inquirer/lib/utils/readline
 Base = require :inquirer/lib/prompts/base
 Paginator = require :inquirer/lib/utils/paginator
+observe = require :inquirer/lib/utils/events
+{ takeWhile } = &rxjs/operators
 
 colors =
-  tip:      &chalk.tip
-  selected: &chalk.selected
+  tip:      &chalk.grey
+  selected: &chalk.white.bold
   warning:  &chalk.yellow
   error:    &chalk.red
 
@@ -23,15 +25,24 @@ applyColors = (customColors) ->
 
 class AutocompletePrompt extends Base
 
-  constructor: (questions, rl, answers) ->
+  constructor: (options, rl, answers) ->
     @throwParamError :source unless @opt.source is Function
     @currentChoices = []
     @renderCount = 0
     @selected = 0
+    @default = @opt.default
     @opt.default = null
+    @errorMessage = null
     @colors = applyColors @opt.colors
+    @paginator = new Paginator
 
-    @paginator = new Paginator();
+  logFile: (args...) ->
+    [args] = args if args.length = 1
+    &fs.appendFileSync
+      :prompt.log
+      if args is String then args else
+        formattedInspect args
+      + "\n"
 
   _run: (@done) ->
     if isArray @rl.history
@@ -42,7 +53,24 @@ class AutocompletePrompt extends Base
     @
 
   bindEvents: ->
-    @rl.on :keypress (e) ->
+    events = observe @rl
+
+    events.line.pipe takeWhile dontHaveAnswer = -> !@answer
+    .forEach (line) ->
+      if @currentChoices.length <= @selected
+        @rl.write line
+        @search line
+
+      else
+        @answer = @currentChoices[@selected]
+        @render()
+        @screen.done()
+        @done @answer
+
+    events.keypress.pipe takeWhile dontHaveAnswer
+    .forEach (e) ->
+      @errorMessage = null
+
       switch e.key?.name
       when :down
         @setSelected @selected + 1
@@ -56,28 +84,15 @@ class AutocompletePrompt extends Base
       else
         @search @rl.line
 
-    @rl.on :line (line) ->
-      if @currentChoices.length <= @selected
-        @rl.write line
-        @search line
-
-      else
-        choice = @currentChoices[@selected]
-        @answer       = choice.value
-        @answerName   = choice.name
-        @shortAnswer  = choice.short
-
-        @status = :answered
-
-        @render()
-        @screen.done()
-        @done choice.value
-
   listRender: (choices, pointer) ->
-    array choice, i in choices
+    process.stdout extract columns
+
+    array {value}, i in choices
+      line = sliceAnsi value, 0, columns - 3
+
       if isSelected = i == pointer
-            @colors.selected "" #{&figures.pointer} #{choice.name}
-      else  "  #{choice.name}"
+            @colors.selected "" #{&figures.pointer} #{line}
+      else  "  #{line}"
 
     .join "\n"
 
@@ -88,10 +103,13 @@ class AutocompletePrompt extends Base
     if @renderCount == 0
       content += @colors.tip "" (Use arrow keys or type to search)
 
+    if @errorMessage
+      content += @colors.error "" ERROR: #{@errorMessage}
+
     @renderCount++
 
-    if @status == :answered
-      content += @colors.selected @shortAnswer || @answerName || @answer
+    if @answer
+      content += @colors.selected @answer.label ? @answer.value
 
     else
       content += @rl.line
@@ -110,23 +128,33 @@ class AutocompletePrompt extends Base
 
     @screen.render content, bottomContent
 
-  search: (searchTerm)-> if @lastSearchTerm != searchTerm
-    @selected = 0
+  search: (searchTerm) ->
+    @setSelected 0
 
-    if @renderCount > 0
+    if @searchedOnce
       @searching = true
       @currentChoices = []
       @render()
+    else
+      firstSearch = true
+      @searchedOnce = true
 
     @lastPromise = thisPromise = @opt.source
       @answers
       @lastSearchTerm = searchTerm
 
     .then (choices) -> if thisPromise == @lastPromise
-      find choice, i in @currentChoices = choices when choice.selected
-        @selected = i
+      @currentChoices = array choice in choices
+        if choice is String then value: choice else choice
+
+      if firstSearch
+        @setSelected
+          findDefaultItemIndex @currentChoices, @default
+          ? 0
 
       @searching = false
       @render()
 
-  setSelected: (selected) -> @selected = selected %% max 1, @currentChoices.length
+    .catch (error) -> @errorMessage = error.message
+
+  setSelected: (selected) -> @selected = (selected ? 0) %% max 1, @currentChoices.length

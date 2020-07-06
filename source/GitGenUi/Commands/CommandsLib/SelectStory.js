@@ -20,7 +20,7 @@ Caf.defMod(module, () => {
               items: compactFlatten([
                 {
                   value: "(new)",
-                  story: { newStory: true, state: "unstarted", estimate: 1 }
+                  story: { newStory: true, state: "started", estimate: 1 }
                 },
                 Caf.array(stories, story => {
                   return { story, value: formatStory(story) };

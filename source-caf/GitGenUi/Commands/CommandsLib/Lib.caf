@@ -54,9 +54,3 @@ import &StandardImport
   ensureTrackerTokenValid = ->
     getMyAccountOrNothing()
     .then (myAccount) -> &ConfigureMenu exitPrompt: :continue prompt: "Please configure your account." unless myAccount
-
-  validateType = (state) ->
-    unless !present(state.type) || /^(patch|major|minor)\/\w+$/.test state.type
-      log.warn "" Commit type should be of the form: [major, minor or patch]/short-word (you provided: #{state.type})
-      merge state, type: null
-    else state

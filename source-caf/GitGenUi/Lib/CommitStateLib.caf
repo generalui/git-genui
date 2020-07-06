@@ -16,12 +16,13 @@ import &StandardImport, {} &ignoreRejections
       if breakingChange
         "" \n\nBREAKING CHANGE: #{} breakingChange
 
-      if coauthors
+      if coauthors?.length > 0
         "\n\n\n" +
           array coauthor in coauthors
             "" Coauthored-by: #{coauthor}
           .join "\n"
     .join ''
+    .trim()
 
   getCommitComment: (state) ->
     state extract generatedCommitMessage, storyState, status, commit, remote
