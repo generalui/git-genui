@@ -31,16 +31,14 @@ class Core
       itemsWereStrings = true
       items = array string from items with value: string
 
-    if multiselect
-      _default = array item in items when item.selected with item.value
-
     values = array {value} from items with value
     itemsByValue = object item in items with-key item.value
 
     inquire {}
       prompt
+      multiselect
       default:    _default
-      type:       if multiselect then :checkbox-plus else :autocomplete
+      type:       :autocomplete
       pageSize:   20
       source:     (answersSoFar, input) ->
         Promise.resolve

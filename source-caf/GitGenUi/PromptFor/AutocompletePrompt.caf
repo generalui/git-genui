@@ -8,7 +8,8 @@ observe = require :inquirer/lib/utils/events
 
 colors =
   tip:      &chalk.grey
-  selected: &chalk.white.bold
+  currentLine: &chalk.white.bold
+  selected: &chalk.greenBright
   warning:  &chalk.yellow
   error:    &chalk.red
 
@@ -27,9 +28,13 @@ class AutocompletePrompt extends Base
 
   constructor: (options, rl, answers) ->
     @throwParamError :source unless @opt.source is Function
-    @currentChoices = []
+    @currentItems = []
     @renderCount = 0
     @selected = 0
+    @itemsWereStrings = false
+    if @multiselect = @opt.multiselect
+      @selectedById = {}
+
     @default = @opt.default
     @opt.default = null
     @errorMessage = null
@@ -57,42 +62,91 @@ class AutocompletePrompt extends Base
 
     events.line.pipe takeWhile dontHaveAnswer = -> !@answer
     .forEach (line) ->
-      if @currentChoices.length <= @selected
+      if @currentItems.length <= @selected
         @rl.write line
         @search line
 
       else
-        @answer = @currentChoices[@selected]
+        @answer = if @multiselect then array @selectedById else @getCurrentItem()
         @render()
         @screen.done()
         @done @answer
 
     events.keypress.pipe takeWhile dontHaveAnswer
-    .forEach (e) ->
+    .forEach (e) -> if e.key extract? meta, ctrl, shift, name
       @errorMessage = null
 
-      switch e.key?.name
-      when :down
-        @setSelected @selected + 1
-        @render()
-        readlineUtils.up @rl, 2
-
-      when :up
-        @setSelected @selected - 1
-        @render()
-
+      switch mergedName = "" #{if ctrl then :ctrl_ else ''}#{name}
+      when :down  then return @down()
+      when :up    then return @up()
       else
-        @search @rl.line
+        handled = true
+        if handled = @multiselect
+          switch mergedName
+          when :space
+            if item = @getCurrentItem()
+              if @selectedById[item.id]
+                # @logFile unselect: item.id
+                delete @selectedById[item.id]
+              else
+                # @logFile select: item.id
+                @selectedById[item.id] = item
 
-  listRender: (choices, pointer) ->
+              @down()
+
+            @rl.line = @rl.line.trim()
+
+          when :ctrl_a then return @selectAll()
+          when :ctrl_n then return @selectNone()
+          when :ctrl_i then return @invertSelection()
+          else handled = false
+
+        unless handled
+          # @logFile {} e.key?.name, @rl.line
+          @search @rl.line
+
+      # @logFile {} @selectedById
+
+  selectAll: ->
+    @selectedById = merge @selectedById, object item in @currentItems with-key item.id
+    @render()
+
+  selectNone: ->
+    @selectedById = {}
+    @render()
+
+  getCurrentItem: -> @currentItems[@selected]
+
+  invertSelection: ->
+    @selectedById = object item in @currentItems with-key item.id when !@selectedById[item.id]
+    @render()
+
+  down: ->
+    @setSelected @selected + 1
+    @render()
+    readlineUtils.up @rl, 2
+
+  up: ->
+    @setSelected @selected - 1
+    @render()
+
+  listRender: (items, pointer) ->
     process.stdout extract columns
 
-    array {value}, i in choices
-      line = sliceAnsi value, 0, columns - 3
+    array item, i in items
+      line = sliceAnsi
+        if isSelected = i == pointer
+          &figures.pointer + ''
+        else ' '
+        + if @multiselect
+          if @selectedById[item.id] then @colors.selected &figures.radioOn else &figures.radioOff
+        + ' '
+        + item.value
 
-      if isSelected = i == pointer
-            @colors.selected "" #{&figures.pointer} #{line}
-      else  "  #{line}"
+        0
+        columns - 1
+
+      if isSelected then @colors.currentLine line else line
 
     .join "\n"
 
@@ -109,7 +163,7 @@ class AutocompletePrompt extends Base
     @renderCount++
 
     if @answer
-      content += @colors.selected @answer.label ? @answer.value
+      content += @colors.currentLine @answer.label ? @answer.value
 
     else
       content += @rl.line
@@ -117,9 +171,9 @@ class AutocompletePrompt extends Base
       bottomContent = if @searching
          '  ' + @colors.tip 'Searching...'
 
-      else if @currentChoices.length > 0
+      else if @currentItems.length > 0
         @paginator.paginate
-          @listRender @currentChoices, @selected
+          @listRender @currentItems, @selected
           @selected
           @opt.pageSize
 
@@ -128,12 +182,32 @@ class AutocompletePrompt extends Base
 
     @screen.render content, bottomContent
 
+  getNormalizedItems: (items) ->
+    if @itemsWereStrings || (items[0] && items[0] is String)
+      @itemsWereStrings = true
+      array item in items
+        unless item is String
+          throw new Error "If any item is a string, all items must be strings."
+
+        id: item
+        value: item
+
+    else
+      array item in items
+        unless item.value is String
+          throw new Error "Every item should have a .value."
+
+        unless present item.id
+          merge item, id: item.value
+
+        else item
+
   search: (searchTerm) ->
     @setSelected 0
 
     if @searchedOnce
       @searching = true
-      @currentChoices = []
+      @currentItems = []
       @render()
     else
       firstSearch = true
@@ -143,18 +217,20 @@ class AutocompletePrompt extends Base
       @answers
       @lastSearchTerm = searchTerm
 
-    .then (choices) -> if thisPromise == @lastPromise
-      @currentChoices = array choice in choices
-        if choice is String then value: choice else choice
+    .then (items) -> if thisPromise == @lastPromise
+      @currentItems = @getNormalizedItems items
 
       if firstSearch
         @setSelected
-          findDefaultItemIndex @currentChoices, @default
+          findDefaultItemIndex @currentItems, @default
           ? 0
+
+      if @multiselect
+        @selectedById = merge @selectedById, object item in @currentItems when item.selected with-key item.id
 
       @searching = false
       @render()
 
     .catch (error) -> @errorMessage = error.message
 
-  setSelected: (selected) -> @selected = (selected ? 0) %% max 1, @currentChoices.length
+  setSelected: (selected) -> @selected = (selected ? 0) %% max 1, @currentItems.length

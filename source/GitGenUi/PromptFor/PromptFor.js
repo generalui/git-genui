@@ -84,13 +84,6 @@ Caf.defMod(module, () => {
               return { value: string };
             });
           }
-          if (multiselect) {
-            _default = Caf.array(
-              items,
-              item => item.value,
-              item => item.selected
-            );
-          }
           values = Caf.array(items, ({ value }) => value);
           itemsByValue = Caf.object(
             items,
@@ -101,8 +94,9 @@ Caf.defMod(module, () => {
           );
           return inquire({
             prompt,
+            multiselect,
             default: _default,
-            type: multiselect ? "checkbox-plus" : "autocomplete",
+            type: "autocomplete",
             pageSize: 20,
             source: (answersSoFar, input) =>
               Promise.resolve(
