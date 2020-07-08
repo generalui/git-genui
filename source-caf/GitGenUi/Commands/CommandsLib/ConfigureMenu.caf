@@ -1,4 +1,4 @@
-import &StandardImport, &Lib, {} &Style
+import &StandardImport, &Lib, {} &Style, &selectCommitFormat
 
 getProjects = ->
   tracker.projects
@@ -20,18 +20,6 @@ editGitEmail = updateStateWithPrompt :email ({email, trackerEmail}) ->
     default: email ? trackerEmail
   .tap (email) ->
     userConfig.mergeAccountsWith git: {} email
-
-selectCommitFormat = ->
-  &PromptFor.item
-    message: "" Select your commit format
-    items:
-      format: :standard            value: "" standard:           Commit types are grouped into patch, minor and major changes
-      format: :conventionalCommit  value: "" conventionalCommit: Commit using the www.ConventionalCommits.org standard
-
-    default: {} projectConfig.commit.format
-
-  .then ({format}) ->
-    projectConfig.mergeCommitWith {} format
 
 editTrackerToken = (state) ->
   state extract trackerName
@@ -106,7 +94,8 @@ getTrackerToken = (state) ->
         .then (me) ->
           &PromptFor.menu
             state
-            prompt:  "" Select action:
+            exitPrompt: exitPrompt
+            prompt:  "" Configure git-genui:
             items: (state) ->
               compactFlatten []
                 action: getTrackerToken,  label: "set PivotalTracker token via auth"  value: me?.name

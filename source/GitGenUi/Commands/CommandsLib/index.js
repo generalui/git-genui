@@ -14,6 +14,7 @@
   FillInMissingState:  require('./fillInMissingState'),
   Lib:                 require('./Lib'),
   SelectCoauthors:     require('./SelectCoauthors'),
+  SelectCommitFormat:  require('./SelectCommitFormat'),
   SelectCommitType:    require('./SelectCommitType'),
   SelectMembers:       require('./SelectMembers'),
   SelectStory:         require('./SelectStory'),

@@ -17,9 +17,9 @@ class ConfigShared extends BaseClass
       throw new Error "configBasename must be a string" unless isString(configBasename) && present configBasename
       &path.join configPath, configBasename
 
-    .then (@configFilePath)-> @_load()
+    .then (@configFilePath)-> @load()
 
-  @property :config :configFilePath
+  @property :config :configFilePath :existedAtLoad
 
   @getter
     configPath: -> throw new Error "must override configPath"
@@ -51,21 +51,18 @@ class ConfigShared extends BaseClass
   setConfigProperty: (key, value) ->
     @_config = merge @_config
     @_config[key] = value
-    @_save()
+    @save()
 
-  #####################################
-    PRIVATE
-  #####################################
-  _save: ->
+  save: ->
     Promise.then ->
       &fsExtra.writeFile @configFilePath, consistentJsonStringify @config, "  "
-    .then -> @config
+    .then -> @
 
-  _load: ->
+  load: ->
     Promise.then ->
       &fsExtra.exists @configFilePath
-    .then (exists) ->
-      if exists
+    .then (@existedAtLoad) ->
+      if @existedAtLoad
         &fsExtra.readFile @configFilePath
         .then (data) ->
           JSON.parse data.toString()
@@ -73,3 +70,4 @@ class ConfigShared extends BaseClass
       else {}
 
     .then (config) -> @setConfig config
+    .then -> @

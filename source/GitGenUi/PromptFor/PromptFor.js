@@ -184,6 +184,10 @@ Caf.defMod(module, () => {
             temp,
             temp1,
             temp2;
+          if (!(state != null)) {
+            options = state;
+            state = {};
+          }
           preprocessState =
             undefined !== (temp = options.preprocessState) ? temp : a => a;
           postprocessState =

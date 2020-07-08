@@ -16,13 +16,17 @@ Caf.defMod(module, () => {
       "menuApp",
       "present",
       "compactFlatten",
-      "repeat"
+      "repeat",
+      "selectCommitFormat"
     ],
     [
       global,
       require("../StandardImport"),
       require("./Lib"),
-      { Style: require("../../Style") }
+      {
+        Style: require("../../Style"),
+        selectCommitFormat: require("./SelectCommitFormat")
+      }
     ],
     (
       updateStateWithPrompt,
@@ -38,12 +42,12 @@ Caf.defMod(module, () => {
       menuApp,
       present,
       compactFlatten,
-      repeat
+      repeat,
+      selectCommitFormat
     ) => {
       let getProjects,
         selectProject,
         editGitEmail,
-        selectCommitFormat,
         editTrackerToken,
         getTrackerToken;
       getProjects = function() {
@@ -91,26 +95,6 @@ Caf.defMod(module, () => {
           })
           .tap(email => userConfig.mergeAccountsWith({ git: { email } }));
       });
-      selectCommitFormat = function() {
-        return require("../../PromptFor")
-          .item({
-            message: "Select your commit format",
-            items: [
-              {
-                format: "standard",
-                value:
-                  "standard:           Commit types are grouped into patch, minor and major changes"
-              },
-              {
-                format: "conventionalCommit",
-                value:
-                  "conventionalCommit: Commit using the www.ConventionalCommits.org standard"
-              }
-            ],
-            default: { format: projectConfig.commit.format }
-          })
-          .then(({ format }) => projectConfig.mergeCommitWith({ format }));
-      };
       editTrackerToken = function(state) {
         let trackerName, eTT;
         trackerName = state.trackerName;
@@ -224,7 +208,8 @@ Caf.defMod(module, () => {
                   )
                   .then(me =>
                     require("../../PromptFor").menu(state, {
-                      prompt: "Select action:",
+                      exitPrompt,
+                      prompt: "Configure git-genui:",
                       items: state => {
                         let temp, base1;
                         return compactFlatten([

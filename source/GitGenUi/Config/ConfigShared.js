@@ -60,10 +60,10 @@ Caf.defMod(module, () => {
               })
               .then(configFilePath => {
                 this.configFilePath = configFilePath;
-                return this._load();
+                return this.load();
               });
           };
-          this.property("config", "configFilePath");
+          this.property("config", "configFilePath", "existedAtLoad");
           this.getter({
             configPath: function() {
               return (() => {
@@ -136,28 +136,30 @@ Caf.defMod(module, () => {
           this.prototype.setConfigProperty = function(key, value) {
             this._config = merge(this._config);
             this._config[key] = value;
-            return this._save();
+            return this.save();
           };
-          this.prototype._save = function() {
+          this.prototype.save = function() {
             return Promise.then(() =>
               require("fs-extra").writeFile(
                 this.configFilePath,
                 consistentJsonStringify(this.config, "  ")
               )
-            ).then(() => this.config);
+            ).then(() => this);
           };
-          this.prototype._load = function() {
+          this.prototype.load = function() {
             return Promise.then(() =>
               require("fs-extra").exists(this.configFilePath)
             )
-              .then(exists =>
-                exists
+              .then(existedAtLoad => {
+                this.existedAtLoad = existedAtLoad;
+                return this.existedAtLoad
                   ? require("fs-extra")
                       .readFile(this.configFilePath)
                       .then(data => JSON.parse(data.toString()))
-                  : {}
-              )
-              .then(config => this.setConfig(config));
+                  : {};
+              })
+              .then(config => this.setConfig(config))
+              .then(() => this);
           };
         }
       ));

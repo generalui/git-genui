@@ -103,6 +103,10 @@ class Core
         value: "" #{shortcut ? index + 1}. #{} value
 
   @menu: (state, options) =>
+    unless state?
+      options = state
+      state = {}
+
     options extract
       preprocessState = (a) -> a
       postprocessState = (a) -> a
