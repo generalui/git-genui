@@ -16,14 +16,18 @@ Caf.defMod(module, () => {
           require("../../PromptFor")
             .selectList({
               prompt: prompt != null ? prompt : "Select a story...",
-              default: story ? { story } : undefined,
+              default: story ? { storyId: story.id } : undefined,
               items: compactFlatten([
                 {
                   value: "(new)",
                   story: { newStory: true, state: "started", estimate: 1 }
                 },
                 Caf.array(stories, story => {
-                  return { story, value: formatStory(story) };
+                  return {
+                    story,
+                    storyId: story.id,
+                    value: formatStory(story)
+                  };
                 }),
                 { value: "(none)", story: {} }
               ])

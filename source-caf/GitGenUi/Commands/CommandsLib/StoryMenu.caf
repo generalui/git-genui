@@ -1,5 +1,7 @@
 import &StandardImport
 
-&Lib.updateStateWithPrompt :story (state) ->
+&Lib.updateStateWithPrompt :story (state, options) ->
   log "" Tip: Select #{&Style.green "(none)"} for no story. It's at the bottom of the story list.
-  &SelectStory merge state, prompt: "" What story does this commit advance most?
+  &SelectStory merge
+    prompt: "" What story does this commit advance most?
+    state

@@ -3,9 +3,9 @@ let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["ChangeStateCliCommand"],
-    [global, require("./StandardImport"), require("./CommandsLib")],
+    [global, require("./CommandsLib")],
     ChangeStateCliCommand => {
-      return ChangeStateCliCommand("started");
+      return ChangeStateCliCommand("delivered");
     }
   );
 });

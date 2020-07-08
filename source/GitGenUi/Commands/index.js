@@ -7,6 +7,7 @@
   Comment:        require('./Comment'),
   Commit:         require('./Commit'),
   Config:         require('./Config'),
+  Deliver:        require('./Deliver'),
   Finish:         require('./Finish'),
   OpenTracker:    require('./OpenTracker'),
   ShowConfig:     require('./ShowConfig'),

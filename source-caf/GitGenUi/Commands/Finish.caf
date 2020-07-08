@@ -1,13 +1,3 @@
 import &StandardImport, &CommandsLib
 
-description: "" finish a story
-run: (options) ->
-  ensureTrackerConfigured()
-  .then -> tracker.stories
-  .then (stories) ->
-    &GitGenUiPromptFor.story
-      array story in stories when tracker.storyIsFinishable story
-      "" Select a story to finish:
-    .then (story) ->
-      if story.id
-        tracker.updateStory story, state: :finished
+ChangeStateCliCommand :finished

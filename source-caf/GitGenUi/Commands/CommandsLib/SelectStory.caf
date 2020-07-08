@@ -7,11 +7,11 @@ selectStory = (state) =>
   Promise.then ->
     &PromptFor.selectList
       prompt: prompt ? "" Select a story...
-      default: if story then {} story
+      default: if story then storyId: story.id
       items: compactFlatten []
         value: "(new)" story: newStory: true state: :started estimate: 1
         array story from stories
-          {} story, value: formatStory story
+          {} story, storyId: story.id, value: formatStory story
         value: "(none)" story: {}
 
     .then ({story}) ->

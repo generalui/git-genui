@@ -1,20 +1,3 @@
 import &StandardImport, &CommandsLib
 
-description: "" start a story
-run: (options) ->
-  ensureTrackerConfigured()
-  .then -> &Tracker.tracker.stories
-  .then (stories) ->
-    started = array story in stories when story.state == :started
-    if started.length > 0
-      log &Style.blue "" Stories already started:
-      each story in started
-        log "  " + tracker.formatStory story
-      log ''
-
-    &GitGenUiPromptFor.story
-      array story in stories when tracker.storyIsStartable story
-      "" Select a story to start:
-    .then (story) ->
-      if story.id
-        &Tracker.tracker.updateStory story, state: :started
+ChangeStateCliCommand :started

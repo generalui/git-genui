@@ -1,0 +1,19 @@
+import &StandardImport, &CommandsLib
+
+(state) ->
+  action = state.replace /ed$/, ''
+  description: "" #{action} a story
+  run: (options) ->
+    ensureTrackerConfigured()
+    .then -> tracker.stories
+    .then (stories) ->
+      log {} userConfig.commitOptionsForProject.story
+      &StoryMenu {}
+        stories
+        userConfig.commitOptionsForProject?.story
+        prompt: "" Select a story to #{action}:
+
+      .then ({story}) ->
+        if story.id
+          tracker.updateStory story, {} state
+        else "No story selected. Aborting..."
