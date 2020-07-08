@@ -5,11 +5,13 @@ Caf.defMod(module, () => {
     [
       "BaseClass",
       "Promise",
+      "isString",
+      "present",
+      "Error",
       "toInspectedObjects",
       "compactFlatten",
       "String",
       "Object",
-      "Error",
       "formattedInspect",
       "lowerCamelCase",
       "merge",
@@ -21,11 +23,13 @@ Caf.defMod(module, () => {
     (
       BaseClass,
       Promise,
+      isString,
+      present,
+      Error,
       toInspectedObjects,
       compactFlatten,
       String,
       Object,
-      Error,
       formattedInspect,
       lowerCamelCase,
       merge,
@@ -38,31 +42,44 @@ Caf.defMod(module, () => {
         class ConfigShared extends BaseClass {},
         function(ConfigShared, classSuper, instanceSuper) {
           this.initSingleton = function() {
-            return this.getConfigFilePathPromise()
-              .then(configFilePath => this.singleton.init(configFilePath))
+            return this.singleton
+              .init()
               .then(() => this.singleton.readyPromise)
               .then(() => this.singleton);
           };
           this.prototype.init = function(configFilePath) {
-            this.configFilePath = configFilePath;
-            return Promise.resolve();
+            return Promise.all([this.configPath, this.configBasename])
+              .then(([configPath, configBasename]) => {
+                if (!(isString(configPath) && present(configPath))) {
+                  throw new Error("configPath must be a string");
+                }
+                if (!(isString(configBasename) && present(configBasename))) {
+                  throw new Error("configBasename must be a string");
+                }
+                return require("path").join(configPath, configBasename);
+              })
+              .then(configFilePath => {
+                this.configFilePath = configFilePath;
+                return this._load();
+              });
           };
-          this.property("config");
-          this.getter("configFilePath", {
-            configBasename: function() {
-              return this.class.configBasename;
-            },
+          this.property("config", "configFilePath");
+          this.getter({
             configPath: function() {
-              return require("path").dirname(this.configFilePath);
+              return (() => {
+                throw new Error("must override configPath");
+              })();
+            },
+            configBasename: function() {
+              return (() => {
+                throw new Error("must override configBasename");
+              })();
             },
             state: function() {
               return this.config;
             },
             homeDirRelativeConfigFilePath: function() {
               return this.configFilePath.replace(require("os").homedir(), "~");
-            },
-            readyPromise: function() {
-              return this._readyPromise;
             },
             inspectedObjects: function() {
               return toInspectedObjects(this.config);
@@ -83,7 +100,7 @@ Caf.defMod(module, () => {
                       throw new Error(
                         `unsupported configFields param type: ${Caf.toString(
                           formattedInspect({ field })
-                        )} (expeting String or Object)`
+                        )} (expecting String or Object)`
                       );
                     })();
                 }
@@ -91,17 +108,17 @@ Caf.defMod(module, () => {
             );
           };
           this._addConfigField = function(field, _default) {
-            this.setter({
-              [field]: function(v) {
-                return this.setConfigProperty(field, v);
-              }
-            });
             this.getter({
               [field]: function() {
                 let temp;
                 return (temp = this.config[field]) != null ? temp : _default;
               }
             });
+            this.prototype[
+              lowerCamelCase(`set ${Caf.toString(field)}`)
+            ] = function(v) {
+              return this.setConfigProperty(field, v);
+            };
             this.prototype[
               lowerCamelCase(`merge ${Caf.toString(field)} with`)
             ] = function(...args) {
@@ -116,32 +133,21 @@ Caf.defMod(module, () => {
               );
             });
           };
-          this.setter({
-            configFilePath: function(cfp) {
-              this._configFilePath = cfp;
-              return this._load();
-            }
-          });
           this.prototype.setConfigProperty = function(key, value) {
             this._config = merge(this._config);
             this._config[key] = value;
             return this._save();
           };
-          this.prototype.deepMergeInto = function(config) {
-            this._config = deepMerge(this._config, config);
-            return this._save();
-          };
           this.prototype._save = function() {
-            let filePath;
-            return require("fs-extra")
-              .writeFile(
-                (filePath = this.configFilePath),
+            return Promise.then(() =>
+              require("fs-extra").writeFile(
+                this.configFilePath,
                 consistentJsonStringify(this.config, "  ")
               )
-              .then(() => this.config);
+            ).then(() => this.config);
           };
           this.prototype._load = function() {
-            return (this._readyPromise = Promise.then(() =>
+            return Promise.then(() =>
               require("fs-extra").exists(this.configFilePath)
             )
               .then(exists =>
@@ -151,7 +157,7 @@ Caf.defMod(module, () => {
                       .then(data => JSON.parse(data.toString()))
                   : {}
               )
-              .then(config => this.setConfig(config)));
+              .then(config => this.setConfig(config));
           };
         }
       ));

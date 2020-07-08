@@ -80,7 +80,6 @@ run: (options) ->
           action: SelectCommitType,   label: "Select type"            value: type
 
           label: "Edit body" value: body, action: (state) ->
-            log :foo
             openInExternalEditor body
             .then (body) -> merge state, {} body
 

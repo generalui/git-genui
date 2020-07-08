@@ -194,12 +194,10 @@ Caf.defMod(module, () => {
                     {
                       label: "Edit body",
                       value: body,
-                      action: state => {
-                        log("foo");
-                        return openInExternalEditor(body).then(body =>
+                      action: state =>
+                        openInExternalEditor(body).then(body =>
                           merge(state, { body })
-                        );
-                      }
+                        )
                     },
                     projectConfig.conventionalCommit
                       ? {

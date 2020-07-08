@@ -1,0 +1,11 @@
+import &StandardImport
+import Config
+
+chainedTest :start ->
+  ProjectFiles.init()
+
+.tapTest
+  "valid files" ->
+    assert.eq :git-genui ProjectFiles.projectFolder
+    assert.match ProjectFiles.projectRoot, /\/git-genui$/
+

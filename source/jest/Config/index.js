@@ -4,5 +4,8 @@
 (module.exports = require('./namespace'))
 
 .addModules({
-  UserConfigTest: require('./UserConfig.test')
+  ConfigSharedTest:  require('./ConfigShared.test'),
+  ProjectConfigTest: require('./ProjectConfig.test'),
+  ProjectFilesTest:  require('./ProjectFiles.test'),
+  UserConfigTest:    require('./UserConfig.test')
 });

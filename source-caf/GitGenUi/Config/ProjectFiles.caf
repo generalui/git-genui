@@ -1,0 +1,19 @@
+import &StandardImport, {} &path, &SourceRoots
+
+class ProjectFiles extends BaseClass
+
+  @projectConfigFilename: :git-genui.config.json
+
+  @projectRootIndicatorFiles: []
+    :.git
+    @projectConfigFilename
+
+  @init: -> @_projectFilesInitPromise =
+    new SourceRoots @projectRootIndicatorFiles
+    .findSourceRoot process.cwd()
+    .then (@projectRoot) ->
+      @projectFolder = path.basename @projectRoot
+
+  @classProperty
+    :projectFolder
+    :projectRoot

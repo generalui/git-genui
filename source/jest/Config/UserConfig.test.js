@@ -6,10 +6,22 @@ Caf.defMod(module, () => {
     ["Config"],
     (parentImports = [global, require("../StandardImport")]),
     Config => {
+      let UserConfig;
+      UserConfig = Config.UserConfig;
       return Caf.importInvoke(
-        ["describe", "test", "assert", "getProjectKey"],
-        [parentImports, Config.UserConfig],
-        (describe, test, assert, getProjectKey) => {
+        [
+          "describe",
+          "test",
+          "assert",
+          "getProjectKey",
+          "chainedTest",
+          "log",
+          "Git"
+        ],
+        [parentImports, UserConfig],
+        (describe, test, assert, getProjectKey, chainedTest, log, Git) => {
+          let mockFs;
+          mockFs = require("@art-suite/mock-fs");
           return describe({
             getProjectKey: function() {
               let origin, remotes, projectFolder;
@@ -43,6 +55,29 @@ Caf.defMod(module, () => {
                 ));
               return test("have_projectFolder", () =>
                 assert.eq(getProjectKey({ projectFolder }), projectFolder));
+            },
+            mockFs: function() {
+              let projectFolder, initialFiles;
+              global.afterAll(() => mockFs.restore());
+              projectFolder = "testProject";
+              initialFiles = {
+                [projectFolder]: { ".git": { config: "[core]" } }
+              };
+              return chainedTest("initialize mock fs", () => {
+                log("Start");
+                mockFs(initialFiles);
+                return new UserConfig();
+              }).tapTest(
+                ["load", userConfig => userConfig.init(Git)],
+                [
+                  "projectKey",
+                  userConfig =>
+                    assert.eq(
+                      "git@github.com:generalui/git-genui.git",
+                      userConfig.projectKey
+                    )
+                ]
+              );
             }
           });
         }

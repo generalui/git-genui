@@ -6,6 +6,7 @@
 .addModules({
   ConfigShared:   require('./ConfigShared'),
   ProjectConfig:  require('./ProjectConfig'),
+  ProjectFiles:   require('./ProjectFiles'),
   SourceRoots:    require('./SourceRoots'),
   StandardImport: require('./StandardImport'),
   UserConfig:     require('./UserConfig')

@@ -1,4 +1,4 @@
-import &StandardImport
+import &StandardImport, {} &ProjectFiles, &path, &os
 
 class UserConfig extends &ConfigShared
   @singletonClass()
@@ -6,25 +6,27 @@ class UserConfig extends &ConfigShared
   @getProjectKey: getProjectKey = ({origin, remotes, projectFolder}) ->
     origin ? remotes?[0]?.refs?.fetch ? projectFolder
 
-  @classGetter
-    configBasename: -> :git-genui.user.config.json
-    configFilePathPromise: -> Promise.then -> &path.join &os.homedir(), @configBasename
-
   @getter
-    :projectKey
+    configBasename: -> :git-genui.user.config.json
+    configPath:     -> os.homedir()
     commitOptionsForProject: (projectKey = @projectKey) ->
       @commitOptions[projectKey]
+
+  @property :projectKey
 
   @configFields
     accounts: {}
     commitOptions: {}
 
-  init: ->
+  # git can be passed in as a mock, or it will be loaded dynamically
+  # NOTE: we have to load git here to break cyclic dependencies
+  init: (git)->
+    git ?= &git
     super
-    .then -> Promise.deepAll {} &git.origin, &git.remotes, projectFolder: &ProjectConfig.repoRootPromise.then &path.basename
-    .catch -> {}
+    .then -> Promise.deepAll {} git.origin, git.remotes, ProjectFiles.projectFolder
+    .catch (error) -> {}
     .then getProjectKey
-    .then (k) -> @_projectKey = k
+    .then (@projectKey) ->
 
   saveCommitOptionsForProject: (commitOptions, projectKey = @projectKey) ->
     throw new Error "projectKey required to save default options" unless present projectKey

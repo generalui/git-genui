@@ -18,11 +18,7 @@ Caf.defMod(module, () => {
           }
         },
         function(SourceRoots, classSuper, instanceSuper) {
-          this.property(
-            "sourceRootIndicatorFiles",
-            "knownSourceRoots",
-            "rootFiles"
-          );
+          this.property("knownSourceRoots", "rootFiles");
           this.prototype.findSourceRoot = function(directory) {
             directory = path.resolve(directory);
             return fs.stat(directory).then(stat => {

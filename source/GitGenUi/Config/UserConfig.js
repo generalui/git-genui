@@ -2,9 +2,17 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
-    ["Promise", "present", "Error", "merge", "toSeconds"],
-    [global, require("./StandardImport")],
-    (Promise, present, Error, merge, toSeconds) => {
+    ["os", "Promise", "ProjectFiles", "present", "Error", "merge", "toSeconds"],
+    [
+      global,
+      require("./StandardImport"),
+      {
+        ProjectFiles: require("./ProjectFiles"),
+        path: require("path"),
+        os: require("os")
+      }
+    ],
+    (os, Promise, ProjectFiles, present, Error, merge, toSeconds) => {
       let UserConfig;
       return (UserConfig = Caf.defClass(
         class UserConfig extends require("./ConfigShared") {},
@@ -26,42 +34,35 @@ Caf.defMod(module, () => {
               ? temp
               : projectFolder;
           };
-          this.classGetter({
+          this.getter({
             configBasename: function() {
               return "git-genui.user.config.json";
             },
-            configFilePathPromise: function() {
-              return Promise.then(() =>
-                require("path").join(
-                  require("os").homedir(),
-                  this.configBasename
-                )
-              );
-            }
-          });
-          this.getter("projectKey", {
+            configPath: function() {
+              return os.homedir();
+            },
             commitOptionsForProject: function(projectKey = this.projectKey) {
               return this.commitOptions[projectKey];
             }
           });
+          this.property("projectKey");
           this.configFields({ accounts: {}, commitOptions: {} });
-          this.prototype.init = function() {
+          this.prototype.init = function(git) {
+            git != null ? git : (git = require("../Git"));
             return instanceSuper.init
               .apply(this, arguments)
               .then(() =>
                 Promise.deepAll({
-                  origin: require("../Git").origin,
-                  remotes: require("../Git").remotes,
-                  projectFolder: require("./ProjectConfig").repoRootPromise.then(
-                    require("path").basename
-                  )
+                  origin: git.origin,
+                  remotes: git.remotes,
+                  projectFolder: ProjectFiles.projectFolder
                 })
               )
-              .catch(() => {
+              .catch(error => {
                 return {};
               })
               .then(getProjectKey)
-              .then(k => (this._projectKey = k));
+              .then(projectKey => (this.projectKey = projectKey));
           };
           this.prototype.saveCommitOptionsForProject = function(
             commitOptions,

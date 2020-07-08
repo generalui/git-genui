@@ -11,7 +11,7 @@ getResolvedFilePath = (filePath) ->
 
     &PromptFor.selectList {}
       multiselect: true
-      prompt: "" Use <space> and <arrow keys> to stage and unstage files. Type to search. <enter> when done.
+      prompt: "" Use <space> and <arrows> to stage and unstage files, <ctrl-a/n/i> to select all/none/invert. Type to search. <enter> when done.
       items = array file in files.sort (a, b) ->
           if a.workingDir != b.workingDir
             (a.workingDir ? '').localeCompare b.workingDir ? ''

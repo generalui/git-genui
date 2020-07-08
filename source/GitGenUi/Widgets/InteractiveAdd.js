@@ -25,7 +25,7 @@ Caf.defMod(module, () => {
             .selectList({
               multiselect: true,
               prompt:
-                "Use <space> and <arrow keys> to stage and unstage files. Type to search. <enter> when done.",
+                "Use <space> and <arrows> to stage and unstage files, <ctrl-a/n/i> to select all/none/invert. Type to search. <enter> when done.",
               items: (items = Caf.array(
                 files.sort((a, b) => {
                   let temp, temp1;

@@ -1,6 +1,7 @@
 {}
   load: ->
-    &UserConfig.initSingleton()
+    &ProjectFiles.init()
+    .then -> &UserConfig.initSingleton()
     .then -> &ProjectConfig.initSingleton()
   &UserConfig.userConfig
   &ProjectConfig.projectConfig

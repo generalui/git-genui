@@ -10,7 +10,7 @@ class SourceRoots extends BaseClass
     @rootFiles = compactFlatten rootFiles
     @knownSourceRoots = {}
 
-  @property :sourceRootIndicatorFiles :knownSourceRoots :rootFiles
+  @property :knownSourceRoots :rootFiles
 
   findSourceRoot: (directory) ->
     directory = path.resolve directory

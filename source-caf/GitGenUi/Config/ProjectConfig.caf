@@ -3,44 +3,16 @@ import &StandardImport, {} &path
 class ProjectConfig extends &ConfigShared
   @singletonClass()
 
-  @sourceRootIndicatorFiles:
-    :.git
-    @configBasename
-
   @configFields
     tracker:  {}
     commit:   format: :standard # or :conventionalCommit
 
   @getter
+    configBasename:     -> :git-genui.config.json
+    configPath:         -> &ProjectFiles.projectRoot
     conventionalCommit: -> @commit.format == :conventionalCommit
     standardCommit:     -> @commit.format == :standard
 
-  _load: ->
-    super
-    .then (config) -> @setConfig @_normalizeDepricatedConfig config
-
-  _normalizeDepricatedConfig: (config) ->
-    if config?.project
-      merge
-        objectWithout config, :project
-        config.project
-    else config
-
-  @getter
-    projectFolder: -> ProjectConfig.projectFolder
-    configBasename: -> ProjectConfig.configBasename
-
-  @classGetter
-    :repoRoot
-    projectFolder: -> &path.basename @repoRoot
-    configBasename: -> :git-genui.config.json
-    configFilePathPromise: -> @repoRootPromise.then (dir) -> dir && &path.join dir, @configBasename
-    repoRootPromise: -> @_repoRootPromise ?=
-      Promise.then ->
-        new &SourceRoots @sourceRootIndicatorFiles
-        .findSourceRoot process.cwd()
-      .tap (r) -> @_repoRoot = r
-      .catch (error) ->
-        log {} error
-        log.warn "" No in a project. Expecing to find the ".git" folder a current or parent folder.
-        null
+  init: ->
+    &ProjectFiles.init()
+    .then -> super

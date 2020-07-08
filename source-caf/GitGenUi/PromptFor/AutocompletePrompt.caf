@@ -151,6 +151,7 @@ class AutocompletePrompt extends Base
 
     .join "\n"
 
+
   render: ->
     content = @getQuestion()
     bottomContent = ''

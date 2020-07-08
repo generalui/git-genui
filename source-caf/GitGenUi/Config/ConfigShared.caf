@@ -3,22 +3,30 @@ import &StandardImport
 class ConfigShared extends BaseClass
 
   @initSingleton: ->
-    @getConfigFilePathPromise()
-    .then (configFilePath) -> @singleton.init configFilePath
+    @singleton.init()
     .then -> @singleton.readyPromise
     .then -> @singleton
 
-  init: (@configFilePath) -> Promise.resolve()
+  init: (configFilePath) ->
+    Promise.all []
+      @configPath
+      @configBasename
 
-  @property :config
+    .then ([configPath, configBasename]) ->
+      throw new Error "configPath must be a string" unless isString(configPath) && present configPath
+      throw new Error "configBasename must be a string" unless isString(configBasename) && present configBasename
+      &path.join configPath, configBasename
+
+    .then (@configFilePath)-> @_load()
+
+  @property :config :configFilePath
 
   @getter
-    :configFilePath
-    configBasename: -> @class.configBasename
-    configPath: -> &path.dirname @configFilePath
+    configPath: -> throw new Error "must override configPath"
+    configBasename: -> throw new Error "must override configBasename"
+
     state: -> @config
     homeDirRelativeConfigFilePath: -> @configFilePath.replace &os.homedir(), "~"
-    readyPromise: -> @_readyPromise
     inspectedObjects: -> toInspectedObjects @config
 
   @configFields: (fields...) ->
@@ -32,45 +40,36 @@ class ConfigShared extends BaseClass
           @_addConfigField key, _default
 
       else
-        throw new Error "unsupported configFields param type: #{formattedInspect {} field} (expeting String or Object)"
+        throw new Error "unsupported configFields param type: #{formattedInspect {} field} (expecting String or Object)"
 
   @_addConfigField: (field, _default) ->
-    @setter [field]: (v) ~> @setConfigProperty field, v
     @getter [field]: ~> @config[field] ? _default
-    @prototype[lowerCamelCase "merge #{field} with"] = (args...) ~> @setConfigProperty field, merge @[field], args...
+    @prototype[lowerCamelCase "set #{field}"]             = (v) ~> @setConfigProperty field, v
+    @prototype[lowerCamelCase "merge #{field} with"]      = (args...) ~> @setConfigProperty field, merge @[field], args...
     @prototype[lowerCamelCase "deep merge #{field} with"] = (args...) ~> @setConfigProperty field, deepMerge @[field], args...
-
-  @setter
-    configFilePath: (cfp) ->
-      @_configFilePath = cfp
-      @_load()
 
   setConfigProperty: (key, value) ->
     @_config = merge @_config
     @_config[key] = value
     @_save()
 
-  deepMergeInto: (config) ->
-    @_config = deepMerge @_config, config
-    @_save()
-
   #####################################
     PRIVATE
   #####################################
   _save: ->
-    &fsExtra.writeFile
-      filePath = @configFilePath
-      consistentJsonStringify @config, "  "
+    Promise.then ->
+      &fsExtra.writeFile @configFilePath, consistentJsonStringify @config, "  "
     .then -> @config
 
   _load: ->
-    @_readyPromise =
-      Promise.then -> &fsExtra.exists @configFilePath
-      .then (exists) ->
-        if exists
-          &fsExtra.readFile @configFilePath
-          .then (data) -> JSON.parse data.toString()
+    Promise.then ->
+      &fsExtra.exists @configFilePath
+    .then (exists) ->
+      if exists
+        &fsExtra.readFile @configFilePath
+        .then (data) ->
+          JSON.parse data.toString()
 
-        else {}
+      else {}
 
-      .then (config) -> @setConfig config
+    .then (config) -> @setConfig config
