@@ -73,12 +73,11 @@ Caf.defMod(module, () => {
             })
           })
           .then(({ projectId }) => projectId)
-          .tap(
-            projectId =>
-              (projectConfig.mergeTrackerWith = {
-                projectId,
-                name: require("../../Tracker").tracker.name
-              })
+          .tap(projectId =>
+            projectConfig.mergeTrackerWith({
+              projectId,
+              name: require("../../Tracker").tracker.name
+            })
           );
       });
       editGitEmail = updateStateWithPrompt("email", function({
@@ -226,7 +225,7 @@ Caf.defMod(module, () => {
                   .then(me =>
                     require("../../PromptFor").menu(state, {
                       prompt: "Select action:",
-                      items: () => {
+                      items: state => {
                         let temp, base1;
                         return compactFlatten([
                           {
@@ -252,7 +251,7 @@ Caf.defMod(module, () => {
                                 value:
                                   me != null
                                     ? Caf.exists(
-                                        (base1 = projects[projectId])
+                                        (base1 = projects[state.projectId])
                                       ) && base1.name
                                     : "configure token first"
                               }

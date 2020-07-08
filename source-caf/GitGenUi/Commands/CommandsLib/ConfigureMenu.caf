@@ -12,7 +12,7 @@ selectProject = updateStateWithPrompt :projectId, ({projectId, projects}) ->
       default: id == projectId
       value: "" #{presentValue name} #{Style.grey "(id: #{id}, account-id: #{account_id})"}
   .then ({projectId}) -> projectId
-  .tap (projectId) -> projectConfig.mergeTrackerWith = {} projectId, &Tracker.tracker.name
+  .tap (projectId) -> projectConfig.mergeTrackerWith {} projectId, &Tracker.tracker.name
 
 editGitEmail = updateStateWithPrompt :email ({email, trackerEmail}) ->
   &PromptFor.input
@@ -103,17 +103,18 @@ getTrackerToken = (state) ->
             log.warn "" Please configure your #{trackerName} token.
             null
 
-        .then (me) -> &PromptFor.menu
-          state
-          prompt:  "" Select action:
-          items: ->
-            compactFlatten []
-              action: getTrackerToken,  label: "set PivotalTracker token via auth"  value: me?.name
-              action: editTrackerToken, label: "set PivotalTracker token manually"  value: repeat 'x', token?.length ? 0
-              # action: editGitEmail,     value: "" 3. set your git email                 #{} presentValue email
-              if projectConfig.configFilePath
-                action:   selectProject
-                disabled: !me?
-                label:    "select tracker project"
-                value:    if me? then projects[projectId]?.name else "configure token first"
-              action: selectCommitFormat, label: "select commit format" value: projectConfig.commit.format
+        .then (me) ->
+          &PromptFor.menu
+            state
+            prompt:  "" Select action:
+            items: (state) ->
+              compactFlatten []
+                action: getTrackerToken,  label: "set PivotalTracker token via auth"  value: me?.name
+                action: editTrackerToken, label: "set PivotalTracker token manually"  value: repeat 'x', token?.length ? 0
+                # action: editGitEmail,     value: "" 3. set your git email                 #{} presentValue email
+                if projectConfig.configFilePath
+                  action:   selectProject
+                  disabled: !me?
+                  label:    "select tracker project"
+                  value:    if me? then projects[state.projectId]?.name else "configure token first"
+                action: selectCommitFormat, label: "select commit format" value: projectConfig.commit.format
