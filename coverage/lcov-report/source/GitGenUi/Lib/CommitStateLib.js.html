@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.18% </span>
+                <span class="strong">86.36% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/22</span>
+                <span class='fraction'>19/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.78% </span>
+                <span class="strong">84.44% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>35/45</span>
+                <span class='fraction'>38/45</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.54% </span>
+                <span class="strong">92.31% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>8/13</span>
+                <span class='fraction'>12/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.18% </span>
+                <span class="strong">86.36% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/22</span>
+                <span class='fraction'>19/22</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -327,13 +327,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -388,7 +388,7 @@ Caf.defMod(module, () =&gt; {
           body
         }) {
           return compactFlattenAll(
-            type != null ? type : "(type)",
+            type != null ? type : <span class="branch-1 cbranch-no" title="branch not covered" >"(type)",</span>
             ": ",
             Caf.exists(story) &amp;&amp; story.id
               ? `[#${Caf.toString(story.id)}]${Caf.toString(
@@ -472,13 +472,13 @@ Caf.defMod(module, () =&gt; {
                 ? require("../Git").status
                 : <span class="branch-1 cbranch-no" title="branch not covered" >require("../Git").printStatus(),</span>
               stories:
-                tracker.configured &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >ignoreRejections(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >tracker.stories)</span>,</span>
+                tracker.configured &amp;&amp; ignoreRejections(() =&gt; tracker.stories),
               members:
-                tracker.configured &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >ignoreRejections(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >tracker.members)</span>,</span>
+                tracker.configured &amp;&amp; ignoreRejections(() =&gt; tracker.members),
               myAccount:
-                tracker.configured &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >ignoreRejections(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >tracker.myAccount)</span>,</span>
+                tracker.configured &amp;&amp; ignoreRejections(() =&gt; tracker.myAccount),
               project:
-                tracker.configured &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >ignoreRejections(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >tracker.project)</span>,</span>
+                tracker.configured &amp;&amp; ignoreRejections(() =&gt; tracker.project),
               remote: require("../Git").aRemote,
               options
             })
@@ -499,7 +499,7 @@ Caf.defMod(module, () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jul 07 2020 16:46:48 GMT-0700 (Pacific Daylight Time)
+                at Wed Jul 08 2020 09:14:33 GMT-0700 (Pacific Daylight Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

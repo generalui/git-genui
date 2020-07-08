@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.03% </span>
+                <span class="strong">81.67% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>47/58</span>
+                <span class='fraction'>49/60</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.14% </span>
+                <span class="strong">77.78% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>27/35</span>
+                <span class='fraction'>28/36</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.03% </span>
+                <span class="strong">81.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>47/58</span>
+                <span class='fraction'>49/60</span>
             </div>
         
             
@@ -223,7 +223,9 @@
 <a name='L164'></a><a href='#L164'>164</a>
 <a name='L165'></a><a href='#L165'>165</a>
 <a name='L166'></a><a href='#L166'>166</a>
-<a name='L167'></a><a href='#L167'>167</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
@@ -273,19 +275,19 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
@@ -372,17 +374,19 @@
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -454,7 +458,7 @@ Caf.defMod(module, () =&gt; {
                 return this._load();
               });
           };
-          this.property("config", "configFilePath");
+          this.property("config", "configFilePath", "existedAtLoad");
           this.getter({
             configPath: <span class="fstat-no" title="function not covered" >fu</span>nction() {
 <span class="cstat-no" title="statement not covered" >              return (<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
@@ -535,20 +539,22 @@ Caf.defMod(module, () =&gt; {
                 this.configFilePath,
                 consistentJsonStringify(this.config, "  ")
               )
-            ).then(() =&gt; this.config);
+            ).then(() =&gt; this);
           };
           this.prototype._load = function() {
             return Promise.then(() =&gt;
               require("fs-extra").exists(this.configFilePath)
             )
-              .then(exists =&gt;
-                exists
+              .then(existedAtLoad =&gt; {
+                this.existedAtLoad = existedAtLoad;
+                return this.existedAtLoad
                   ? require("fs-extra")
                       .readFile(this.configFilePath)
                       .then(data =&gt; JSON.parse(data.toString()))
-                  : {}
-              )
-              .then(config =&gt; this.setConfig(config));
+                  : {};
+              })
+              .then(config =&gt; this.setConfig(config))
+              .then(() =&gt; this);
           };
         }
       ));
@@ -562,7 +568,7 @@ Caf.defMod(module, () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jul 07 2020 17:12:25 GMT-0700 (Pacific Daylight Time)
+                at Wed Jul 08 2020 10:09:05 GMT-0700 (Pacific Daylight Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

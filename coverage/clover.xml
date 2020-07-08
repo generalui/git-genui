@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1594167145939" clover="3.2.0">
-  <project timestamp="1594167145939" name="All files">
-    <metrics statements="186" coveredstatements="133" conditionals="78" coveredconditionals="39" methods="103" coveredmethods="71" elements="367" coveredelements="243" complexity="0" loc="186" ncloc="186" packages="3" files="9" classes="9"/>
+<coverage generated="1594228145235" clover="3.2.0">
+  <project timestamp="1594228145235" name="All files">
+    <metrics statements="111" coveredstatements="63" conditionals="47" coveredconditionals="14" methods="64" coveredmethods="34" elements="222" coveredelements="111" complexity="0" loc="111" ncloc="111" packages="3" files="3" classes="3"/>
     <package name="GitGenUi.Commands">
-      <metrics statements="42" coveredstatements="6" conditionals="28" coveredconditionals="0" methods="23" coveredmethods="2"/>
+      <metrics statements="43" coveredstatements="6" conditionals="30" coveredconditionals="0" methods="24" coveredmethods="2"/>
       <file name="Commit.js" path="/Users/shanebdavis/dev/genui/opensource/git-genui/source/GitGenUi/Commands/Commit.js">
-        <metrics statements="42" coveredstatements="6" conditionals="28" coveredconditionals="0" methods="23" coveredmethods="2"/>
+        <metrics statements="43" coveredstatements="6" conditionals="30" coveredconditionals="0" methods="24" coveredmethods="2"/>
         <line num="2" count="9" type="stmt"/>
         <line num="3" count="9" type="stmt"/>
         <line num="4" count="9" type="stmt"/>
@@ -23,16 +23,14 @@
         <line num="112" count="0" type="stmt"/>
         <line num="114" count="0" type="stmt"/>
         <line num="117" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="127" count="0" type="stmt"/>
-        <line num="130" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="131" count="0" type="stmt"/>
-        <line num="132" count="0" type="stmt"/>
-        <line num="133" count="0" type="stmt"/>
-        <line num="144" count="0" type="stmt"/>
-        <line num="146" count="0" type="stmt"/>
-        <line num="159" count="0" type="stmt"/>
-        <line num="160" count="0" type="stmt"/>
-        <line num="161" count="0" type="stmt"/>
+        <line num="125" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="130" count="0" type="stmt"/>
+        <line num="133" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="134" count="0" type="stmt"/>
+        <line num="135" count="0" type="stmt"/>
+        <line num="136" count="0" type="stmt"/>
+        <line num="147" count="0" type="stmt"/>
+        <line num="149" count="0" type="stmt"/>
         <line num="162" count="0" type="stmt"/>
         <line num="163" count="0" type="stmt"/>
         <line num="164" count="0" type="stmt"/>
@@ -41,28 +39,22 @@
         <line num="167" count="0" type="stmt"/>
         <line num="168" count="0" type="stmt"/>
         <line num="169" count="0" type="stmt"/>
-        <line num="198" count="0" type="stmt"/>
-        <line num="199" count="0" type="stmt"/>
-        <line num="207" count="0" type="stmt"/>
+        <line num="170" count="0" type="stmt"/>
+        <line num="171" count="0" type="stmt"/>
+        <line num="172" count="0" type="stmt"/>
+        <line num="201" count="0" type="stmt"/>
+        <line num="202" count="0" type="stmt"/>
         <line num="210" count="0" type="stmt"/>
-        <line num="240" count="0" type="stmt"/>
-        <line num="247" count="0" type="stmt"/>
-        <line num="268" count="0" type="stmt"/>
+        <line num="213" count="0" type="stmt"/>
+        <line num="243" count="0" type="stmt"/>
+        <line num="250" count="0" type="stmt"/>
+        <line num="271" count="0" type="stmt"/>
       </file>
     </package>
     <package name="GitGenUi.Config">
-      <metrics statements="136" coveredstatements="119" conditionals="48" coveredconditionals="37" methods="76" coveredmethods="65"/>
-      <file name="Config.js" path="/Users/shanebdavis/dev/genui/opensource/git-genui/source/GitGenUi/Config/Config.js">
-        <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
-        <line num="2" count="9" type="stmt"/>
-        <line num="3" count="9" type="stmt"/>
-        <line num="4" count="9" type="stmt"/>
-        <line num="6" count="2" type="stmt"/>
-        <line num="8" count="2" type="stmt"/>
-        <line num="9" count="2" type="stmt"/>
-      </file>
+      <metrics statements="60" coveredstatements="49" conditionals="15" coveredconditionals="12" methods="36" coveredmethods="28"/>
       <file name="ConfigShared.js" path="/Users/shanebdavis/dev/genui/opensource/git-genui/source/GitGenUi/Config/ConfigShared.js">
-        <metrics statements="58" coveredstatements="47" conditionals="15" coveredconditionals="12" methods="35" coveredmethods="27"/>
+        <metrics statements="60" coveredstatements="49" conditionals="15" coveredconditionals="12" methods="36" coveredmethods="28"/>
         <line num="2" count="9" type="stmt"/>
         <line num="3" count="9" type="stmt"/>
         <line num="4" count="9" type="stmt"/>
@@ -72,14 +64,14 @@
         <line num="47" count="4" type="stmt"/>
         <line num="48" count="4" type="stmt"/>
         <line num="50" count="9" type="stmt"/>
-        <line num="51" count="7" type="stmt"/>
-        <line num="53" count="7" type="cond" truecount="3" falsecount="1"/>
+        <line num="51" count="8" type="stmt"/>
+        <line num="53" count="8" type="cond" truecount="3" falsecount="1"/>
         <line num="54" count="0" type="stmt"/>
-        <line num="56" count="7" type="cond" truecount="3" falsecount="1"/>
+        <line num="56" count="8" type="cond" truecount="3" falsecount="1"/>
         <line num="57" count="0" type="stmt"/>
-        <line num="59" count="7" type="stmt"/>
-        <line num="62" count="7" type="stmt"/>
-        <line num="63" count="7" type="stmt"/>
+        <line num="59" count="8" type="stmt"/>
+        <line num="62" count="8" type="stmt"/>
+        <line num="63" count="8" type="stmt"/>
         <line num="66" count="9" type="stmt"/>
         <line num="67" count="9" type="stmt"/>
         <line num="69" count="0" type="stmt"/>
@@ -116,98 +108,13 @@
         <line num="143" count="5" type="stmt"/>
         <line num="147" count="5" type="stmt"/>
         <line num="149" count="9" type="stmt"/>
-        <line num="150" count="7" type="stmt"/>
-        <line num="151" count="7" type="stmt"/>
-        <line num="154" count="7" type="cond" truecount="2" falsecount="0"/>
-        <line num="157" count="2" type="stmt"/>
-        <line num="160" count="7" type="stmt"/>
-      </file>
-      <file name="ProjectConfig.js" path="/Users/shanebdavis/dev/genui/opensource/git-genui/source/GitGenUi/Config/ProjectConfig.js">
-        <metrics statements="14" coveredstatements="13" conditionals="0" coveredconditionals="0" methods="9" coveredmethods="8"/>
-        <line num="2" count="9" type="stmt"/>
-        <line num="3" count="9" type="stmt"/>
-        <line num="4" count="9" type="stmt"/>
-        <line num="6" count="9" type="stmt"/>
-        <line num="9" count="9" type="stmt"/>
-        <line num="10" count="9" type="stmt"/>
-        <line num="11" count="9" type="stmt"/>
-        <line num="13" count="4" type="stmt"/>
-        <line num="16" count="3" type="stmt"/>
-        <line num="19" count="1" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="25" count="9" type="stmt"/>
-        <line num="26" count="3" type="stmt"/>
-        <line num="28" count="3" type="stmt"/>
-      </file>
-      <file name="ProjectFiles.js" path="/Users/shanebdavis/dev/genui/opensource/git-genui/source/GitGenUi/Config/ProjectFiles.js">
-        <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="5"/>
-        <line num="2" count="9" type="stmt"/>
-        <line num="3" count="9" type="stmt"/>
-        <line num="4" count="9" type="stmt"/>
-        <line num="13" count="9" type="stmt"/>
-        <line num="16" count="9" type="stmt"/>
-        <line num="17" count="9" type="stmt"/>
-        <line num="18" count="9" type="stmt"/>
-        <line num="19" count="6" type="stmt"/>
-        <line num="24" count="6" type="stmt"/>
-        <line num="25" count="6" type="stmt"/>
-        <line num="28" count="9" type="stmt"/>
-      </file>
-      <file name="SourceRoots.js" path="/Users/shanebdavis/dev/genui/opensource/git-genui/source/GitGenUi/Config/SourceRoots.js">
-        <metrics statements="23" coveredstatements="22" conditionals="15" coveredconditionals="14" methods="11" coveredmethods="11"/>
-        <line num="2" count="9" type="stmt"/>
-        <line num="3" count="9" type="stmt"/>
-        <line num="4" count="9" type="stmt"/>
-        <line num="9" count="9" type="stmt"/>
-        <line num="10" count="9" type="stmt"/>
-        <line num="11" count="9" type="stmt"/>
-        <line num="12" count="9" type="stmt"/>
-        <line num="15" count="7" type="stmt"/>
-        <line num="16" count="7" type="stmt"/>
-        <line num="17" count="7" type="stmt"/>
-        <line num="21" count="9" type="stmt"/>
-        <line num="22" count="9" type="stmt"/>
-        <line num="23" count="13" type="stmt"/>
-        <line num="24" count="13" type="stmt"/>
-        <line num="25" count="13" type="cond" truecount="1" falsecount="1"/>
-        <line num="26" count="0" type="stmt"/>
-        <line num="28" count="13" type="stmt"/>
-        <line num="32" count="13" type="cond" truecount="2" falsecount="0"/>
-        <line num="37" count="9" type="stmt"/>
-        <line num="38" count="29" type="stmt"/>
-        <line num="41" count="81" type="stmt"/>
-        <line num="42" count="81" type="cond" truecount="2" falsecount="0"/>
-        <line num="46" count="29" type="cond" truecount="2" falsecount="0"/>
-      </file>
-      <file name="UserConfig.js" path="/Users/shanebdavis/dev/genui/opensource/git-genui/source/GitGenUi/Config/UserConfig.js">
-        <metrics statements="23" coveredstatements="19" conditionals="18" coveredconditionals="11" methods="12" coveredmethods="10"/>
-        <line num="2" count="9" type="stmt"/>
-        <line num="3" count="9" type="stmt"/>
-        <line num="4" count="9" type="stmt"/>
-        <line num="17" count="9" type="stmt"/>
-        <line num="21" count="9" type="stmt"/>
-        <line num="22" count="9" type="stmt"/>
-        <line num="28" count="6" type="cond" truecount="2" falsecount="0"/>
-        <line num="37" count="9" type="stmt"/>
-        <line num="39" count="3" type="stmt"/>
-        <line num="42" count="3" type="stmt"/>
-        <line num="45" count="1" type="stmt"/>
-        <line num="48" count="9" type="stmt"/>
-        <line num="49" count="9" type="stmt"/>
-        <line num="50" count="9" type="stmt"/>
-        <line num="51" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="52" count="3" type="stmt"/>
-        <line num="55" count="3" type="stmt"/>
-        <line num="62" count="0" type="stmt"/>
-        <line num="65" count="3" type="stmt"/>
-        <line num="67" count="9" type="stmt"/>
-        <line num="72" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="73" count="0" type="stmt"/>
-        <line num="75" count="0" type="stmt"/>
-      </file>
-      <file name="index.js" path="/Users/shanebdavis/dev/genui/opensource/git-genui/source/GitGenUi/Config/index.js">
-        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="4" count="9" type="stmt"/>
+        <line num="150" count="8" type="stmt"/>
+        <line num="151" count="8" type="stmt"/>
+        <line num="154" count="8" type="stmt"/>
+        <line num="155" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="158" count="3" type="stmt"/>
+        <line num="161" count="8" type="stmt"/>
+        <line num="162" count="8" type="stmt"/>
       </file>
     </package>
     <package name="jest">

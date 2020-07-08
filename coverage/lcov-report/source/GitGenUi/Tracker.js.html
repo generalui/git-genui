@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">56.86% </span>
+                <span class="strong">64.71% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>29/51</span>
+                <span class='fraction'>33/51</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">8.51% </span>
+                <span class="strong">25.53% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/47</span>
+                <span class='fraction'>12/47</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">29.03% </span>
+                <span class="strong">41.94% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>9/31</span>
+                <span class='fraction'>13/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">56.86% </span>
+                <span class="strong">64.71% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>29/51</span>
+                <span class='fraction'>33/51</span>
             </div>
         
             
@@ -337,20 +337,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -362,26 +356,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -576,8 +576,8 @@ Caf.defMod(module, () =&gt; {
             name: function() {
               let temp;
               return (temp = projectConfig.tracker.name) != null
-                ? <span class="branch-0 cbranch-no" title="branch not covered" >temp</span>
-                : "PivotalTracker";
+                ? temp
+                : <span class="branch-1 cbranch-no" title="branch not covered" >"PivotalTracker";</span>
             },
             settableStoryStates: <span class="fstat-no" title="function not covered" >fu</span>nction() {
               let base;
@@ -585,23 +585,23 @@ Caf.defMod(module, () =&gt; {
                 Caf.exists((base = this.tracker)) &amp;&amp; base.settableStoryStates
               );
             },
-            stories: <span class="fstat-no" title="function not covered" >fu</span>nction() {
+            stories: function() {
               let base;
-<span class="cstat-no" title="statement not covered" >              return (</span>
+              return (
                 Caf.exists((base = this.tracker)) &amp;&amp;
                 base.getStories(this.projectId)
               );
             },
-            members: <span class="fstat-no" title="function not covered" >fu</span>nction() {
+            members: function() {
               let base;
-<span class="cstat-no" title="statement not covered" >              return (</span>
+              return (
                 Caf.exists((base = this.tracker)) &amp;&amp;
                 base.getMembers(this.projectId)
               );
             },
-            myAccount: <span class="fstat-no" title="function not covered" >fu</span>nction() {
+            myAccount: function() {
               let base;
-<span class="cstat-no" title="statement not covered" >              return (</span>
+              return (
                 Caf.exists((base = this.tracker)) &amp;&amp;
                 base.getMyAccount(this.projectId)
               );
@@ -610,9 +610,9 @@ Caf.defMod(module, () =&gt; {
               let base;
 <span class="cstat-no" title="statement not covered" >              return Caf.exists((base = this.tracker)) &amp;&amp; base.projects;</span>
             },
-            project: <span class="fstat-no" title="function not covered" >fu</span>nction() {
+            project: function() {
               let base;
-<span class="cstat-no" title="statement not covered" >              return (</span>
+              return (
                 Caf.exists((base = this.tracker)) &amp;&amp;
                 base.getProject(this.projectId)
               );
@@ -757,7 +757,7 @@ Caf.defMod(module, () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jul 07 2020 16:46:48 GMT-0700 (Pacific Daylight Time)
+                at Wed Jul 08 2020 09:14:33 GMT-0700 (Pacific Daylight Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
