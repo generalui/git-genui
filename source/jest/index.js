@@ -4,6 +4,7 @@
 (module.exports = require('./namespace'))
 
 .addModules({
+  GitTest:        require('./Git.test'),
   StandardImport: require('./StandardImport')
 });
 require('./Config');

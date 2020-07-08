@@ -119,9 +119,7 @@ Caf.defMod(module, () => {
         getInitialCommitState: function(options = {}) {
           return Promise.deepAll(
             merge(userConfig.commitOptionsForProject, {
-              status: options.quiet
-                ? require("../Git").status
-                : require("../Git").printStatus(),
+              status: require("../Git").status,
               stories:
                 tracker.configured && ignoreRejections(() => tracker.stories),
               members:
@@ -133,11 +131,17 @@ Caf.defMod(module, () => {
               remote: require("../Git").aRemote,
               options
             })
-          ).then(state =>
-            !projectConfig.conventionalCommit
-              ? objectWithout(state, "breakingChange")
-              : state
-          );
+          )
+            .tap(({ status }) =>
+              !options.quiet
+                ? require("../Git").printStatus({ status })
+                : undefined
+            )
+            .then(state =>
+              !projectConfig.conventionalCommit
+                ? objectWithout(state, "breakingChange")
+                : state
+            );
         }
       };
     }

@@ -86,51 +86,42 @@ class Git extends BaseClass
   decodeStatus = (statusCode) ->
     statusCodes[statusCode]
 
-  @printStatus: (options)->
-    unstagedColors =
-      deleted:    :red
-      conflicted: :magenta
-      added:      :yellow
-      renamed:    :blue
-      modified:   :red
-      untracked:    :red
-      staged:     :green
+  @loadStatus:  (options) ->
+    options extract? status, origin, remotes, email
+    Promise.deepAll {}
+      status  ?= @status
+      origin  ?= @origin
+      remotes ?= @remotes
+      email   ?= @email
+    .then (loaded) -> merge options, loaded
 
-    stagedColors =
-      deleted:    :brightRed
-      conflicted: :brightMagenta
-      added:      :brightYellow
-      renamed:    :brightBlue
-      modified:   :brightCyan
-      untracked:  :brightGray
-      staged:     :brightGreen
-
-    Promise.all [] @status, @origin, @remotes, @email
-    .tap ([status, origin, remotes, email]) ->
-      if options?.verbose
-        log verbose: {}
-          projectConfig.projectFolder
-          userConfig.projectKey
-          git: {} remotes, status
-
-      if origin?
-        log "" Origin:        #{Style.green origin}
-      else
-        log :Remotes:
-        each {refs, name} in remotes
-          log "" \_ #{pad name + ":", 12} #{Style.green refs.fetch}
-
-      log "" Branch:        #{Style.green status.current}
-      log "" Tracking:      #{Style.green status.tracking}
-      log "" Author:        #{Style.green email}
-
+  @getStatusReport: (options) ->
+    @loadStatus options
+    .then ({status, origin, remotes, email, verbose}) ->
+      {staged, unstaged, untracked} = status
       outputOne = ({path, status}) -> "  #{pad status + ':', 12} #{path}"
 
-      {staged, unstaged, untracked} = status
+      compactFlattenAll
+        if verbose
+          formattedInspect verbose: {}
+            projectConfig.projectFolder
+            userConfig.projectKey
+            git: {} remotes, status
 
-      if staged.length > 0
-        log "" \nChanges to be committed:       #{Style.grey "(#{pluralize :file, staged.length})"}
-        log
+        if origin?
+          "" Origin:        #{Style.green origin}
+
+        else []
+          :Remotes:
+          array {refs, name} in remotes
+            "" \_ #{pad name + ":", 12} #{Style.green refs.fetch}
+
+        "" Branch:        #{Style.green status.current}
+        "" Tracking:      #{Style.green status.tracking}
+        "" Author:        #{Style.green email}
+
+        if staged.length > 0 then []
+          "" \nChanges to be committed:       #{Style.grey "(#{pluralize :file, staged.length})"}
           array file in staged with
             if file.status == :modified && file.index != :modified
               Style.yellow outputOne file
@@ -139,20 +130,24 @@ class Git extends BaseClass
           .sort()
           .join :\n
 
-      if unstaged.length > 0
-        log "" \nChanges not staged to commit:  #{Style.grey "(#{pluralize :file, unstaged.length})"}
-        log Style.red
-          array file in unstaged with outputOne file
-          .sort()
-          .join :\n
+        if unstaged.length > 0 then []
+          "" \nChanges not staged to commit:  #{Style.grey "(#{pluralize :file, unstaged.length})"}
+          Style.red
+            array file in unstaged with outputOne file
+            .sort()
+            .join :\n
 
-      if untracked.length > 0
-        log "" \nUntracked files:               #{Style.grey "(#{pluralize :file, untracked.length})"}
-        log Style.red
-          array file in untracked with outputOne file
-          .sort()
-          .join :\n
+        if untracked.length > 0 then []
+          "" \nUntracked files:               #{Style.grey "(#{pluralize :file, untracked.length})"}
+          Style.red
+            array file in untracked with outputOne file
+            .sort()
+            .join :\n
 
-      log ''
+        ''
 
-    .then ([status]) -> status
+      .join :\n
+
+  @printStatus: (options)=>
+    @getStatusReport options
+    .then log

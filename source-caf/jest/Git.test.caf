@@ -1,0 +1,48 @@
+import &StandardImport
+
+test :getGitConfig ->
+  Git.getGitConfig()
+  .then (config) ->
+    assert.isString config[:user.name]
+
+test :aRemote ->
+  Git.aRemote
+  .then (remote) ->
+    assert.isString remote.name
+    assert.isObject remote.refs
+    assert.eq
+      Object.keys remote.refs
+      .sort()
+      :fetch :push
+
+chainedTest "rawStatus" ->
+  Git.rawStatus
+
+.thenTest
+  :normalizeGitStatus -> Git.normalizeGitStatus
+
+.tapTest
+  "second normalizeGitStatus doesn't change anything" (firstNormalizedStatus)->
+    assert.eq
+      Git.normalizeGitStatus firstNormalizedStatus
+      firstNormalizedStatus
+
+test "getStatusReport" ->
+  Git.getStatusReport()
+  .then (report) ->
+    assert.match
+      report
+      ///i
+        Origin (.|\n)*
+        Branch (.|\n)*
+        Tracking (.|\n)*
+        Author (.|\n)*
+        Files
+
+test "getStatusReport with options" ->
+  Git.getStatusReport verbose: true
+  .then (report) ->
+    assert.match
+      report
+      ///i
+        verbose

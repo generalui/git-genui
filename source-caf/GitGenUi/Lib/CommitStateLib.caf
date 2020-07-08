@@ -44,13 +44,16 @@ import &StandardImport, {} &ignoreRejections
     Promise.deepAll merge
       userConfig.commitOptionsForProject
       {}
-        status:     if options.quiet then &Git.status else &Git.printStatus()
+        &Git.status
         stories:    tracker.configured && ignoreRejections -> tracker.stories
         members:    tracker.configured && ignoreRejections -> tracker.members
         myAccount:  tracker.configured && ignoreRejections -> tracker.myAccount
         project:    tracker.configured && ignoreRejections -> tracker.project
         remote:     &Git.aRemote
         options
+    .tap ({status}) ->
+      unless options.quiet
+        &Git.printStatus {} status
     .then (state) ->
       unless projectConfig.conventionalCommit
         objectWithout state, :breakingChange

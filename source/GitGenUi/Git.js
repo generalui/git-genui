@@ -10,12 +10,14 @@ Caf.defMod(module, () => {
       "compactFlatten",
       "Object",
       "objectWithout",
-      "log",
+      "compactFlattenAll",
+      "formattedInspect",
       "projectConfig",
       "userConfig",
       "Style",
       "pluralize",
-      "pad"
+      "pad",
+      "log"
     ],
     [global, require("./StandardImport"), { Style: require("./Style") }],
     (
@@ -26,12 +28,14 @@ Caf.defMod(module, () => {
       compactFlatten,
       Object,
       objectWithout,
-      log,
+      compactFlattenAll,
+      formattedInspect,
       projectConfig,
       userConfig,
       Style,
       pluralize,
-      pad
+      pad,
+      log
     ) => {
       let SimpleGit, Git;
       SimpleGit = require("simple-git/promise")();
@@ -151,121 +155,109 @@ Caf.defMod(module, () => {
         decodeStatus = function(statusCode) {
           return statusCodes[statusCode];
         };
-        this.printStatus = function(options) {
-          let unstagedColors, stagedColors;
-          unstagedColors = {
-            deleted: "red",
-            conflicted: "magenta",
-            added: "yellow",
-            renamed: "blue",
-            modified: "red",
-            untracked: "red",
-            staged: "green"
-          };
-          stagedColors = {
-            deleted: "brightRed",
-            conflicted: "brightMagenta",
-            added: "brightYellow",
-            renamed: "brightBlue",
-            modified: "brightCyan",
-            untracked: "brightGray",
-            staged: "brightGreen"
-          };
-          return Promise.all([
-            this.status,
-            this.origin,
-            this.remotes,
-            this.email
-          ])
-            .tap(([status, origin, remotes, email]) => {
-              let outputOne, staged, unstaged, untracked;
-              if (Caf.exists(options) && options.verbose) {
-                log({
-                  verbose: {
-                    projectFolder: projectConfig.projectFolder,
-                    projectKey: userConfig.projectKey,
-                    git: { remotes, status }
-                  }
-                });
-              }
-              if (origin != null) {
-                log(`Origin:        ${Caf.toString(Style.green(origin))}`);
-              } else {
-                log("Remotes:");
-                Caf.each2(remotes, ({ refs, name }) =>
-                  log(
-                    `  ${Caf.toString(pad(name + ":", 12))} ${Caf.toString(
-                      Style.green(refs.fetch)
-                    )}`
-                  )
-                );
-              }
-              log(
-                `Branch:        ${Caf.toString(Style.green(status.current))}`
-              );
-              log(
-                `Tracking:      ${Caf.toString(Style.green(status.tracking))}`
-              );
-              log(`Author:        ${Caf.toString(Style.green(email))}`);
+        this.loadStatus = function(options) {
+          let status, origin, remotes, email;
+          if (Caf.exists(options)) {
+            status = options.status;
+            origin = options.origin;
+            remotes = options.remotes;
+            email = options.email;
+          }
+          return Promise.deepAll({
+            status: status != null ? status : (status = this.status),
+            origin: origin != null ? origin : (origin = this.origin),
+            remotes: remotes != null ? remotes : (remotes = this.remotes),
+            email: email != null ? email : (email = this.email)
+          }).then(loaded => merge(options, loaded));
+        };
+        this.getStatusReport = function(options) {
+          return this.loadStatus(options).then(
+            ({ status, origin, remotes, email, verbose }) => {
+              let staged, unstaged, untracked, outputOne;
+              ({ staged, unstaged, untracked } = status);
               outputOne = ({ path, status }) =>
                 `  ${Caf.toString(pad(status + ":", 12))} ${Caf.toString(
                   path
                 )}`;
-              ({ staged, unstaged, untracked } = status);
-              if (staged.length > 0) {
-                log(
-                  `\nChanges to be committed:       ${Caf.toString(
-                    Style.grey(
-                      `(${Caf.toString(pluralize("file", staged.length))})`
-                    )
-                  )}`
-                );
-                log(
-                  Caf.array(staged, file =>
-                    file.status === "modified" && file.index !== "modified"
-                      ? Style.yellow(outputOne(file))
-                      : Style.green(outputOne(file))
-                  )
-                    .sort()
-                    .join("\n")
-                );
-              }
-              if (unstaged.length > 0) {
-                log(
-                  `\nChanges not staged to commit:  ${Caf.toString(
-                    Style.grey(
-                      `(${Caf.toString(pluralize("file", unstaged.length))})`
-                    )
-                  )}`
-                );
-                log(
-                  Style.red(
-                    Caf.array(unstaged, file => outputOne(file))
-                      .sort()
-                      .join("\n")
-                  )
-                );
-              }
-              if (untracked.length > 0) {
-                log(
-                  `\nUntracked files:               ${Caf.toString(
-                    Style.grey(
-                      `(${Caf.toString(pluralize("file", untracked.length))})`
-                    )
-                  )}`
-                );
-                log(
-                  Style.red(
-                    Caf.array(untracked, file => outputOne(file))
-                      .sort()
-                      .join("\n")
-                  )
-                );
-              }
-              return log("");
-            })
-            .then(([status]) => status);
+              return compactFlattenAll(
+                verbose
+                  ? formattedInspect({
+                      verbose: {
+                        projectFolder: projectConfig.projectFolder,
+                        projectKey: userConfig.projectKey,
+                        git: { remotes, status }
+                      }
+                    })
+                  : undefined,
+                origin != null
+                  ? `Origin:        ${Caf.toString(Style.green(origin))}`
+                  : [
+                      "Remotes:",
+                      Caf.array(
+                        remotes,
+                        ({ refs, name }) =>
+                          `  ${Caf.toString(
+                            pad(name + ":", 12)
+                          )} ${Caf.toString(Style.green(refs.fetch))}`
+                      )
+                    ],
+                `Branch:        ${Caf.toString(Style.green(status.current))}`,
+                `Tracking:      ${Caf.toString(Style.green(status.tracking))}`,
+                `Author:        ${Caf.toString(Style.green(email))}`,
+                staged.length > 0
+                  ? [
+                      `\nChanges to be committed:       ${Caf.toString(
+                        Style.grey(
+                          `(${Caf.toString(pluralize("file", staged.length))})`
+                        )
+                      )}`,
+                      Caf.array(staged, file =>
+                        file.status === "modified" && file.index !== "modified"
+                          ? Style.yellow(outputOne(file))
+                          : Style.green(outputOne(file))
+                      )
+                        .sort()
+                        .join("\n")
+                    ]
+                  : undefined,
+                unstaged.length > 0
+                  ? [
+                      `\nChanges not staged to commit:  ${Caf.toString(
+                        Style.grey(
+                          `(${Caf.toString(
+                            pluralize("file", unstaged.length)
+                          )})`
+                        )
+                      )}`,
+                      Style.red(
+                        Caf.array(unstaged, file => outputOne(file))
+                          .sort()
+                          .join("\n")
+                      )
+                    ]
+                  : undefined,
+                untracked.length > 0
+                  ? [
+                      `\nUntracked files:               ${Caf.toString(
+                        Style.grey(
+                          `(${Caf.toString(
+                            pluralize("file", untracked.length)
+                          )})`
+                        )
+                      )}`,
+                      Style.red(
+                        Caf.array(untracked, file => outputOne(file))
+                          .sort()
+                          .join("\n")
+                      )
+                    ]
+                  : undefined,
+                ""
+              ).join("\n");
+            }
+          );
         };
+        this.printStatus = options => this.getStatusReport(options).then(log);
       }));
     }
   );

@@ -48,7 +48,7 @@ Caf.defMod(module, () => {
               ))
             })
             .then(selectedItems => {
-              let selectedFilesByFile, serializer;
+              let selectedFilesByFile, toDo;
               selectedFilesByFile = Caf.object(
                 selectedItems,
                 null,
@@ -56,24 +56,27 @@ Caf.defMod(module, () => {
                 null,
                 item => item.file.path
               );
-              serializer = new Promise.Serializer();
-              Caf.each2(items, ({ file, selected }) =>
-                !!selected !== !!selectedFilesByFile[file.path]
-                  ? serializer.then(() => {
-                      let action;
-                      return require("../Git")
-                        [(action = selected ? "unstage" : "stage")](
-                          getResolvedFilePath(file.path)
-                        )
-                        .then(() =>
-                          log(
-                            Style.blue(action + ": ") + Style.green(file.path)
-                          )
-                        );
-                    })
+              toDo = { stage: [], unstage: [] };
+              Caf.each2(items, ({ file, selected }) => {
+                let action;
+                return !!selected !== !!selectedFilesByFile[file.path]
+                  ? (toDo[(action = selected ? "unstage" : "stage")].push(
+                      getResolvedFilePath(file.path)
+                    ),
+                    log(Style.blue(action + ": ") + Style.green(file.path)))
+                  : undefined;
+              });
+              return Promise.then(() =>
+                toDo.stage.length > 1
+                  ? require("../Git").stage(toDo.stage)
                   : undefined
-              );
-              return serializer;
+              )
+                .then(() =>
+                  toDo.unstage.length > 1
+                    ? require("../Git").unstage(toDo.unstage)
+                    : undefined
+                )
+                .then(() => toDo);
             });
         });
       };
