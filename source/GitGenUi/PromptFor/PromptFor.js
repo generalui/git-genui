@@ -45,10 +45,6 @@ Caf.defMod(module, () => {
         "autocomplete",
         require("./AutocompletePrompt")
       );
-      require("inquirer").registerPrompt(
-        "checkbox-plus",
-        require("inquirer-checkbox-plus-prompt")
-      );
       inquire = function(options) {
         if (present(options.name)) {
           throw new Error(
@@ -75,6 +71,7 @@ Caf.defMod(module, () => {
           items,
           multiselect,
           prompt,
+          tip,
           default: _default
         }) {
           let itemsWereStrings, values, itemsByValue;
@@ -95,6 +92,7 @@ Caf.defMod(module, () => {
           return inquire({
             prompt,
             multiselect,
+            tip,
             default: _default,
             type: "autocomplete",
             pageSize: 20,

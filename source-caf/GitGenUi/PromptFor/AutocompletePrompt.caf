@@ -7,11 +7,11 @@ observe = require :inquirer/lib/utils/events
 { takeWhile } = &rxjs/operators
 
 colors =
-  tip:      &chalk.grey
-  currentLine: &chalk.white.bold
-  selected: &chalk.greenBright
-  warning:  &chalk.yellow
-  error:    &chalk.red
+  tip:          &chalk.grey
+  currentLine:  &chalk.white.bold
+  selected:     &chalk.greenBright
+  warning:      &chalk.yellow
+  error:        &chalk.red
 
 applyColors = (customColors) ->
   object c, k in colors
@@ -29,7 +29,7 @@ class AutocompletePrompt extends Base
   constructor: (options, rl, answers) ->
     @throwParamError :source unless @opt.source is Function
     @currentItems = []
-    @renderCount = 0
+    @showTip = true
     @selected = 0
     @itemsWereStrings = false
     if @multiselect = @opt.multiselect
@@ -130,7 +130,7 @@ class AutocompletePrompt extends Base
     @setSelected @selected - 1
     @render()
 
-  listRender: (items, pointer) ->
+  renderItemList: (items, pointer) ->
     process.stdout extract columns
 
     array item, i in items
@@ -151,40 +151,45 @@ class AutocompletePrompt extends Base
 
     .join "\n"
 
+  getPrompt: ->
+    compactFlatten []
+      @getQuestion()
+      if @showTip then @colors.tip @opt.tip ? "" (Use arrow keys or type to search)
+      else if @multiselect then @colors.tip "#{objectKeyCount @selectedById}/#{@total} "
 
-  render: ->
-    content = @getQuestion()
-    bottomContent = ''
+      if @errorMessage then @colors.error "" ERROR: #{@errorMessage}
 
-    if @renderCount == 0
-      content += @colors.tip "" (Use arrow keys or type to search)
-
-    if @errorMessage
-      content += @colors.error "" ERROR: #{@errorMessage}
-
-    @renderCount++
-
-    if @answer
-      content += if @multiselect
-        "" #{objectKeyCount @selectedById} selected
-      else @colors.currentLine @answer.label ? @answer.value
-
-    else
-      content += @rl.line
-
-      bottomContent = if @searching
-         '  ' + @colors.tip 'Searching...'
-
-      else if @currentItems.length > 0
-        @paginator.paginate
-          @listRender @currentItems, @selected
-          @selected
-          @opt.pageSize
+      if @answer
+        @colors.currentLine @answer.label ? @answer.value
 
       else
-        '  ' + @colors.warning 'No results...'
+        @rl.line
 
-    @screen.render content, bottomContent
+    .join ''
+
+  getRenderedPage: ->
+    if @searching
+      '  ' + @colors.tip 'Searching...'
+
+    else if @currentItems.length > 0
+      @paginator.paginate
+        @renderItemList @currentItems, @selected
+        @selected
+        @opt.pageSize
+
+    else
+      '  ' + @colors.warning 'No results...'
+
+  render: ->
+    @screen.render
+      @getPrompt()
+
+      if @answer
+        ''
+      else
+        @getRenderedPage()
+
+    @showTip = false
 
   getNormalizedItems: (items) ->
     if @itemsWereStrings || (items[0] && items[0] is String)
@@ -225,6 +230,7 @@ class AutocompletePrompt extends Base
       @currentItems = @getNormalizedItems items
 
       if firstSearch
+        @total = @currentItems.length
         @setSelected
           findDefaultItemIndex @currentItems, @default
           ? 0

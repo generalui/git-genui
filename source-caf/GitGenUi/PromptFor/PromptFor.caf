@@ -1,7 +1,6 @@
 import &ArtStandardLib, &ArtClassSystem, &Lib, &Style, &PromptForLib
 
-&inquirer.registerPrompt :autocomplete &AutocompletePrompt # inquirer-autocomplete-prompt
-&inquirer.registerPrompt :checkbox-plus &inquirer-checkbox-plus-prompt
+&inquirer.registerPrompt :autocomplete &AutocompletePrompt
 
 inquire = (options) ->
   throw new Error "no need to specify 'name' - just your value is returned w/o a wrapping object" if present options.name
@@ -26,7 +25,7 @@ class Core
 
     OUT: selected item, as passed in
 
-  @selectList: ({items, multiselect, prompt, default: _default}) ->
+  @selectList: ({items, multiselect, prompt, tip, default: _default}) ->
     if isString items[0]
       itemsWereStrings = true
       items = array string from items with value: string
@@ -37,6 +36,7 @@ class Core
     inquire {}
       prompt
       multiselect
+      tip
       default:    _default
       type:       :autocomplete
       pageSize:   20

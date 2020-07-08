@@ -24,8 +24,9 @@ Caf.defMod(module, () => {
           return require("../PromptFor")
             .selectList({
               multiselect: true,
-              prompt:
-                "Use <space> and <arrows> to stage and unstage files, <ctrl-a/n/i> to select all/none/invert. Type to search. <enter> when done.",
+              tip:
+                "<arrows> move cursor, <a/b/c..> filter, <space> toggle, <ctrl-a/n/i> select all/none/invert, <enter> finish",
+              prompt: "Staged files",
               items: (items = Caf.array(
                 files.sort((a, b) => {
                   let temp, temp1;

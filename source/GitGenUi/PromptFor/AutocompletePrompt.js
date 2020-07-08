@@ -11,6 +11,7 @@ Caf.defMod(module, () => {
       "merge",
       "process",
       "sliceAnsi",
+      "compactFlatten",
       "objectKeyCount",
       "present",
       "findDefaultItemIndex",
@@ -31,6 +32,7 @@ Caf.defMod(module, () => {
       merge,
       process,
       sliceAnsi,
+      compactFlatten,
       objectKeyCount,
       present,
       findDefaultItemIndex,
@@ -91,7 +93,7 @@ Caf.defMod(module, () => {
               this.throwParamError("source");
             }
             this.currentItems = [];
-            this.renderCount = 0;
+            this.showTip = true;
             this.selected = 0;
             this.itemsWereStrings = false;
             if ((this.multiselect = this.opt.multiselect)) {
@@ -228,7 +230,7 @@ Caf.defMod(module, () => {
             this.setSelected(this.selected - 1);
             return this.render();
           };
-          this.prototype.listRender = function(items, pointer) {
+          this.prototype.renderItemList = function(items, pointer) {
             let columns;
             columns = process.stdout.columns;
             return Caf.array(items, (item, i) => {
@@ -250,40 +252,52 @@ Caf.defMod(module, () => {
               return isSelected ? this.colors.currentLine(line) : line;
             }).join("\n");
           };
-          this.prototype.render = function() {
-            let content, bottomContent, temp;
-            content = this.getQuestion();
-            bottomContent = "";
-            if (this.renderCount === 0) {
-              content += this.colors.tip("(Use arrow keys or type to search)");
-            }
-            if (this.errorMessage) {
-              content += this.colors.error(
-                `ERROR: ${Caf.toString(this.errorMessage)}`
-              );
-            }
-            this.renderCount++;
-            if (this.answer) {
-              content += this.multiselect
-                ? `${Caf.toString(objectKeyCount(this.selectedById))} selected`
-                : this.colors.currentLine(
-                    (temp = this.answer.label) != null
+          this.prototype.getPrompt = function() {
+            let temp, temp1;
+            return compactFlatten([
+              this.getQuestion(),
+              this.showTip
+                ? this.colors.tip(
+                    (temp = this.opt.tip) != null
                       ? temp
-                      : this.answer.value
-                  );
-            } else {
-              content += this.rl.line;
-              bottomContent = this.searching
-                ? "  " + this.colors.tip("Searching...")
-                : this.currentItems.length > 0
-                ? this.paginator.paginate(
-                    this.listRender(this.currentItems, this.selected),
-                    this.selected,
-                    this.opt.pageSize
+                      : "(Use arrow keys or type to search)"
                   )
-                : "  " + this.colors.warning("No results...");
-            }
-            return this.screen.render(content, bottomContent);
+                : this.multiselect
+                ? this.colors.tip(
+                    `${Caf.toString(
+                      objectKeyCount(this.selectedById)
+                    )}/${Caf.toString(this.total)} `
+                  )
+                : undefined,
+              this.errorMessage
+                ? this.colors.error(`ERROR: ${Caf.toString(this.errorMessage)}`)
+                : undefined,
+              this.answer
+                ? this.colors.currentLine(
+                    (temp1 = this.answer.label) != null
+                      ? temp1
+                      : this.answer.value
+                  )
+                : this.rl.line
+            ]).join("");
+          };
+          this.prototype.getRenderedPage = function() {
+            return this.searching
+              ? "  " + this.colors.tip("Searching...")
+              : this.currentItems.length > 0
+              ? this.paginator.paginate(
+                  this.renderItemList(this.currentItems, this.selected),
+                  this.selected,
+                  this.opt.pageSize
+                )
+              : "  " + this.colors.warning("No results...");
+          };
+          this.prototype.render = function() {
+            this.screen.render(
+              this.getPrompt(),
+              this.answer ? "" : this.getRenderedPage()
+            );
+            return (this.showTip = false);
           };
           this.prototype.getNormalizedItems = function(items) {
             return this.itemsWereStrings ||
@@ -326,14 +340,15 @@ Caf.defMod(module, () => {
                 return thisPromise === this.lastPromise
                   ? ((this.currentItems = this.getNormalizedItems(items)),
                     firstSearch
-                      ? this.setSelected(
+                      ? ((this.total = this.currentItems.length),
+                        this.setSelected(
                           (temp = findDefaultItemIndex(
                             this.currentItems,
                             this.default
                           )) != null
                             ? temp
                             : 0
-                        )
+                        ))
                       : undefined,
                     this.multiselect
                       ? (this.selectedById = merge(
