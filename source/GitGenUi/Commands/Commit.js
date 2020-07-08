@@ -8,6 +8,7 @@ Caf.defMod(module, () => {
       "ignoreRejections",
       "tracker",
       "merge",
+      "CommitNow",
       "validateStory",
       "fillInMissingState",
       "saveState",
@@ -30,7 +31,6 @@ Caf.defMod(module, () => {
       "SelectCoauthors",
       "presentValue",
       "EditGitStage",
-      "CommitNow",
       "openInExternalEditor"
     ],
     [
@@ -46,6 +46,7 @@ Caf.defMod(module, () => {
       ignoreRejections,
       tracker,
       merge,
+      CommitNow,
       validateStory,
       fillInMissingState,
       saveState,
@@ -68,10 +69,9 @@ Caf.defMod(module, () => {
       SelectCoauthors,
       presentValue,
       EditGitStage,
-      CommitNow,
       openInExternalEditor
     ) => {
-      let configure, statusColors;
+      let configure, getCommitAndSetStateAction, statusColors;
       configure = function(state) {
         return ConfigureMenu({ exitPrompt: "back" })
           .then(() =>
@@ -82,6 +82,9 @@ Caf.defMod(module, () => {
             })
           )
           .then(updates => merge(state, updates));
+      };
+      getCommitAndSetStateAction = function(setStoryState) {
+        return state => CommitNow(merge(state, { setStoryState }));
       };
       statusColors = { staged: "green", unstaged: "red", untracked: "red" };
       return {
@@ -278,12 +281,30 @@ Caf.defMod(module, () => {
                       ).join(", ")
                     },
                     present(message)
-                      ? {
-                          action: CommitNow,
-                          shortcut: "C",
-                          value: "Commit and exit",
-                          exit: true
-                        }
+                      ? [
+                          {
+                            exit: true,
+                            action: CommitNow,
+                            shortcut: "C",
+                            value: "Commit and exit"
+                          },
+                          Caf.exists(story) && story.id
+                            ? {
+                                exit: true,
+                                action: getCommitAndSetStateAction("finished"),
+                                shortcut: "F",
+                                value: "Commit, Finish and exit"
+                              }
+                            : undefined,
+                          Caf.exists(story) && story.id
+                            ? {
+                                exit: true,
+                                action: getCommitAndSetStateAction("delivered"),
+                                shortcut: "D",
+                                value: "Commit, Deliver and exit"
+                              }
+                            : undefined
+                        ]
                       : undefined
                   ]);
                 },

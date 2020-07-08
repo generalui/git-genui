@@ -14,7 +14,8 @@ import &StandardImport, &CommandsLib, &Git
       merge state, commitResult
       compactFlatten []
         :AddStoryComment if present state.story?.id # state extract postCommitActions
-        :AutoStartStory if state.story?.state == :unstarted
+        :AutoStartStory if !state.setStoryState && state.story?.state == :unstarted
+        :SetStoryState
       &PostCommitActions
 
   .then ({actionsApplied, result}) ->

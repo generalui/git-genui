@@ -16,6 +16,10 @@ configure = (state) ->
 
   .then (updates) -> merge state, updates
 
+getCommitAndSetStateAction = (setStoryState) ->
+  (state) -> CommitNow merge state, {} setStoryState
+
+
 statusColors =
   staged:     :green
   unstaged:   :red
@@ -117,11 +121,10 @@ run: (options) ->
               &Style[statusColors[statusCat]] "" #{status[statusCat].length} #{statusCat}
             .join ', '
 
-          if present message
-            action: CommitNow
-            shortcut: :C
-            value:  "" Commit and exit
-            exit:   true
+          if present message then []
+            exit: true action: CommitNow, shortcut: :C  value:  "Commit and exit"
+            exit: true action: (getCommitAndSetStateAction :finished ), shortcut: :F  value:  "Commit, Finish and exit" if story?.id
+            exit: true action: (getCommitAndSetStateAction :delivered), shortcut: :D  value:  "Commit, Deliver and exit" if story?.id
 
       postprocessState: saveState
 

@@ -5,5 +5,6 @@
 
 .addModules({
   AddStoryComment: require('./AddStoryComment'),
-  AutoStartStory:  require('./AutoStartStory')
+  AutoStartStory:  require('./AutoStartStory'),
+  SetStoryState:   require('./SetStoryState')
 });

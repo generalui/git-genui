@@ -1,0 +1,14 @@
+import &StandardImport, &Style
+
+(state) ->
+  state extract setStoryState, story
+  if story?.id && present setStoryState
+    &Tracker.tracker.updateStory story, state: setStoryState
+
+  else
+    if state.options?.verbose
+      log grey "" skip: SetStoryState (no story)
+    Promise.resolve()
+
+  .then ->
+    state

@@ -45,10 +45,12 @@ Caf.defMod(module, () => {
                 present(Caf.exists((base = state.story)) && base.id)
                   ? "AddStoryComment"
                   : undefined,
+                !state.setStoryState &&
                 (Caf.exists((base1 = state.story)) && base1.state) ===
-                "unstarted"
+                  "unstarted"
                   ? "AutoStartStory"
-                  : undefined
+                  : undefined,
+                "SetStoryState"
               ]),
               require("../../PostCommitActions")
             );
