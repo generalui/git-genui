@@ -1,0 +1,12 @@
+import &StandardImport, &CommandsLib, {} &Style
+
+description: "" log commits
+run: ->
+  &Git.getCommitLog()
+  .then (list) ->
+    each {hash, date, message, refs, authorName, authorEmail} in-array list
+      log
+        ""
+          #{hash.slice 0,7}
+          #{formatDate date}
+    null

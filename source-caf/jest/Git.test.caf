@@ -46,3 +46,8 @@ test "getStatusReport with options" ->
       report
       ///i
         verbose
+
+test "getCommitLog" ->
+  Git.getCommitLog()
+  .then (logList) ->
+    assert.isArray logList

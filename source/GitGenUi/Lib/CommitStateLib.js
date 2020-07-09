@@ -3,10 +3,11 @@ let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return Caf.importInvoke(
     [
+      "merge",
       "compactFlattenAll",
+      "present",
       "userConfig",
       "Promise",
-      "merge",
       "tracker",
       "ignoreRejections",
       "projectConfig",
@@ -18,20 +19,57 @@ Caf.defMod(module, () => {
       { ignoreRejections: require("./ignoreRejections") }
     ],
     (
+      merge,
       compactFlattenAll,
+      present,
       userConfig,
       Promise,
-      merge,
       tracker,
       ignoreRejections,
       projectConfig,
       objectWithout
     ) => {
-      let extractSavableState;
+      let commitParser, extractSavableState;
+      commitParser = new (require("./CommitParser"))();
       return {
+        parseCommitMessage: function(message) {
+          let subject,
+            type,
+            scope,
+            trackerState,
+            trackerId,
+            body,
+            semanticVersion,
+            footer;
+          ({
+            subject,
+            type,
+            scope,
+            trackerState,
+            trackerId,
+            body,
+            semanticVersion,
+            footer
+          } = commitParser.parse(message));
+          return merge({
+            type:
+              semanticVersion != null
+                ? type != null
+                  ? `${Caf.toString(semanticVersion)}/${Caf.toString(type)}`
+                  : semanticVersion
+                : type,
+            scope,
+            message: subject,
+            storyState: trackerState,
+            storyId: trackerId,
+            body,
+            coauthors: Caf.exists(footer) && footer["co-authored-by"]
+          });
+        },
         getCommitMessage: function({
           type,
           story,
+          storyId,
           message,
           coauthors,
           storyState,
@@ -39,16 +77,16 @@ Caf.defMod(module, () => {
           body
         }) {
           return compactFlattenAll(
-            type != null ? type : "(type)",
-            ": ",
-            Caf.exists(story) && story.id
-              ? `[#${Caf.toString(story.id)}]${Caf.toString(
-                  storyState && storyState !== story.status
-                    ? ` (${Caf.toString(storyState)})`
-                    : undefined
-                )} `
+            type ? type + ": " : undefined,
+            (storyId != null
+            ? storyId
+            : (storyId = Caf.exists(story) && story.id))
+              ? ((storyState = present(storyState)
+                  ? `${Caf.toString(storyState)} `
+                  : ""),
+                `[${Caf.toString(storyState)}#${Caf.toString(storyId)}] `)
               : undefined,
-            message != null ? message : "(message)",
+            present(message) ? message : undefined,
             body
               ? `\n\n${Caf.toString(body.replace(/\n\n\n+/g, "\n\n"))}`
               : undefined,
@@ -59,7 +97,7 @@ Caf.defMod(module, () => {
               ? "\n\n\n" +
                   Caf.array(
                     coauthors,
-                    coauthor => `Coauthored-by: ${Caf.toString(coauthor)}`
+                    coauthor => `Co-authored-by: ${Caf.toString(coauthor)}`
                   ).join("\n")
               : undefined
           )
@@ -96,7 +134,7 @@ Caf.defMod(module, () => {
           )})`;
         },
         extractSavableState: (extractSavableState = function(state) {
-          let message, type, coauthors, story, breakingChange, body, footers;
+          let message, type, coauthors, story, breakingChange, body, trailers;
           return (
             ({
               message,
@@ -105,9 +143,9 @@ Caf.defMod(module, () => {
               story,
               breakingChange,
               body,
-              footers
+              trailers
             } = state),
-            { message, type, coauthors, story, breakingChange, body, footers }
+            { message, type, coauthors, story, breakingChange, body, trailers }
           );
         }),
         saveState: function(state) {

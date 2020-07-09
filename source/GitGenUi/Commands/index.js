@@ -9,6 +9,7 @@
   Config:         require('./Config'),
   Deliver:        require('./Deliver'),
   Finish:         require('./Finish'),
+  Log:            require('./Log'),
   OpenTracker:    require('./OpenTracker'),
   ShowConfig:     require('./ShowConfig'),
   Stage:          require('./Stage'),

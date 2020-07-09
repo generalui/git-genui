@@ -16,8 +16,8 @@ configure = (state) ->
 
   .then (updates) -> merge state, updates
 
-getCommitAndSetStateAction = (setStoryState) ->
-  (state) -> CommitNow merge state, {} setStoryState
+getCommitAndSetStateAction = (storyState) ->
+  (state) -> CommitNow merge state, {} storyState
 
 
 statusColors =
@@ -124,6 +124,9 @@ run: (options) ->
           if present message then []
             exit: true action: CommitNow,                               shortcut: :C  value:  "Commit and exit"
             exit: true action: (getCommitAndSetStateAction :finished ), shortcut: :F  value:  "Commit, Finish and exit" if story?.id
+
+            # TO-DEPRICATE - PivotalTraker suggests Delivery should be done by CI or someone other than the dev
+            # https://www.pivotaltracker.com/help/articles/workflow_overview/
             exit: true action: (getCommitAndSetStateAction :delivered), shortcut: :D  value:  "Commit, Deliver and exit" if story?.id
 
       postprocessState: saveState

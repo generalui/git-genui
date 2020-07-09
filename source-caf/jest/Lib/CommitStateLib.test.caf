@@ -4,6 +4,95 @@ import Git
 global.beforeAll ->
   Config.load()
 
+testEncodeAndDecodeMessage = (args...) ->
+  each props, i in args by 2
+    expectedMessage = args[i + 1]
+    test "getCommitMessage   #{&util.inspect props}" ->
+      assert.eq
+        getCommitMessage props
+        expectedMessage
+        {} props
+
+    test "parseCommitMessage #{&util.inspect(expectedMessage, { compact: true, breakLength: 200 }).replace /\n\s*/g, ' '}" ->
+      assert.eq
+        parseCommitMessage expectedMessage
+        props
+        {} expectedMessage
+
+testEncodeAndDecodeMessage2 = (args...) ->
+  each commitMessage in args
+    test "getCommitMessage parseCommitMessage #{&util.inspect(commitMessage, { compact: true, breakLength: 200 }).replace /\n\s*/g, ' ' }" ->
+      assert.eq
+        getCommitMessage parseCommitMessage commitMessage
+        commitMessage
+
+describe :parseCommitMessage ->
+  testEncodeAndDecodeMessage
+    message: "" just some text is OK
+    "" just some text is OK
+
+    type: :aType
+    message: "" a title
+    "" aType: a title
+
+    type: :patch/fix
+    message: "" a title
+    "" patch/fix: a title
+
+    type: :patch/fix
+    message: "" a title
+    storyId: :123
+    "" patch/fix: [#123] a title
+
+    type: :patch/fix
+    message: "" a title
+    storyId: :123
+    "" patch/fix: [#123] a title
+
+    type: :patch/fix
+    message: "" a title
+    storyId: :123
+    storyState: :finished
+    "" patch/fix: [finished #123] a title
+
+    type: :patch/fix
+    message: "" a title
+    storyId: :123
+    storyState: :finished
+    body:
+      """
+        This is some very cool body
+        * with bullets
+
+        And paragraphs
+
+    """
+      patch/fix: [finished #123] a title
+
+      This is some very cool body
+      * with bullets
+
+      And paragraphs
+
+    type: :patch/fix
+    message: "" a title
+    storyId: :123
+    storyState: :finished
+    coauthors: [] :frank :sally
+
+    """
+      patch/fix: [finished #123] a title
+
+
+      Co-authored-by: frank
+      Co-authored-by: sally
+
+  testEncodeAndDecodeMessage2
+    "" just some text is OK
+    "" patch/fix: a title
+    "" patch/fix: [#123] a title
+
+
 describe :getCommitMessage ->
 
   ##
@@ -19,24 +108,24 @@ describe :getCommitMessage ->
 
   exhibitA =
     type:      :feat
-    story:           '[171339446] (started) Update "About Page" with collage, move Kayak photo to Careers.'
+    story:           '[starts #171339446] Update "About Page" with collage, move Kayak photo to Careers.'
     message:         ""
     wantLongMessage: true
 
   test "type and message" ->
     assert.eq
       getCommitMessage
-        type: :feat
-        message:    :hi
+        type:     :feat
+        message:  :hi
       "" feat: hi
 
 
   test "body" ->
     assert.eq
       getCommitMessage
-        type: :feat
-        message:    :hi
-        body: "OneLine\nTwoLine"
+        type:     :feat
+        message:  :hi
+        body:     "" OneLine\nTwoLine
       """
         feat: hi
 
@@ -72,7 +161,7 @@ describe :getCommitMessage ->
         message:    :hi
         story: id: 123 status: :unstarted
         storyState: :started
-      "" feat: [#123] (started) hi
+      "" feat: [started #123] hi
 
   test :storyFinished ->
     assert.eq
@@ -81,7 +170,7 @@ describe :getCommitMessage ->
         message:    :hi
         story: id:  123, status: :started
         storyState: :finished
-      "" feat: [#123] (finished) hi
+      "" feat: [finished #123] hi
 
   test "coauthors" ->
     assert.eq
@@ -93,7 +182,7 @@ describe :getCommitMessage ->
         feat: hi
 
 
-        Coauthored-by: franky
+        Co-authored-by: franky
 
   test :breakingChange ->
     assert.eq

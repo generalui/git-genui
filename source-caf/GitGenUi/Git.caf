@@ -95,6 +95,17 @@ class Git extends BaseClass
       email   ?= @email
     .then (loaded) -> merge options, loaded
 
+  normalizeListLogLine = ({hash, date, message, refs, author_name, author_email, body}) ->
+    {}
+      date: Date.parse date
+      hash, message, refs, body
+      authorName: author_name
+      authorEmail: author_email
+
+  @getCommitLog: (options) ->
+    SimpleGit.log options
+    .then ({all}) -> all.map normalizeListLogLine
+
   @getStatusReport: (options) ->
     @loadStatus options
     .then ({status, origin, remotes, email, verbose}) ->

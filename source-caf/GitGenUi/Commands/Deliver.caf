@@ -1,3 +1,1 @@
-import &CommandsLib
-
-ChangeStateCliCommand :delivered
+&CommandsLib.ChangeStateCliCommand :delivered

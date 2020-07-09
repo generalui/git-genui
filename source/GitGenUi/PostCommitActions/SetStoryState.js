@@ -6,12 +6,12 @@ Caf.defMod(module, () => {
     [global, require("../StandardImport"), require("../Style")],
     (present, log, grey, Promise) => {
       return function(state) {
-        let setStoryState, story, base;
-        setStoryState = state.setStoryState;
+        let storyState, story, base;
+        storyState = state.storyState;
         story = state.story;
-        return (Caf.exists(story) && story.id && present(setStoryState)
+        return (Caf.exists(story) && story.id && present(storyState)
           ? require("../Tracker").tracker.updateStory(story, {
-              state: setStoryState
+              state: storyState
             })
           : (Caf.exists((base = state.options)) && base.verbose
               ? log(grey("skip: SetStoryState (no story)"))

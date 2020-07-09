@@ -83,8 +83,8 @@ Caf.defMod(module, () => {
           )
           .then(updates => merge(state, updates));
       };
-      getCommitAndSetStateAction = function(setStoryState) {
-        return state => CommitNow(merge(state, { setStoryState }));
+      getCommitAndSetStateAction = function(storyState) {
+        return state => CommitNow(merge(state, { storyState }));
       };
       statusColors = { staged: "green", unstaged: "red", untracked: "red" };
       return {

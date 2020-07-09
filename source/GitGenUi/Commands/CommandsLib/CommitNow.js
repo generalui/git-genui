@@ -45,7 +45,7 @@ Caf.defMod(module, () => {
                 present(Caf.exists((base = state.story)) && base.id)
                   ? "AddStoryComment"
                   : undefined,
-                !state.setStoryState &&
+                !state.storyState &&
                 (Caf.exists((base1 = state.story)) && base1.state) ===
                   "unstarted"
                   ? "AutoStartStory"

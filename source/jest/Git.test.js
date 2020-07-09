@@ -39,10 +39,13 @@ Caf.defMod(module, () => {
           )
         );
       });
-      return test("getStatusReport with options", function() {
+      test("getStatusReport with options", function() {
         return Git.getStatusReport({ verbose: true }).then(report =>
           assert.match(report, /verbose/i)
         );
+      });
+      return test("getCommitLog", function() {
+        return Git.getCommitLog().then(logList => assert.isArray(logList));
       });
     }
   );

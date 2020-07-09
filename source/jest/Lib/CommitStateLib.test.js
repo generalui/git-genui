@@ -13,6 +13,7 @@ Caf.defMod(module, () => {
           "Config",
           "assert",
           "getCommitMessage",
+          "parseCommitMessage",
           "merge",
           "extractSavableState",
           "expect",
@@ -27,6 +28,7 @@ Caf.defMod(module, () => {
           Config,
           assert,
           getCommitMessage,
+          parseCommitMessage,
           merge,
           extractSavableState,
           expect,
@@ -34,15 +36,111 @@ Caf.defMod(module, () => {
           getInitialCommitState,
           escapeRegExp
         ) => {
+          let testEncodeAndDecodeMessage, testEncodeAndDecodeMessage2;
           global.beforeAll(function() {
             return Config.load();
+          });
+          testEncodeAndDecodeMessage = function(...args) {
+            let from, into, to, i1, temp;
+            return (
+              (from = args),
+              (into = from),
+              from != null
+                ? ((to = from.length),
+                  (i1 = 0),
+                  (() => {
+                    while (i1 < to) {
+                      let props, i, expectedMessage;
+                      props = from[i1];
+                      i = i1;
+                      expectedMessage = args[i + 1];
+                      test(`getCommitMessage   ${Caf.toString(
+                        require("util").inspect(props)
+                      )}`, () =>
+                        assert.eq(getCommitMessage(props), expectedMessage, {
+                          props
+                        }));
+                      test(`parseCommitMessage ${Caf.toString(
+                        require("util")
+                          .inspect(expectedMessage, {
+                            compact: true,
+                            breakLength: 200
+                          })
+                          .replace(/\n\s*/g, " ")
+                      )}`, () =>
+                        assert.eq(parseCommitMessage(expectedMessage), props, {
+                          expectedMessage
+                        }));
+                      temp = i1 += 2;
+                    }
+                    return temp;
+                  })())
+                : undefined,
+              into
+            );
+          };
+          testEncodeAndDecodeMessage2 = function(...args) {
+            return Caf.each2(args, commitMessage =>
+              test(`getCommitMessage parseCommitMessage ${Caf.toString(
+                require("util")
+                  .inspect(commitMessage, { compact: true, breakLength: 200 })
+                  .replace(/\n\s*/g, " ")
+              )}`, () =>
+                assert.eq(
+                  getCommitMessage(parseCommitMessage(commitMessage)),
+                  commitMessage
+                ))
+            );
+          };
+          describe("parseCommitMessage", function() {
+            testEncodeAndDecodeMessage(
+              { message: "just some text is OK" },
+              "just some text is OK",
+              { type: "aType", message: "a title" },
+              "aType: a title",
+              { type: "patch/fix", message: "a title" },
+              "patch/fix: a title",
+              { type: "patch/fix", message: "a title", storyId: "123" },
+              "patch/fix: [#123] a title",
+              { type: "patch/fix", message: "a title", storyId: "123" },
+              "patch/fix: [#123] a title",
+              {
+                type: "patch/fix",
+                message: "a title",
+                storyId: "123",
+                storyState: "finished"
+              },
+              "patch/fix: [finished #123] a title",
+              {
+                type: "patch/fix",
+                message: "a title",
+                storyId: "123",
+                storyState: "finished",
+                body:
+                  "This is some very cool body\n* with bullets\n\nAnd paragraphs"
+              },
+              "patch/fix: [finished #123] a title\n\nThis is some very cool body\n* with bullets\n\nAnd paragraphs",
+              {
+                type: "patch/fix",
+                message: "a title",
+                storyId: "123",
+                storyState: "finished",
+                coauthors: ["frank", "sally"]
+              },
+              "patch/fix: [finished #123] a title\n\n\nCo-authored-by: frank\nCo-authored-by: sally"
+            );
+            return testEncodeAndDecodeMessage2(
+              "just some text is OK",
+              "patch/fix: a title",
+              "patch/fix: [#123] a title"
+            );
           });
           describe("getCommitMessage", function() {
             let exhibitA;
             exhibitA = {
               type: "feat",
               story:
-                '[171339446] (started) Update "About Page" with collage, move Kayak photo to Careers.',
+                '[starts #171339446] Update "About Page" with collage, move Kayak photo to Careers.',
               message: "",
               wantLongMessage: true
             };
@@ -86,7 +184,7 @@ Caf.defMod(module, () => {
                   story: { id: 123, status: "unstarted" },
                   storyState: "started"
                 }),
-                "feat: [#123] (started) hi"
+                "feat: [started #123] hi"
               ));
             test("storyFinished", () =>
               assert.eq(
@@ -96,7 +194,7 @@ Caf.defMod(module, () => {
                   story: { id: 123, status: "started" },
                   storyState: "finished"
                 }),
-                "feat: [#123] (finished) hi"
+                "feat: [finished #123] hi"
               ));
             test("coauthors", () =>
               assert.eq(
@@ -105,7 +203,7 @@ Caf.defMod(module, () => {
                   message: "hi",
                   coauthors: ["franky"]
                 }),
-                "feat: hi\n\n\nCoauthored-by: franky"
+                "feat: hi\n\n\nCo-authored-by: franky"
               ));
             return test("breakingChange", () =>
               assert.eq(

@@ -121,22 +121,125 @@ Related
 * https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines
 
 
-### Commit format
+### Git-Genui Standard Commit Format
+
+Git-Genui generates and parses a standard commit format. GG's primary goal is to encode: semantic versioning, story/tracker id, and coauthors. I wanted GG to be as compatible as possible with existing frameworks while also adhering to first-principles & KISS.
 
 Combination of:
 * https://www.npmjs.com/package/semantic-release
 * https://help.github.com/en/github/committing-changes-to-your-project/creating-a-commit-with-multiple-authors
 * https://www.pivotaltracker.com/help/articles/githubs_service_hook_for_tracker/
+* https://git-scm.com/docs/git-interpret-trailers
+* https://git.wiki.kernel.org/index.php/CommitMessageConventions
 
 
+Example using all options:
 ```
-<type>(<scope>): [(Starts|Finishes) #TRACKER_STORY_ID] <subject>
-<BLANK LINE>
-<body>
-<BLANK LINE>
-<footer>
-<BLANK LINE>
-<BLANK LINE>
+minor/feature(todo-list): [finishes #abc123] select-all button
+
+You can now select all items in one click.
+
+Co-authored-by: Juan Sánchez <foo@bar.com>
+```
+
+All elements are optional. Below are several legal variants:
+
+* Without a footer:
+    ```
+    minor/feature(todo-list): [finishes #abc123] select-all button
+
+    You can now select all items in one click.
+    ```
+* Without a body:
+    ```
+    minor/feature(todo-list): [finishes #abc123] select-all button
+    ```
+* Without scope:
+    ```
+    minor/feature: [finishes #abc123] select-all button
+    ```
+* Without tracker info:
+    ```
+    minor/feature: select-all button
+    ```
+* Without semanticVersion info:
+    ```
+    feature: select-all button
+    ```
+* Without anything except the subject:
+    ```
+    select-all button
+    ```
+
+See below for the full specification.
+
+#### ConventionalCommit.org
+
+We also support the [ConventionalCommit.org](https://www.conventionalcommits.org/en/v1.0.0/#specification) format. From a first-principles perspective, this format is clunky.
+
+Conventional-commit shortcomings:
+
+* Is an ill-defined specification. It doesn't provide sufficient details to write a compliant parser or to guarantee a commit-generator will be compliant with other parsers.
+* Inconsistent and ambiguous semantic versioning encoding
+  * Patch and minor changes are encoded in the types `fix` and `feat` respectively.
+  * However, major changes are encoded *either* as an "!" at the end of the type OR as a trailer with the key "BREAKING CHANGES". The first encoding creates ambiguity: What is the semantic versioning of this commit message `fix!: foo`? The second encoding is considered a trailer, but it's illegal. Trailers are not allowed to have spaces in their key.
+  * All commits which might affect a deployment are at a minimum patch-level version changes, yet CC explicitly allows many forms of non-version changing commits.
+* Poor choice of abbreviation: "feat" means "a deed notable especially for courage"
+
+#### Trailers
+
+Trailers are arbitrary key-value metadata. GG is particularly concerned with tracking co-authors, which is the only trailer GG currently generates.
+
+> NOTE: most specifications for git-trailers only require a single empty line before the trailers, but GitHub's specification for `Co-authored-by` explicitly requests two.
+
+Co-authors are encoded as trailers. There should be one tailer for each co-author as follows:
+```
 Co-authored-by: name <name@example.com>
 Co-authored-by: another-name <another-name@example.com>
 ```
+
+#### GG-Standard Commit Specification
+
+```javascript
+ggStandardCommit: header body? footer?
+
+header:           preamble? trackerInfo? subject
+subject:          restOfLine
+
+// PREAMBLE - SEMANTIC_VERSION, TYPE, and SCOPE
+preamble:         semanticType scopeTerm? colon_
+
+semanticType:
+                  semanticVersion '/' type:word
+                  semanticVersion
+                  type:word
+
+scopeTerm:        '(' scope:word ')'
+
+trackerInfo:      '[' trackerState? '#' trackerId:word ']' _
+trackerState:     word _
+
+// BODY OF MESSAGE
+body:             bodyParagraph+
+bodyParagraph:    !footer endLines restOfLine
+
+// FOOTER METADATA
+footer:           trailer+ whitespaceOnly
+trailer:          endLines token:word colon_ value:restOfLine
+
+// TOKENS
+_:                /\ +/
+endLines:         /( *\n)+/
+colon_:           /: +/
+word:             /[-_\w]+/
+restOfLine:       /[^\n]+/u
+semanticVersion:  /(major|minor|patch)\b/
+whitespaceOnly:   /\s*(?!.|\n)/
+```
+
+Notes:
+
+* Specification is a [Parsing-Expression Grammar](https://en.wikipedia.org/wiki/Parsing_expression_grammar)
+* Regular expressions use JavaScript semantics
+* You are allowed to have more than one `trailer` with the same token
+* Trailer tokens are case insensitive

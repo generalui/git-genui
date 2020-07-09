@@ -10,6 +10,7 @@ Caf.defMod(module, () => {
       "compactFlatten",
       "Object",
       "objectWithout",
+      "Date",
       "compactFlattenAll",
       "formattedInspect",
       "projectConfig",
@@ -28,6 +29,7 @@ Caf.defMod(module, () => {
       compactFlatten,
       Object,
       objectWithout,
+      Date,
       compactFlattenAll,
       formattedInspect,
       projectConfig,
@@ -44,7 +46,7 @@ Caf.defMod(module, () => {
         classSuper,
         instanceSuper
       ) {
-        let statusCodes, decodeStatus;
+        let statusCodes, decodeStatus, normalizeListLogLine;
         this.getGitConfig = function() {
           return Promise.then(() => SimpleGit.listConfig()).then(
             ({ all }) => all
@@ -169,6 +171,30 @@ Caf.defMod(module, () => {
             remotes: remotes != null ? remotes : (remotes = this.remotes),
             email: email != null ? email : (email = this.email)
           }).then(loaded => merge(options, loaded));
+        };
+        normalizeListLogLine = function({
+          hash,
+          date,
+          message,
+          refs,
+          author_name,
+          author_email,
+          body
+        }) {
+          return {
+            date: Date.parse(date),
+            hash,
+            message,
+            refs,
+            body,
+            authorName: author_name,
+            authorEmail: author_email
+          };
+        };
+        this.getCommitLog = function(options) {
+          return SimpleGit.log(options).then(({ all }) =>
+            all.map(normalizeListLogLine)
+          );
         };
         this.getStatusReport = function(options) {
           return this.loadStatus(options).then(

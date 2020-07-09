@@ -1,0 +1,92 @@
+import &StandardImport
+
+# https://git-scm.com/docs/git-interpret-trailers
+class CommitParser extends &CaffeineEight.Parser
+
+  parse: (source, options)->
+    node = super
+    return node if options?.returnNode
+
+    node extract
+      header extract?
+        subject
+        preamble extract?
+          semanticType extract? semanticVersion, type, breakingChange
+          scopeTerm extract? scope
+        trackerInfo extract?
+          trackerState
+          trackerId
+
+      body
+      footer
+
+    footer = if footer?.trailers.length > 0
+      each {trailerToken, trailerValue} in footer.trailers into trailerMap = {}
+        token = dashCase trailerToken.toString()
+        value = trailerValue.toString()
+        trailerMap[token] =
+          if (previous = trailerMap[token])?
+            if !isArray previous
+              [] previous, value
+            else
+              arrayWith previous, value
+          else value
+
+    # ConventionalCommit.org Support:
+    semanticVersion = :major if breakingChange || footer?["breaking-change"]
+
+    unless semanticVersion?
+      semanticVersion = switch type?.toString()
+      when :fix   then :patch
+      when :feat  then :minor
+
+    # Output props
+    props = {}
+      subject
+      type
+      scope
+      trackerState
+      trackerId
+      body
+      semanticVersion
+      footer
+
+    object v, k in props when v?
+      if v is Object then v else v.toString().trim()
+
+  @rule
+    root:           "" header body? footer?
+    header:         "" preamble? trackerInfo? subject
+    subject:        "" restOfLine
+    preamble:       "" semanticType scopeTerm? colon_
+
+    semanticType:
+                    "" semanticVersion '/' type:word breakingChange:bang?
+                    "" semanticVersion breakingChange:bang?
+                    "" type:word breakingChange:bang?
+
+    scopeTerm:      "" '(' scope:word ')'
+
+    trackerInfo:    "" '[' trackerState? '#' trackerId:word ']' _
+    trackerState:   "" word _
+
+    body:           "" bodyParagraph+
+    bodyParagraph:  "" !footer endLines restOfLine
+
+    footer:         "" trailer+ whitespaceOnly
+    trailer:        "" endLines trailerToken colon_ trailerValue
+
+    trailerToken:
+      /BREAKING CHANGE/
+      :word
+
+    trailerValue:   :restOfLine
+
+    _:              /\ +/
+    endLines:       /( *\n)+/
+    colon_:         /: +/
+    word:           /[-_\w]+/
+    restOfLine:     /[^\n]+/u
+    bang:           /[!]/
+    semanticVersion:/(major|minor|patch)\b/
+    whitespaceOnly: /\s*(?!.|\n)/

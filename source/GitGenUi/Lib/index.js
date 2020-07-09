@@ -6,6 +6,7 @@
 .addModules({
   ApplyActions:         require('./applyActions'),
   Autocomplete:         require('./Autocomplete'),
+  CommitParser:         require('./CommitParser'),
   CommitStateLib:       require('./CommitStateLib'),
   IgnoreRejections:     require('./ignoreRejections'),
   OpenInExternalEditor: require('./openInExternalEditor'),

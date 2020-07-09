@@ -1,9 +1,9 @@
 import &StandardImport, &Style
 
 (state) ->
-  state extract setStoryState, story
-  if story?.id && present setStoryState
-    &Tracker.tracker.updateStory story, state: setStoryState
+  state extract storyState, story
+  if story?.id && present storyState
+    &Tracker.tracker.updateStory story, state: storyState
 
   else
     if state.options?.verbose

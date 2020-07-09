@@ -1,0 +1,226 @@
+import &StandardImport
+
+parserTest = (source, result) ->
+  []
+    source.replace /\n/g, " \\n "
+    (commitParser) ->
+      try
+        parsed = commitParser.parse source
+      catch error
+        log {} error
+        throw error
+      assert.eq
+        parsed
+        result
+        -> commitParser.parse source, returnNode: true
+
+markdownExample =
+  """
+    Body can have awesome markdown:
+
+    1. lets you explain things better
+    2. let's do it together
+    3. lettuce is a vegetable
+    4. le tus is bad spanish for "the your"
+
+test "return-node option" ->
+  assert.instanceof
+    &CaffeineEight.Nodes.Node
+    new CommitParser
+    .parse "a", returnNode: true
+
+describe :ggStandardFormat ->
+  chainedTest :parser ->
+    new CommitParser
+
+  .tapTest
+    parserTest
+      subject = "" just a subject
+      {} subject
+
+    parserTest
+      "" myType: mySubject
+      type: :myType
+      subject:  :mySubject
+
+    parserTest
+      "" myType(myScope): mySubject
+      type: :myType
+      scope:    :myScope
+      subject:  :mySubject
+
+    parserTest
+      "" minor/myType: mySubject
+      semanticVersion:  :minor
+      type:             :myType
+      subject:          :mySubject
+
+    parserTest
+      "" minor: mySubject
+      semanticVersion:  :minor
+      subject:          :mySubject
+
+    parserTest
+      "" [#123] mySubject
+      trackerId:    :123
+      subject:      :mySubject
+
+    parserTest
+      "" [finishes #123] mySubject
+      trackerState: :finishes
+      trackerId:    :123
+      subject:      :mySubject
+
+    parserTest
+      "" mySubject\nmyBody
+      subject:      :mySubject
+      body:         :myBody
+
+    parserTest
+      "" mySubject\n#{} markdownExample
+      subject:      :mySubject
+      body:         markdownExample
+
+    parserTest
+      """
+        mySubject
+
+        my-trailer: my-value
+
+      subject:      :mySubject
+      footer:
+        my-trailer: :my-value
+
+    parserTest
+      """
+        Calculus
+
+        Co-authored-by: Sir Isaac Newton
+        Co-authored-by: Gottfried Wilhelm Leibniz
+
+      subject:      :Calculus
+      footer:
+        co-authored-by:
+          "Sir Isaac Newton"
+          "Gottfried Wilhelm Leibniz"
+
+describe :failures ->
+  test "empty commit message" ->
+    assert.rejects ->
+      new CommitParser
+      .parse ''
+
+describe :edge-cases ->
+  chainedTest :parser ->
+    new CommitParser
+
+  .tapTest
+    parserTest 'a' subject: :a
+
+    parserTest
+      """
+        mySubject
+        close-footer: hmm
+      subject: :mySubject
+      footer: close-footer: :hmm
+
+    parserTest
+      """
+        mySubject
+        closeBody
+        close-footer: hmm
+      subject: :mySubject
+      body:    :closeBody
+      footer: close-footer: :hmm
+
+    parserTest
+      """ [bad-tracker-id123] mySubject
+      subject: "" [bad-tracker-id123] mySubject
+
+    parserTest
+      """ majorbs: mySubject
+      subject: "" mySubject
+      type: :majorbs
+
+    parserTest
+      """ bad type: mySubject
+      subject: "" bad type: mySubject
+
+    parserTest
+      """ bad/type: mySubject
+      subject: "" bad/type: mySubject
+
+    parserTest
+      """ major/bad/type: mySubject
+      subject: "" major/bad/type: mySubject
+
+
+    parserTest
+      """
+        mySubject
+
+        foo: looks like a footer
+
+        but then it's not
+
+      subject: "" mySubject
+      body:
+        """
+          foo: looks like a footer
+
+          but then it's not
+
+    parserTest
+      """
+        mySubject
+        my-footer: trailing whitespace coming
+
+        \_
+
+      subject: "" mySubject
+      footer:
+        my-footer: "" trailing whitespace coming
+
+describe :ccStandardFormat ->
+  chainedTest :parser ->
+    new CommitParser
+
+  .tapTest
+    parserTest
+      subject = "" just a subject
+      {} subject
+
+    parserTest
+      "" fix: mySubject
+      subject:          :mySubject
+      semanticVersion:  :patch
+      type:             :fix
+
+    parserTest
+      "" feat: mySubject
+      subject:          :mySubject
+      semanticVersion:  :minor
+      type:             :feat
+
+    parserTest
+      "" refactor!: mySubject
+      subject:          :mySubject
+      semanticVersion:  :major
+      type:             :refactor
+
+    parserTest
+      "" refactor: mySubject
+      subject:          :mySubject
+      type:             :refactor
+
+    parserTest
+      """
+        refactor: mySubject
+
+        BREAKING CHANGE: Should imply major semanticVersion
+
+      subject:          :mySubject
+      semanticVersion:  :major
+      type:             :refactor
+      footer:
+        "breaking-change": "Should imply major semanticVersion"

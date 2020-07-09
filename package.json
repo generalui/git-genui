@@ -11,6 +11,7 @@
     "art-rest-client": "^1.8.5",
     "art-standard-lib": "^1.69.4",
     "btoa": "^1.2.1",
+    "caffeine-eight": "^2.6.0",
     "caffeine-script-runtime": "1.13.3",
     "chalk": "^4.1.0",
     "external-editor": "^3.1.0",
@@ -27,7 +28,7 @@
   "devDependencies": {
     "@art-suite/mock-fs": "^1.0.0",
     "art-build-configurator": "^1.26.14",
-    "art-testbench": "^2.0.0",
+    "art-testbench": "^2.1.0",
     "caffeine-script": "^0.72.1",
     "jest": "^26.1.0",
     "mock-fs": "^4.11.0",

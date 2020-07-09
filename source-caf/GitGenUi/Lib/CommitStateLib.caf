@@ -1,14 +1,59 @@
 import &StandardImport, {} &ignoreRejections
 
-{}
-  getCommitMessage: ({type, story, message, coauthors, storyState, breakingChange, body}) ->
-    compactFlattenAll
-      type ? "(type)"
-      ": "
-      if story?.id
-        "" [##{story.id}]#{if storyState && storyState != story.status then " (#{storyState})"}\_
+commitParser = new &CommitParser
 
-      message ? "(message)"
+{}
+  parseCommitMessage: (message) ->
+    # [_, type, storyId, storyState, message, body, trailers...] = message.match ///
+    #   ^   (?: ([^\s:]+) :)? # type
+
+    #   \ * (?:\[#(\w+)\])?   # storyId
+
+    #   \ * (?:\((\w+)\))?    # storyState
+
+    #   \ * ([^\n]*)          # message
+
+    #   \ * (?:
+    #     \n\n
+    #     (
+    #       (?!BREAKING\ CHANGE:)
+    #       (?!\w+:)
+    #       (?:[^\n]+\n?\n?)+
+    #     )
+    #   )? # body
+
+    #   \ * ((?:
+    #     \n+
+    #     (?:BREAKING\ CHANGE|[-\w_]+):
+    #     \s+[^\n]+
+    #   )*)
+
+    {subject, type, scope, trackerState, trackerId, body, semanticVersion, footer} = commitParser.parse message
+    merge {}
+      type:
+        if semanticVersion?
+          if type? then "#{semanticVersion}/#{type}"
+          else semanticVersion
+        else type
+
+      scope
+      message:      subject
+      storyState:   trackerState
+      storyId:      trackerId
+      body
+      coauthors:    footer?[:co-authored-by]
+
+  getCommitMessage: ({type, story, storyId, message, coauthors, storyState, breakingChange, body}) ->
+    compactFlattenAll
+      type + ": " if type
+
+      if storyId ?= story?.id
+        storyState = if present storyState then "#{storyState} "
+        else ''
+        "[#{storyState}##{storyId}] "
+
+      if present message
+        message
 
       if body
         "" \n\n#{body.replace /\n\n\n+/g, "\n\n"}
@@ -19,7 +64,7 @@ import &StandardImport, {} &ignoreRejections
       if coauthors?.length > 0
         "\n\n\n" +
           array coauthor in coauthors
-            "" Coauthored-by: #{coauthor}
+            "" Co-authored-by: #{coauthor}
           .join "\n"
     .join ''
     .trim()
@@ -32,7 +77,7 @@ import &StandardImport, {} &ignoreRejections
       > #{generatedCommitMessage}
       (auto-comment by git-genui v#{&package.version})
 
-  extractSavableState = (state) -> {message, type, coauthors, story, breakingChange, body, footers} = state
+  extractSavableState = (state) -> {message, type, coauthors, story, breakingChange, body, trailers} = state
 
   saveState: (state) ->
     if state
