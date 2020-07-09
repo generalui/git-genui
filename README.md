@@ -132,7 +132,6 @@ Combination of:
 * https://git-scm.com/docs/git-interpret-trailers
 * https://git.wiki.kernel.org/index.php/CommitMessageConventions
 
-
 Example using all options:
 ```
 minor/feature(todo-list): [finishes #abc123] select-all button
@@ -198,7 +197,17 @@ Co-authored-by: name <name@example.com>
 Co-authored-by: another-name <another-name@example.com>
 ```
 
-#### GG-Standard Commit Specification
+#### GG-Standard-Commit Specification
+
+The GG-Standard-Commit spec consists of several optional parts. All fields except for the subject are optional. In short, gg-standard-commits look like this:
+
+```html
+<semanticVersion><type>(scope): [<stateChange> #<trackerId>] <subject>
+<body>
+<footer>
+```
+
+Precisely, the gg-standard-commit specification is defined as follows:
 
 ```javascript
 ggStandardCommit: header body? footer?
