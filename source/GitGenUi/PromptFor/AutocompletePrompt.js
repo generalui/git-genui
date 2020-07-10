@@ -13,6 +13,7 @@ Caf.defMod(module, () => {
       "sliceAnsi",
       "compactFlatten",
       "objectKeyCount",
+      "repeat",
       "present",
       "findDefaultItemIndex",
       "max"
@@ -34,6 +35,7 @@ Caf.defMod(module, () => {
       sliceAnsi,
       compactFlatten,
       objectKeyCount,
+      repeat,
       present,
       findDefaultItemIndex,
       max
@@ -286,7 +288,12 @@ Caf.defMod(module, () => {
               ? "  " + this.colors.tip("Searching...")
               : this.currentItems.length > 0
               ? this.paginator.paginate(
-                  this.renderItemList(this.currentItems, this.selected),
+                  this.renderItemList(this.currentItems, this.selected) +
+                    (this.currentItems.length > this.opt.pageSize
+                      ? this.colors.tip(
+                          "\n  " + repeat("-", process.stdout.columns - 4)
+                        )
+                      : ""),
                   this.selected,
                   this.opt.pageSize
                 )

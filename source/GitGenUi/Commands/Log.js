@@ -60,6 +60,7 @@ Caf.defMod(module, () => {
                 return require("../PromptFor")
                   .item({
                     pageSize: "max",
+                    tip: "(Use arrow keys or type to search, ctrl-C to exit)",
                     items:
                       ((from = list),
                       (into = []),

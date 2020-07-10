@@ -18,6 +18,7 @@ run: ->
     main = ->
       &PromptFor.item
         pageSize: :max
+        tip: "" (Use arrow keys or type to search, ctrl-C to exit)
         items:
           array entry in-array list
             entry extract hash, semanticVersion, subject, type, trackerId, date, footer
