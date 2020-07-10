@@ -36,6 +36,6 @@ getResolvedFilePath = (filePath) ->
             + Style.green file.path
 
       Promise
-      .then -> &Git.stage toDo.stage if toDo.stage.length > 1
-      .then -> &Git.unstage toDo.unstage if toDo.unstage.length > 1
+      .then -> &Git.stage toDo.stage if toDo.stage.length > 0
+      .then -> &Git.unstage toDo.unstage if toDo.unstage.length > 0
       .then -> toDo

@@ -67,12 +67,12 @@ Caf.defMod(module, () => {
                   : undefined;
               });
               return Promise.then(() =>
-                toDo.stage.length > 1
+                toDo.stage.length > 0
                   ? require("../Git").stage(toDo.stage)
                   : undefined
               )
                 .then(() =>
-                  toDo.unstage.length > 1
+                  toDo.unstage.length > 0
                     ? require("../Git").unstage(toDo.unstage)
                     : undefined
                 )

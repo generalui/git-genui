@@ -25,7 +25,7 @@ class Core
 
     OUT: selected item, as passed in
 
-  @selectList: ({items, multiselect, prompt, tip, default: _default}) ->
+  @selectList: ({items, multiselect, prompt, tip, pageSize, default: _default}) ->
     if isString items[0]
       itemsWereStrings = true
       items = array string from items with value: string
@@ -39,7 +39,7 @@ class Core
       tip
       default:    _default
       type:       :autocomplete
-      pageSize:   20
+      pageSize:   if pageSize == :max then process.stdout.rows - 2 else pageSize ? 20
       source:     (answersSoFar, input) ->
         Promise.resolve
           array value in approximateSearchSort input, values
@@ -99,11 +99,16 @@ class Core
       else if disabled
         value = grey value
 
+      shortcut ?= "#{index + 1}"
+      shortcut += "."
+      if list.length > 9
+        shortcut = pad shortcut, 3
+
       merge item,
-        value: "" #{shortcut ? index + 1}. #{} value
+        value: "" #{shortcut} #{} value
 
   @menu: (state, options) =>
-    unless state?
+    unless options?
       options = state
       state = {}
 
@@ -121,7 +126,7 @@ class Core
           if items is Function then items state else items
           exit: true
           value: "" #{} exitPrompt
-          shortcut: :0
+          shortcut: capitalize exitPrompt[0]
 
       .then (item) ->
         item extract action, exit, disabled

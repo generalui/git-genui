@@ -107,7 +107,7 @@ Caf.defMod(module, () => {
             );
           };
           this.rule({
-            root: "header body? footer?",
+            root: "header body? footer? whitespaceOnly?",
             header: "preamble? trackerInfo? subject",
             subject: "restOfLine",
             preamble: "semanticType scopeTerm? colon_",

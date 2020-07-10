@@ -4,12 +4,14 @@ Caf.defMod(module, () => {
   return Caf.importInvoke(
     [
       "BaseClass",
+      "CommitParser",
       "Promise",
       "merge",
       "getCommitMessage",
       "compactFlatten",
       "Object",
       "objectWithout",
+      "log",
       "Date",
       "compactFlattenAll",
       "formattedInspect",
@@ -17,18 +19,19 @@ Caf.defMod(module, () => {
       "userConfig",
       "Style",
       "pluralize",
-      "pad",
-      "log"
+      "pad"
     ],
     [global, require("./StandardImport"), { Style: require("./Style") }],
     (
       BaseClass,
+      CommitParser,
       Promise,
       merge,
       getCommitMessage,
       compactFlatten,
       Object,
       objectWithout,
+      log,
       Date,
       compactFlattenAll,
       formattedInspect,
@@ -36,8 +39,7 @@ Caf.defMod(module, () => {
       userConfig,
       Style,
       pluralize,
-      pad,
-      log
+      pad
     ) => {
       let SimpleGit, Git;
       SimpleGit = require("simple-git/promise")();
@@ -46,7 +48,7 @@ Caf.defMod(module, () => {
         classSuper,
         instanceSuper
       ) {
-        let statusCodes, decodeStatus, normalizeListLogLine;
+        let statusCodes, decodeStatus, commitParser, normalizeListLogLine;
         this.getGitConfig = function() {
           return Promise.then(() => SimpleGit.listConfig()).then(
             ({ all }) => all
@@ -172,6 +174,7 @@ Caf.defMod(module, () => {
             email: email != null ? email : (email = this.email)
           }).then(loaded => merge(options, loaded));
         };
+        commitParser = new CommitParser();
         normalizeListLogLine = function({
           hash,
           date,
@@ -181,15 +184,27 @@ Caf.defMod(module, () => {
           author_email,
           body
         }) {
-          return {
-            date: Date.parse(date),
-            hash,
-            message,
-            refs,
-            body,
-            authorName: author_name,
-            authorEmail: author_email
-          };
+          let parsed, error;
+          if (body) {
+            message += `\n${Caf.toString(body)}`;
+          }
+          try {
+            parsed = commitParser.parse(message);
+          } catch (error1) {
+            error = error1;
+            log.error({ normalizeListLogLine: { message, error } });
+          }
+          return merge(
+            {
+              date: Date.parse(date),
+              hash,
+              refs,
+              authorName: author_name,
+              authorEmail: author_email,
+              rawMessage: message
+            },
+            parsed
+          );
         };
         this.getCommitLog = function(options) {
           return SimpleGit.log(options).then(({ all }) =>

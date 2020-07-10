@@ -55,7 +55,7 @@ class CommitParser extends &CaffeineEight.Parser
       if v is Object then v else v.toString().trim()
 
   @rule
-    root:           "" header body? footer?
+    root:           "" header body? footer? whitespaceOnly?
     header:         "" preamble? trackerInfo? subject
     subject:        "" restOfLine
     preamble:       "" semanticType scopeTerm? colon_

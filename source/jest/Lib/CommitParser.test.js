@@ -75,6 +75,11 @@ Caf.defMod(module, () => {
             subject: "mySubject",
             footer: { "my-trailer": "my-value" }
           }),
+          parserTest("wip: co-author test\n\nCo-authored-by: foo@test.com", {
+            subject: "co-author test",
+            type: "wip",
+            footer: { "co-authored-by": "foo@test.com" }
+          }),
           parserTest(
             "Calculus\n\nCo-authored-by: Sir Isaac Newton\nCo-authored-by: Gottfried Wilhelm Leibniz",
             {
@@ -86,7 +91,8 @@ Caf.defMod(module, () => {
                 ]
               }
             }
-          )
+          ),
+          parserTest("subject\n\nbody\n", { subject: "subject", body: "body" })
         );
       });
       describe("failures", function() {

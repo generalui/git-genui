@@ -1,12 +1,61 @@
 import &StandardImport, &CommandsLib, {} &Style
 
+shortName = (name) -> name.split(/@|\s/)[0]
+
 description: "" log commits
 run: ->
   &Git.getCommitLog()
   .then (list) ->
-    each {hash, date, message, refs, authorName, authorEmail} in-array list
-      log
-        ""
-          #{hash.slice 0,7}
-          #{formatDate date}
-    null
+    maxTypeLength = 0
+    maxTrackerId = 0
+    each {type, trackerId} in list
+      maxTypeLength = max maxTypeLength, type.length if type?
+      maxTrackerId = max maxTrackerId, trackerId.length if trackerId
+
+    now = toSeconds()
+
+    selected = null
+    main = ->
+      &PromptFor.item
+        pageSize: :max
+        items:
+          array entry in-array list
+            entry extract hash, semanticVersion, subject, type, trackerId, date, footer
+            coauthors = compactFlattenAll
+              entry.authorName
+              footer?[:co-authored-by]
+
+            authors = array author in coauthors with shortName author
+
+            merge entry,
+              value:
+                ""
+                  #{Style.grey hash.slice 0, 7}
+                  #{Style.brightGreen pad (durationString now - toSeconds date), 3, ' ', true}
+                  #{pad (if trackerId then Style.grey "##{trackerId}" else ''), maxTrackerId + 1}
+                  #{Style[if semanticVersion == :major then :red else if semanticVersion == :minor then :blue else :grey] (semanticVersion || "     ") + (if semanticVersion && type then :/ else ' ') + pad type ? '', maxTypeLength}
+                  #{Style.green authors.join ', '}
+                  #{subject}
+
+      .then (selected) ->
+        &PromptFor.menu
+          items: array value, label from objectWithout selected, :value :id :rawMessage
+            if label == :date
+              value = formatDate value
+            {} value, label, action: switch label
+              when :trackerId then -> tracker.openStoryInBrowser value
+        .then main
+
+    main()
+
+##
+  date:            1594333779000
+  hash:            :29082475dedde352271a60af3e3d6a1765332e51
+  refs:            "HEAD -> master"
+  body:            ""
+  authorName:      "Shane Brinkman-Davis Delamore"
+  authorEmail:     :shanebdavis@gmail.com
+  rawMessage:      "minor/feature: NEW: ggStandardCommit and conventionalCommit parsing capabilities"
+  subject:         "NEW: ggStandardCommit and conventionalCommit parsing capabilities"
+  type:            :feature
+  semanticVersion: :minor

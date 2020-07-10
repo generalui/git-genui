@@ -8,6 +8,7 @@ Caf.defMod(module, () => {
       "Promise",
       "merge",
       "isString",
+      "process",
       "approximateSearchSort",
       "max",
       "pad",
@@ -15,7 +16,8 @@ Caf.defMod(module, () => {
       "blue",
       "presentValue",
       "compactFlatten",
-      "Function"
+      "Function",
+      "capitalize"
     ],
     [
       global,
@@ -31,6 +33,7 @@ Caf.defMod(module, () => {
       Promise,
       merge,
       isString,
+      process,
       approximateSearchSort,
       max,
       pad,
@@ -38,7 +41,8 @@ Caf.defMod(module, () => {
       blue,
       presentValue,
       compactFlatten,
-      Function
+      Function,
+      capitalize
     ) => {
       let inquire, Core;
       require("inquirer").registerPrompt(
@@ -72,6 +76,7 @@ Caf.defMod(module, () => {
           multiselect,
           prompt,
           tip,
+          pageSize,
           default: _default
         }) {
           let itemsWereStrings, values, itemsByValue;
@@ -95,7 +100,12 @@ Caf.defMod(module, () => {
             tip,
             default: _default,
             type: "autocomplete",
-            pageSize: 20,
+            pageSize:
+              pageSize === "max"
+                ? process.stdout.rows - 2
+                : pageSize != null
+                ? pageSize
+                : 20,
             source: (answersSoFar, input) =>
               Promise.resolve(
                 Caf.array(
@@ -169,10 +179,15 @@ Caf.defMod(module, () => {
                 value = grey(value);
               }
             }
+            shortcut != null
+              ? shortcut
+              : (shortcut = `${Caf.toString(index + 1)}`);
+            shortcut += ".";
+            if (list.length > 9) {
+              shortcut = pad(shortcut, 3);
+            }
             return merge(item, {
-              value: `${Caf.toString(
-                shortcut != null ? shortcut : index + 1
-              )}. ${Caf.toString(value)}`
+              value: `${Caf.toString(shortcut)} ${Caf.toString(value)}`
             });
           });
         };
@@ -184,7 +199,7 @@ Caf.defMod(module, () => {
             temp,
             temp1,
             temp2;
-          if (!(state != null)) {
+          if (!(options != null)) {
             options = state;
             state = {};
           }
@@ -206,7 +221,7 @@ Caf.defMod(module, () => {
                       {
                         exit: true,
                         value: `${Caf.toString(exitPrompt)}`,
-                        shortcut: "0"
+                        shortcut: capitalize(exitPrompt[0])
                       }
                     ])
                   )

@@ -135,6 +135,9 @@ Caf.defMod(module, () => {
               base.openInBrowser(this.projectId)
             );
           };
+          this.prototype.openStoryInBrowser = function(storyId) {
+            return require("open")(this.getStoryBrowserUrl(storyId));
+          };
           this.prototype.updateStory = function(storyOrId, updates) {
             let base;
             return (

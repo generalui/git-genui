@@ -93,6 +93,17 @@ describe :ggStandardFormat ->
 
     parserTest
       """
+        wip: co-author test
+
+        Co-authored-by: foo@test.com
+
+      subject: "co-author test"
+      type:    :wip
+      footer:
+        co-authored-by: :foo@test.com
+
+    parserTest
+      """
         Calculus
 
         Co-authored-by: Sir Isaac Newton
@@ -103,6 +114,15 @@ describe :ggStandardFormat ->
         co-authored-by:
           "Sir Isaac Newton"
           "Gottfried Wilhelm Leibniz"
+
+    parserTest
+      """
+        subject
+
+        body\n
+
+      subject: :subject
+      body:    :body
 
 describe :failures ->
   test "empty commit message" ->

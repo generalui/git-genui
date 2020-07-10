@@ -28,6 +28,7 @@ class Tracker extends BaseClass
   getStoryBrowserUrl: (storyId) -> @tracker?.getStoryBrowserUrl @projectId, storyId
   getProjectUrl:      -> @tracker?.getProjectUrl @projectId
   openInBrowser:      -> @tracker?.openInBrowser @projectId
+  openStoryInBrowser: (storyId) -> &open @getStoryBrowserUrl storyId
 
   updateStory:        (storyOrId, updates) -> @tracker?.updateStory @projectId, storyOrId, updates
   createComment:      (storyId, text) -> @tracker?.createComment @projectId, storyId, text

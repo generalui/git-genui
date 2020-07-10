@@ -95,12 +95,26 @@ class Git extends BaseClass
       email   ?= @email
     .then (loaded) -> merge options, loaded
 
+  commitParser = new CommitParser
+
   normalizeListLogLine = ({hash, date, message, refs, author_name, author_email, body}) ->
-    {}
-      date: Date.parse date
-      hash, message, refs, body
-      authorName: author_name
-      authorEmail: author_email
+    if body
+      message += "\n#{body}"
+
+    try
+      parsed = commitParser.parse message
+    catch error
+      log.error normalizeListLogLine: {} message, error
+
+    merge
+      {}
+        date: Date.parse date
+        hash, refs
+        authorName: author_name
+        authorEmail: author_email
+        rawMessage: message
+
+      parsed
 
   @getCommitLog: (options) ->
     SimpleGit.log options
