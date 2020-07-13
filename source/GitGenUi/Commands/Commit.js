@@ -12,10 +12,7 @@ Caf.defMod(module, () => {
       "validateStory",
       "fillInMissingState",
       "saveState",
-      "projectConfig",
       "log",
-      "brightWhite",
-      "min",
       "process",
       "getInitialCommitState",
       "present",
@@ -24,6 +21,7 @@ Caf.defMod(module, () => {
       "repeat",
       "getCommitMessage",
       "EditCommitMessage",
+      "projectConfig",
       "StoryMenu",
       "stripAnsi",
       "colorNotPresent",
@@ -50,10 +48,7 @@ Caf.defMod(module, () => {
       validateStory,
       fillInMissingState,
       saveState,
-      projectConfig,
       log,
-      brightWhite,
-      min,
       process,
       getInitialCommitState,
       present,
@@ -62,6 +57,7 @@ Caf.defMod(module, () => {
       repeat,
       getCommitMessage,
       EditCommitMessage,
+      projectConfig,
       StoryMenu,
       stripAnsi,
       colorNotPresent,
@@ -109,27 +105,7 @@ Caf.defMod(module, () => {
           ]
         },
         run: function(options) {
-          return Promise.then(() =>
-            !projectConfig.existedAtLoad
-              ? (log(
-                  brightWhite.bold(
-                    " \n--------------------\nWelcome to Git-Genui\n--------------------"
-                  )
-                ),
-                log(
-                  require("ansi-wordwrap")(
-                    `This is the first time you've run ${Caf.toString(
-                      brightWhite("git-genui")
-                    )} for this project. Please adjust any configuration options you wish and then select 'continue with commit...'.`,
-                    { width: min(80, process.stdout.columns - 2) }
-                  )
-                ),
-                log(""),
-                ConfigureMenu({
-                  exitPrompt: "continue with commit..."
-                }).then(() => projectConfig.save()))
-              : undefined
-          )
+          return Promise.then(() => {})
             .then(() => require("../Git").remotes)
             .catch(({ message }) => {
               log.warn(

@@ -40,20 +40,20 @@ options:
 run: (options) ->
 
   Promise.then ->
-    unless projectConfig.existedAtLoad
-      log brightWhite.bold
-        """
-          \_
-          --------------------
-          Welcome to Git-Genui
-          --------------------
-      log &ansiWordwrap
-        "" This is the first time you've run #{brightWhite :git-genui} for this project. Please adjust any configuration options you wish and then select 'continue with commit...'.
-        width: min 80, process.stdout.columns - 2
-      log ''
+    # unless projectConfig.existedAtLoad
+    #   log brightWhite.bold
+    #     """
+    #       \_
+    #       --------------------
+    #       Welcome to Git-Genui
+    #       --------------------
+    #   log &ansiWordwrap
+    #     "" This is the first time you've run #{brightWhite :git-genui} for this project. Please adjust any configuration options you wish and then select 'continue with commit...'.
+    #     width: min 80, process.stdout.columns - 2
+    #   log ''
 
-      ConfigureMenu exitPrompt: "" continue with commit...
-      .then -> projectConfig.save() # ensure it is created
+    #   ConfigureMenu exitPrompt: "" continue with commit...
+    #   .then -> projectConfig.save() # ensure it is created
 
   .then -> &git.remotes
   .catch ({message})->
