@@ -37,7 +37,6 @@ test "getStatusReport" ->
         Branch (.|\n)*
         Tracking (.|\n)*
         Author (.|\n)*
-        Files
 
 test "getStatusReport with options" ->
   Git.getStatusReport verbose: true

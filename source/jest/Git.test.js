@@ -35,7 +35,7 @@ Caf.defMod(module, () => {
         return Git.getStatusReport().then(report =>
           assert.match(
             report,
-            /Origin(.|\n)*Branch(.|\n)*Tracking(.|\n)*Author(.|\n)*Files/i
+            /Origin(.|\n)*Branch(.|\n)*Tracking(.|\n)*Author(.|\n)*/i
           )
         );
       });
