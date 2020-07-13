@@ -3,6 +3,17 @@ import &StandardImport, &CommandsLib, {} &Style
 shortName = (name) -> name.split(/@|\s/)[0]
 
 description: "" log commits
+options:
+  from: "" from commit
+  to:   "" to commit
+  args: "" file or folder to log
+examples:
+  :package.json
+  "" log all changes to package.json
+
+  "" --from fdc32b1 --to d6a9c19
+  "" log all changes between these two commits
+
 run: (options) ->
   options extract file = options.args?[0]
   &Git.getCommitLog {} options.to, options.from, file
@@ -23,7 +34,11 @@ run: (options) ->
         tip: "" (Use arrow keys or type to search, ctrl-C to exit)
         items:
           array entry in-array list
-            entry extract hash, semanticVersion, subject, type, trackerId, date, footer
+            entry extract hash, semanticVersion, subject, type, trackerId, date, footer, refs
+            if present refs
+              refs = compactFlatten refs
+              refs = null unless refs.length > 0
+
             coauthors = compactFlattenAll
               entry.authorName
               footer?[:co-authored-by]
@@ -37,12 +52,12 @@ run: (options) ->
                   #{Style.brightGreen pad (durationString now - toSeconds date), 3, ' ', true}
                   #{pad (if trackerId then Style.grey "##{trackerId}" else ''), maxTrackerId + 1}
                   #{Style[if semanticVersion == :major then :red else if semanticVersion == :minor then :blue else :grey] (semanticVersion || "     ") + (if semanticVersion && type then :/ else ' ') + pad type ? '', maxTypeLength}
-                  #{Style.green authors.join ', '}
+                  #{Style.green authors.join ', '}#{if refs then Style.yellow " (#{refs.join ', '})" }
                   #{subject}
 
       .then (selected) ->
         &PromptFor.menu
-          items: array value, label from objectWithout selected, :value :id :rawMessage
+          items: array value, label from log objectWithout selected, :value :id :rawMessage
             if label == :date
               value = formatDate value
             {} value, label, action: switch label

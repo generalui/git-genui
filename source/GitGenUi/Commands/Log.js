@@ -5,11 +5,14 @@ Caf.defMod(module, () => {
     [
       "toSeconds",
       "max",
+      "present",
+      "compactFlatten",
       "compactFlattenAll",
       "merge",
       "Style",
       "pad",
       "durationString",
+      "log",
       "objectWithout",
       "formatDate",
       "tracker"
@@ -23,11 +26,14 @@ Caf.defMod(module, () => {
     (
       toSeconds,
       max,
+      present,
+      compactFlatten,
       compactFlattenAll,
       merge,
       Style,
       pad,
       durationString,
+      log,
       objectWithout,
       formatDate,
       tracker
@@ -38,6 +44,17 @@ Caf.defMod(module, () => {
       };
       return {
         description: "log commits",
+        options: {
+          from: "from commit",
+          to: "to commit",
+          args: "file or folder to log"
+        },
+        examples: [
+          "package.json",
+          "log all changes to package.json",
+          "--from fdc32b1 --to d6a9c19",
+          "log all changes between these two commits"
+        ],
         run: function(options) {
           let file, temp, base;
           file =
@@ -85,6 +102,7 @@ Caf.defMod(module, () => {
                                 trackerId,
                                 date,
                                 footer,
+                                refs,
                                 coauthors,
                                 authors;
                               entry = from[i];
@@ -95,7 +113,14 @@ Caf.defMod(module, () => {
                                 (type = entry.type),
                                 (trackerId = entry.trackerId),
                                 (date = entry.date),
-                                (footer = entry.footer)),
+                                (footer = entry.footer),
+                                (refs = entry.refs)),
+                                present(refs)
+                                  ? ((refs = compactFlatten(refs)),
+                                    !(refs.length > 0)
+                                      ? (refs = null)
+                                      : undefined)
+                                  : undefined,
                                 (coauthors = compactFlattenAll(
                                   entry.authorName,
                                   Caf.exists(footer) && footer["co-authored-by"]
@@ -141,6 +166,12 @@ Caf.defMod(module, () => {
                                     )
                                   )} ${Caf.toString(
                                     Style.green(authors.join(", "))
+                                  )}${Caf.toString(
+                                    refs
+                                      ? Style.yellow(
+                                          ` (${Caf.toString(refs.join(", "))})`
+                                        )
+                                      : undefined
                                   )} ${Caf.toString(subject)}`
                                 }))
                               );
@@ -155,7 +186,9 @@ Caf.defMod(module, () => {
                     require("../PromptFor")
                       .menu({
                         items: Caf.array(
-                          objectWithout(selected, "value", "id", "rawMessage"),
+                          log(
+                            objectWithout(selected, "value", "id", "rawMessage")
+                          ),
                           (value, label) => {
                             if (label === "date") {
                               value = formatDate(value);
