@@ -122,7 +122,7 @@ Related
 * https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines
 
 
-### Git-Genui Standard Commit Format
+# The `gg-standard-commit` Format
 
 Git-Genui generates and parses a standard commit format. GG's primary goal is to encode: semantic versioning, story/tracker id, and coauthors. I wanted GG to be as compatible as possible with existing frameworks while also adhering to first-principles & KISS.
 
@@ -173,7 +173,21 @@ All elements are optional. Below are several legal variants:
 
 See below for the full specification.
 
-#### ConventionalCommit.org
+## Trailers
+
+GG-standard-commit is compatible with [Git Trailers](https://git-scm.com/docs/git-interpret-trailers). Essentially, trailers are an arbitrary key-value metadata map. In pacticular, tailers are how [GitHub.com encodes co-authors](https://help.github.com/en/github/committing-changes-to-your-project/creating-a-commit-with-multiple-authors). GG is particularly concerned with tracking co-authors and follows the GitHub standard:
+
+> NOTE: most specifications for git-trailers only require a single empty line before the trailers, but GitHub's specification for `Co-authored-by` explicitly requests two.
+
+Co-authors are encoded as trailers. There should be one tailer for each co-author as follows:
+```
+Co-authored-by: name <name@example.com>
+Co-authored-by: another-name <another-name@example.com>
+```
+
+> NOTE: This is not specifically a part of the gg-standard-commit specification. The spec allows for any number of trailers with any keys or values.
+
+## What about ConventionalCommit.org?
 
 We also support the [ConventionalCommit.org](https://www.conventionalcommits.org/en/v1.0.0/#specification) format. From a first-principles perspective, this format is clunky.
 
@@ -186,19 +200,8 @@ Conventional-commit shortcomings:
   * All commits which might affect a deployment are at a minimum patch-level version changes, yet CC explicitly allows many forms of non-version changing commits.
 * Poor choice of abbreviation: "feat" means "a deed notable especially for courage"
 
-#### Trailers
 
-Trailers are arbitrary key-value metadata. GG is particularly concerned with tracking co-authors, which is the only trailer GG currently generates.
-
-> NOTE: most specifications for git-trailers only require a single empty line before the trailers, but GitHub's specification for `Co-authored-by` explicitly requests two.
-
-Co-authors are encoded as trailers. There should be one tailer for each co-author as follows:
-```
-Co-authored-by: name <name@example.com>
-Co-authored-by: another-name <another-name@example.com>
-```
-
-#### GG-Standard-Commit Specification
+## The `gg-standard-commit` Specification
 
 The GG-Standard-Commit spec consists of several optional parts. All fields except for the subject are optional. In short, gg-standard-commits look like this:
 
