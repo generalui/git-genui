@@ -38,9 +38,14 @@ Caf.defMod(module, () => {
       };
       return {
         description: "log commits",
-        run: function() {
+        run: function(options) {
+          let file, temp, base;
+          file =
+            undefined !== (temp = options.file)
+              ? temp
+              : Caf.exists((base = options.args)) && base[0];
           return require("../Git")
-            .getCommitLog()
+            .getCommitLog({ to: options.to, from: options.from, file })
             .then(list => {
               let maxTypeLength, maxTrackerId, now, selected, main;
               maxTypeLength = 0;
@@ -56,10 +61,13 @@ Caf.defMod(module, () => {
               now = toSeconds();
               selected = null;
               main = () => {
-                let from, into, to, i, temp;
+                let from, into, to, i, temp1;
                 return require("../PromptFor")
                   .item({
                     pageSize: "max",
+                    prompt: `git log${Caf.toString(
+                      file ? " " + file : undefined
+                    )}:`,
                     tip: "(Use arrow keys or type to search, ctrl-C to exit)",
                     items:
                       ((from = list),
@@ -136,9 +144,9 @@ Caf.defMod(module, () => {
                                   )} ${Caf.toString(subject)}`
                                 }))
                               );
-                              temp = i++;
+                              temp1 = i++;
                             }
-                            return temp;
+                            return temp1;
                           })())
                         : undefined,
                       into)

@@ -3,8 +3,9 @@ import &StandardImport, &CommandsLib, {} &Style
 shortName = (name) -> name.split(/@|\s/)[0]
 
 description: "" log commits
-run: ->
-  &Git.getCommitLog()
+run: (options) ->
+  options extract file = options.args?[0]
+  &Git.getCommitLog {} options.to, options.from, file
   .then (list) ->
     maxTypeLength = 0
     maxTrackerId = 0
@@ -18,6 +19,7 @@ run: ->
     main = ->
       &PromptFor.item
         pageSize: :max
+        prompt: "" git log#{if file then ' ' + file}:
         tip: "" (Use arrow keys or type to search, ctrl-C to exit)
         items:
           array entry in-array list

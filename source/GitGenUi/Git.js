@@ -206,10 +206,11 @@ Caf.defMod(module, () => {
             parsed
           );
         };
-        this.getCommitLog = function(options) {
-          return SimpleGit.log(options).then(({ all }) =>
-            all.map(normalizeListLogLine)
-          );
+        this.getCommitLog = function(options = {}) {
+          let from, to, file;
+          return SimpleGit.log(
+            (({ from, to, file } = options), { from, to, file })
+          ).then(({ all }) => all.map(normalizeListLogLine));
         };
         this.getStatusReport = function(options) {
           return this.loadStatus(options).then(

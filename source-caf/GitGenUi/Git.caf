@@ -116,8 +116,26 @@ class Git extends BaseClass
 
       parsed
 
-  @getCommitLog: (options) ->
-    SimpleGit.log options
+  ##
+    IN: options:
+      from: tag or branch <string>
+      to:   tag or branch <string>
+      file: file (or path?) to git-log <string>
+
+    from https://www.npmjs.com/package/simple-git:
+
+      list commits between options.from and options.to tags or branch (if not specified will show all history).
+
+      Additionally you can provide options.file, which is the path to a file in your repository.
+
+      Then only this file will be considered. options.symmetric allows you to specify whether you want to use symmetric revision range (To be compatible, by default, its value is true). For any other set of options, supply options as an array of strings to be appended to the git log command.
+
+      To use a custom splitter in the log format, set options.splitter to be the string the log should be split on.
+
+      Set options.multiLine to true to include a multi-line body in the output format. Options can also be supplied as a standard options object for adding custom properties supported by the git log command.
+
+  @getCommitLog: (options = {}) ->
+    SimpleGit.log {from, to, file} = options
     .then ({all}) -> all.map normalizeListLogLine
 
   @getStatusReport: (options) ->

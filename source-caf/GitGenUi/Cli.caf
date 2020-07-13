@@ -6,22 +6,17 @@ run: ->
   .then ->
     commands = object m from &Commands.modules when m.description is String
     require :@art-suite/cli
-    .start
-      commands: object {run}, command in commands
-        (params) ->
-          !params.quiet && log brightWhite.bold "" git genui #{dashCase command}
-          run params
+    .start {}
+      commands
+      description:
+        """
+          git-genui's goal is to streamline developer workflow in these areas:
 
-      help:
-        description:
-          """
-            git-genui's goal is to streamline developer workflow in these areas:
+          * updating tracker stories
+          * tracking semantic changes
+          * tracking coauthors
 
-            * updating tracker stories
-            * tracking semantic changes
-            * tracking coauthors
+          The primary command is 'git-genui commit'. That command will prompt you through any configuration needed and all options for making a commit. The primary affect is to craft a well-formated git-commit message. Optionally, you can pass one or more of the commit options on the command-line.
 
-            The primary command is 'git-genui commit'. That command will prompt you through any configuration needed and all options for making a commit. The primary affect is to craft a well-formated git-commit message. Optionally, you can pass one or more of the commit options on the command-line.
-
-        commands: object m in commands
-          merge m, m.options
+        # commands: object m in commands
+        #   merge m, m.options
