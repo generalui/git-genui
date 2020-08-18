@@ -216,20 +216,23 @@ Precisely, the gg-standard-commit specification is defined as follows:
 ```javascript
 ggStandardCommit: header body? footer?
 
-header:           preamble? trackerInfo? subject
+header:           colonTerm? trackerTerm? subject
 subject:          restOfLine
 
 // PREAMBLE - SEMANTIC_VERSION, TYPE, and SCOPE
-preamble:         semanticType scopeTerm? colon_
-
-semanticType:
+colonTerm:        semanticsTerm scopeTerm? colon_
+dnd
+semanticsTerm:
                   semanticVersion '/' type:word
                   semanticVersion
                   type:word
 
-scopeTerm:        '(' scope:word ')'
+scopeTerm:        '(' scope ')'
 
-trackerInfo:      '[' trackerState? '#' trackerId:word ']' _
+scope:            word pathExtension?
+pathExtension:    '/' word pathExtension?
+
+trackerTerm:      '[' trackerState? '#' trackerId:word ']' _
 trackerState:     word _
 
 // BODY OF MESSAGE
