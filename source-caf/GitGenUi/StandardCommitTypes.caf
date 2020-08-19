@@ -9,6 +9,7 @@
   patch/refactor:     non-functional clean up and/or improve code quality
   patch/perf:         performance improved
   patch/fix:          code fixed and passing tests
+  patch/tooling:      CI/CD, scripts, deployment, init
   patch/improvement:  feature improvement (doesn't change external API)
   minor/feature:      new feature added or extended
   minor/deprecation:  feature deprecated
