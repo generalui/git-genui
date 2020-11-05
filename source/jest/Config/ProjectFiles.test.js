@@ -5,14 +5,14 @@ Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["Config"],
     (parentImports = [global, require("../StandardImport")]),
-    Config => {
+    (Config) => {
       return Caf.importInvoke(
         ["chainedTest", "ProjectFiles", "assert"],
         [parentImports, Config],
         (chainedTest, ProjectFiles, assert) => {
-          return chainedTest("start", function() {
+          return chainedTest("start", function () {
             return ProjectFiles.init();
-          }).tapTest("valid files", function() {
+          }).tapTest("valid files", function () {
             assert.eq("git-genui", ProjectFiles.projectFolder);
             return assert.match(ProjectFiles.projectRoot, /\/git-genui$/);
           });

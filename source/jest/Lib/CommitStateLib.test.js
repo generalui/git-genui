@@ -5,7 +5,7 @@ Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["Git"],
     (parentImports = [global, require("../StandardImport")]),
-    Git => {
+    (Git) => {
       return Caf.importInvoke(
         [
           "describe",
@@ -19,7 +19,7 @@ Caf.defMod(module, () => {
           "expect",
           "getCommitComment",
           "getInitialCommitState",
-          "escapeRegExp"
+          "escapeRegExp",
         ],
         [parentImports, Git],
         (
@@ -37,10 +37,10 @@ Caf.defMod(module, () => {
           escapeRegExp
         ) => {
           let testEncodeAndDecodeMessage, testEncodeAndDecodeMessage2;
-          global.beforeAll(function() {
+          global.beforeAll(function () {
             return Config.load();
           });
-          testEncodeAndDecodeMessage = function(...args) {
+          testEncodeAndDecodeMessage = function (...args) {
             let from, into, to, i1, temp;
             return (
               (from = args),
@@ -58,18 +58,18 @@ Caf.defMod(module, () => {
                         require("util").inspect(props)
                       )}`, () =>
                         assert.eq(getCommitMessage(props), expectedMessage, {
-                          props
+                          props,
                         }));
                       test(`parseCommitMessage ${Caf.toString(
                         require("util")
                           .inspect(expectedMessage, {
                             compact: true,
-                            breakLength: 200
+                            breakLength: 200,
                           })
                           .replace(/\n\s*/g, " ")
                       )}`, () =>
                         assert.eq(parseCommitMessage(expectedMessage), props, {
-                          expectedMessage
+                          expectedMessage,
                         }));
                       temp = i1 += 2;
                     }
@@ -79,8 +79,8 @@ Caf.defMod(module, () => {
               into
             );
           };
-          testEncodeAndDecodeMessage2 = function(...args) {
-            return Caf.each2(args, commitMessage =>
+          testEncodeAndDecodeMessage2 = function (...args) {
+            return Caf.each2(args, (commitMessage) =>
               test(`getCommitMessage parseCommitMessage ${Caf.toString(
                 require("util")
                   .inspect(commitMessage, { compact: true, breakLength: 200 })
@@ -92,7 +92,7 @@ Caf.defMod(module, () => {
                 ))
             );
           };
-          describe("parseCommitMessage", function() {
+          describe("parseCommitMessage", function () {
             testEncodeAndDecodeMessage(
               { message: "just some text is OK" },
               "just some text is OK",
@@ -108,7 +108,7 @@ Caf.defMod(module, () => {
                 type: "patch/fix",
                 message: "a title",
                 storyId: "123",
-                storyState: "finished"
+                storyState: "finished",
               },
               "patch/fix: [finished #123] a title",
               {
@@ -117,7 +117,7 @@ Caf.defMod(module, () => {
                 storyId: "123",
                 storyState: "finished",
                 body:
-                  "This is some very cool body\n* with bullets\n\nAnd paragraphs"
+                  "This is some very cool body\n* with bullets\n\nAnd paragraphs",
               },
               "patch/fix: [finished #123] a title\n\nThis is some very cool body\n* with bullets\n\nAnd paragraphs",
               {
@@ -125,7 +125,7 @@ Caf.defMod(module, () => {
                 message: "a title",
                 storyId: "123",
                 storyState: "finished",
-                coauthors: ["frank", "sally"]
+                coauthors: ["frank", "sally"],
               },
               "patch/fix: [finished #123] a title\n\n\nCo-authored-by: frank\nCo-authored-by: sally"
             );
@@ -135,14 +135,14 @@ Caf.defMod(module, () => {
               "patch/fix: [#123] a title"
             );
           });
-          describe("getCommitMessage", function() {
+          describe("getCommitMessage", function () {
             let exhibitA;
             exhibitA = {
               type: "feat",
               story:
                 '[starts #171339446] Update "About Page" with collage, move Kayak photo to Careers.',
               message: "",
-              wantLongMessage: true
+              wantLongMessage: true,
             };
             test("type and message", () =>
               assert.eq(
@@ -154,7 +154,7 @@ Caf.defMod(module, () => {
                 getCommitMessage({
                   type: "feat",
                   message: "hi",
-                  body: "OneLine\nTwoLine"
+                  body: "OneLine\nTwoLine",
                 }),
                 "feat: hi\n\nOneLine\nTwoLine"
               ));
@@ -163,7 +163,7 @@ Caf.defMod(module, () => {
                 getCommitMessage({
                   type: "feat",
                   message: "hi",
-                  body: "OneLine\n\n\n\nTwoLine"
+                  body: "OneLine\n\n\n\nTwoLine",
                 }),
                 "feat: hi\n\nOneLine\n\nTwoLine"
               ));
@@ -172,7 +172,7 @@ Caf.defMod(module, () => {
                 getCommitMessage({
                   type: "feat",
                   message: "hi",
-                  story: { id: 123 }
+                  story: { id: 123 },
                 }),
                 "feat: [#123] hi"
               ));
@@ -182,7 +182,7 @@ Caf.defMod(module, () => {
                   type: "feat",
                   message: "hi",
                   story: { id: 123, status: "unstarted" },
-                  storyState: "started"
+                  storyState: "started",
                 }),
                 "feat: [started #123] hi"
               ));
@@ -192,7 +192,7 @@ Caf.defMod(module, () => {
                   type: "feat",
                   message: "hi",
                   story: { id: 123, status: "started" },
-                  storyState: "finished"
+                  storyState: "finished",
                 }),
                 "feat: [finished #123] hi"
               ));
@@ -201,7 +201,7 @@ Caf.defMod(module, () => {
                 getCommitMessage({
                   type: "feat",
                   message: "hi",
-                  coauthors: ["franky"]
+                  coauthors: ["franky"],
                 }),
                 "feat: hi\n\n\nCo-authored-by: franky"
               ));
@@ -212,31 +212,31 @@ Caf.defMod(module, () => {
                   message:
                     "allow provided config object to extend other configs",
                   breakingChange:
-                    "`extends` key in config file is now used for extending other config files"
+                    "`extends` key in config file is now used for extending other config files",
                 }),
                 "feat: allow provided config object to extend other configs\n\nBREAKING CHANGE: `extends` key in config file is now used for extending other config files"
               ));
           });
-          test("extractSavableState", function() {
+          test("extractSavableState", function () {
             return assert.eq(
               merge(extractSavableState({ message: "foo", bar: "baz" })),
               { message: "foo" }
             );
           });
-          return describe("getCommitComment", function() {
+          return describe("getCommitComment", function () {
             test("has git-genui tag", () =>
               expect(getCommitComment({})).toMatch(
                 /git-genui.*v\d+\.\d+\.\d+/
               ));
             return test("test everything", () =>
-              getInitialCommitState({ quiet: true }).then(initialState => {
+              getInitialCommitState({ quiet: true }).then((initialState) => {
                 let state;
                 initialState.message = "my-commit-message";
                 return require("art-testbench").assert.match(
                   getCommitComment(
                     (state = merge(initialState, {
                       generatedCommitMessage: getCommitMessage(initialState),
-                      commit: "abc123"
+                      commit: "abc123",
                     }))
                   ),
                   RegExp(

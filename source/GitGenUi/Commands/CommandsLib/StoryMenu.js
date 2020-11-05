@@ -5,7 +5,7 @@ Caf.defMod(module, () => {
     ["log", "merge"],
     [global, require("../StandardImport")],
     (log, merge) => {
-      return require("./Lib").updateStateWithPrompt("story", function(
+      return require("./Lib").updateStateWithPrompt("story", function (
         state,
         options
       ) {

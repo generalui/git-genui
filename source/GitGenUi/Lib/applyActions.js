@@ -6,14 +6,14 @@ Caf.defMod(module, () => {
     [global, require("./StandardImport"), require("../Style")],
     (Promise, Error, log, grey) => {
       let applyActions;
-      return (applyActions = function(input, actionList, actions, options) {
+      return (applyActions = function (input, actionList, actions, options) {
         let resultPromise, actionsApplied;
         resultPromise = Promise.then(() => input);
         actionsApplied = { succeeded: [], failed: [] };
         Caf.each2(
           actionList,
           (actionName, index) =>
-            (resultPromise = resultPromise.then(previousResult =>
+            (resultPromise = resultPromise.then((previousResult) =>
               Promise.then(() => {
                 let action;
                 if (!(action = actions[actionName])) {
@@ -28,7 +28,7 @@ Caf.defMod(module, () => {
               })
                 .tap(() => actionsApplied.succeeded.push(actionName))
                 .tapCatch(() => actionsApplied.failed.push(actionName))
-                .catch(error => {
+                .catch((error) => {
                   if (!(Caf.exists(options) && options.quiet)) {
                     log.error({
                       message: `Error in action ${Caf.toString(
@@ -36,17 +36,21 @@ Caf.defMod(module, () => {
                       )} (order = ${Caf.toString(index + 1)} / ${Caf.toString(
                         actionList.length
                       )})`,
-                      error
+                      error,
                     });
                   }
                   return previousResult;
                 })
             ))
         );
-        return resultPromise.then(result => {
+        return resultPromise.then((result) => {
           return {
             result,
-            actionsApplied: Caf.object(actionsApplied, null, v => v.length > 0)
+            actionsApplied: Caf.object(
+              actionsApplied,
+              null,
+              (v) => v.length > 0
+            ),
           };
         });
       });

@@ -13,30 +13,30 @@ Caf.defMod(module, () => {
         ensureTrackerConfigured,
         ensureTrackerTokenValid;
       return {
-        updateStateWithPrompt: (updateStateWithPrompt = function(
+        updateStateWithPrompt: (updateStateWithPrompt = function (
           statePropName,
           a,
           b
         ) {
           let promptFunction, options;
           promptFunction = b != null ? ((options = a), b) : a;
-          return state =>
+          return (state) =>
             Promise.then(() => promptFunction(state, options))
-              .then(value =>
+              .then((value) =>
                 value === undefined ? state[statePropName] : value
               )
-              .then(value => merge(state, { [statePropName]: value }));
+              .then((value) => merge(state, { [statePropName]: value }));
         }),
-        menuApp: (menuApp = function(state, menuF) {
+        menuApp: (menuApp = function (state, menuF) {
           return menuF(state).then(({ action }) =>
             action != null
-              ? Promise.then(() => action(state)).then(newState =>
+              ? Promise.then(() => action(state)).then((newState) =>
                   menuApp(newState != null ? newState : state, menuF)
                 )
               : undefined
           );
         }),
-        validateStory: (validateStory = function(state) {
+        validateStory: (validateStory = function (state) {
           let story, storyId, stories;
           story = state.story;
           storyId = state.storyId;
@@ -47,7 +47,11 @@ Caf.defMod(module, () => {
               : (storyId = Caf.exists(story) && story.id)
           ) {
             if (
-              !(story = Caf.find(stories, null, story => story.id === storyId))
+              !(story = Caf.find(
+                stories,
+                null,
+                (story) => story.id === storyId
+              ))
             ) {
               log.warn(
                 merge({ message: "Invalid story or storyId", story, storyId })
@@ -57,39 +61,40 @@ Caf.defMod(module, () => {
           }
           return state;
         }),
-        getMyAccountOrNothing: (getMyAccountOrNothing = function() {
+        getMyAccountOrNothing: (getMyAccountOrNothing = function () {
           return Promise.then(() => {
             let base, base1;
             return (
               Caf.exists((base = userConfig.accounts)) &&
-              Caf.exists((base1 = base[tracker.name])) && base1.token &&
+              Caf.exists((base1 = base[tracker.name])) &&
+              base1.token &&
               tracker.myAccount
             );
           }).catch(() => {});
         }),
-        getProjectOrNothing: (getProjectOrNothing = function() {
+        getProjectOrNothing: (getProjectOrNothing = function () {
           return Promise.then(() => tracker.project).catch(() => {});
         }),
-        ensureTrackerConfigured: (ensureTrackerConfigured = function() {
-          return getProjectOrNothing().then(project =>
+        ensureTrackerConfigured: (ensureTrackerConfigured = function () {
+          return getProjectOrNothing().then((project) =>
             !project
               ? require("./ConfigureMenu")({
                   exitPrompt: "continue",
-                  prompt: "Please select a project."
+                  prompt: "Please select a project.",
                 })
               : undefined
           );
         }),
-        ensureTrackerTokenValid: (ensureTrackerTokenValid = function() {
-          return getMyAccountOrNothing().then(myAccount =>
+        ensureTrackerTokenValid: (ensureTrackerTokenValid = function () {
+          return getMyAccountOrNothing().then((myAccount) =>
             !myAccount
               ? require("./ConfigureMenu")({
                   exitPrompt: "continue",
-                  prompt: "Please configure your account."
+                  prompt: "Please configure your account.",
                 })
               : undefined
           );
-        })
+        }),
       };
     }
   );

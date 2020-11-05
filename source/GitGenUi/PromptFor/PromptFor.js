@@ -17,7 +17,7 @@ Caf.defMod(module, () => {
       "presentValue",
       "compactFlatten",
       "Function",
-      "capitalize"
+      "capitalize",
     ],
     [
       global,
@@ -25,7 +25,7 @@ Caf.defMod(module, () => {
       require("art-class-system"),
       require("../Lib"),
       require("../Style"),
-      require("./PromptForLib")
+      require("./PromptForLib"),
     ],
     (
       present,
@@ -49,7 +49,7 @@ Caf.defMod(module, () => {
         "autocomplete",
         require("./AutocompletePrompt")
       );
-      inquire = function(options) {
+      inquire = function (options) {
         if (present(options.name)) {
           throw new Error(
             "no need to specify 'name' - just your value is returned w/o a wrapping object"
@@ -60,29 +60,29 @@ Caf.defMod(module, () => {
           return require("inquirer").prompt(
             merge(options, {
               name: "value",
-              message: (temp = options.prompt) != null ? temp : options.message
+              message: (temp = options.prompt) != null ? temp : options.message,
             })
           );
         }).then(({ value }) => value);
       };
-      return (Core = Caf.defClass(class Core extends Object {}, function(
+      return (Core = Caf.defClass(class Core extends Object {}, function (
         Core,
         classSuper,
         instanceSuper
       ) {
         let numberValues;
-        this.selectList = function({
+        this.selectList = function ({
           items,
           multiselect,
           prompt,
           tip,
           pageSize,
-          default: _default
+          default: _default,
         }) {
           let itemsWereStrings, values, itemsByValue;
           if (isString(items[0])) {
             itemsWereStrings = true;
-            items = Caf.array(items, string => {
+            items = Caf.array(items, (string) => {
               return { value: string };
             });
           }
@@ -92,7 +92,7 @@ Caf.defMod(module, () => {
             null,
             null,
             null,
-            item => item.value
+            (item) => item.value
           );
           return inquire({
             prompt,
@@ -110,13 +110,13 @@ Caf.defMod(module, () => {
               Promise.resolve(
                 Caf.array(
                   approximateSearchSort(input, values),
-                  value => itemsByValue[value]
+                  (value) => itemsByValue[value]
                 )
-              )
-          }).then(item => (itemsWereStrings ? item.value : item));
+              ),
+          }).then((item) => (itemsWereStrings ? item.value : item));
         };
         this.item = this.selectList;
-        this.yesNo = function(options) {
+        this.yesNo = function (options) {
           return inquire(
             merge(
               {
@@ -127,15 +127,15 @@ Caf.defMod(module, () => {
                     : "no",
                 choices: [
                   { key: "y", value: "yes", name: "yes" },
-                  { key: "n", value: "no", name: "no" }
-                ]
+                  { key: "n", value: "no", name: "no" },
+                ],
               },
               options
             )
           );
         };
-        this.input = function(options) {
-          return inquire(merge({ type: "input" }, options)).then(str =>
+        this.input = function (options) {
+          return inquire(merge({ type: "input" }, options)).then((str) =>
             !options.canBeBlank
               ? (() => {
                   switch (false) {
@@ -150,12 +150,12 @@ Caf.defMod(module, () => {
               : undefined
           );
         };
-        this.password = options =>
+        this.password = (options) =>
           this.input(merge(options, { type: "password" }));
-        this.password = function(options) {
+        this.password = function (options) {
           return inquire(merge({ type: "password" }, options));
         };
-        numberValues = function(list) {
+        numberValues = function (list) {
           let maxLabel;
           maxLabel = Caf.reduce(
             list,
@@ -187,7 +187,7 @@ Caf.defMod(module, () => {
               shortcut = pad(shortcut, 3);
             }
             return merge(item, {
-              value: `${Caf.toString(shortcut)} ${Caf.toString(value)}`
+              value: `${Caf.toString(shortcut)} ${Caf.toString(value)}`,
             });
           });
         };
@@ -204,15 +204,15 @@ Caf.defMod(module, () => {
             state = {};
           }
           preprocessState =
-            undefined !== (temp = options.preprocessState) ? temp : a => a;
+            undefined !== (temp = options.preprocessState) ? temp : (a) => a;
           postprocessState =
-            undefined !== (temp1 = options.postprocessState) ? temp1 : a => a;
+            undefined !== (temp1 = options.postprocessState) ? temp1 : (a) => a;
           exitPrompt =
             undefined !== (temp2 = options.exitPrompt) ? temp2 : "exit";
           items = options.items;
           return Promise.resolve(state)
             .then(preprocessState)
-            .then(state =>
+            .then((state) =>
               this.selectList(
                 merge(options, {
                   items: numberValues(
@@ -221,12 +221,12 @@ Caf.defMod(module, () => {
                       {
                         exit: true,
                         value: `${Caf.toString(exitPrompt)}`,
-                        shortcut: capitalize(exitPrompt[0])
-                      }
+                        shortcut: capitalize(exitPrompt[0]),
+                      },
                     ])
-                  )
+                  ),
                 })
-              ).then(item => {
+              ).then((item) => {
                 let action, exit, disabled;
                 action = item.action;
                 exit = item.exit;
@@ -239,13 +239,13 @@ Caf.defMod(module, () => {
                     : state;
                 })
                   .then(postprocessState)
-                  .then(newState =>
+                  .then((newState) =>
                     exit
                       ? newState
                       : this.menu(
                           newState,
                           merge(options, {
-                            default: item ? { label: item.label } : undefined
+                            default: item ? { label: item.label } : undefined,
                           })
                         )
                   );

@@ -116,7 +116,7 @@ class PivotalTracker extends BaseClass
       else @getStory projectId, storyOrId
 
     .then ({id, storyType, estimate}) ->
-      if storyType != :chore && !estimate? && !updates.estimate?
+      if storyType != :chore && storyType != :bug && !estimate? && !updates.estimate?
         updates = merge updates, estimate: 1
 
       putJson

@@ -11,14 +11,14 @@ Caf.defMod(module, () => {
       "process",
       "formatDate",
       "log",
-      "green"
+      "green",
     ],
     [
       global,
       require("art-standard-lib"),
       require("art-class-system"),
       require("./Style"),
-      require("./Config")
+      require("./Config"),
     ],
     (
       BaseClass,
@@ -40,137 +40,137 @@ Caf.defMod(module, () => {
             this.init();
           }
         },
-        function(Tracker, classSuper, instanceSuper) {
+        function (Tracker, classSuper, instanceSuper) {
           this.singletonClass();
-          this.prototype.init = function() {
+          this.prototype.init = function () {
             return (this.formatStory = this.formatStory.bind(this));
           };
           this.getter("projectConfig", {
-            tracker: function() {
+            tracker: function () {
               return require("./Trackers")[this.name];
             },
-            projectId: function() {
+            projectId: function () {
               return projectConfig.tracker.projectId;
             },
-            name: function() {
+            name: function () {
               let temp;
               return (temp = projectConfig.tracker.name) != null
                 ? temp
                 : "PivotalTracker";
             },
-            settableStoryStates: function() {
+            settableStoryStates: function () {
               let base;
               return (
                 Caf.exists((base = this.tracker)) && base.settableStoryStates
               );
             },
-            stories: function() {
+            stories: function () {
               let base;
               return (
                 Caf.exists((base = this.tracker)) &&
                 base.getStories(this.projectId)
               );
             },
-            members: function() {
+            members: function () {
               let base;
               return (
                 Caf.exists((base = this.tracker)) &&
                 base.getMembers(this.projectId)
               );
             },
-            myAccount: function() {
+            myAccount: function () {
               let base;
               return (
                 Caf.exists((base = this.tracker)) &&
                 base.getMyAccount(this.projectId)
               );
             },
-            projects: function() {
+            projects: function () {
               let base;
               return Caf.exists((base = this.tracker)) && base.projects;
             },
-            project: function() {
+            project: function () {
               let base;
               return (
                 Caf.exists((base = this.tracker)) &&
                 base.getProject(this.projectId)
               );
             },
-            configured: function() {
+            configured: function () {
               return this.tracker.configured && present(this.projectId);
-            }
+            },
           });
-          this.prototype.createStory = function(story) {
+          this.prototype.createStory = function (story) {
             let base;
             return (
               Caf.exists((base = this.tracker)) &&
               base.createStory(this.projectId, story)
             );
           };
-          this.prototype.getStoryUrl = function(storyId) {
+          this.prototype.getStoryUrl = function (storyId) {
             let base;
             return (
               Caf.exists((base = this.tracker)) &&
               base.getStoryUrl(this.projectId, storyId)
             );
           };
-          this.prototype.getStoryBrowserUrl = function(storyId) {
+          this.prototype.getStoryBrowserUrl = function (storyId) {
             let base;
             return (
               Caf.exists((base = this.tracker)) &&
               base.getStoryBrowserUrl(this.projectId, storyId)
             );
           };
-          this.prototype.getProjectUrl = function() {
+          this.prototype.getProjectUrl = function () {
             let base;
             return (
               Caf.exists((base = this.tracker)) &&
               base.getProjectUrl(this.projectId)
             );
           };
-          this.prototype.openInBrowser = function() {
+          this.prototype.openInBrowser = function () {
             let base;
             return (
               Caf.exists((base = this.tracker)) &&
               base.openInBrowser(this.projectId)
             );
           };
-          this.prototype.openStoryInBrowser = function(storyId) {
+          this.prototype.openStoryInBrowser = function (storyId) {
             return require("open")(this.getStoryBrowserUrl(storyId));
           };
-          this.prototype.updateStory = function(storyOrId, updates) {
+          this.prototype.updateStory = function (storyOrId, updates) {
             let base;
             return (
               Caf.exists((base = this.tracker)) &&
               base.updateStory(this.projectId, storyOrId, updates)
             );
           };
-          this.prototype.createComment = function(storyId, text) {
+          this.prototype.createComment = function (storyId, text) {
             let base;
             return (
               Caf.exists((base = this.tracker)) &&
               base.createComment(this.projectId, storyId, text)
             );
           };
-          this.prototype.authenticate = function(options) {
+          this.prototype.authenticate = function (options) {
             let base;
             return (
               Caf.exists((base = this.tracker)) && base.authenticate(options)
             );
           };
-          this.prototype.storyIsStartable = function(story) {
+          this.prototype.storyIsStartable = function (story) {
             let base;
             return (
               Caf.exists((base = this.tracker)) && base.storyIsStartable(story)
             );
           };
-          this.prototype.storyIsFinishable = function(story) {
+          this.prototype.storyIsFinishable = function (story) {
             let base;
             return (
               Caf.exists((base = this.tracker)) && base.storyIsFinishable(story)
             );
           };
-          this.prototype.formatStory = function(story, addLinks) {
+          this.prototype.formatStory = function (story, addLinks) {
             let temp;
             return story.id
               ? `${Caf.toString(
@@ -184,7 +184,7 @@ Caf.defMod(module, () => {
                 )} ${Caf.toString(story.name)}`
               : "(none)";
           };
-          this.prototype.createCommentWithMessage = function(
+          this.prototype.createCommentWithMessage = function (
             storyId,
             text,
             verbose
@@ -203,7 +203,7 @@ Caf.defMod(module, () => {
                 : undefined;
             });
           };
-          this.prototype.updateStoryWithMessage = function(
+          this.prototype.updateStoryWithMessage = function (
             storyId,
             updates,
             verbose
@@ -222,7 +222,7 @@ Caf.defMod(module, () => {
                 : undefined
             );
           };
-          this.prototype.logStoryUpdateMessage = function(storyId, message) {
+          this.prototype.logStoryUpdateMessage = function (storyId, message) {
             return log(
               blue(`Story [#${Caf.toString(storyId)}]: `) + green(message)
             );

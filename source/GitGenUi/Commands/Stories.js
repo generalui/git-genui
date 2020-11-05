@@ -7,13 +7,13 @@ Caf.defMod(module, () => {
     (ensureTrackerConfigured, Promise, SelectStory, EditStoryMenu) => {
       return {
         description: "list all open stories",
-        run: function(options) {
+        run: function (options) {
           return ensureTrackerConfigured()
             .then(() =>
               Promise.all([
                 require("../Tracker").tracker.stories,
                 require("../Tracker").tracker.project,
-                require("../Tracker").tracker.members
+                require("../Tracker").tracker.members,
               ])
             )
             .then(([stories, project, members]) => {
@@ -23,8 +23,8 @@ Caf.defMod(module, () => {
                   stories,
                   project,
                   members,
-                  prompt: "Select a story to edit:"
-                }).then(story =>
+                  prompt: "Select a story to edit:",
+                }).then((story) =>
                   story.id
                     ? (!story.newStory
                         ? EditStoryMenu(
@@ -35,7 +35,7 @@ Caf.defMod(module, () => {
                       )
                         .tap(() =>
                           require("../Tracker").tracker.stories.then(
-                            s => (stories = s)
+                            (s) => (stories = s)
                           )
                         )
                         .then(prompt)
@@ -44,7 +44,7 @@ Caf.defMod(module, () => {
               return prompt();
             })
             .then(() => null);
-        }
+        },
       };
     }
   );

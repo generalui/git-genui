@@ -7,17 +7,17 @@ Caf.defMod(module, () => {
       global,
       require("../StandardImport"),
       require("../Config"),
-      { Style: require("../Style") }
+      { Style: require("../Style") },
     ],
     (projectConfig, log, pad, Promise, Style) => {
       let getResolvedFilePath;
-      getResolvedFilePath = function(filePath) {
+      getResolvedFilePath = function (filePath) {
         return require("path").join(projectConfig.configPath, filePath);
       };
-      return function(options) {
+      return function (options) {
         return require("../Git").rawStatus.then(({ files }) => {
           let items;
-          files = Caf.array(files, null, file => file.index !== "renamed");
+          files = Caf.array(files, null, (file) => file.index !== "renamed");
           if (Caf.exists(options) && options.verbose) {
             log({ files });
           }
@@ -36,25 +36,25 @@ Caf.defMod(module, () => {
                       )
                     : a.path.localeCompare(b.path);
                 }),
-                file => {
+                (file) => {
                   return {
                     file,
                     selected: !file.workingDir,
                     value: `${Caf.toString(
                       pad(`(${Caf.toString(file.workingDir || "staged")})`, 15)
-                    )} ${Caf.toString(file.path)}`
+                    )} ${Caf.toString(file.path)}`,
                   };
                 }
-              ))
+              )),
             })
-            .then(selectedItems => {
+            .then((selectedItems) => {
               let selectedFilesByFile, toDo;
               selectedFilesByFile = Caf.object(
                 selectedItems,
                 null,
                 null,
                 null,
-                item => item.file.path
+                (item) => item.file.path
               );
               toDo = { stage: [], unstage: [] };
               Caf.each2(items, ({ file, selected }) => {

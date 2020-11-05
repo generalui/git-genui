@@ -6,10 +6,10 @@ Caf.defMod(module, () => {
     [global, require("../StandardImport")],
     (test, describe, log, assert, CommitParser, chainedTest) => {
       let parserTest, markdownExample;
-      parserTest = function(source, result) {
+      parserTest = function (source, result) {
         return [
           source.replace(/\n/g, " \\n "),
-          commitParser => {
+          (commitParser) => {
             let parsed, error;
             try {
               parsed = commitParser.parse(source);
@@ -21,64 +21,64 @@ Caf.defMod(module, () => {
             return assert.eq(parsed, result, () =>
               commitParser.parse(source, { returnNode: true })
             );
-          }
+          },
         ];
       };
       markdownExample =
         'Body can have awesome markdown:\n\n1. lets you explain things better\n2. let\'s do it together\n3. lettuce is a vegetable\n4. le tus is bad spanish for "the your"';
-      test("return-node option", function() {
+      test("return-node option", function () {
         return assert.instanceof(
           require("caffeine-eight").Nodes.Node,
           new CommitParser().parse("a", { returnNode: true })
         );
       });
-      describe("ggStandardFormat", function() {
+      describe("ggStandardFormat", function () {
         let subject;
         return chainedTest("parser", () => new CommitParser()).tapTest(
           parserTest((subject = "just a subject"), { subject }),
           parserTest("myType: mySubject", {
             type: "myType",
-            subject: "mySubject"
+            subject: "mySubject",
           }),
           parserTest("myType(myScope): mySubject", {
             type: "myType",
             scope: "myScope",
-            subject: "mySubject"
+            subject: "mySubject",
           }),
           parserTest("minor/myType: mySubject", {
             semanticVersion: "minor",
             type: "myType",
-            subject: "mySubject"
+            subject: "mySubject",
           }),
           parserTest("minor: mySubject", {
             semanticVersion: "minor",
-            subject: "mySubject"
+            subject: "mySubject",
           }),
           parserTest("[#123] mySubject", {
             trackerId: "123",
-            subject: "mySubject"
+            subject: "mySubject",
           }),
           parserTest("[finishes #123] mySubject", {
             trackerState: "finishes",
             trackerId: "123",
-            subject: "mySubject"
+            subject: "mySubject",
           }),
           parserTest("mySubject\nmyBody", {
             subject: "mySubject",
-            body: "myBody"
+            body: "myBody",
           }),
           parserTest(`mySubject\n${Caf.toString(markdownExample)}`, {
             subject: "mySubject",
-            body: markdownExample
+            body: markdownExample,
           }),
           parserTest("mySubject\n\nmy-trailer: my-value", {
             subject: "mySubject",
-            footer: { "my-trailer": "my-value" }
+            footer: { "my-trailer": "my-value" },
           }),
           parserTest("wip: co-author test\n\nCo-authored-by: foo@test.com", {
             subject: "co-author test",
             type: "wip",
-            footer: { "co-authored-by": "foo@test.com" }
+            footer: { "co-authored-by": "foo@test.com" },
           }),
           parserTest(
             "Calculus\n\nCo-authored-by: Sir Isaac Newton\nCo-authored-by: Gottfried Wilhelm Leibniz",
@@ -87,77 +87,77 @@ Caf.defMod(module, () => {
               footer: {
                 "co-authored-by": [
                   "Sir Isaac Newton",
-                  "Gottfried Wilhelm Leibniz"
-                ]
-              }
+                  "Gottfried Wilhelm Leibniz",
+                ],
+              },
             }
           ),
           parserTest("subject\n\nbody\n", { subject: "subject", body: "body" })
         );
       });
-      describe("failures", function() {
+      describe("failures", function () {
         return test("empty commit message", () =>
           assert.rejects(() => new CommitParser().parse("")));
       });
-      describe("edge-cases", function() {
+      describe("edge-cases", function () {
         return chainedTest("parser", () => new CommitParser()).tapTest(
           parserTest("a", { subject: "a" }),
           parserTest("mySubject\nclose-footer: hmm", {
             subject: "mySubject",
-            footer: { "close-footer": "hmm" }
+            footer: { "close-footer": "hmm" },
           }),
           parserTest("mySubject\ncloseBody\nclose-footer: hmm", {
             subject: "mySubject",
             body: "closeBody",
-            footer: { "close-footer": "hmm" }
+            footer: { "close-footer": "hmm" },
           }),
           parserTest("[bad-tracker-id123] mySubject", {
-            subject: "[bad-tracker-id123] mySubject"
+            subject: "[bad-tracker-id123] mySubject",
           }),
           parserTest("majorbs: mySubject", {
             subject: "mySubject",
-            type: "majorbs"
+            type: "majorbs",
           }),
           parserTest("bad type: mySubject", { subject: "bad type: mySubject" }),
           parserTest("bad/type: mySubject", { subject: "bad/type: mySubject" }),
           parserTest("major/bad/type: mySubject", {
-            subject: "major/bad/type: mySubject"
+            subject: "major/bad/type: mySubject",
           }),
           parserTest(
             "mySubject\n\nfoo: looks like a footer\n\nbut then it's not",
             {
               subject: "mySubject",
-              body: "foo: looks like a footer\n\nbut then it's not"
+              body: "foo: looks like a footer\n\nbut then it's not",
             }
           ),
           parserTest("mySubject\nmy-footer: trailing whitespace coming\n\n ", {
             subject: "mySubject",
-            footer: { "my-footer": "trailing whitespace coming" }
+            footer: { "my-footer": "trailing whitespace coming" },
           })
         );
       });
-      return describe("ccStandardFormat", function() {
+      return describe("ccStandardFormat", function () {
         let subject;
         return chainedTest("parser", () => new CommitParser()).tapTest(
           parserTest((subject = "just a subject"), { subject }),
           parserTest("fix: mySubject", {
             subject: "mySubject",
             semanticVersion: "patch",
-            type: "fix"
+            type: "fix",
           }),
           parserTest("feat: mySubject", {
             subject: "mySubject",
             semanticVersion: "minor",
-            type: "feat"
+            type: "feat",
           }),
           parserTest("refactor!: mySubject", {
             subject: "mySubject",
             semanticVersion: "major",
-            type: "refactor"
+            type: "refactor",
           }),
           parserTest("refactor: mySubject", {
             subject: "mySubject",
-            type: "refactor"
+            type: "refactor",
           }),
           parserTest(
             "refactor: mySubject\n\nBREAKING CHANGE: Should imply major semanticVersion",
@@ -166,8 +166,8 @@ Caf.defMod(module, () => {
               semanticVersion: "major",
               type: "refactor",
               footer: {
-                "breaking-change": "Should imply major semanticVersion"
-              }
+                "breaking-change": "Should imply major semanticVersion",
+              },
             }
           )
         );

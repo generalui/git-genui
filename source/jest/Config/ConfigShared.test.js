@@ -5,7 +5,7 @@ Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["Config"],
     (parentImports = [global, require("../StandardImport")]),
-    Config => {
+    (Config) => {
       return Caf.importInvoke(
         ["ConfigShared", "chainedTest", "Promise", "assert", "JSON"],
         [parentImports, Config],
@@ -16,127 +16,127 @@ Caf.defMod(module, () => {
           testFieldDefault = "testDefault";
           TestConfig = Caf.defClass(
             class TestConfig extends ConfigShared {},
-            function(TestConfig, classSuper, instanceSuper) {
+            function (TestConfig, classSuper, instanceSuper) {
               this.configFields({ testField: "testDefault" });
               this.configFields("otherTestField");
               this.getter({
-                configBasename: function() {
+                configBasename: function () {
                   return "testConfig.json";
                 },
-                configPath: function() {
+                configPath: function () {
                   return Promise.then(() => ".");
-                }
+                },
               });
             }
           );
-          global.afterAll(function() {
+          global.afterAll(function () {
             return mockFs.restore();
           });
-          return chainedTest("initialize mock fs", function() {
+          return chainedTest("initialize mock fs", function () {
             mockFs(initialFiles);
             return new TestConfig();
           })
             .tapTest(
               [
                 "load",
-                function(testConfig) {
+                function (testConfig) {
                   return testConfig.init();
-                }
+                },
               ],
               [
                 "load doesn't vivify",
-                function() {
+                function () {
                   return assert.eq(mockFs.getTree(), initialFiles);
-                }
+                },
               ],
               [
                 "existedAtLoad is false",
-                function(testConfig) {
+                function (testConfig) {
                   return assert.false(testConfig.existedAtLoad);
-                }
+                },
               ],
               [
                 "testConfig.setConfigProperty :a :b",
-                function(testConfig) {
+                function (testConfig) {
                   return testConfig.setConfigProperty("a", "b");
-                }
+                },
               ],
               [
                 "setConfigProperty should automatically save",
-                function(testConfig) {
+                function (testConfig) {
                   return assert.eq(
                     JSON.parse(mockFs.getTree()[testConfig.configBasename]),
                     { a: "b" }
                   );
-                }
+                },
               ],
               [
                 "testField setTestField",
-                function(testConfig) {
+                function (testConfig) {
                   return testConfig.setTestField({ baz: { boz: "bam" } });
-                }
+                },
               ],
               [
                 "testField getTestField",
-                function(testConfig) {
+                function (testConfig) {
                   return assert.eq(
                     { baz: { boz: "bam" } },
                     testConfig.getTestField()
                   );
-                }
+                },
               ],
               [
                 "testField setter result",
-                function(testConfig) {
+                function (testConfig) {
                   return assert.eq(
                     { baz: { boz: "bam" } },
                     JSON.parse(mockFs.getTree()[testConfig.configBasename])
                       .testField
                   );
-                }
+                },
               ],
               [
                 "testField mergeTestFieldWith will replace",
-                function(testConfig) {
+                function (testConfig) {
                   return testConfig.mergeTestFieldWith({ baz: { two: 2 } });
-                }
+                },
               ],
               [
                 "testField mergeTestFieldWith will replace result",
-                function(testConfig) {
+                function (testConfig) {
                   return assert.eq(
                     { baz: { two: 2 } },
                     JSON.parse(mockFs.getTree()[testConfig.configBasename])
                       .testField
                   );
-                }
+                },
               ],
               [
                 "testField deepMergeTestFieldWith will deep-merge",
-                function(testConfig) {
+                function (testConfig) {
                   return testConfig.deepMergeTestFieldWith({
-                    baz: { three: 3 }
+                    baz: { three: 3 },
                   });
-                }
+                },
               ],
               [
                 "testField deepMergeTestFieldWith will deep-merge result",
-                function(testConfig) {
+                function (testConfig) {
                   return assert.eq(
                     { baz: { two: 2, three: 3 } },
                     JSON.parse(mockFs.getTree()[testConfig.configBasename])
                       .testField
                   );
-                }
+                },
               ]
             )
             .thenTest(
               "create new testConfig instance to simulate second load",
-              function() {
+              function () {
                 return new TestConfig().init();
               }
             )
-            .tapTest("existedAtLoad is true", function(testConfig) {
+            .tapTest("existedAtLoad is true", function (testConfig) {
               return assert.true(testConfig.existedAtLoad);
             });
         }

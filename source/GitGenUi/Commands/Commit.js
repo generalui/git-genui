@@ -29,14 +29,14 @@ Caf.defMod(module, () => {
       "SelectCoauthors",
       "presentValue",
       "EditGitStage",
-      "openInExternalEditor"
+      "openInExternalEditor",
     ],
     [
       global,
       require("./StandardImport"),
       require("./CommandsLib"),
       require("../Git"),
-      require("../Style")
+      require("../Style"),
     ],
     (
       ConfigureMenu,
@@ -68,19 +68,19 @@ Caf.defMod(module, () => {
       openInExternalEditor
     ) => {
       let configure, getCommitAndSetStateAction, statusColors;
-      configure = function(state) {
+      configure = function (state) {
         return ConfigureMenu({ exitPrompt: "back" })
           .then(() =>
             Promise.deepAll({
               stories: ignoreRejections(() => tracker.stories),
               members: ignoreRejections(() => tracker.members),
-              myAccount: ignoreRejections(() => tracker.myAccount)
+              myAccount: ignoreRejections(() => tracker.myAccount),
             })
           )
-          .then(updates => merge(state, updates));
+          .then((updates) => merge(state, updates));
       };
-      getCommitAndSetStateAction = function(storyState) {
-        return state => CommitNow(merge(state, { storyState }));
+      getCommitAndSetStateAction = function (storyState) {
+        return (state) => CommitNow(merge(state, { storyState }));
       };
       statusColors = { staged: "green", unstaged: "red", untracked: "red" };
       return {
@@ -89,22 +89,22 @@ Caf.defMod(module, () => {
         options: {
           message: [
             "message",
-            "entier your git-commit message on the command-line"
+            "entier your git-commit message on the command-line",
           ],
           coauthors: [
             "authors",
-            "one more more coauthor emails (separated by spaces)"
+            "one more more coauthor emails (separated by spaces)",
           ],
           type: [
             "type",
-            "Commit type string. Should be of the form: [major, minor or patch]/short-word"
+            "Commit type string. Should be of the form: [major, minor or patch]/short-word",
           ],
           "story-id": [
             "id",
-            "Input the tracker story id directly on the command-line. It will be validated against existing stories."
-          ]
+            "Input the tracker story id directly on the command-line. It will be validated against existing stories.",
+          ],
         },
-        run: function(options) {
+        run: function (options) {
           return Promise.then(() => {})
             .then(() => require("../Git").remotes)
             .catch(({ message }) => {
@@ -127,9 +127,9 @@ Caf.defMod(module, () => {
             )
             .then(fillInMissingState)
             .then(saveState)
-            .then(state =>
+            .then((state) =>
               require("../PromptFor").menu(state, {
-                preprocessState: state => {
+                preprocessState: (state) => {
                   let columns;
                   if (present(state.message)) {
                     columns = process.stdout.columns;
@@ -141,7 +141,7 @@ Caf.defMod(module, () => {
                           brightGreen
                             .bold(getCommitMessage(state))
                             .replace(/\n/g, "\n  "),
-                          repeat("-", columns - 2)
+                          repeat("-", columns - 2),
                         ]).join("\n")
                       )
                     );
@@ -149,7 +149,7 @@ Caf.defMod(module, () => {
                   }
                   return state;
                 },
-                items: state => {
+                items: (state) => {
                   let myAccount,
                     message,
                     story,
@@ -174,7 +174,7 @@ Caf.defMod(module, () => {
                     {
                       action: EditCommitMessage,
                       label: "Edit message",
-                      value: message
+                      value: message,
                     },
                     myAccount && projectConfig.tracker
                       ? {
@@ -183,36 +183,36 @@ Caf.defMod(module, () => {
                           value:
                             Caf.exists(story) && story.id
                               ? stripAnsi(tracker.formatStory(story))
-                              : undefined
+                              : undefined,
                         }
                       : {
                           action: configure,
                           label: "Select story",
-                          value: colorNotPresent("configure tracker")
+                          value: colorNotPresent("configure tracker"),
                         },
                     {
                       action: SelectCommitType,
                       label: "Select type",
-                      value: type
+                      value: type,
                     },
                     {
                       label: "Edit body",
                       value: body,
-                      action: state =>
-                        openInExternalEditor(body).then(body =>
+                      action: (state) =>
+                        openInExternalEditor(body).then((body) =>
                           merge(state, { body })
-                        )
+                        ),
                     },
                     projectConfig.conventionalCommit
                       ? {
                           label: "Breaking changes",
                           value: breakingChange,
-                          action: state =>
+                          action: (state) =>
                             openInExternalEditor(
                               breakingChange
-                            ).then(breakingChange =>
+                            ).then((breakingChange) =>
                               merge(state, { breakingChange })
-                            )
+                            ),
                         }
                       : undefined,
                     myAccount
@@ -227,12 +227,12 @@ Caf.defMod(module, () => {
                                     0
                                     ? coauthors
                                     : undefined
-                                )
+                                ),
                         }
                       : {
                           action: configure,
                           label: "Change coauthors",
-                          value: colorNotPresent("configure tracker")
+                          value: colorNotPresent("configure tracker"),
                         },
                     {
                       action: EditGitStage,
@@ -240,13 +240,13 @@ Caf.defMod(module, () => {
                       value: compactFlatten(
                         Caf.array(
                           ["staged", "unstaged", "untracked"],
-                          statusCat =>
+                          (statusCat) =>
                             require("../Style")[statusColors[statusCat]](
                               `${Caf.toString(
                                 status[statusCat].length
                               )} ${Caf.toString(statusCat)}`
                             ),
-                          statusCat => {
+                          (statusCat) => {
                             let base;
                             return (
                               (Caf.exists((base = status[statusCat])) &&
@@ -254,7 +254,7 @@ Caf.defMod(module, () => {
                             );
                           }
                         )
-                      ).join(", ")
+                      ).join(", "),
                     },
                     present(message)
                       ? [
@@ -262,14 +262,14 @@ Caf.defMod(module, () => {
                             exit: true,
                             action: CommitNow,
                             shortcut: "C",
-                            value: "Commit and exit"
+                            value: "Commit and exit",
                           },
                           Caf.exists(story) && story.id
                             ? {
                                 exit: true,
                                 action: getCommitAndSetStateAction("finished"),
                                 shortcut: "F",
-                                value: "Commit, Finish and exit"
+                                value: "Commit, Finish and exit",
                               }
                             : undefined,
                           Caf.exists(story) && story.id
@@ -277,18 +277,18 @@ Caf.defMod(module, () => {
                                 exit: true,
                                 action: getCommitAndSetStateAction("delivered"),
                                 shortcut: "D",
-                                value: "Commit, Deliver and exit"
+                                value: "Commit, Deliver and exit",
                               }
-                            : undefined
+                            : undefined,
                         ]
-                      : undefined
+                      : undefined,
                   ]);
                 },
-                postprocessState: saveState
+                postprocessState: saveState,
               })
             )
             .then(() => null);
-        }
+        },
       };
     }
   );

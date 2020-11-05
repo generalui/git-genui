@@ -5,12 +5,12 @@ Caf.defMod(module, () => {
     return {
       description: "show git status",
       options: {
-        verbose: ["verbose", "show detailed git and git-genui status"]
+        verbose: ["verbose", "show detailed git and git-genui status"],
       },
-      run: function(options) {
+      run: function (options) {
         require("../Git").printStatus(options);
         return null;
-      }
+      },
     };
   })();
 });

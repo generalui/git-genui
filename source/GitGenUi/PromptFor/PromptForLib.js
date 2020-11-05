@@ -7,13 +7,13 @@ Caf.defMod(module, () => {
     findDefaultItem,
     findDefaultItemIndex;
   return {
-    partialEq: (partialEq = function(a, b) {
+    partialEq: (partialEq = function (a, b) {
       return !Caf.find(a, null, (v, k) => b[k] !== v);
     }),
-    findDefaultItem: (findDefaultItem = function(items, _default) {
+    findDefaultItem: (findDefaultItem = function (items, _default) {
       return items[findDefaultItemIndex(items, _default)];
     }),
-    findDefaultItemIndex: (findDefaultItemIndex = function(items, _default) {
+    findDefaultItemIndex: (findDefaultItemIndex = function (items, _default) {
       let from,
         into,
         to,
@@ -105,6 +105,6 @@ Caf.defMod(module, () => {
             );
         }
       })();
-    })
+    }),
   };
 });

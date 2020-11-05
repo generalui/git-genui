@@ -5,7 +5,7 @@ Caf.defMod(module, () => {
     ["present", "getCommitComment", "log", "grey", "Promise"],
     [global, require("../StandardImport"), require("../Style")],
     (present, getCommitComment, log, grey, Promise) => {
-      return function(state) {
+      return function (state) {
         let story, id, base, base1;
         return (present(
           ((story = state.story),

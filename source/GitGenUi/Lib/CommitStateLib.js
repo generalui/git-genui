@@ -11,12 +11,12 @@ Caf.defMod(module, () => {
       "tracker",
       "ignoreRejections",
       "projectConfig",
-      "objectWithout"
+      "objectWithout",
     ],
     [
       global,
       require("./StandardImport"),
-      { ignoreRejections: require("./ignoreRejections") }
+      { ignoreRejections: require("./ignoreRejections") },
     ],
     (
       merge,
@@ -32,7 +32,7 @@ Caf.defMod(module, () => {
       let commitParser, extractSavableState;
       commitParser = new (require("./CommitParser"))();
       return {
-        parseCommitMessage: function(message) {
+        parseCommitMessage: function (message) {
           let subject,
             type,
             scope,
@@ -49,7 +49,7 @@ Caf.defMod(module, () => {
             trackerId,
             body,
             semanticVersion,
-            footer
+            footer,
           } = commitParser.parse(message));
           return merge({
             type:
@@ -63,10 +63,10 @@ Caf.defMod(module, () => {
             storyState: trackerState,
             storyId: trackerId,
             body,
-            coauthors: Caf.exists(footer) && footer["co-authored-by"]
+            coauthors: Caf.exists(footer) && footer["co-authored-by"],
           });
         },
-        getCommitMessage: function({
+        getCommitMessage: function ({
           type,
           story,
           storyId,
@@ -74,13 +74,15 @@ Caf.defMod(module, () => {
           coauthors,
           storyState,
           breakingChange,
-          body
+          body,
         }) {
           return compactFlattenAll(
             type ? type + ": " : undefined,
-            (storyId != null
-            ? storyId
-            : (storyId = Caf.exists(story) && story.id))
+            (
+              storyId != null
+                ? storyId
+                : (storyId = Caf.exists(story) && story.id)
+            )
               ? ((storyState = present(storyState)
                   ? `${Caf.toString(storyState)} `
                   : ""),
@@ -97,14 +99,14 @@ Caf.defMod(module, () => {
               ? "\n\n\n" +
                   Caf.array(
                     coauthors,
-                    coauthor => `Co-authored-by: ${Caf.toString(coauthor)}`
+                    (coauthor) => `Co-authored-by: ${Caf.toString(coauthor)}`
                   ).join("\n")
               : undefined
           )
             .join("")
             .trim();
         },
-        getCommitComment: function(state) {
+        getCommitComment: function (state) {
           let generatedCommitMessage,
             storyState,
             status,
@@ -133,7 +135,7 @@ Caf.defMod(module, () => {
             require("../../../package").version
           )})`;
         },
-        extractSavableState: (extractSavableState = function(state) {
+        extractSavableState: (extractSavableState = function (state) {
           let message, type, coauthors, story, breakingChange, body, trailers;
           return (
             ({
@@ -143,18 +145,18 @@ Caf.defMod(module, () => {
               story,
               breakingChange,
               body,
-              trailers
+              trailers,
             } = state),
             { message, type, coauthors, story, breakingChange, body, trailers }
           );
         }),
-        saveState: function(state) {
+        saveState: function (state) {
           if (state) {
             userConfig.saveCommitOptionsForProject(extractSavableState(state));
           }
           return state;
         },
-        getInitialCommitState: function(options = {}) {
+        getInitialCommitState: function (options = {}) {
           return Promise.deepAll(
             merge(userConfig.commitOptionsForProject, {
               status: require("../Git").status,
@@ -167,7 +169,7 @@ Caf.defMod(module, () => {
               project:
                 tracker.configured && ignoreRejections(() => tracker.project),
               remote: require("../Git").aRemote,
-              options
+              options,
             })
           )
             .tap(({ status }) =>
@@ -175,12 +177,12 @@ Caf.defMod(module, () => {
                 ? require("../Git").printStatus({ status })
                 : undefined
             )
-            .then(state =>
+            .then((state) =>
               !projectConfig.conventionalCommit
                 ? objectWithout(state, "breakingChange")
                 : state
             );
-        }
+        },
       };
     }
   );

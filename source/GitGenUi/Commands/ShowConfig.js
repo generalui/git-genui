@@ -7,7 +7,7 @@ Caf.defMod(module, () => {
     (log, Style, userConfig, projectConfig) => {
       return {
         description: "Show the merged configurarion for git-genui.",
-        run: function({ quiet }) {
+        run: function ({ quiet }) {
           !quiet &&
             log(
               `To change the config, run ${Caf.toString(
@@ -20,9 +20,9 @@ Caf.defMod(module, () => {
             );
           return {
             [userConfig.homeDirRelativeConfigFilePath]: userConfig,
-            [projectConfig.homeDirRelativeConfigFilePath]: projectConfig
+            [projectConfig.homeDirRelativeConfigFilePath]: projectConfig,
           };
-        }
+        },
       };
     }
   );

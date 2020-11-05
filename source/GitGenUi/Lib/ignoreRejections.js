@@ -6,7 +6,7 @@ Caf.defMod(module, () => {
     [global, require("./StandardImport")],
     (Promise, log) => {
       let ignoreRejections;
-      return (ignoreRejections = function(a) {
+      return (ignoreRejections = function (a) {
         return Promise.then(a).catch(({ message }) => {
           log.warn(message);
           return undefined;

@@ -17,7 +17,7 @@ Caf.defMod(module, () => {
       "merge",
       "deepMerge",
       "consistentJsonStringify",
-      "JSON"
+      "JSON",
     ],
     [global, require("./StandardImport")],
     (
@@ -40,14 +40,14 @@ Caf.defMod(module, () => {
       let ConfigShared;
       return (ConfigShared = Caf.defClass(
         class ConfigShared extends BaseClass {},
-        function(ConfigShared, classSuper, instanceSuper) {
-          this.initSingleton = function() {
+        function (ConfigShared, classSuper, instanceSuper) {
+          this.initSingleton = function () {
             return this.singleton
               .init()
               .then(() => this.singleton.readyPromise)
               .then(() => this.singleton);
           };
-          this.prototype.init = function(configFilePath) {
+          this.prototype.init = function (configFilePath) {
             return Promise.all([this.configPath, this.configBasename])
               .then(([configPath, configBasename]) => {
                 if (!(isString(configPath) && present(configPath))) {
@@ -58,35 +58,35 @@ Caf.defMod(module, () => {
                 }
                 return require("path").join(configPath, configBasename);
               })
-              .then(configFilePath => {
+              .then((configFilePath) => {
                 this.configFilePath = configFilePath;
                 return this.load();
               });
           };
           this.property("config", "configFilePath", "existedAtLoad");
           this.getter({
-            configPath: function() {
+            configPath: function () {
               return (() => {
                 throw new Error("must override configPath");
               })();
             },
-            configBasename: function() {
+            configBasename: function () {
               return (() => {
                 throw new Error("must override configBasename");
               })();
             },
-            state: function() {
+            state: function () {
               return this.config;
             },
-            homeDirRelativeConfigFilePath: function() {
+            homeDirRelativeConfigFilePath: function () {
               return this.configFilePath.replace(require("os").homedir(), "~");
             },
-            inspectedObjects: function() {
+            inspectedObjects: function () {
               return toInspectedObjects(this.config);
-            }
+            },
           });
-          this.configFields = function(...fields) {
-            return Caf.each2(compactFlatten(fields), field =>
+          this.configFields = function (...fields) {
+            return Caf.each2(compactFlatten(fields), (field) =>
               (() => {
                 switch (false) {
                   case !Caf.is(field, String):
@@ -107,38 +107,38 @@ Caf.defMod(module, () => {
               })()
             );
           };
-          this._addConfigField = function(field, _default) {
+          this._addConfigField = function (field, _default) {
             this.getter({
-              [field]: function() {
+              [field]: function () {
                 let temp;
                 return (temp = this.config[field]) != null ? temp : _default;
-              }
+              },
             });
             this.prototype[
               lowerCamelCase(`set ${Caf.toString(field)}`)
-            ] = function(v) {
+            ] = function (v) {
               return this.setConfigProperty(field, v);
             };
             this.prototype[
               lowerCamelCase(`merge ${Caf.toString(field)} with`)
-            ] = function(...args) {
+            ] = function (...args) {
               return this.setConfigProperty(field, merge(this[field], ...args));
             };
             return (this.prototype[
               lowerCamelCase(`deep merge ${Caf.toString(field)} with`)
-            ] = function(...args) {
+            ] = function (...args) {
               return this.setConfigProperty(
                 field,
                 deepMerge(this[field], ...args)
               );
             });
           };
-          this.prototype.setConfigProperty = function(key, value) {
+          this.prototype.setConfigProperty = function (key, value) {
             this._config = merge(this._config);
             this._config[key] = value;
             return this.save();
           };
-          this.prototype.save = function() {
+          this.prototype.save = function () {
             return Promise.then(() =>
               require("fs-extra").writeFile(
                 this.configFilePath,
@@ -146,19 +146,19 @@ Caf.defMod(module, () => {
               )
             ).then(() => this);
           };
-          this.prototype.load = function() {
+          this.prototype.load = function () {
             return Promise.then(() =>
               require("fs-extra").exists(this.configFilePath)
             )
-              .then(existedAtLoad => {
+              .then((existedAtLoad) => {
                 this.existedAtLoad = existedAtLoad;
                 return this.existedAtLoad
                   ? require("fs-extra")
                       .readFile(this.configFilePath)
-                      .then(data => JSON.parse(data.toString()))
+                      .then((data) => JSON.parse(data.toString()))
                   : {};
               })
-              .then(config => this.setConfig(config))
+              .then((config) => this.setConfig(config))
               .then(() => this);
           };
         }

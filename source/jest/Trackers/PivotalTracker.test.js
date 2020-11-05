@@ -7,11 +7,11 @@ Caf.defMod(module, () => {
     (GitGenUi, chainedTest, assert, Object, formattedInspect) => {
       let PivotalTracker;
       PivotalTracker = GitGenUi.Trackers.PivotalTracker;
-      return chainedTest("getProjects", function() {
+      return chainedTest("getProjects", function () {
         return require("../../../source/GitGenUi")
           .Config.load()
           .then(() => PivotalTracker.getProjects())
-          .then(results => {
+          .then((results) => {
             assert.isArray(results);
             assert.gt(results.length, 0);
             assert.eq(results[0].kind, "project");
@@ -20,8 +20,8 @@ Caf.defMod(module, () => {
       }).tapTest(
         [
           "getStories",
-          function(project) {
-            return PivotalTracker.getStories(project.id).then(results => {
+          function (project) {
+            return PivotalTracker.getStories(project.id).then((results) => {
               let keys, expectedKeys;
               assert.isArray(results);
               assert.gt(results.length, 0);
@@ -35,9 +35,9 @@ Caf.defMod(module, () => {
                   "requestedById",
                   "state",
                   "updatedAt",
-                  "url"
+                  "url",
                 ]),
-                key =>
+                (key) =>
                   !Caf.in(key, keys)
                     ? assert.fail(
                         `expected to find key ${Caf.toString(
@@ -51,21 +51,21 @@ Caf.defMod(module, () => {
                     : undefined
               );
             });
-          }
+          },
         ],
         [
           "getMembers",
-          function(project) {
-            return PivotalTracker.getMembers(project.id).then(results => {
+          function (project) {
+            return PivotalTracker.getMembers(project.id).then((results) => {
               assert.isArray(results);
               assert.gt(results.length, 0);
               return assert.eq(Object.keys(results[0]).sort(), [
                 "email",
                 "id",
-                "name"
+                "name",
               ]);
             });
-          }
+          },
         ]
       );
     }

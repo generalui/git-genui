@@ -7,20 +7,20 @@ Caf.defMod(module, () => {
     (ensureTrackerConfigured, log) => {
       return {
         description: "comment on a story",
-        run: function(options) {
+        run: function (options) {
           return ensureTrackerConfigured()
             .then(() => require("../Tracker").tracker.stories)
-            .then(stories =>
+            .then((stories) =>
               require("../GitGenUiPromptFor").story(
                 stories,
                 "What story do you want to comment on?"
               )
             )
-            .then(story =>
+            .then((story) =>
               story
                 ? require("../PromptFor")
                     .input({ message: "Comment:" })
-                    .then(comment =>
+                    .then((comment) =>
                       require("../Tracker").tracker.createComment(
                         story.id,
                         comment
@@ -28,7 +28,7 @@ Caf.defMod(module, () => {
                     )
                 : log("Canceled")
             );
-        }
+        },
       };
     }
   );

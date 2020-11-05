@@ -7,14 +7,14 @@ Caf.defMod(module, () => {
     (log, InteractiveAdd) => {
       return {
         description: "stage or unstage files to commit",
-        run: function(options) {
+        run: function (options) {
           log(
             `Tip: You can also stage files with ${Caf.toString(
               require("../Style").green("git add")
             )}.`
           );
           return InteractiveAdd(options).then(() => null);
-        }
+        },
       };
     }
   );

@@ -17,7 +17,7 @@ Caf.defMod(module, () => {
       "present",
       "compactFlatten",
       "repeat",
-      "selectCommitFormat"
+      "selectCommitFormat",
     ],
     [
       global,
@@ -25,8 +25,8 @@ Caf.defMod(module, () => {
       require("./Lib"),
       {
         Style: require("../../Style"),
-        selectCommitFormat: require("./SelectCommitFormat")
-      }
+        selectCommitFormat: require("./SelectCommitFormat"),
+      },
     ],
     (
       updateStateWithPrompt,
@@ -50,14 +50,14 @@ Caf.defMod(module, () => {
         editGitEmail,
         editTrackerToken,
         getTrackerToken;
-      getProjects = function() {
-        return tracker.projects.then(projects =>
-          Caf.object(projects, null, null, null, v => v.id)
+      getProjects = function () {
+        return tracker.projects.then((projects) =>
+          Caf.object(projects, null, null, null, (v) => v.id)
         );
       };
-      selectProject = updateStateWithPrompt("projectId", function({
+      selectProject = updateStateWithPrompt("projectId", function ({
         projectId,
-        projects
+        projects,
       }) {
         return require("../../PromptFor")
           .selectList({
@@ -72,52 +72,52 @@ Caf.defMod(module, () => {
                       account_id
                     )})`
                   )
-                )}`
+                )}`,
               };
-            })
+            }),
           })
           .then(({ projectId }) => projectId)
-          .tap(projectId =>
+          .tap((projectId) =>
             projectConfig.mergeTrackerWith({
               projectId,
-              name: require("../../Tracker").tracker.name
+              name: require("../../Tracker").tracker.name,
             })
           );
       });
-      editGitEmail = updateStateWithPrompt("email", function({
+      editGitEmail = updateStateWithPrompt("email", function ({
         email,
-        trackerEmail
+        trackerEmail,
       }) {
         return require("../../PromptFor")
           .input({
             message: "Enter your git email:",
-            default: email != null ? email : trackerEmail
+            default: email != null ? email : trackerEmail,
           })
-          .tap(email => userConfig.mergeAccountsWith({ git: { email } }));
+          .tap((email) => userConfig.mergeAccountsWith({ git: { email } }));
       });
-      editTrackerToken = function(state) {
+      editTrackerToken = function (state) {
         let trackerName, eTT;
         trackerName = state.trackerName;
         eTT = () =>
           require("../../PromptFor")
             .password({
-              message: `Enter your ${Caf.toString(trackerName)} token:`
+              message: `Enter your ${Caf.toString(trackerName)} token:`,
             })
-            .tap(token =>
+            .tap((token) =>
               userConfig.mergeAccountsWith({ [trackerName]: { token } })
             )
             .tap(() => {})
             .tap(
-              projectId =>
+              (projectId) =>
                 (projectConfig.mergeTrackerWith = { name: trackerName })
             )
-            .then(token =>
+            .then((token) =>
               tracker.myAccount.then(
                 () => {
                   log(Style.green("Valid token."));
                   return token;
                 },
-                error => {
+                (error) => {
                   log(error);
                   log.warn("Invalid token.");
                   return eTT();
@@ -125,18 +125,18 @@ Caf.defMod(module, () => {
               )
             );
         return eTT()
-          .then(token =>
+          .then((token) =>
             Promise.deepAll({
               token,
               myAccount: tracker.myAccount,
-              projects: getProjects()
+              projects: getProjects(),
             })
           )
           .then(({ token, myAccount, projects }) =>
             merge(state, { token, projects, trackerEmail: myAccount.email })
           );
       };
-      getTrackerToken = function(state) {
+      getTrackerToken = function (state) {
         let email, trackerName, trackerEmail, temp;
         email = state.email;
         trackerName = state.trackerName;
@@ -146,13 +146,13 @@ Caf.defMod(module, () => {
             (temp = trackerEmail != null ? trackerEmail : email) != null
               ? temp
               : getEnv().USER,
-          trackerName
+          trackerName,
         })
           .tap(({ token, email }) =>
             userConfig.mergeAccountsWith({ [trackerName]: { token, email } })
           )
           .then(({ token, email }) =>
-            getProjects().then(projects =>
+            getProjects().then((projects) =>
               merge({ trackerEmail: email }, state, { token, projects })
             )
           )
@@ -161,7 +161,7 @@ Caf.defMod(module, () => {
             return state;
           });
       };
-      return function(options) {
+      return function (options) {
         let exitPrompt, prompt;
         if (Caf.exists(options)) {
           exitPrompt = options.exitPrompt;
@@ -169,7 +169,7 @@ Caf.defMod(module, () => {
         }
         return getProjects()
           .catch(() => log.warn("Tracker token is invalid."))
-          .then(projects => {
+          .then((projects) => {
             let trackerName, trackerAccount, base;
             return menuApp(
               {
@@ -183,15 +183,15 @@ Caf.defMod(module, () => {
                 trackerEmail:
                   Caf.exists(trackerAccount) && trackerAccount.email,
                 email:
-                  Caf.exists((base = userConfig.accounts.git)) && base.email
+                  Caf.exists((base = userConfig.accounts.git)) && base.email,
               },
-              state => {
+              (state) => {
                 let projectId, token;
                 projectId = state.projectId;
                 token = state.token;
                 return require("../../Tracker")
                   .tracker.myAccount.then(
-                    me => {
+                    (me) => {
                       if (present(prompt)) {
                         log(Style.green(prompt));
                       }
@@ -206,17 +206,17 @@ Caf.defMod(module, () => {
                       return null;
                     }
                   )
-                  .then(me =>
+                  .then((me) =>
                     require("../../PromptFor").menu(state, {
                       exitPrompt,
                       prompt: "Configure git-genui:",
-                      items: state => {
+                      items: (state) => {
                         let temp, base1;
                         return compactFlatten([
                           {
                             action: getTrackerToken,
                             label: "set PivotalTracker token via auth",
-                            value: Caf.exists(me) && me.name
+                            value: Caf.exists(me) && me.name,
                           },
                           {
                             action: editTrackerToken,
@@ -226,7 +226,7 @@ Caf.defMod(module, () => {
                               (temp = Caf.exists(token) && token.length) != null
                                 ? temp
                                 : 0
-                            )
+                            ),
                           },
                           projectConfig.configFilePath
                             ? {
@@ -238,16 +238,16 @@ Caf.defMod(module, () => {
                                     ? Caf.exists(
                                         (base1 = projects[state.projectId])
                                       ) && base1.name
-                                    : "configure token first"
+                                    : "configure token first",
                               }
                             : undefined,
                           {
                             action: selectCommitFormat,
                             label: "select commit format",
-                            value: projectConfig.commit.format
-                          }
+                            value: projectConfig.commit.format,
+                          },
                         ]);
-                      }
+                      },
                     })
                   );
               }

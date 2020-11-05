@@ -11,7 +11,7 @@ Caf.defMod(module, () => {
       "white",
       "bold",
       "whiteBright",
-      "greenBright"
+      "greenBright",
     ],
     [global, require("art-standard-lib"), require("chalk")],
     (merge, red, blue, green, cyan, white, bold, whiteBright, greenBright) => {
@@ -29,7 +29,7 @@ Caf.defMod(module, () => {
         brightGreen: greenBright,
         grey: require("chalk").hex("#777").bold,
         red: require("chalk").hex("#e96b00").bold,
-        blue: require("chalk").hex("#65b1ff")
+        blue: require("chalk").hex("#65b1ff"),
       });
     }
   );

@@ -15,14 +15,14 @@ Caf.defMod(module, () => {
       "putJson",
       "lowerCamelCase",
       "snakeCase",
-      "Date"
+      "Date",
     ],
     [
       global,
       require("art-standard-lib"),
       require("art-class-system"),
       require("art-rest-client"),
-      require("../Config")
+      require("../Config"),
     ],
     (
       BaseClass,
@@ -42,27 +42,27 @@ Caf.defMod(module, () => {
       let PivotalTracker;
       return (PivotalTracker = Caf.defClass(
         class PivotalTracker extends BaseClass {},
-        function(PivotalTracker, classSuper, instanceSuper) {
+        function (PivotalTracker, classSuper, instanceSuper) {
           let stateOrder;
           this.classGetter({
-            accountConfig: function() {
+            accountConfig: function () {
               let base;
               return (
                 Caf.exists((base = userConfig.accounts)) && base[this.name]
               );
-            }
+            },
           });
           this.classGetter({
-            token: function() {
+            token: function () {
               let base;
               return Caf.exists((base = this.accountConfig)) && base.token;
             },
-            configured: function() {
+            configured: function () {
               return present(this.token);
             },
-            commonRestOptions: function() {
+            commonRestOptions: function () {
               return { normalizedHeaders: { "X-TrackerToken": this.token } };
-            }
+            },
           });
           stateOrder = {
             rejected: 0,
@@ -71,7 +71,7 @@ Caf.defMod(module, () => {
             unscheduled: 3,
             finished: 4,
             delivered: 5,
-            unknown: 5
+            unknown: 5,
           };
           this.baseUrl = "https://www.pivotaltracker.com/services/v5";
           this.storyStates = [
@@ -81,40 +81,40 @@ Caf.defMod(module, () => {
             "unstarted",
             "unscheduled",
             "finished",
-            "delivered"
+            "delivered",
           ];
           this.settableStoryStates = [
             "unstarted",
             "started",
             "finished",
-            "delivered"
+            "delivered",
           ];
-          this.requireProjectId = function(projectId) {
+          this.requireProjectId = function (projectId) {
             return !present(projectId)
               ? (() => {
                   throw new Error("projectId required");
                 })()
               : undefined;
           };
-          this.getProjectUrl = function(projectId) {
+          this.getProjectUrl = function (projectId) {
             this.requireProjectId(projectId);
             return `${Caf.toString(this.projectsUrl)}/${Caf.toString(
               projectId
             )}`;
           };
           this.classGetter({
-            projectsUrl: function() {
+            projectsUrl: function () {
               return `${Caf.toString(this.baseUrl)}/projects`;
             },
-            projects: function() {
+            projects: function () {
               return getJson(this.projectsUrl, this.commonRestOptions);
             },
-            myAccount: function() {
+            myAccount: function () {
               return getJson(
                 `${Caf.toString(this.baseUrl)}/me?date_format=millis`,
                 this.commonRestOptions
               ).then(this._normalizeAccount);
-            }
+            },
           });
           this.getStories = (projectId, options) => {
             let states;
@@ -130,8 +130,8 @@ Caf.defMod(module, () => {
               )}`,
               this.commonRestOptions
             )
-              .then(stories => stories.map(this._normalizeStory))
-              .then(stories =>
+              .then((stories) => stories.map(this._normalizeStory))
+              .then((stories) =>
                 stories.sort((a, b) => {
                   let aStatus, bStatus, temp, temp1;
                   aStatus =
@@ -148,21 +148,21 @@ Caf.defMod(module, () => {
                 })
               );
           };
-          this.getProject = projectId =>
+          this.getProject = (projectId) =>
             getJson(this.getProjectUrl(projectId), this.commonRestOptions).then(
               this._normalizeResponse
             );
-          this.getMembers = projectId =>
+          this.getMembers = (projectId) =>
             getJson(
               `${Caf.toString(this.getProjectUrl(projectId))}/memberships`,
               this.commonRestOptions
-            ).then(memberships =>
+            ).then((memberships) =>
               Caf.array(memberships, ({ person }) => {
                 let id, name, email;
                 return ({ id, name, email } = person), { id, name, email };
               })
             );
-          this.openInBrowser = function(projectId) {
+          this.openInBrowser = function (projectId) {
             this.requireProjectId(projectId);
             return require("open")(
               `https://www.pivotaltracker.com/n/projects/${Caf.toString(
@@ -170,18 +170,18 @@ Caf.defMod(module, () => {
               )}`
             );
           };
-          this.getStoryBrowserUrl = function(projectId, storyId) {
+          this.getStoryBrowserUrl = function (projectId, storyId) {
             return `https://www.pivotaltracker.com/story/show/${Caf.toString(
               storyId
             )}`;
           };
-          this.getStoryUrl = function(projectId, storyId) {
+          this.getStoryUrl = function (projectId, storyId) {
             return (
               this.getProjectUrl(projectId) +
               `/stories/${Caf.toString(storyId)}`
             );
           };
-          this.authenticate = function({ username, password }) {
+          this.authenticate = function ({ username, password }) {
             return getJson(
               "https://www.pivotaltracker.com/services/v5/me",
               merge({
@@ -190,24 +190,24 @@ Caf.defMod(module, () => {
                     require("btoa")(
                       `${Caf.toString(username)}:${Caf.toString(password)}`
                     )
-                  )}`
-                }
+                  )}`,
+                },
               })
             ).then(this._normalizeAccount);
           };
-          this.storyIsStartable = function(story) {
+          this.storyIsStartable = function (story) {
             return [
               Caf.in(story.state, "unstarted"),
               "rejected",
-              "unscheduled"
+              "unscheduled",
             ];
           };
-          this.storyIsFinishable = function(story) {
+          this.storyIsFinishable = function (story) {
             return Caf.in(story.state, [
               "unstarted",
               "rejected",
               "unscheduled",
-              "started"
+              "started",
             ]);
           };
           this.getStory = (projectId, storyId) =>
@@ -221,7 +221,7 @@ Caf.defMod(module, () => {
               this.commonRestOptions
             )
               .then(this._normalizeStory)
-              .tapCatch(error => log({ createStory: { error } }));
+              .tapCatch((error) => log({ createStory: { error } }));
           this.updateStory = (projectId, storyOrId, updates) =>
             Promise.then(() =>
               present(Caf.exists(storyOrId) && storyOrId.id)
@@ -231,6 +231,7 @@ Caf.defMod(module, () => {
               .then(({ id, storyType, estimate }) => {
                 if (
                   storyType !== "chore" &&
+                  storyType !== "bug" &&
                   !(estimate != null) &&
                   !(updates.estimate != null)
                 ) {
@@ -243,27 +244,27 @@ Caf.defMod(module, () => {
                 );
               })
               .then(this._normalizeStory)
-              .tapCatch(error => log({ updateStory: { error } }));
-          this.createComment = function(projectId, storyId, text) {
+              .tapCatch((error) => log({ updateStory: { error } }));
+          this.createComment = function (projectId, storyId, text) {
             return postJson(
               `${Caf.toString(this.getStoryUrl(projectId, storyId))}/comments`,
               { text },
               this.commonRestOptions
             );
           };
-          this._normalizeStory = story =>
+          this._normalizeStory = (story) =>
             this._normalizeResponse(
               Caf.object(story, null, null, null, (v, k) =>
                 k === "current_state" ? "state" : k
               )
             );
-          this._denormalizeStory = story =>
+          this._denormalizeStory = (story) =>
             this._snakeCaseKeys(
               Caf.object(story, null, null, null, (v, k) =>
                 k === "state" ? "current_state" : k
               )
             );
-          this._normalizeAccount = function(account) {
+          this._normalizeAccount = function (account) {
             return merge(
               Caf.object(account, null, null, null, (v, k) =>
                 k === "api_token" ? "token" : lowerCamelCase(k)
@@ -271,10 +272,10 @@ Caf.defMod(module, () => {
               { tracker: "PivotalTracker" }
             );
           };
-          this._snakeCaseKeys = function(data) {
+          this._snakeCaseKeys = function (data) {
             return Caf.object(data, null, null, null, (v, k) => snakeCase(k));
           };
-          this._normalizeResponse = function(data) {
+          this._normalizeResponse = function (data) {
             return Caf.object(
               data,
               (v, k) =>

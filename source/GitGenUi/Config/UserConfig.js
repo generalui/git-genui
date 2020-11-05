@@ -9,20 +9,20 @@ Caf.defMod(module, () => {
       {
         ProjectFiles: require("./ProjectFiles"),
         path: require("path"),
-        os: require("os")
-      }
+        os: require("os"),
+      },
     ],
     (os, Promise, ProjectFiles, present, Error, merge, toSeconds) => {
       let UserConfig;
       return (UserConfig = Caf.defClass(
         class UserConfig extends require("./ConfigShared") {},
-        function(UserConfig, classSuper, instanceSuper) {
+        function (UserConfig, classSuper, instanceSuper) {
           let getProjectKey;
           this.singletonClass();
-          this.getProjectKey = getProjectKey = function({
+          this.getProjectKey = getProjectKey = function ({
             origin,
             remotes,
-            projectFolder
+            projectFolder,
           }) {
             let temp, base, base1;
             return (temp =
@@ -30,24 +30,25 @@ Caf.defMod(module, () => {
                 ? origin
                 : Caf.exists(remotes) &&
                   Caf.exists((base = remotes[0])) &&
-                    Caf.exists((base1 = base.refs)) && base1.fetch) != null
+                  Caf.exists((base1 = base.refs)) &&
+                  base1.fetch) != null
               ? temp
               : projectFolder;
           };
           this.getter({
-            configBasename: function() {
+            configBasename: function () {
               return "git-genui.user.config.json";
             },
-            configPath: function() {
+            configPath: function () {
               return os.homedir();
             },
-            commitOptionsForProject: function(projectKey = this.projectKey) {
+            commitOptionsForProject: function (projectKey = this.projectKey) {
               return this.commitOptions[projectKey];
-            }
+            },
           });
           this.property("projectKey");
           this.configFields({ accounts: {}, commitOptions: {} });
-          this.prototype.init = function(git) {
+          this.prototype.init = function (git) {
             git != null ? git : (git = require("../Git"));
             return instanceSuper.init
               .apply(this, arguments)
@@ -55,16 +56,16 @@ Caf.defMod(module, () => {
                 Promise.deepAll({
                   origin: git.origin,
                   remotes: git.remotes,
-                  projectFolder: ProjectFiles.projectFolder
+                  projectFolder: ProjectFiles.projectFolder,
                 })
               )
-              .catch(error => {
+              .catch((error) => {
                 return {};
               })
               .then(getProjectKey)
-              .then(projectKey => (this.projectKey = projectKey));
+              .then((projectKey) => (this.projectKey = projectKey));
           };
-          this.prototype.saveCommitOptionsForProject = function(
+          this.prototype.saveCommitOptionsForProject = function (
             commitOptions,
             projectKey = this.projectKey
           ) {
@@ -82,8 +83,8 @@ Caf.defMod(module, () => {
                       Caf.exists((base = this.commitOptions[projectKey])) &&
                       base.createdAt) != null
                       ? temp
-                      : updatedAt
-                })
+                      : updatedAt,
+                }),
               })
             );
           };

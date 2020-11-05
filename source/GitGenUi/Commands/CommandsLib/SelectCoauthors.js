@@ -2,7 +2,9 @@
 let Caf = require("caffeine-script-runtime");
 Caf.defMod(module, () => {
   return (() => {
-    return require("./Lib").updateStateWithPrompt("coauthors", function(state) {
+    return require("./Lib").updateStateWithPrompt("coauthors", function (
+      state
+    ) {
       let myId, coauthors, base, base1, temp;
       myId = Caf.exists((base = state.myAccount)) && base.id;
       return (Caf.exists((base1 = state.members)) && base1.length) > 0
@@ -15,11 +17,11 @@ Caf.defMod(module, () => {
                 return {
                   email,
                   selected: Caf.in(email, coauthors),
-                  value: `${Caf.toString(name)} <${Caf.toString(email)}>`
+                  value: `${Caf.toString(name)} <${Caf.toString(email)}>`,
                 };
-              })
+              }),
             })
-            .then(items => Caf.array(items, ({ email }) => email)))
+            .then((items) => Caf.array(items, ({ email }) => email)))
         : state.coauthors;
     });
   })();

@@ -9,7 +9,7 @@ Caf.defMod(module, () => {
       "objectWithout",
       "standardFormatDate",
       "Array",
-      "Object"
+      "Object",
     ],
     [global, require("./StandardImport"), require("./CommandsLib")],
     (
@@ -23,12 +23,12 @@ Caf.defMod(module, () => {
     ) => {
       return {
         description: "show which tracker account you are logged in with",
-        run: function(options) {
+        run: function (options) {
           return ensureTrackerTokenValid()
             .then(() =>
               Promise.all([
                 require("../Tracker").tracker.myAccount,
-                require("../Git").getGitConfig()
+                require("../Git").getGitConfig(),
               ])
             )
             .then(([account, git]) => {
@@ -39,11 +39,11 @@ Caf.defMod(module, () => {
                     /^(created|updated)At$/.test(k) ? standardFormatDate(v) : v,
                   (v, k) => !Caf.is(v, Array) && !Caf.is(v, Object)
                 ),
-                git
+                git,
               });
               return null;
             });
-        }
+        },
       };
     }
   );

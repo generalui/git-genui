@@ -6,12 +6,12 @@ Caf.defMod(module, () => {
     [global, require("./StandardImport")],
     (Promise, present, getEnv, log) => {
       let externalEditor;
-      externalEditor = function(value) {
-        return Promise.withCallback(callback =>
+      externalEditor = function (value) {
+        return Promise.withCallback((callback) =>
           require("external-editor").editAsync(value, callback)
         );
       };
-      return function(value) {
+      return function (value) {
         let moreInfo;
         moreInfo =
           "More info: https://wiki.archlinux.org/index.php/Environment_variables";
@@ -23,7 +23,7 @@ Caf.defMod(module, () => {
             ),
             require("../PromptFor")
               .input({ message: "Edit your commit body:", default: value })
-              .tap(v => log({ doneA: v })))
+              .tap((v) => log({ doneA: v })))
           : (log(
               `Opening external editor: ${Caf.toString(
                 getEnv().EDITOR
@@ -33,9 +33,9 @@ Caf.defMod(module, () => {
             ),
             externalEditor(value))
         )
-          .tap(v => log({ doneB: v }))
-          .then(newValue => newValue.trim())
-          .then(newValue => (present(newValue) ? newValue : null));
+          .tap((v) => log({ doneB: v }))
+          .then((newValue) => newValue.trim())
+          .then((newValue) => (present(newValue) ? newValue : null));
       };
     }
   );

@@ -7,7 +7,7 @@ Caf.defMod(module, () => {
     (Promise, compactFlatten, merge) => {
       let formatStory, selectStory;
       formatStory = require("../../Tracker").tracker.formatStory;
-      return (selectStory = state => {
+      return (selectStory = (state) => {
         let stories, prompt, story;
         stories = state.stories;
         prompt = state.prompt;
@@ -20,17 +20,17 @@ Caf.defMod(module, () => {
               items: compactFlatten([
                 {
                   value: "(new)",
-                  story: { newStory: true, state: "started", estimate: 1 }
+                  story: { newStory: true, state: "started", estimate: 1 },
                 },
-                Caf.array(stories, story => {
+                Caf.array(stories, (story) => {
                   return {
                     story,
                     storyId: story.id,
-                    value: formatStory(story)
+                    value: formatStory(story),
                   };
                 }),
-                { value: "(none)", story: {} }
-              ])
+                { value: "(none)", story: {} },
+              ]),
             })
             .then(({ story }) =>
               Caf.exists(story) && story.newStory

@@ -9,18 +9,18 @@ Caf.defMod(module, () => {
       "log",
       "formatDate",
       "present",
-      "objectWithout"
+      "objectWithout",
     ],
     [global, require("../StandardImport")],
     (Promise, merge, neq, log, formatDate, present, objectWithout) => {
       let conditionalUpdate;
-      conditionalUpdate = function(story, updates) {
+      conditionalUpdate = function (story, updates) {
         return !story.newStory &&
           Caf.find(updates, null, (v, k) => neq(story[k], v))
           ? require("../../Tracker").tracker.updateStory(story, updates)
           : Promise.resolve(merge(story, updates));
       };
-      return function(state, options) {
+      return function (state, options) {
         let story, project, members, ownerIds, length;
         story = state.story;
         project = state.project;
@@ -34,7 +34,7 @@ Caf.defMod(module, () => {
         return require("../../PromptFor").menu(
           story,
           merge(options, {
-            preprocessState: story => {
+            preprocessState: (story) => {
               log.unquoted(
                 Caf.object(
                   story,
@@ -44,76 +44,80 @@ Caf.defMod(module, () => {
               );
               return story;
             },
-            items: story => {
+            items: (story) => {
               let temp, base;
               return [
                 {
-                  action: story =>
+                  action: (story) =>
                     require("./EditStoryName")(
                       merge(state, { story })
-                    ).then(name => conditionalUpdate(story, { name })),
+                    ).then((name) => conditionalUpdate(story, { name })),
                   label: "name",
-                  value: story.name
+                  value: story.name,
                 },
                 {
-                  action: story =>
+                  action: (story) =>
                     require("./SelectStoryState")(
                       merge(state, { story })
-                    ).then(storyState =>
+                    ).then((storyState) =>
                       conditionalUpdate(story, { state: storyState })
                     ),
                   label: "state",
-                  value: story.state
+                  value: story.state,
                 },
                 {
-                  action: story =>
+                  action: (story) =>
                     require("./SelectStoryEstimate")(
                       merge(state, { story })
-                    ).then(estimate => conditionalUpdate(story, { estimate })),
+                    ).then((estimate) =>
+                      conditionalUpdate(story, { estimate })
+                    ),
                   label: "estimate",
-                  value: (temp = story.estimate) != null ? temp : "-"
+                  value: (temp = story.estimate) != null ? temp : "-",
                 },
                 {
-                  action: story => {
+                  action: (story) => {
                     let temp1;
                     return require("./SelectMembers")(merge(state, { story }), {
                       selectedMemberIds:
                         (temp1 = story.ownerIds) != null ? temp1 : [],
-                      prompt: "Select owners:"
+                      prompt: "Select owners:",
                     })
-                      .then(ownerIds => ownerIds.sort())
-                      .then(ownerIds => conditionalUpdate(story, { ownerIds }));
+                      .then((ownerIds) => ownerIds.sort())
+                      .then((ownerIds) =>
+                        conditionalUpdate(story, { ownerIds })
+                      );
                   },
                   label: "owners",
                   value:
                     (Caf.exists((base = story.ownerIds)) && base.length) > 0
-                      ? Caf.array(story.ownerIds, id => {
+                      ? Caf.array(story.ownerIds, (id) => {
                           let base1;
                           return (
                             Caf.exists(
                               (base1 = Caf.find(
                                 members,
                                 null,
-                                member => member.id === id
+                                (member) => member.id === id
                               ))
                             ) && base1.name
                           );
                         }).join(", ")
-                      : "(none)"
+                      : "(none)",
                 },
                 story.newStory && present(story.name)
                   ? {
-                      action: story =>
+                      action: (story) =>
                         require("../../Tracker")
                           .tracker.createStory(objectWithout(story, "newStory"))
-                          .then(story => merge(story, { newStory: true })),
+                          .then((story) => merge(story, { newStory: true })),
                       value: "save and exit",
                       shortcut: "9",
-                      exit: true
+                      exit: true,
                     }
-                  : undefined
+                  : undefined,
               ];
-            }
+            },
           })
         );
       };

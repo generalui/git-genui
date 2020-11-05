@@ -12,31 +12,31 @@ Caf.defMod(module, () => {
         getMatchQuality,
         approximateSearchSort;
       stableSort = require("stable");
-      searchMatch = function(searchString, string) {
+      searchMatch = function (searchString, string) {
         return getSearchRegExp(searchString).test(string);
       };
       return {
-        compareMatchQuality: (compareMatchQuality = function(a, b) {
+        compareMatchQuality: (compareMatchQuality = function (a, b) {
           return a.quality - b.quality;
         }),
-        getSearchRegExp: (getSearchRegExp = function(searchString) {
+        getSearchRegExp: (getSearchRegExp = function (searchString) {
           return {
             searchString,
             caseInsensative: new RegExp(
-              Caf.array(searchString.split(""), letter =>
+              Caf.array(searchString.split(""), (letter) =>
                 escapeRegexp(letter)
               ).join(".*?"),
               "ig"
             ),
             caseSensative: new RegExp(
-              Caf.array(searchString.split(""), letter =>
+              Caf.array(searchString.split(""), (letter) =>
                 escapeRegexp(letter)
               ).join(".*?"),
               "g"
-            )
+            ),
           };
         }),
-        getMatchQuality: (getMatchQuality = function(
+        getMatchQuality: (getMatchQuality = function (
           string,
           { caseInsensative, caseSensative, searchString }
         ) {
@@ -51,7 +51,8 @@ Caf.defMod(module, () => {
             let caseSensativeMatchLength, position, base, base1;
             caseSensativeMatchLength =
               Caf.exists((base = caseSensative.exec(string))) &&
-              Caf.exists((base1 = base[0])) && base1.length;
+              Caf.exists((base1 = base[0])) &&
+              base1.length;
             caseSensative.lastIndex = caseInsensative.lastIndex =
               1 + (position = fullMatch.index);
             quality = min(
@@ -64,7 +65,7 @@ Caf.defMod(module, () => {
           }
           return quality;
         }),
-        approximateSearchSort: (approximateSearchSort = function(
+        approximateSearchSort: (approximateSearchSort = function (
           searchString,
           strings
         ) {
@@ -76,7 +77,7 @@ Caf.defMod(module, () => {
           sortedStringsWithMatchLength = stableSort(
             Caf.each2(
               strings,
-              string => {
+              (string) => {
                 let quality;
                 return nearInfinity >
                   (quality = getMatchQuality(string, searchRegExp))
@@ -92,7 +93,7 @@ Caf.defMod(module, () => {
             sortedStringsWithMatchLength,
             ({ string }) => string
           );
-        })
+        }),
       };
     }
   );

@@ -17,32 +17,32 @@ Caf.defMod(module, () => {
             this.knownSourceRoots = {};
           }
         },
-        function(SourceRoots, classSuper, instanceSuper) {
+        function (SourceRoots, classSuper, instanceSuper) {
           this.property("knownSourceRoots", "rootFiles");
-          this.prototype.findSourceRoot = function(directory) {
+          this.prototype.findSourceRoot = function (directory) {
             directory = path.resolve(directory);
-            return fs.stat(directory).then(stat => {
+            return fs.stat(directory).then((stat) => {
               if (!stat.isDirectory()) {
                 directory = path.dirname(directory);
               }
               return (
                 this.knownSourceRoots[directory] ||
                 this._findRootR(directory).then(
-                  sourceRoot =>
+                  (sourceRoot) =>
                     (this.knownSourceRoots[directory] = sourceRoot || false)
                 )
               );
             });
           };
-          this.prototype._findRootR = function(directory) {
+          this.prototype._findRootR = function (directory) {
             return Promise.all(
-              Caf.array(this.rootFiles, file => {
+              Caf.array(this.rootFiles, (file) => {
                 let p;
-                return glob((p = path.join(directory, file))).then(found =>
+                return glob((p = path.join(directory, file))).then((found) =>
                   found.length > 0 ? true : undefined
                 );
               })
-            ).then(rootFileExistResults =>
+            ).then((rootFileExistResults) =>
               Caf.find(rootFileExistResults)
                 ? directory
                 : directory !== "/" &&

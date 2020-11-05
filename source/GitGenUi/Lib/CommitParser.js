@@ -8,8 +8,8 @@ Caf.defMod(module, () => {
       let CommitParser;
       return (CommitParser = Caf.defClass(
         class CommitParser extends require("caffeine-eight").Parser {},
-        function(CommitParser, classSuper, instanceSuper) {
-          this.prototype.parse = function(source, options) {
+        function (CommitParser, classSuper, instanceSuper) {
+          this.prototype.parse = function (source, options) {
             let node,
               header,
               subject,
@@ -98,7 +98,7 @@ Caf.defMod(module, () => {
               trackerId,
               body,
               semanticVersion,
-              footer
+              footer,
             };
             return Caf.object(
               props,
@@ -114,7 +114,7 @@ Caf.defMod(module, () => {
             semanticType: [
               "semanticVersion '/' type:word breakingChange:bang?",
               "semanticVersion breakingChange:bang?",
-              "type:word breakingChange:bang?"
+              "type:word breakingChange:bang?",
             ],
             scopeTerm: "'(' scope:word ')'",
             trackerInfo: "'[' trackerState? '#' trackerId:word ']' _",
@@ -132,7 +132,7 @@ Caf.defMod(module, () => {
             restOfLine: /[^\n]+/u,
             bang: /[!]/,
             semanticVersion: /(major|minor|patch)\b/,
-            whitespaceOnly: /\s*(?!.|\n)/
+            whitespaceOnly: /\s*(?!.|\n)/,
           });
         }
       ));

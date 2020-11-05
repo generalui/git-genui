@@ -15,13 +15,13 @@ Caf.defMod(module, () => {
       "log",
       "objectWithout",
       "formatDate",
-      "tracker"
+      "tracker",
     ],
     [
       global,
       require("./StandardImport"),
       require("./CommandsLib"),
-      { Style: require("../Style") }
+      { Style: require("../Style") },
     ],
     (
       toSeconds,
@@ -39,7 +39,7 @@ Caf.defMod(module, () => {
       tracker
     ) => {
       let shortName;
-      shortName = function(name) {
+      shortName = function (name) {
         return name.split(/@|\s/)[0];
       };
       return {
@@ -47,15 +47,15 @@ Caf.defMod(module, () => {
         options: {
           from: "from commit",
           to: "to commit",
-          args: "file or folder to log"
+          args: "file or folder to log",
         },
         examples: [
           "package.json",
           "log all changes to package.json",
           "--from fdc32b1 --to d6a9c19",
-          "log all changes between these two commits"
+          "log all changes between these two commits",
         ],
-        run: function(options) {
+        run: function (options) {
           let file, temp, base;
           file =
             undefined !== (temp = options.file)
@@ -63,7 +63,7 @@ Caf.defMod(module, () => {
               : Caf.exists((base = options.args)) && base[0];
           return require("../Git")
             .getCommitLog({ to: options.to, from: options.from, file })
-            .then(list => {
+            .then((list) => {
               let maxTypeLength, maxTrackerId, now, selected, main;
               maxTypeLength = 0;
               maxTrackerId = 0;
@@ -125,7 +125,7 @@ Caf.defMod(module, () => {
                                   entry.authorName,
                                   Caf.exists(footer) && footer["co-authored-by"]
                                 )),
-                                (authors = Caf.array(coauthors, author =>
+                                (authors = Caf.array(coauthors, (author) =>
                                   shortName(author)
                                 )),
                                 merge(entry, {
@@ -172,7 +172,7 @@ Caf.defMod(module, () => {
                                           ` (${Caf.toString(refs.join(", "))})`
                                         )
                                       : undefined
-                                  )} ${Caf.toString(subject)}`
+                                  )} ${Caf.toString(subject)}`,
                                 }))
                               );
                               temp1 = i++;
@@ -180,9 +180,9 @@ Caf.defMod(module, () => {
                             return temp1;
                           })())
                         : undefined,
-                      into)
+                      into),
                   })
-                  .then(selected =>
+                  .then((selected) =>
                     require("../PromptFor")
                       .menu({
                         items: Caf.array(
@@ -202,17 +202,17 @@ Caf.defMod(module, () => {
                                     return () =>
                                       tracker.openStoryInBrowser(value);
                                 }
-                              })()
+                              })(),
                             };
                           }
-                        )
+                        ),
                       })
                       .then(main)
                   );
               };
               return main();
             });
-        }
+        },
       };
     }
   );

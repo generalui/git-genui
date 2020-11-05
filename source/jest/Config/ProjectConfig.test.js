@@ -5,7 +5,7 @@ Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["Config"],
     (parentImports = [global, require("../StandardImport")]),
-    Config => {
+    (Config) => {
       return Caf.importInvoke(
         [
           "chainedTest",
@@ -13,7 +13,7 @@ Caf.defMod(module, () => {
           "ProjectConfig",
           "assert",
           "JSON",
-          "projectConfig"
+          "projectConfig",
         ],
         [parentImports, Config],
         (chainedTest, process, ProjectConfig, assert, JSON, projectConfig) => {
@@ -21,35 +21,35 @@ Caf.defMod(module, () => {
           mockFs = require("@art-suite/mock-fs");
           projectFolder = "testProject";
           initialFiles = { [projectFolder]: { ".git": { config: "[core]" } } };
-          global.afterAll(function() {
+          global.afterAll(function () {
             return mockFs.restore();
           });
-          return chainedTest("initialize mock fs", function() {
+          return chainedTest("initialize mock fs", function () {
             mockFs(initialFiles);
             process.chdir(projectFolder);
             return new ProjectConfig();
           }).tapTest(
             [
               "load",
-              function(projectConfig) {
+              function (projectConfig) {
                 return projectConfig.init();
-              }
+              },
             ],
             [
               "load doesn't vivify",
-              function() {
+              function () {
                 return assert.eq(mockFs.getTree(), initialFiles);
-              }
+              },
             ],
             [
               "projectConfig.setConfigProperty :a :b",
-              function(projectConfig) {
+              function (projectConfig) {
                 return projectConfig.setConfigProperty("a", "b");
-              }
+              },
             ],
             [
               "setConfigProperty should automatically save",
-              function() {
+              function () {
                 return assert.eq(
                   JSON.parse(
                     mockFs.getTree()[projectFolder][
@@ -58,7 +58,7 @@ Caf.defMod(module, () => {
                   ),
                   { a: "b" }
                 );
-              }
+              },
             ]
           );
         }

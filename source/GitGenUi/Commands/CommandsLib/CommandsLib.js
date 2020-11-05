@@ -4,7 +4,7 @@ Caf.defMod(module, () => {
   return (() => {
     return [
       require("./Lib"),
-      { fillInMissingState: require("./fillInMissingState") }
+      { fillInMissingState: require("./fillInMissingState") },
     ];
   })();
 });

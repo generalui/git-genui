@@ -8,14 +8,14 @@ Caf.defMod(module, () => {
     require("../../source"),
     {
       GitGenUi: require("../../source/GitGenUi"),
-      describe: (describe = function(a, b) {
+      describe: (describe = function (a, b) {
         return Caf.is(a, Object)
           ? Caf.each2(a, (v, k) => describe(k, v))
           : global.describe(a, () => {
               b();
               return undefined;
             });
-      })
+      }),
     }
   );
 });

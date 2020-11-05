@@ -9,7 +9,7 @@ Caf.defMod(module, () => {
       "getMatchQuality",
       "getSearchRegExp",
       "Infinity",
-      "approximateSearchSort"
+      "approximateSearchSort",
     ],
     [global, require("../StandardImport")],
     (
@@ -22,7 +22,7 @@ Caf.defMod(module, () => {
       approximateSearchSort
     ) => {
       return describe({
-        getMatchQuality: function() {
+        getMatchQuality: function () {
           test("regression where the first match is not the best match", () => {
             let string;
             string =
@@ -58,7 +58,7 @@ Caf.defMod(module, () => {
             );
           });
         },
-        approximateSearchSort: function() {
+        approximateSearchSort: function () {
           test("basics", () =>
             assert.eq(
               approximateSearchSort("hi", ["h__i", "h___i", "h_i", "hi"]),
@@ -70,7 +70,7 @@ Caf.defMod(module, () => {
                 "def_h-i",
                 "abc_hi",
                 "def_hi",
-                "xyz_hi"
+                "xyz_hi",
               ]),
               ["abc_hi", "def_hi", "xyz_hi", "def_h-i"]
             ));
@@ -80,7 +80,7 @@ Caf.defMod(module, () => {
                 "def_h-i",
                 "def_hi",
                 "abc_hi",
-                "xyz_hi"
+                "xyz_hi",
               ]),
               ["def_hi", "abc_hi", "xyz_hi", "def_h-i"]
             ));
@@ -90,7 +90,7 @@ Caf.defMod(module, () => {
                 "xyz_hi",
                 "def_h-i",
                 "def_hi",
-                "abc_hi"
+                "abc_hi",
               ]),
               ["xyz_hi", "def_hi", "abc_hi", "def_h-i"]
             ));
@@ -101,14 +101,14 @@ Caf.defMod(module, () => {
                 "[170466089] (unscheduled) The navigation needs to appear in opposite colors (light bg, dark links) when it is displayed on a page that has a light background top slat.",
                 "[170465836] (unstarted) Footer needs cleanup",
                 "[170652027] (unstarted) Services pages need case studies",
-                "[170589433] (unstarted) Research SEO appropriate way to redirect genui.co to genui.com."
+                "[170589433] (unstarted) Research SEO appropriate way to redirect genui.co to genui.com.",
               ]),
               [
                 "[170589418] (unstarted) On an iPhone, the home hero services menu has line wrapping in bad places. Needs some cleanup.",
                 "[170465836] (unstarted) Footer needs cleanup",
                 "[170652027] (unstarted) Services pages need case studies",
                 "[170589433] (unstarted) Research SEO appropriate way to redirect genui.co to genui.com.",
-                "[170466089] (unscheduled) The navigation needs to appear in opposite colors (light bg, dark links) when it is displayed on a page that has a light background top slat."
+                "[170466089] (unscheduled) The navigation needs to appear in opposite colors (light bg, dark links) when it is displayed on a page that has a light background top slat.",
               ]
             ));
           test("regression2", () => {
@@ -154,7 +154,7 @@ Caf.defMod(module, () => {
                   "[#171680680] (unscheduled) K8S built via TerraForm",
                   "[#171680675] (unscheduled) Centralized Logging",
                   "[#171680670] (unscheduled) RAP > K8S",
-                  "[#171680665] (unscheduled) all secrets out of repos"
+                  "[#171680665] (unscheduled) all secrets out of repos",
                 ])
               ),
               [
@@ -179,7 +179,7 @@ Caf.defMod(module, () => {
                 "[#171714372] (unscheduled) Test IPSEC VPN functionality on Sophos XG firewall",
                 "[#171774137] (unscheduled) Identify Priority-1 S3 buckets to migrate",
                 "[#171778115] (unstarted) Clean up Packer to only copy needed files to image",
-                "[#171734707] (unscheduled) Fix LIMS NTP config to use AWS internal servers"
+                "[#171734707] (unscheduled) Fix LIMS NTP config to use AWS internal servers",
               ]
             );
           });
@@ -187,11 +187,11 @@ Caf.defMod(module, () => {
             assert.eq(
               approximateSearchSort("fix", [
                 "FIX:      bug fix",
-                "TEST:     tests added, improved or fixed"
+                "TEST:     tests added, improved or fixed",
               ]),
               ["FIX:      bug fix", "TEST:     tests added, improved or fixed"]
             ));
-        }
+        },
       });
     }
   );

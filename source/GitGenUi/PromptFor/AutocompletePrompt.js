@@ -16,13 +16,13 @@ Caf.defMod(module, () => {
       "repeat",
       "present",
       "findDefaultItemIndex",
-      "max"
+      "max",
     ],
     [
       global,
       require("art-standard-lib"),
       require("./PromptForLib"),
-      { sliceAnsi: require("slice-ansi") }
+      { sliceAnsi: require("slice-ansi") },
     ],
     (
       String,
@@ -58,9 +58,9 @@ Caf.defMod(module, () => {
         currentLine: require("chalk").white.bold,
         selected: require("chalk").greenBright,
         warning: require("chalk").yellow,
-        error: require("chalk").red
+        error: require("chalk").red,
       };
-      applyColors = function(customColors) {
+      applyColors = function (customColors) {
         return Caf.object(colors, (c, k) => {
           let color, temp;
           c =
@@ -108,8 +108,8 @@ Caf.defMod(module, () => {
             this.paginator = new Paginator();
           }
         },
-        function(AutocompletePrompt, classSuper, instanceSuper) {
-          this.prototype.logFile = function(...args) {
+        function (AutocompletePrompt, classSuper, instanceSuper) {
+          this.prototype.logFile = function (...args) {
             if ((args.length = 1)) {
               [args] = args;
             }
@@ -118,7 +118,7 @@ Caf.defMod(module, () => {
               (Caf.is(args, String) ? args : formattedInspect(args)) + "\n"
             );
           };
-          this.prototype._run = function(done) {
+          this.prototype._run = function (done) {
             this.done = done;
             if (isArray(this.rl.history)) {
               this.rl.history = [];
@@ -127,12 +127,12 @@ Caf.defMod(module, () => {
             this.search();
             return this;
           };
-          this.prototype.bindEvents = function() {
+          this.prototype.bindEvents = function () {
             let events, dontHaveAnswer;
             events = observe(this.rl);
             events.line
               .pipe(takeWhile((dontHaveAnswer = () => !this.answer)))
-              .forEach(line =>
+              .forEach((line) =>
                 this.currentItems.length <= this.selected
                   ? (this.rl.write(line), this.search(line))
                   : ((this.answer = this.multiselect
@@ -144,14 +144,16 @@ Caf.defMod(module, () => {
               );
             return events.keypress
               .pipe(takeWhile(dontHaveAnswer))
-              .forEach(e => {
+              .forEach((e) => {
                 let meta, ctrl, shift, name, mergedName, handled, item, temp;
-                return (Caf.exists((temp = e.key))
-                ? ((meta = temp.meta),
-                  (ctrl = temp.ctrl),
-                  (shift = temp.shift),
-                  (name = temp.name))
-                : undefined)
+                return (
+                  Caf.exists((temp = e.key))
+                    ? ((meta = temp.meta),
+                      (ctrl = temp.ctrl),
+                      (shift = temp.shift),
+                      (name = temp.name))
+                    : undefined
+                )
                   ? ((this.errorMessage = null),
                     (() => {
                       switch (
@@ -199,40 +201,40 @@ Caf.defMod(module, () => {
                   : undefined;
               });
           };
-          this.prototype.selectAll = function() {
+          this.prototype.selectAll = function () {
             this.selectedById = merge(
               this.selectedById,
-              Caf.object(this.currentItems, null, null, null, item => item.id)
+              Caf.object(this.currentItems, null, null, null, (item) => item.id)
             );
             return this.render();
           };
-          this.prototype.selectNone = function() {
+          this.prototype.selectNone = function () {
             this.selectedById = {};
             return this.render();
           };
-          this.prototype.getCurrentItem = function() {
+          this.prototype.getCurrentItem = function () {
             return this.currentItems[this.selected];
           };
-          this.prototype.invertSelection = function() {
+          this.prototype.invertSelection = function () {
             this.selectedById = Caf.object(
               this.currentItems,
               null,
-              item => !this.selectedById[item.id],
+              (item) => !this.selectedById[item.id],
               null,
-              item => item.id
+              (item) => item.id
             );
             return this.render();
           };
-          this.prototype.down = function() {
+          this.prototype.down = function () {
             this.setSelected(this.selected + 1);
             this.render();
             return readlineUtils.up(this.rl, 2);
           };
-          this.prototype.up = function() {
+          this.prototype.up = function () {
             this.setSelected(this.selected - 1);
             return this.render();
           };
-          this.prototype.renderItemList = function(items, pointer) {
+          this.prototype.renderItemList = function (items, pointer) {
             let columns;
             columns = process.stdout.columns;
             return Caf.array(items, (item, i) => {
@@ -254,7 +256,7 @@ Caf.defMod(module, () => {
               return isSelected ? this.colors.currentLine(line) : line;
             }).join("\n");
           };
-          this.prototype.getPrompt = function() {
+          this.prototype.getPrompt = function () {
             let temp, temp1;
             return compactFlatten([
               this.getQuestion(),
@@ -280,10 +282,10 @@ Caf.defMod(module, () => {
                       ? temp1
                       : this.answer.value
                   )
-                : this.rl.line
+                : this.rl.line,
             ]).join("");
           };
-          this.prototype.getRenderedPage = function() {
+          this.prototype.getRenderedPage = function () {
             return this.searching
               ? "  " + this.colors.tip("Searching...")
               : this.currentItems.length > 0
@@ -299,18 +301,18 @@ Caf.defMod(module, () => {
                 )
               : "  " + this.colors.warning("No results...");
           };
-          this.prototype.render = function() {
+          this.prototype.render = function () {
             this.screen.render(
               this.getPrompt(),
               this.answer ? "" : this.getRenderedPage()
             );
             return (this.showTip = false);
           };
-          this.prototype.getNormalizedItems = function(items) {
+          this.prototype.getNormalizedItems = function (items) {
             return this.itemsWereStrings ||
               (items[0] && Caf.is(items[0], String))
               ? ((this.itemsWereStrings = true),
-                Caf.array(items, item => {
+                Caf.array(items, (item) => {
                   if (!Caf.is(item, String)) {
                     throw new Error(
                       "If any item is a string, all items must be strings."
@@ -318,7 +320,7 @@ Caf.defMod(module, () => {
                   }
                   return { id: item, value: item };
                 }))
-              : Caf.array(items, item => {
+              : Caf.array(items, (item) => {
                   if (!Caf.is(item.value, String)) {
                     throw new Error("Every item should have a .value.");
                   }
@@ -327,7 +329,7 @@ Caf.defMod(module, () => {
                     : item;
                 });
           };
-          this.prototype.search = function(searchTerm) {
+          this.prototype.search = function (searchTerm) {
             let firstSearch, thisPromise;
             this.setSelected(0);
             if (this.searchedOnce) {
@@ -342,7 +344,7 @@ Caf.defMod(module, () => {
               this.answers,
               (this.lastSearchTerm = searchTerm)
             ))
-              .then(items => {
+              .then((items) => {
                 let temp;
                 return thisPromise === this.lastPromise
                   ? ((this.currentItems = this.getNormalizedItems(items)),
@@ -363,9 +365,9 @@ Caf.defMod(module, () => {
                           Caf.object(
                             this.currentItems,
                             null,
-                            item => item.selected,
+                            (item) => item.selected,
                             null,
-                            item => item.id
+                            (item) => item.id
                           )
                         ))
                       : undefined,
@@ -373,9 +375,9 @@ Caf.defMod(module, () => {
                     this.render())
                   : undefined;
               })
-              .catch(error => (this.errorMessage = error.message));
+              .catch((error) => (this.errorMessage = error.message));
           };
-          this.prototype.setSelected = function(selected) {
+          this.prototype.setSelected = function (selected) {
             return (this.selected = Caf.mod(
               selected != null ? selected : 0,
               max(1, this.currentItems.length)

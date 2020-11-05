@@ -8,13 +8,13 @@ Caf.defMod(module, () => {
       "present",
       "Array",
       "String",
-      "formattedInspect"
+      "formattedInspect",
     ],
     [global, require("art-standard-lib")],
     (formatDate, toSeconds, present, Array, String, formattedInspect) => {
       let colorizeValue, colorNotPresent, presentValue;
       return {
-        standardFormatDate: function(date) {
+        standardFormatDate: function (date) {
           return formatDate(
             date != null ? date : toSeconds(),
             "yyyy-mm-dd HH:MM:ss"
@@ -22,15 +22,15 @@ Caf.defMod(module, () => {
         },
         colorizeValue: (colorizeValue = require("../Style").yellow),
         colorNotPresent: (colorNotPresent = require("../Style").grey),
-        presentValue: (presentValue = function(value, noneValue = "none") {
+        presentValue: (presentValue = function (value, noneValue = "none") {
           return present(value)
             ? Caf.is(value, Array) && Caf.is(value[0], String)
-              ? Caf.array(value, v => colorizeValue(v)).join(", ")
+              ? Caf.array(value, (v) => colorizeValue(v)).join(", ")
               : Caf.is(value, String)
               ? colorizeValue(value)
               : formattedInspect(value, { color: true })
             : colorNotPresent(noneValue);
-        })
+        }),
       };
     }
   );

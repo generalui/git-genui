@@ -5,17 +5,17 @@ Caf.defMod(module, () => {
     ["describe", "test", "Error", "timeout", "assert", "applyActions"],
     [global, require("../StandardImport")],
     (describe, test, Error, timeout, assert, applyActions) => {
-      return describe("applyActions", function() {
+      return describe("applyActions", function () {
         let actions;
         actions = {
-          addOne: a => a + 1,
+          addOne: (a) => a + 1,
           throwError: () =>
             (() => {
               throw new Error("OhNoes!");
             })(),
-          double: a => a * 2,
-          timeout: a => timeout(1, () => a),
-          div3: a => a / 3
+          double: (a) => a * 2,
+          timeout: (a) => timeout(1, () => a),
+          div3: (a) => a / 3,
         };
         test("undefined actions", () =>
           assert.resolved.eq(
@@ -25,7 +25,7 @@ Caf.defMod(module, () => {
         test("0 actions", () =>
           assert.resolved.eq(applyActions(1, []), {
             result: 1,
-            actionsApplied: {}
+            actionsApplied: {},
           }));
         test("1 action", () =>
           assert.resolved.eq(
@@ -35,11 +35,11 @@ Caf.defMod(module, () => {
         test("3 actions", () =>
           assert.resolved.eq(
             applyActions(1, ["addOne", "double", "div3"], actions, {
-              quiet: true
+              quiet: true,
             }),
             {
               result: 4 / 3,
-              actionsApplied: { succeeded: ["addOne", "double", "div3"] }
+              actionsApplied: { succeeded: ["addOne", "double", "div3"] },
             }
           ));
         test("Promise action", () =>
@@ -52,7 +52,7 @@ Caf.defMod(module, () => {
             applyActions(1, ["throwError", "double"], actions, { quiet: true }),
             {
               result: 2,
-              actionsApplied: { succeeded: ["double"], failed: ["throwError"] }
+              actionsApplied: { succeeded: ["double"], failed: ["throwError"] },
             }
           ));
       });

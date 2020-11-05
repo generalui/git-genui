@@ -17,15 +17,15 @@ Caf.defMod(module, () => {
                     default: defaultStory ? { story: defaultStory } : undefined,
                     items: compactFlatten([
                       { value: "(new)", story: {} },
-                      Caf.array(stories, story => {
+                      Caf.array(stories, (story) => {
                         return { story, value: formatStory(story) };
                       }),
-                      { value: "(none)", story: {} }
-                    ])
+                      { value: "(none)", story: {} },
+                    ]),
                   })
                   .then(({ story }) => story)
               : undefined
-          )
+          ),
       };
     }
   );

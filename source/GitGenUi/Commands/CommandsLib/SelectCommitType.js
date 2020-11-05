@@ -4,8 +4,10 @@ Caf.defMod(module, () => {
   return Caf.importInvoke(
     ["log"],
     [global, require("../StandardImport")],
-    log => {
-      return require("./Lib").updateStateWithPrompt("type", function({ type }) {
+    (log) => {
+      return require("./Lib").updateStateWithPrompt("type", function ({
+        type,
+      }) {
         log(
           " \nCommit types are listed in ascending order of importance.\nIf your commit matches more than one category, choose the one closer to the bottom."
         );
@@ -15,10 +17,10 @@ Caf.defMod(module, () => {
             default: { type },
             items: Caf.array(
               require("../../CommitTypes")().split(/\n/g),
-              value => {
+              (value) => {
                 return { value, type: value.split(":")[0] };
               }
-            )
+            ),
           })
           .then(({ type }) => type);
       });

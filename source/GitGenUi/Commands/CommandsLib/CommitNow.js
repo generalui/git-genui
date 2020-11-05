@@ -10,13 +10,13 @@ Caf.defMod(module, () => {
       "present",
       "log",
       "getCommitMessage",
-      "tracker"
+      "tracker",
     ],
     [
       global,
       require("../StandardImport"),
       require("./CommandsLib"),
-      require("../../Git")
+      require("../../Git"),
     ],
     (
       Promise,
@@ -28,16 +28,16 @@ Caf.defMod(module, () => {
       getCommitMessage,
       tracker
     ) => {
-      return function(state) {
+      return function (state) {
         return (state.pretend
           ? Promise.resolve({
               branch: state.status.current,
               commit: "pretending",
-              summary: { changes: 123, insertions: 456, deletions: 789 }
+              summary: { changes: 123, insertions: 456, deletions: 789 },
             })
           : require("../../Git").commit(state)
         )
-          .then(commitResult => {
+          .then((commitResult) => {
             let base, base1;
             return applyActions(
               merge(state, commitResult),
@@ -50,7 +50,7 @@ Caf.defMod(module, () => {
                   "unstarted"
                   ? "AutoStartStory"
                   : undefined,
-                "SetStoryState"
+                "SetStoryState",
               ]),
               require("../../PostCommitActions")
             );
@@ -66,13 +66,13 @@ Caf.defMod(module, () => {
                 "commit-success": {
                   summary: merge(
                     { files: Caf.array(staged, ({ path }) => path) },
-                    Caf.object(summary, v => v | 0)
+                    Caf.object(summary, (v) => v | 0)
                   ),
                   message: getCommitMessage(state),
                   actionsApplied,
                   branch,
-                  commit
-                }
+                  commit,
+                },
               });
             } else {
               log({ "commit-success": commit != null ? commit : { result } });
