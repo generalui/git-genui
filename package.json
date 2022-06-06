@@ -22,7 +22,7 @@
     "neptune-namespaces-runtime": "^3.0.0",
     "open": "^7.0.3",
     "pivotaljs": "^1.0.3",
-    "simple-git": "^2.5.0",
+    "simple-git": "^3.7.1",
     "slice-ansi": "^4.0.0",
     "stable": "^0.1.8"
   },

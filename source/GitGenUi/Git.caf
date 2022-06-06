@@ -1,5 +1,5 @@
 import &StandardImport, {} &Style
-SimpleGit = require(:simple-git/promise)()
+SimpleGit = &SimpleGit()
 
 class Git extends BaseClass
 
