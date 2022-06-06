@@ -1,7 +1,6 @@
 import &StandardImport
-Config extract UserConfig
+Config extract UserConfig, ConfigShared
 import UserConfig
-mockFs = require :@art-suite/mock-fs
 
 describe
   getProjectKey: ->
@@ -40,9 +39,6 @@ describe
 
   mockFs: ->
 
-    global.afterAll ->
-      mockFs.restore()
-
     projectFolder = :testProject
 
     initialFiles =
@@ -52,8 +48,7 @@ describe
             [core]
 
     chainedTest "initialize mock fs" ->
-      log :Start
-      mockFs initialFiles
+      ConfigShared.mockFs initialFiles
       new UserConfig
 
     .tapTest

@@ -9,6 +9,7 @@
   CommitParser:         require('./CommitParser'),
   CommitStateLib:       require('./CommitStateLib'),
   IgnoreRejections:     require('./ignoreRejections'),
+  MiniMockFs:           require('./MiniMockFs'),
   OpenInExternalEditor: require('./openInExternalEditor'),
   Presenters:           require('./Presenters'),
   SearchSort:           require('./SearchSort'),

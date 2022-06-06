@@ -2,6 +2,10 @@ import &StandardImport
 
 class ConfigShared extends BaseClass
 
+  @fs = &fsExtra
+
+  @mockFs = (mockFiles = {}) => @fs = &lib/MiniMockFs.createMockFs mockFiles
+
   @initSingleton: ->
     @singleton.init()
     .then -> @singleton.readyPromise
@@ -55,15 +59,17 @@ class ConfigShared extends BaseClass
 
   save: ->
     Promise.then ->
-      &fsExtra.writeFile @configFilePath, consistentJsonStringify @config, "  "
+      ConfigShared.fs.writeFile @configFilePath, consistentJsonStringify @config, "  "
+
     .then -> @
 
   load: ->
     Promise.then ->
-      &fsExtra.exists @configFilePath
+      ConfigShared.fs.exists @configFilePath
+
     .then (@existedAtLoad) ->
       if @existedAtLoad
-        &fsExtra.readFile @configFilePath
+        ConfigShared.fs.readFile @configFilePath
         .then (data) ->
           JSON.parse data.toString()
 

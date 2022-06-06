@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "MiniMockFs.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Lib/MiniMockFs.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,0FAAO,0DAEP,sBAAc,CAAC,8DACb,YAAY,MAAM,uBAEhB,eAAe,WACf,WAAY,CAAC,UAAU,8BACrB,MAAM,qBACO,YAAY,eAAe,gBACtC,MAAS,IAAC,KAAQ,OAAK,mBAAmB,KAAO,OAAU,IAAI,kBAEjE,gBAAgB,SAElB,qBAAW,CAAC,aAAa,aAAY,MAAI,aAAa,YAEtD,QAAY,CAAC,aACX,SAAS,qBACA,kBACC,QAEZ,6BAAe,CAAC,kCACd,MAAM,qBACI,YAAY,eAAe,aACnC,iBAAM,YAAK,YAEb,CAAG,eACD,MACG,cAAM,IAAI"
+}

@@ -1,0 +1,57 @@
+import &StandardImport, &GitGenUi/Lib/MiniMockFs
+
+initialFiles = a: "hi"
+
+chainedTest 'createMockFs' ->
+  createMockFs initialFiles
+
+.softTapTest 'getTree' (mockFs) ->
+  assert.eq
+    mockFs.getTree()
+    initialFiles
+
+.tapTest 'writeFile' (mockFs) ->
+  mockFs.writeFile 'foo', 'bar-body'
+
+.softTapTest 'getTree after write' (mockFs) ->
+  assert.eq
+    mockFs.getTree()
+    merge initialFiles, foo: 'bar-body'
+
+.tapTest 'readFile' (mockFs) ->
+  mockFs.readFile :foo
+  .then (file) ->
+    assert.eq
+      file
+      'bar-body'
+
+.tapTest 'readFile rejects' (mockFs) ->
+  assert.rejects mockFs.readFile :bar
+
+.tapTest 'exists' (mockFs) ->
+  mockFs.exists :foo
+  .then assert.true
+  .then -> mockFs.exists :bar
+  .then assert.false
+
+.tapTest 'write pathed file'  (mockFs)->
+  mockFs.writeFile 'root/user/alien', 'alien-body'
+
+.softTapTest 'getTree' (mockFs)->
+  assert.eq
+    mockFs.getTree()
+    a: :hi
+    foo: :bar-body
+    root: user: alien: :alien-body
+
+.softTapTest 'readFile pathed' (mockFs) ->
+  mockFs.readFile 'root/user/alien'
+  .then (contents) -> assert.eq contents, 'alien-body'
+
+.softTapTest 'exists pathed - when true' (mockFs) ->
+  mockFs.exists 'root/user/alien'
+  .then assert.true
+
+.softTapTest 'exists pathed - when false' (mockFs) ->
+  mockFs.exists 'root/user/alien2'
+  .then assert.false
