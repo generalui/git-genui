@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "SelectCoauthors.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/SelectCoauthors.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;yCAEA,8CAA2B,qBAAW,CAAC,gDACrC,yBAAO,oCAEJ,uDAAwB,KAAC,oCAC1B,+BACA,sCAAqB,CACnB,aAAa,MACb,QAAW,0CACX,iBACyB,mCAAa,QAEhC,OACA,UAAU,cAAS,YACnB,uBAAe,uBAAS,qBAE1B,CAAC,oBACY,oBAAW,WAG9B"
+}

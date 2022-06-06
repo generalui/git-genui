@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "openInExternalEditor.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Lib/openInExternalEditor.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,oGAAO,sFAEP,iBAAc,QAAG,CAAC,QAAU,4BAAqB,CAAC,aAChD,qCAA0B,OAAO,6BAGnC,CAAC,sBACC,WAAa,gFAEb,EAAO,QAAQ,mBAAe,CAC5B,wJAGU,cAEV,+BACE,SAAW,0BACX,SAAS,YACN,CAAC,MAAM,KAAI,OAAO,QAErB,CACF,IAAG,yCAE4B,iJAErB,cAEV,eAAe,aAEZ,CAAC,MAAM,KAAI,OAAO,UACjB,CAAC,aAAa,sBACd,CAAC,aACF,QAAQ,YACT,WAEG"
+}

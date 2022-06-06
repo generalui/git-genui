@@ -1,0 +1,80 @@
+import &StandardImport
+import Config
+
+initialFiles = {}
+
+testFieldDefault = :testDefault
+
+class TestConfig extends ConfigShared
+  @configFields
+    testField:  :testDefault
+
+  @configFields :otherTestField
+
+  @getter
+    configBasename: -> :testConfig.json
+    configPath:     -> Promise.then -> :.
+
+chainedTest "initialize mock fs" ->
+  ConfigShared.mockFs initialFiles
+  new TestConfig
+
+.tapTest
+  "load" (testConfig) ->
+    testConfig.init()
+
+  "load doesn't vivify" ->
+    assert.eq
+      ConfigShared.fs.getTree()
+      initialFiles
+
+  "existedAtLoad is false" (testConfig) ->
+    assert.false testConfig.existedAtLoad
+
+  "testConfig.setConfigProperty :a :b" (testConfig) ->
+    testConfig.setConfigProperty :a :b
+
+  "setConfigProperty should automatically save" (testConfig)->
+    assert.eq
+      JSON.parse ConfigShared.fs.getTree()[testConfig.configBasename]
+      a: :b
+
+  "testField setTestField" (testConfig) ->
+    testConfig.setTestField baz: boz: :bam
+
+  "testField getTestField" (testConfig) ->
+    assert.eq
+      baz: boz: :bam
+      testConfig.getTestField()
+
+  "testField setter result" (testConfig) ->
+    assert.eq
+      baz: boz: :bam
+      JSON.parse ConfigShared.fs.getTree()[testConfig.configBasename]
+      .testField
+
+  "testField mergeTestFieldWith will replace" (testConfig) ->
+    testConfig.mergeTestFieldWith baz: two: 2
+
+  "testField mergeTestFieldWith will replace result" (testConfig) ->
+    assert.eq
+      baz: two: 2
+      JSON.parse ConfigShared.fs.getTree()[testConfig.configBasename]
+      .testField
+
+  "testField deepMergeTestFieldWith will deep-merge" (testConfig) ->
+    testConfig.deepMergeTestFieldWith baz: three: 3
+
+  "testField deepMergeTestFieldWith will deep-merge result" (testConfig) ->
+    assert.eq
+      baz: two: 2, three: 3
+      JSON.parse ConfigShared.fs.getTree()[testConfig.configBasename]
+      .testField
+
+.thenTest "create new testConfig instance to simulate second load" ->
+  new TestConfig
+  .init()
+
+.tapTest
+  "existedAtLoad is true" (testConfig) ->
+    assert.true testConfig.existedAtLoad

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "PromptForLib.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/PromptFor/PromptForLib.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,wIAKE,uBAAS,QAAG,CAAC,GAAG,IAAI,iBACF,mBAAO,EAAE,OAAM,MAEjC,mCAAe,QAAG,CAAC,OAAO,WAAY,OACpC,MAAM,qBAAqB,OAAO,cAEpC,6CAAoB,QAAG,CAAC,OAAO,qGAAY,KACjB,sCAExB,wBAAM,MACD,kBAAY,UAAM,eACG,mIAAW,UAAU,UAAU,eAAU,iEAAC,MAE/D,kBAAY,UAAM,gBACG,yIAAW,eAAc,mBAAc,6EAE7D,gBACsB,yIAAW,uBAAkB"
+}

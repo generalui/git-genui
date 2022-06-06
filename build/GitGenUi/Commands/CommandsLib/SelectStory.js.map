@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "SelectStory.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/SelectStory.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,mGAAO,kGAEP,mEAEA,cAAc,CAAC,uCAAS,UACtB,kEACA,aAAY,MACV,sCAAqB,CACnB,QAAQ,0BAAW,qBACnB,SAAY,QAAW,UAAS,uBAChC,OAAO,iBACL,OAAO,SAAQ,QAAO,UAAU,MAAK,OAAO,WAAS,UAAU,eAC9C,qBAAO,QACnB,OAAO,SAAS,UAAU,OAAO,YAAY,aAClD,OAAO,UAAS,oBAEd,CAAC,CAAC,WACN,YAAG,4BACD,2BAAe,MAAM,QAAU,WAG/B"
+}

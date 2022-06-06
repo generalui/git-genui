@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "AddStoryComment.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/PostCommitActions/AddStoryComment.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,sHAAO,8BAAiB,0EAExB,gBAAC,oCAAS,OACR,CAAG,iBAAQ,+DACT,uDACE,IACA,iBAAiB,0BACjB,kCAEA,CACF,oBAAG,mCACD,IAAI,KAAO,kDACb,+BAEO"
+}

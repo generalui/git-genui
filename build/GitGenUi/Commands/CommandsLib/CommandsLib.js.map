@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "CommandsLib.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/CommandsLib.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;yCAEA,QACE,mBACG"
+}

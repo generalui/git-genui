@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "ShowConfig.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Commands/ShowConfig.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,4GAAO,8BAAoB,0EAE3B,qBACK,gDAGL,aAAK,CAAC,CAAC,SACC,UAAI,IAAG,0CAEmB,YAAY,wEAGpC,kBAAkB,sIAClB,kBAAkB,0GAG1B,CAAC,2CAA8C,YAC/C,CAAC,8CAA8C"
+}

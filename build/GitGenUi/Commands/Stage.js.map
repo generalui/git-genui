@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Stage.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Commands/Stage.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,sFAAO,6BAAiB,kDAExB,qBAAe,oCACf,aAAK,CAAC,UACJ,IAAG,mDAEsC,0BAAa,wBAEtD,eAAe,oBACN"
+}

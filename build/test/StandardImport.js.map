@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "StandardImport.js",
+  "sourceRoot": "../..",
+  "sources": [
+    "source/test/StandardImport.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;uEACA,0CACE,0BACA,iBAEE,mCACA,qBAAQ,QAAG,CAAC,GAAG,IAAK,OACf,WAAK,WAAM,UACC,aACX,SAAS,GAAG,MAGd,gBAAgB,UAAM,YAAK"
+}

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Status.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Commands/Status.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;yCAEA,qBAAe,mBACf,UACE,UAAS,WAAW,4CAEtB,aAAK,CAAC,UACJ,8BAAiB,iBACjB"
+}

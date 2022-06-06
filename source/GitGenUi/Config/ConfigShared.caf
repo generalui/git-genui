@@ -1,0 +1,79 @@
+import &StandardImport
+
+class ConfigShared extends BaseClass
+
+  @fs = &fsExtra
+
+  @mockFs = (mockFiles = {}) => @fs = &lib/MiniMockFs.createMockFs mockFiles
+
+  @initSingleton: ->
+    @singleton.init()
+    .then -> @singleton.readyPromise
+    .then -> @singleton
+
+  init: (configFilePath) ->
+    Promise.all []
+      @configPath
+      @configBasename
+
+    .then ([configPath, configBasename]) ->
+      throw new Error "configPath must be a string" unless isString(configPath) && present configPath
+      throw new Error "configBasename must be a string" unless isString(configBasename) && present configBasename
+      &path.join configPath, configBasename
+
+    .then (@configFilePath)-> @load()
+
+  @property :config :configFilePath :existedAtLoad
+
+  @getter
+    configPath: -> throw new Error "must override configPath"
+    configBasename: -> throw new Error "must override configBasename"
+
+    state: -> @config
+    homeDirRelativeConfigFilePath: -> @configFilePath.replace &os.homedir(), "~"
+    inspectedObjects: -> toInspectedObjects @config
+
+  @configFields: (fields...) ->
+    each field in compactFlatten fields
+      switch
+      when field is String
+        @_addConfigField field
+
+      when field is Object
+        each _default, key in field
+          @_addConfigField key, _default
+
+      else
+        throw new Error "unsupported configFields param type: #{formattedInspect {} field} (expecting String or Object)"
+
+  @_addConfigField: (field, _default) ->
+    @getter [field]: ~> @config[field] ? _default
+    @prototype[lowerCamelCase "set #{field}"]             = (v) ~> @setConfigProperty field, v
+    @prototype[lowerCamelCase "merge #{field} with"]      = (args...) ~> @setConfigProperty field, merge @[field], args...
+    @prototype[lowerCamelCase "deep merge #{field} with"] = (args...) ~> @setConfigProperty field, deepMerge @[field], args...
+
+  setConfigProperty: (key, value) ->
+    @_config = merge @_config
+    @_config[key] = value
+    @save()
+
+  save: ->
+    Promise.then ->
+      ConfigShared.fs.writeFile @configFilePath, consistentJsonStringify @config, "  "
+
+    .then -> @
+
+  load: ->
+    Promise.then ->
+      ConfigShared.fs.exists @configFilePath
+
+    .then (@existedAtLoad) ->
+      if @existedAtLoad
+        ConfigShared.fs.readFile @configFilePath
+        .then (data) ->
+          JSON.parse data.toString()
+
+      else {}
+
+    .then (config) -> @setConfig config
+    .then -> @

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "SourceRoots.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Config/SourceRoots.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,kHAAO,iHAEP,KAAK,qBACL,OAAO,iBACP,OAAO,qFAEmB,sBAEX,CAAC,oCACZ,iBAAa,eAAe,YAC5B,kFAEF,cAAU,oBAAkB,8CAE5B,QAAgB,CAAC,YACf,YAAY,aAAa,mBACzB,QAAQ,gBACF,CAAC,UAAQ,KAC6B,mEAC1C,sBAAkB,cAChB,gBAAY,gBACN,CAAC,eAAgC,sBAAC,aAAa,cAAc,yCAEzE,QAAY,CAAC,YAAa,OACxB,sBAA0B,kCAAU,OAClC,KAAK,IAAI,UAAU,WAAW,YACxB,CAAC,UACG,gBAAe,gCAErB,CAAC,yBACL,SAAQ,wBACN,YACM,CAAS,cAAI,OAAO,cAAa,2BAAiB,QAAQ,cAChE,gBAAY,aAAa,YAAY,kBAErC"
+}

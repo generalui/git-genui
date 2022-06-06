@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "EditGitStage.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/EditGitStage.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;yCAEA,8CAA2B,sBAAU,OACnC,+CACK,MAAI"
+}

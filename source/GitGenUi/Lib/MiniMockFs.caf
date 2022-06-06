@@ -1,0 +1,28 @@
+import &ArtStandardLib
+
+createMockFs: (initialFiles = {}) =>
+  mockFiles = clone initialFiles
+  {}
+    getTree:    -> mockFiles
+    writeFile:  (filePath, data) ->
+      dir = mockFiles
+      each p, i in splitPath = filePath.split "/"
+        dir = dir[p] = if i == splitPath.length - 1 then data else dir[p] || {}
+
+      Promise.resolve data
+
+    readFile = (filePath) -> Promise.then -> readFileSync filePath
+
+    exists:     (filePath) ->
+      readFile filePath
+      .then -> true
+      .catch -> false
+
+    readFileSync = (filePath) ->
+      dir = mockFiles
+      each p in splitPath = filePath.split "/"
+        dir = dir?[p]
+
+      if dir?
+        dir
+      else throw new Error()

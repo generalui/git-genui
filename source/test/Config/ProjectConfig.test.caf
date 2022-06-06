@@ -1,0 +1,30 @@
+import &StandardImport
+import Config
+
+projectFolder = :testProject
+
+initialFiles =
+  [projectFolder]:
+    .git: config: "" [core]
+
+chainedTest "initialize mock fs" ->
+  ConfigShared.mockFs initialFiles
+  # process.chdir projectFolder
+  new ProjectConfig
+
+.tapTest
+  "load" (projectConfig) ->
+    projectConfig.init()
+
+  "load doesn't vivify" ->
+    assert.eq
+      ConfigShared.fs.getTree()
+      initialFiles
+
+  "projectConfig.setConfigProperty :a :b" (projectConfig) ->
+    projectConfig.setConfigProperty :a :b
+
+  "setConfigProperty should automatically save" ->
+    assert.eq
+      JSON.parse ConfigShared.fs.readFileSync "" #{projectConfig.configPath}/#{projectConfig.configBasename}
+      a: :b

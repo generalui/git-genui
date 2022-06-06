@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "SetStoryState.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/PostCommitActions/SetStoryState.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,kGAAO,8BAAiB,wDAExB,gBAAC,qCAAS,aACR,8CACA,CAAG,kCAAa,QAAQ,eACtB,0CAA6B,QAAO,OAAO,eAEzC,CACF,mBAAG,kCACD,IAAI,KAAO,gDACb,+BAGA"
+}

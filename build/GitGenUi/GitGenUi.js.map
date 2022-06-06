@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "GitGenUi.js",
+  "sourceRoot": "../..",
+  "sources": [
+    "source/GitGenUi/GitGenUi.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,kCACE,kBACA"
+}
