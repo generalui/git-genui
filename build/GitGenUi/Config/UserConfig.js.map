@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "UserConfig.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Config/UserConfig.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,wIAAO,8BAAoB,yCAAe,uBAAO,uGAEjD,0DAAyB,kGACvB,4CAEgB,gBAAa,QAAG,CAAC,CAAC,QAAQ,SAAS,wCAAkB,OACnE,SAAM,qCAAG,uCAAS,yEAAkB,kBAEtC,YAAO,CACL,4BAAmB,uCACnB,wBAAmB,uBACnB,iCAAyB,CAAC,aAAa,kBAAe,OACpD,mBAAe,iBAEnB,cAAU,eAEV,mBACE,cACA,2CAIF,QAAM,CAAC,MACL,oBAAG,MAAI,0BACP,+CACK,MAAI,gBAAe,CAAI,oBAAY,sBAAa,mDAC9C,CAAC,WAAU,kBACZ,oBACA,CAAC,6FAET,QAA6B,CAAC,eAAe,aAAa,6CAAe,KACF,QAAQ,uFAC7E,uBACE,iBACA,MAAM,qBACJ,CAAC,aAAa,MACZ,gBAEE,uBAAY,aACZ,WAAW,8CAAe,iDAAyB"
+}

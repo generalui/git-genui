@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "ProjectFiles.test.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/jest/Config/ProjectFiles.test.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,0GAAO,4CACP,mFAAO,iDAEP,mBAAY,qBAAS,OACnB,+BAGA,2BACE,UAAU,aAAW,oCACrB,aAAa,0BAA0B"
+}

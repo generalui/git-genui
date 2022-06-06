@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "SelectMembers.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/SelectMembers.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;yCAEA,gBAAC,OAAO,CAAC,QAAQ,iDACf,yBAAO,oCAEJ,uDAAwB,KACzB,sCAAqB,CACnB,aAAa,MACb,QAAS,0BAAW,mBACpB,iBAC6B,uCAAa,QAEpC,IACA,UAAU,WAAM,oBAChB,uBAAe,uBAAS,wBAAe,QAAM,QAAU,kCAEzD,CAAC,oBACS,iBAAW,OAG3B"
+}

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "StandardImport.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Commands/StandardImport.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,4EAA6B,CAAI"
+}

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Config.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Commands/Config.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,8EAAO,6BAAiB,2BAAiB,kDAEzC,qBAAe,uBACf,KAAK"
+}

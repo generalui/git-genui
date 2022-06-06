@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "SelectCommitFormat.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/SelectCommitFormat.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,8EAAO,2EAEP,4BAAkB,YAAK,OACrB,gCAAe,CACb,SAAW,6BACX,SACE,QAAQ,YAAqB,OAAS,sFACtC,QAAQ,sBAAqB,OAAS,+EAExC,UAAY,4CAER,CAAC,CAAC,YACN,+BAAiC"
+}

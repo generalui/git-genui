@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Start.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Commands/Start.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,gFAAmC"
+}

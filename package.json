@@ -8,7 +8,7 @@
   "dependencies": {
     "@art-suite/cli": "^1.3.7",
     "ansi-wordwrap": "^1.0.2",
-    "art-rest-client": "^1.8.8",
+    "art-rest-client": "^1.7.0",
     "art-standard-lib": "^1.69.8",
     "btoa": "^1.2.1",
     "caffeine-eight": "^2.6.1",
@@ -16,28 +16,53 @@
     "chalk": "^4.1.0",
     "external-editor": "^3.1.0",
     "fs-extra": "^9.0.0",
-    "inquirer": "^7.3.3",
-    "neptune-namespaces-runtime": "^3.2.6",
-    "open": "^7.2.0",
+    "inquirer": "^7.1.0",
+    "inquirer-autocomplete-prompt": "^1.0.2",
+    "inquirer-checkbox-plus-prompt": "^1.0.1",
+    "neptune-namespaces-runtime": "^3.0.0",
+    "open": "^7.0.3",
     "pivotaljs": "^1.0.3",
-    "simple-git": "^2.20.1",
+    "simple-git": "^2.5.0",
     "slice-ansi": "^4.0.0",
     "stable": "^0.1.8"
   },
   "description": "git-genui streamlines: PivotalTracker updates, git-commits, pairing-git-commits, semantic-versioning",
   "devDependencies": {
     "@art-suite/mock-fs": "^1.0.3",
-    "art-build-configurator": "^1.26.17",
-    "art-testbench": "^2.2.5",
-    "caffeine-script": "^0.72.4",
-    "jest": "^26.4.2",
-    "mock-fs": "^4.13.0",
-    "neptune-namespaces": "^4.2.6",
-    "npm-watch": "^0.7.0"
+    "@art-suite/standard-package-builder": "^1.1.3",
+    "art-build-configurator": "^1.26.9",
+    "art-testbench": "^1.17.2",
+    "caffeine-script": "^0.74.1",
+    "case-sensitive-paths-webpack-plugin": "^2.2.0",
+    "chai": "^4.2.0",
+    "coffee-loader": "^0.7.3",
+    "css-loader": "^3.0.0",
+    "jest": "^28.1.0",
+    "json-loader": "^0.5.7",
+    "mocha": "^7.1.1",
+    "mock-fs": "^4.11.0",
+    "neptune-namespaces": "^4.0.0",
+    "npm-watch": "^0.7.0",
+    "script-loader": "^0.7.2",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.39.1",
+    "webpack-cli": "*",
+    "webpack-dev-server": "^3.7.2",
+    "webpack-merge": "^4.2.1",
+    "webpack-node-externals": "^1.7.2"
   },
   "homepage": "https://github.com/generalui/git-genui",
   "jest": {
-    "testEnvironment": "node"
+    "collectCoverageFrom": [
+      "build/**/*.js",
+      "!build/test/**/*.js"
+    ],
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/test"
+    ],
+    "verbose": true
   },
   "license": "ISC",
   "name": "git-genui",
@@ -45,22 +70,24 @@
     "type": "git",
     "url": "https://github.com/generalui/git-genui.git"
   },
+  "scripts": {
+    "build": "cd source\nfind . -name '*.js' -o -name '*.css' | cpio -vpdm ../build\ncd ..\ncaf -m -c source -o build\nnpm run nn",
+    "build-clean": "# BUILD CLEAN START\n#   - building into: build-temp\n#\nrm -rf ./__build-old__\ncd source\nfind . -name '*.js' -o -name '*.css' | cpio -vpdm ../build-temp\ncd ..\ncaf -m -c source -o build-temp\nnpm run nn\n\nnn build-temp/*\n\n# BUILD CLEAN FINIALIZING\n#  - replace old build in:   build\n#  - with new build from:    build-temp\n#\nmv build __build-old__\nmv build-temp build\nrm -rf ./__build-old__",
+    "clean": "rm -rf build/*",
+    "nn": "nn build/* ",
+    "test": "npm run nn\njest",
+    "watch": "npm-watch"
+  },
+  "version": "0.20.5",
   "watch": {
     "build": {
-      "patterns": [
-        "source-caf"
+      "extensions": [
+        "caf"
       ],
-      "extensions": "caf",
+      "patterns": [
+        "source"
+      ],
       "quiet": false
     }
-  },
-  "scripts": {
-    "build": "caf -p -c source-caf -o source; nn -sq",
-    "build-clean": "rm -rf source/*; npm run build",
-    "build-test": "npm run build; npm run test --silent; echo",
-    "test": "nn -s; jest",
-    "watch": "npm-watch",
-    "watch-test": "watch 'npm run build-test' ./source-caf ./test"
-  },
-  "version": "0.20.5"
+  }
 }

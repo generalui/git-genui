@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "EditStoryName.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/EditStoryName.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;yCAGA,gBAAC,CAAC,SAAS,SAAU,OACnB,iCAAgB,CACd,SAAW,sBACX,SAAS"
+}

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "SelectStoryState.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/SelectStoryState.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;yCAEA,gBAAC,CAAC,YAAY,SAAU,OACtB,sCAAqB,CACnB,QAAW,uBACX,SAAS,kCAAa,aACtB,OAAO"
+}

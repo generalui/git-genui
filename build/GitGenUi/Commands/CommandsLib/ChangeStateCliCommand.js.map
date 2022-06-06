@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "ChangeStateCliCommand.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/ChangeStateCliCommand.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,wHAAO,8BAAiB,mFAExB,gBAAC,oBACC,SAAS,cAAc,OAAO,aAC9B,6BAAkB,mBAClB,KAAK,CAAC,YACJ,+BACK,MAAI,sBACH,CAAC,uBACL,IAAG,CAAI,0DACP,uBAAU,CACR,SACA,4EACA,0CAA+B,kBAE3B,CAAC,CAAC,WACH,WACD,oBAAoB,QAAU,UAC3B"
+}

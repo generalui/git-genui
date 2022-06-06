@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('./source').run()
+require('./build').run()

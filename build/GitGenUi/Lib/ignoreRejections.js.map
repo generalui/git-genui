@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "ignoreRejections.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Lib/ignoreRejections.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,+EAAO,uEAEP,0BAAgB,QAAG,CAAC,IAAK,OACvB,aAAa,SACN,CAAC,CAAC,cACP,SAAS,iBACT"
+}

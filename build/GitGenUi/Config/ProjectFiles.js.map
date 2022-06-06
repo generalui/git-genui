@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "ProjectFiles.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Config/ProjectFiles.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,4GAAO,8BAAoB,uBAAO,uGAElC,8DAA2B,8FAED,2DAGtB,QACA,yCAEF,YAAU,uCACR,KAAI,YAAY,gDACA,oBACV,CAAC,wDACL,qBAAiB,cAAc,wBAEnC,mBACE,iBACA"
+}

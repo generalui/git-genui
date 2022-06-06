@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "ProjectConfig.test.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/jest/Config/ProjectConfig.test.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,0GAAO,4CACP,wHAAO,yHAEP,SAAS,QAAQ,uBAEjB,gBAAgB,eAEhB,gBACE,CAAC,iBACC,SAAM,QAAU,aAEpB,gBAAe,YAAG,OAChB,4BAEF,YAAY,kCACV,OAAO,eACP,cAAc,uBACd,IAAI,0BAGJ,gBAAO,CAAC,gBAAiB,OACvB,0BAEF,mCAAwB,OACtB,UACE,kBACA,mBAEJ,iDAAwC,CAAC,gBAAiB,OACxD,gCAAgC,KAAG,UAErC,2DAAgD,OAC9C,UACE,WAAW,iBAAiB,eAAe,iCAC3C,GAAG"
+}

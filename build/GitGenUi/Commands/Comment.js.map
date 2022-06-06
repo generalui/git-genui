@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Comment.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Commands/Comment.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,+FAAO,6BAAiB,8DAExB,qBAAe,sBACf,aAAK,CAAC,UAAW,OAEf,+BACK,MAAI,4CACH,CAAC,YACL,sCACE,SACE,+CAEA,CAAC,UACF,QACD,+BACE,SAAW,kBACP,CAAC,YACL,4CACE,UACA,YACD,IAAI"
+}

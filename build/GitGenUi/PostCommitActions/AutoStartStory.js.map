@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "AutoStartStory.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/PostCommitActions/AutoStartStory.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,kGAAO,8BAAiB,wDAExB,gBAAC,yCAAS,OACR,CAAI,kBAAQ,4FAAyD,eAAc,eACjF,0CAA6B,QAAO,OAAO,cAEzC,CACF,mBAAG,kCACD,IAAI,KAAO,iDACb,+BAGA"
+}

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "applyActions.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Lib/applyActions.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,gGAAO,6BAAiB,wEAExB,sBAAY,QAAG,CAAC,OAAO,YAAY,SAAS,6CAC1C,gBAAgB,mBAAgB,QAChC,kBACE,eACA,uBAC0B,mCAC1B,gBACE,mBACM,CAAC,mBACL,aAAY,mBACV,KAAO,UAAS,QAAQ,eACtB,MAAM,IAAI,sCAAyB,mCAES,8FAC9C,OAAO,uBAEL,MAAS,8BAA8B,sBAClC,MAAI,2BAA2B,mBAEjC,CAAC,WACN,iBAAO,6BACL,UAAS,CACP,yCAEsB,qCAAuB,QAAQ,qBAAO,uBAE5D,kBAEJ,4BAER,mBAAmB,CAAC,YAAU,QAE1B,QACA,2BAA8B,6BAAoB,WAAW"
+}

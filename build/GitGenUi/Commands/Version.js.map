@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Version.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Commands/Version.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,6EAAe,gBACf,aAAK,CAAC,CAAC,WAAY,OACd,UACD,UAEA"
+}

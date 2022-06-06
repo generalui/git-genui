@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Stories.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Commands/Stories.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,mIAAO,6BAAiB,8FAExB,qBAAe,yBACf,aAAK,CAAC,UAAW,OACf,+BACK,MAAI,aACP,uCACA,uCACA,8CACI,CAAC,CAAC,SAAS,SAAS,0BACxB,SAAM,MACJ,aAAe,SAAS,SAAS,SAAS,QAAU,iCAC9C,CAAC,UACF,WACD,EAAO,iBACL,eAAe,OAAO,SAAS,WAAU,YAAY,sBAClD,uBAED,MACF,2CACM,CAAC,MAAM,UAAU,SAEnB,6BAEZ,uBAEO"
+}

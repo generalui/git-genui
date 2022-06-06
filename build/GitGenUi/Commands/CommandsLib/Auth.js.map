@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Auth.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/Auth.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,+HAAO,sGAEP,cAAI,QAAG,CAAC,CAAC,OAAO,UAAU,eAAgB,OACxC,aAAY,MAAI,kCACd,SAAS,wBAAQ,UACjB,sCAA2B,0CACvB,CAAC,aACL,qCACE,SAAS,OACT,sCAA2B,+DAEvB,CAAC,aACL,+CAAiC,UAAU,eAEtC,CAAC,CAAC,IAAI,MAAM,UAAU,cACzB,IAAG,CAAC,SAAS,OAAS,IAAI,MAAM,UAAU,oBAErC,CAAC,WACN,IAAG,iBAAgB,6BACjB,SAAW,+CAGX,UAAS,CACP,wBACA,iCAEJ,cAAM"
+}

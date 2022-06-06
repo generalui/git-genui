@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "PivotalTracker.test.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/jest/Trackers/PivotalTracker.test.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,gIAAO,iHACP,0DAEA,YAAY,2BAAe,OACzB,6CACK,MAAI,mCACH,CAAC,aACL,eAAe,UACf,UAAU,gBAAgB,IAC1B,UAAU,QAAQ,SAAS,mBAC3B,QAAQ,kBAGV,sBAAY,CAAC,UAAW,OACtB,0BAA0B,iBACpB,CAAC,qCACL,eAAe,UACf,UAAU,gBAAgB,IAC1B,OAAO,YAAY,QAAQ,sBACf,gBACR,aACA,MACA,QACA,YACA,iBACA,SACA,aACA,iBAEF,CAAO,aAAO,SACZ,YAAW,qCACc,sEAEW,kBAAkB,uCAEhD,iBAAiB,QAAQ,6BAEvC,sBAAY,CAAC,UAAW,OACtB,0BAA0B,iBACpB,CAAC,aACL,eAAe,UACf,UAAU,gBAAgB,WAC1B,UACE,YAAY,QAAQ,aAEpB,SAAQ,MAAK"
+}

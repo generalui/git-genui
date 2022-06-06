@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Autocomplete.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Lib/Autocomplete.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,yHAAO,6BAAiB,0BAAgB,0HACxC,QACE,mDAAuB,QAAG,CAAC,UAAW,OACpC,CAAC,cAAc,wBAAS,UACtB,+BAEA,0BACe,sBAAsB,OAAO,mBACxC,UAAU,KAAK,GAAG,UAAU"
+}

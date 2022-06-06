@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "ProjectConfig.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Config/ProjectConfig.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;4DAEA,gEAA4B,kFAC1B,uBAEA,mBACE,aACA,SAAU,QAAQ,eAEpB,YAAO,CACL,4BAAuB,kCACvB,wBAAuB,gDACvB,gCAAuB,8BAAkB,wBACzC,4BAAuB,8BAAkB,sCAE3C,YAAQ,OACN,sCACK"
+}

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "EditCommitMessage.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/EditCommitMessage.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;yCAEA,8CAA2B,mBAAS,CAAC,CAAC,WAAY,OAChD,kCACE,SAAW,kCACX,SAAS"
+}

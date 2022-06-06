@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "StandardCommitTypes.js",
+  "sourceRoot": "../..",
+  "sources": [
+    "source/GitGenUi/StandardCommitTypes.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,iCAAG"
+}

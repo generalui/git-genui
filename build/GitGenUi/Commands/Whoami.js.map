@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Whoami.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Commands/Whoami.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,oKAAO,6BAAiB,yHAExB,qBAAe,qDACf,aAAK,CAAC,UAAW,OAEf,+BACK,MAAI,aACP,yCACA,yCAEI,CAAC,CAAC,SAAS,UACf,aAAY,CACV,CAAC,6BAAmC,cAAc,SAAS,WAAU,mBAChE,6BAA6B,KAC9B,mBAAmB,KAChB,2DACP,cAEF"
+}

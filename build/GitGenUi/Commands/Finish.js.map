@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Finish.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "source/GitGenUi/Commands/Finish.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,gFAAmC"
+}

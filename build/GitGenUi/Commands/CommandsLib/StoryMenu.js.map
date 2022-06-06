@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "StoryMenu.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/StoryMenu.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,6EAAO,gDAEP,8CAA2B,iBAAO,CAAC,OAAO,UACxC,IAAG,4BAAkB,6BAAa,0EAClC,yBAAa,OACX,QAAU,8CACV"
+}

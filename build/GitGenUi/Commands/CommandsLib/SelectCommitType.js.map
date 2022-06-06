@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "SelectCommitType.js",
+  "sourceRoot": "../../../..",
+  "sources": [
+    "source/GitGenUi/Commands/CommandsLib/SelectCommitType.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,oEAAO,yCAEP,8CAA2B,gBAAM,CAAC,CAAC,QACjC,IACK,6JAKL,sCAAqB,CACnB,QAAW,uBACX,UAAY,OACZ,iBAAsB,qCAAqB,oBAAK,QAC3C,OAAO,MAAM,YAAY,KAAK,cAE/B,CAAC,CAAC,UAAU"
+}

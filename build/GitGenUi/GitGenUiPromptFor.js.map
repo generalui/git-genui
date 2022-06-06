@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "GitGenUiPromptFor.js",
+  "sourceRoot": "../..",
+  "sources": [
+    "source/GitGenUi/GitGenUiPromptFor.caf"
+  ],
+  "names": [],
+  "mappings": "AAAA;;AAAA,0FAAO,6EAEP,gEAEA,OAAO,CAAC,SAAS,QAAQ,iBACvB,aAAY,MAAO,UACjB,kCAAqB,CACnB,QAAQ,0BAAW,qBACnB,SAAY,eAAkB,QAAO,2BACrC,OAAO,iBACL,OAAO,SAAQ,sBACE,qBAAO,QACnB,OAAO,OAAO,YAAY,aAC/B,OAAO,UAAS,oBAEd,CAAC,CAAC,WAAW"
+}
