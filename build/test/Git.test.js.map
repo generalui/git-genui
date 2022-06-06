@@ -3,7 +3,7 @@
   "file": "Git.test.js",
   "sourceRoot": "../..",
   "sources": [
-    "source/jest/Git.test.caf"
+    "source/test/Git.test.caf"
   ],
   "names": [],
   "mappings": "AAAA;;AAAA,+GAAO,2EAEP,KAAK,4BAAgB,OACnB,wBACM,CAAC,WACL,gBAAgB,OAAO,mBAE3B,KAAK,uBAAW,OACd,iBACM,CAAC,YACL,gBAAgB,cAChB,gBAAgB,qBAChB,UACE,YAAY,sBAEZ,SAAO,gBAEb,YAAY,yBAAc,OACxB,0BAGA,kCAAuB,yCAGvB,6DAAoD,CAAC,wBAAwB,OAC3E,UACE,uBAAuB,wBACvB,2BAEN,KAAK,+BAAoB,OACvB,2BACM,CAAC,WACL,aACE,QACA,gEAMN,KAAK,4CAAiC,OACpC,qBAAoB,SAAS,YACvB,CAAC,WACL,aACE,QACA,wBAGN,KAAK,4BAAiB,OACpB,wBACM,CAAC,YACL,eAAe"
