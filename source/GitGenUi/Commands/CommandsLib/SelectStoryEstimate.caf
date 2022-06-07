@@ -6,4 +6,5 @@ import &StandardImport
     prompt:  "" Select story estimate:
     default: "" #{} story.estimate ? :-
     items: project.pointScale.split ","
+
   .then (v) -> v | 0

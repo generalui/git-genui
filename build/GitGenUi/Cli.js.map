@@ -6,5 +6,5 @@
     "source/GitGenUi/Cli.caf"
   ],
   "names": [],
-  "mappings": "AAAA;;AAAA,uEAAO,6BAAiB,kCAExB,yBAAO,OACL,gCACM,CAAC,kBAAkB,kCAAsB,qBAC1C,qBACH,sBAAyB,4CAAuB,sBAAiB,iBACjE,QAAQ,yBAEN,UACA,aACK"
+  "mappings": "AAAA;;AAAA,uEAAO,6BAAiB,kCAExB,yBAAO,OACL,gCACM,CAAC,kBAAkB,kCAAsB,qBAC1C,qBACH,sBAAyB,4CAAuB,sBAAiB,iBACjE,iCAEE,UACA,aACK"
 }
