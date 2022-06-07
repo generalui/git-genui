@@ -20,7 +20,7 @@
     "inquirer-autocomplete-prompt": "^1.0.2",
     "inquirer-checkbox-plus-prompt": "^1.0.1",
     "neptune-namespaces-runtime": "^3.0.0",
-    "open": "^7.0.3",
+    "open": "^8.4.0",
     "pivotaljs": "^1.0.3",
     "simple-git": "^3.7.1",
     "slice-ansi": "^4.0.0",
