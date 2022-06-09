@@ -5,7 +5,7 @@ run: ->
   .then (projectConfig) -> &Tracker.tracker.init projectConfig
   .then ->
     commands = object m from &Commands.modules when m.description is String
-    require :@art-suite/cli
+    &@ArtSuite/Cli
     .start {}
       commands
       description:

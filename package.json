@@ -15,12 +15,12 @@
     "caffeine-script-runtime": "^1.13.4",
     "chalk": "^4.1.0",
     "external-editor": "^3.1.0",
-    "fs-extra": "^9.0.0",
-    "inquirer": "^7.1.0",
-    "inquirer-autocomplete-prompt": "^1.0.2",
+    "fs-extra": "^10.1.0",
+    "inquirer": "^8.2.4",
+    "inquirer-autocomplete-prompt": "^2.0.0",
     "inquirer-checkbox-plus-prompt": "^1.0.1",
     "neptune-namespaces-runtime": "^3.0.0",
-    "open": "^7.0.3",
+    "open": "^8.4.0",
     "pivotaljs": "^1.0.3",
     "simple-git": "^3.7.1",
     "slice-ansi": "^4.0.0",
@@ -64,7 +64,7 @@
     "test": "npm run nn\njest",
     "watch": "npm-watch"
   },
-  "version": "0.20.6",
+  "version": "0.20.7",
   "watch": {
     "build": {
       "extensions": [

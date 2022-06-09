@@ -18,4 +18,5 @@ run: (options) ->
         &Tracker.tracker.createComment
           story.id
           comment
-    else log "Canceled"
+
+    else log :Canceled

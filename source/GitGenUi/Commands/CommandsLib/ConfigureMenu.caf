@@ -11,6 +11,7 @@ selectProject = updateStateWithPrompt :projectId, ({projectId, projects}) ->
       projectId: id
       default: id == projectId
       value: "" #{presentValue name} #{Style.grey "(id: #{id}, account-id: #{account_id})"}
+
   .then ({projectId}) -> projectId
   .tap (projectId) -> projectConfig.mergeTrackerWith {} projectId, &Tracker.tracker.name
 
@@ -18,6 +19,7 @@ editGitEmail = updateStateWithPrompt :email ({email, trackerEmail}) ->
   &PromptFor.input
     message: "" Enter your git email:
     default: email ? trackerEmail
+
   .tap (email) ->
     userConfig.mergeAccountsWith git: {} email
 
@@ -34,15 +36,18 @@ editTrackerToken = (state) ->
         ->
           log Style.green "" Valid token.
           token
+
         (error) ->
           log error
           log.warn "" Invalid token.
           eTT()
+
   eTT()
   .then (token) -> Promise.deepAll {}
     token
     tracker.myAccount
     projects: getProjects()
+
   .then ({token, myAccount, projects}) -> merge state, {} token, projects, trackerEmail: myAccount.email
 
 getTrackerToken = (state) ->
@@ -60,6 +65,7 @@ getTrackerToken = (state) ->
         trackerEmail: email
         state
         {} token, projects
+
   .catch ->
     log.warn "" Auth failed.
     state
@@ -87,6 +93,7 @@ getTrackerToken = (state) ->
           (me) ->
             log Style.green prompt if present prompt
             me
+
           ->
             log.warn "" Please configure your #{trackerName} token.
             null

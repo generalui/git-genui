@@ -6,5 +6,5 @@
     "source/GitGenUi/Commands/CommandsLib/SelectStoryEstimate.caf"
   ],
   "names": [],
-  "mappings": "AAAA;;yCAGA,gBAAC,CAAC,SAAS,mBAAU,OACnB,sCAAqB,CACnB,QAAW,0BACX,yBAAgB,0CAAiB,SACjC,OAAO,yBAAyB,YAC5B,CAAC,MAAM,IAAI"
+  "mappings": "AAAA;;yCAGA,gBAAC,CAAC,SAAS,mBAAU,OACnB,sCAAqB,CACnB,QAAW,0BACX,yBAAgB,0CAAiB,SACjC,OAAO,yBAAyB,YAE5B,CAAC,MAAM,IAAI"
 }

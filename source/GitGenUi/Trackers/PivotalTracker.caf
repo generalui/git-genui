@@ -142,7 +142,6 @@ class PivotalTracker extends BaseClass
   @_denormalizeStory: (story) =>
     @_snakeCaseKeys object v, k in story with-key if k == :state then :current_state else k
 
-
   @_normalizeAccount: (account) ->
     merge
       object v, k from account with-key
